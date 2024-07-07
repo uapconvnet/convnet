@@ -1,0 +1,37 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:AvalonEdit="using:AvaloniaEdit"
+             xmlns:c="clr-namespace:Convnet.Common"
+             xmlns:props="clr-namespace:Convnet.Properties"
+             xmlns:vm="clr-namespace:Convnet.PageViewModels"
+             x:Class="Convnet.PageViews.TestPageView"
+             x:DataType="vm:TestPageViewModel">
+
+  <Grid x:Name="gridMain" Background="{DynamicResource BackgroundBrushLight}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="26"/>
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <StackPanel x:Name="StackPanelInfo" Margin="0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" VerticalAlignment="Stretch" Orientation="Horizontal">
+        <Border x:Name="BorderProgress" BorderThickness="1,1,0,1" CornerRadius="3" Margin="1,1,0,1" Padding="2" IsVisible="{Binding ShowProgress, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" Background="{DynamicResource BackgroundBrushLight}" BorderBrush="{DynamicResource BackgroundBrushLight}">
+          <c:FormattedTextBlock x:Name="TextBlockProgress" Margin="4" FontFamily="Consolas" FontSize="14" TextWrapping="NoWrap" FormattedText="{Binding ProgressText}" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrushLight}"/>
+        </Border>
+       <Border x:Name="BorderInputSnapShot" BorderThickness="0,1,1,1" CornerRadius="3" Margin="1,1,0,1" Padding="2,0,5,2" IsVisible="{Binding ShowSample, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" Background="{DynamicResource BackgroundBrushLight}" BorderBrush="{DynamicResource BackgroundBrushLight}">
+          <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
+            <TextBlock x:Name="TextBlockHeader" Text="Input" Margin="3,6,3,3" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Consolas" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrushLight}" FontSize="14" FontWeight="Bold"/>
+            <Image Source="{Binding InputSnapshot}" Width="64" Height="64" Margin="12,1,3,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <TextBlock x:Name="TextBlockLabel" Text="{Binding Label}"  Margin="12,3,3,3" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Consolas" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrushLight}"/>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </Grid>  
+  </Grid>
+</UserControl>
