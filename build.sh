@@ -4,5 +4,5 @@ cd dnn
 chmod +rwx ./build.sh
 ./build.sh
 cd ..
-cd ConvnetAvalonia
-dotnet build ConvnetAvalonia.csproj -c:Release
+cd Convnet
+dotnet build Convnet.csproj -c:Release
