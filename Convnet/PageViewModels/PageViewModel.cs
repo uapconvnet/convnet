@@ -30,7 +30,7 @@ namespace Convnet.PageViewModels
         
         public void DocumentationCommand()
         {
-            ApplicationHelper.OpenBrowser("https://github.com/proxualli/convnet.git");
+            ApplicationHelper.OpenBrowser("https://github.com/uapconvnet/convnet.git");
         }
 
         public void Cut()
