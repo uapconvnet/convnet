@@ -1,0 +1,30 @@
+[submodule "dnn/deps/magic_enum"]
+	path = dnn/deps/magic_enum
+	url = https://github.com/Neargye/magic_enum
+[submodule "dnn/deps/CImg"]
+	path = dnn/deps/CImg
+	url = https://github.com/dtschump/CImg
+[submodule "dnn/deps/googletest"]
+	path = dnn/deps/googletest
+	url = https://github.com/google/googletest
+[submodule "dnn/deps/version2"]
+	path = dnn/deps/version2
+	url = https://github.com/proxualli/version2
+[submodule "dnn/deps/oneDNN"]
+	path = dnn/deps/oneDNN
+	url = https://github.com/oneapi-src/oneDNN
+[submodule "dnn/deps/zlib"]
+	path = dnn/deps/zlib
+	url = https://github.com/madler/zlib
+[submodule "dnn/deps/csv-parser"]
+	path = dnn/deps/csv-parser
+	url = https://github.com/vincentlaucsb/csv-parser
+[submodule "dnn/deps/libpng"]
+	path = dnn/deps/libpng
+	url = https://github.com/glennrp/libpng
+[submodule "dnn/deps/bitsery"]
+	path = dnn/deps/bitsery
+	url = https://github.com/fraillt/bitsery.git
+[submodule "dnn/deps/libjpeg-turbo"]
+	path = dnn/deps/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo
