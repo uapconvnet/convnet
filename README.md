@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Convnet Explorer
 
 ### Layers
@@ -156,3 +157,7 @@
 * [fashion-mnist](https://paperswithcode.com/sota/image-classification-on-fashion-mnist)
 * [mnist](https://paperswithcode.com/sota/image-classification-on-mnist)
 * [tiny-imagenet](https://paperswithcode.com/sota/image-classification-on-tiny-imagenet-1)
+=======
+# convnet
+convnet explorer
+>>>>>>> d7847260a40669f315f5bf29772283ae290268d8
