@@ -24,7 +24,7 @@
 	url = https://github.com/glennrp/libpng
 [submodule "dnn/deps/bitsery"]
 	path = dnn/deps/bitsery
-	url = https://github.com/fraillt/bitsery.git
+	url = https://github.com/fraillt/bitsery
 [submodule "dnn/deps/libjpeg-turbo"]
 	path = dnn/deps/libjpeg-turbo
 	url = https://github.com/libjpeg-turbo/libjpeg-turbo
