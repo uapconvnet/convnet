@@ -4013,7 +4013,6 @@ namespace Interop
                                             newImg[(i * 4) + 3] = 255;     // A
                                         }
                                         
-
                                         int length = Marshal.SizeOf(newImg[0]) * newImg.Length;
                                         IntPtr pnt = Marshal.AllocHGlobal(length);
                                         Marshal.Copy(newImg, 0, pnt, newImg.Length);
