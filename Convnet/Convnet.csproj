@@ -104,6 +104,7 @@
     <PackageReference Include="Oxyplot.AvaloniaCore" Version="2.1.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     <PackageReference Include="AvaloniaEdit.TextMate" Version="11.0.6" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
     <PackageReference Include="TextMateSharp.Grammars" Version="1.0.56" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="XamlNameReferenceGenerator" Version="1.6.1" />
@@ -200,9 +201,9 @@
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\dnn.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
-    <Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\dnn.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
-    <Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\dnnl.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
-    <Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\libpng16.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <!--<Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\dnn.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />-->
+    <!--<Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\dnnl.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\libpng16.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />-->
     <Exec Command="cp $(SolutionDir)/dnn/build/libdnn.so $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
   </Target>
 </Project>

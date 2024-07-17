@@ -61,7 +61,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>DNN_EXPORTS;DNN_DEV;DNN_DLL;DNN_CACHE_PRIMITIVES;DNN_AVX512BW;DNN_LOG;cimg_use_jpeg;cimg_use_png;cimg_use_zlib;cimg_use_openmp;cimg_use_cpp11;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DNN_EXPORTS;DNN_DEV;DNN_DLL;DNN_CACHE_PRIMITIVES;DNN_AVX512BW;DNN_LOG;cimg_use_jpeg;cimg_use_openmp;cimg_use_cpp11;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CallingConvention>Cdecl</CallingConvention>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -90,7 +90,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>DNN_EXPORTS;DNN_CACHE_PRIMITIVES;DNN_DLL;DNN_AVX512BW;cimg_use_jpeg;cimg_use_png;cimg_use_zlib;cimg_use_openmp;cimg_use_cpp11;_WINDOWS;_USRDLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DNN_EXPORTS;DNN_CACHE_PRIMITIVES;DNN_DLL;DNN_AVX512BW;cimg_use_jpeg;cimg_use_openmp;cimg_use_cpp11;_WINDOWS;_USRDLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
       <EnablePREfast>false</EnablePREfast>
       <AdditionalIncludeDirectories>$(SolutionDir)dnn\deps\version2\add-on\random;$(SolutionDir)dnn\deps\nameof\include;$(SolutionDir)dnn\deps\magic_enum\include;$(SolutionDir)dnn\include;$(SolutionDir)dnn\deps\version2;$(SolutionDir)dnn\deps\libpng;$(SolutionDir)dnn\deps\libjpeg-turbo;$(SolutionDir)dnn\deps\oneDNN\include;$(SolutionDir)dnn\deps\oneDNN\build\include;$(SolutionDir)dnn\deps\csv-parser\single_include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -192,12 +192,6 @@
   <ItemGroup>
     <ProjectReference Include="deps\libjpeg-turbo\build\jpeg-static.vcxproj">
       <Project>{cbddf2db-4407-3d56-87f9-0846eaa8c9d5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="deps\libpng\projects\vstudio\libpng\libpng.vcxproj">
-      <Project>{d6973076-9317-4ef2-a0b8-b7a18ac0713e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="deps\libpng\projects\vstudio\zlib\zlib.vcxproj">
-      <Project>{60f89955-91c6-3a36-8000-13c592fec2df}</Project>
     </ProjectReference>
     <ProjectReference Include="deps\oneDNN\build\src\dnnl.vcxproj">
       <Project>{2f09a747-18cb-3043-85bf-83bba99c5137}</Project>
