@@ -7,6 +7,8 @@
 
     <props:Settings x:Key="Settings"/>
 
+    <FontFamily x:Key="ConsolasFontFamily">avares://Convnet/Resources/Consolas.ttf#Consolas</FontFamily>
+    
     <converters:BooleanValueInverter x:Key="Inverter" />
     <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
     <converters:BatchSizeToBool x:Key="BatchSizeToBool"/>

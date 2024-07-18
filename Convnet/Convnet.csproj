@@ -19,17 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--This helps with theme dll-s trimming.
-    If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
-    https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
     <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
     <TrimmableAssembly Include="Avalonia.Themes.Default" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Fonts\*" />
     <None Remove="Resources\Calculator.png" />
     <None Remove="Resources\Cancel.png" />
-    <None Remove="Resources\Consolas.ttf" />
     <None Remove="Resources\Delete.png" />
     <None Remove="Resources\OpenFile.png" />
     <None Remove="Resources\SaveAs.png" />
@@ -120,7 +117,7 @@
     <AvaloniaResource Include="Resources\App.ico" />
     <AvaloniaResource Include="Resources\Calculator.png" />
     <AvaloniaResource Include="Resources\Cancel.png" />
-    <AvaloniaResource Include="Resources\Consolas.ttf" />
+    <AvaloniaResource Include="Resources\Fonts\*" /> 
     <AvaloniaResource Include="Resources\Delete.png" />
     <AvaloniaResource Include="Resources\OpenFile.png" />
     <AvaloniaResource Include="Resources\SaveAs.png" />
@@ -129,9 +126,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AvaloniaResource>
     <AvaloniaResource Include="Resources\Sync.png" />
-     <Content Include="Resources\state\resnet-3-2-6-channelzeropad-relu.txt">
+    <Content Include="Resources\state\resnet-3-2-6-channelzeropad-relu.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>     <AvaloniaResource Include="Resources\Bolt.png" />
+    </Content>     
+    <AvaloniaResource Include="Resources\Bolt.png" />
     <AvaloniaResource Include="Resources\Calculate.png" />
     <AvaloniaResource Include="Resources\ClearContents.png" />
     <AvaloniaResource Include="Resources\Collection.png" />
@@ -206,7 +204,6 @@
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\dnn.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
-    <!--<Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\dnn.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />-->
     <!--<Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\dnnl.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
     <Exec Command="xcopy /Y $(SolutionDir)$(PlatformName)\$(ConfigurationName)\libpng16.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />-->
     <Exec Command="cp $(SolutionDir)/dnn/build/libdnn.so $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
