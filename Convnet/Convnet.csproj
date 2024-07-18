@@ -29,6 +29,7 @@
   <ItemGroup>
     <None Remove="Resources\Calculator.png" />
     <None Remove="Resources\Cancel.png" />
+    <None Remove="Resources\Consolas.ttf" />
     <None Remove="Resources\Delete.png" />
     <None Remove="Resources\OpenFile.png" />
     <None Remove="Resources\SaveAs.png" />
@@ -86,6 +87,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.1.0-rc2" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.0.6" />
+    <PackageReference Include="Avalonia.BuildServices" Version="0.0.31" />
     <PackageReference Include="Avalonia.Desktop" Version="11.1.0-rc2" />
     <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.1.0-rc2" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.0-rc2" />
@@ -104,6 +106,8 @@
     <PackageReference Include="Oxyplot.AvaloniaCore" Version="2.1.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     <PackageReference Include="AvaloniaEdit.TextMate" Version="11.0.6" />
+    <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="System.Text.Json" Version="8.0.4" />
     <PackageReference Include="TextMateSharp.Grammars" Version="1.0.56" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -116,6 +120,7 @@
     <AvaloniaResource Include="Resources\App.ico" />
     <AvaloniaResource Include="Resources\Calculator.png" />
     <AvaloniaResource Include="Resources\Cancel.png" />
+    <AvaloniaResource Include="Resources\Consolas.ttf" />
     <AvaloniaResource Include="Resources\Delete.png" />
     <AvaloniaResource Include="Resources\OpenFile.png" />
     <AvaloniaResource Include="Resources\SaveAs.png" />

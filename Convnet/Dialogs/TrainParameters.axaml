@@ -94,25 +94,25 @@
 
         <TextBox ContextMenu="{StaticResource MyContextMenu}" Grid.Column="2" Grid.Row="4" x:Name="textBoxMaximumRate" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="2" TabIndex="5" IsTabStop="True" MaxLines="1" BorderThickness="1" FontSize="14">
             <TextBox.Text>
-                <Binding Path="MaximumRate"  Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
+                <Binding Path="MaximumRate" Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
             </TextBox.Text>
         </TextBox>
 
         <TextBox ContextMenu="{StaticResource MyContextMenu}"  Grid.Column="2" Grid.Row="5" Grid.RowSpan="1" HorizontalAlignment="Stretch" x:Name="textBoxMinimumRate" VerticalAlignment="Stretch" Margin="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" TabIndex="6" MaxLines="1" BorderThickness="1" FontSize="14">
             <TextBox.Text>
-                <Binding Path="MinimumRate"  Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
+                <Binding Path="MinimumRate" Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
             </TextBox.Text>
         </TextBox>
 
         <TextBox ContextMenu="{StaticResource MyContextMenu}" Grid.Column="2" Grid.Row="6" Grid.RowSpan="1" HorizontalAlignment="Stretch" x:Name="textBoxFinalRate" VerticalAlignment="Stretch" Margin="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" TabIndex="7" MaxLines="1" BorderThickness="1" FontSize="14">
             <TextBox.Text>
-                <Binding Path="FinalRate"  Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
+                <Binding Path="FinalRate" Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
             </TextBox.Text>
         </TextBox>
 
         <TextBox ContextMenu="{StaticResource MyContextMenu}" Grid.Column="2" Grid.ColumnSpan="1" Grid.Row="7" Grid.RowSpan="1" HorizontalAlignment="Stretch" x:Name="textBoxDecayFactor" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="2" TabIndex="8" MaxLines="1" BorderThickness="1" FontSize="14">
             <TextBox.Text>
-                <Binding Path="DecayFactor"  Mode="TwoWay" StringFormat="{}{0:R}" UpdateSourceTrigger="PropertyChanged"/>
+                <Binding Path="DecayFactor" Mode="TwoWay" StringFormat="{}{0:R}" UpdateSourceTrigger="PropertyChanged"/>
             </TextBox.Text>
         </TextBox>
 
@@ -132,13 +132,13 @@
 
         <TextBox ContextMenu="{StaticResource MyContextMenu}" Grid.Column="2" Grid.Row="11" Grid.RowSpan="1" HorizontalAlignment="Stretch" x:Name="textBoxMomentum" VerticalAlignment="Stretch" Margin="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" TabIndex="12" MaxLines="1" BorderThickness="1" FontSize="14">
             <TextBox.Text>
-                <Binding Path="Momentum"  Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
+                <Binding Path="Momentum" Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
             </TextBox.Text>
         </TextBox>
 
         <TextBox ContextMenu="{StaticResource MyContextMenu}" Grid.Column="2" Grid.Row="12" Grid.RowSpan="1" HorizontalAlignment="Stretch" x:Name="textBoxBeta2" VerticalAlignment="Stretch" Margin="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" TabIndex="13" MaxLines="1" BorderThickness="1" FontSize="14">
             <TextBox.Text>
-                <Binding Path="Beta2"  Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
+                <Binding Path="Beta2" Mode="TwoWay" StringFormat="{}{0:0.##########}" UpdateSourceTrigger="PropertyChanged"/>
             </TextBox.Text>
         </TextBox>
 

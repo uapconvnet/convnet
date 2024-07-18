@@ -18,6 +18,7 @@
   </Application.Styles>
   
   <Application.Resources>
+    <FontFamily x:Key="ConsolasFontFamily">avares://Convnet/Resources/Consolas.ttf#Consolas</FontFamily>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
         <ResourceInclude Source="/Resources/shared.axaml"/>
