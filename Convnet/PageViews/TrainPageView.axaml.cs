@@ -3,7 +3,7 @@ using Avalonia.Markup.Xaml;
 
 namespace Convnet.PageViews
 {
-    private bool Zoomout = false;
+    // private bool Zoomout = false;
 
     public partial class TrainPageView : UserControl
     {
