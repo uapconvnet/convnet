@@ -25,7 +25,7 @@ namespace Convnet.PageViews
         }
     }
 
-    //  private void SnapShot_MouseLeftButtonDown(object sender, PointerPressedEventArgs args)
+    //  private void SnapShot_MouseLeftButtonDown(object sender, PointerEventArgs args)
     //  {
     //         var point = args.GetCurrentPoint(sender as Control);
     //         var x = point.Position.X;
@@ -88,58 +88,58 @@ namespace Convnet.PageViews
     //         }
     //     } 
 
-        private void TrainingPlot_MouseLeftButtonDown(object sender, PointerPressedEventArgs args)
-        {
-            var point = args.GetCurrentPoint(sender as Control);
+        // private void TrainingPlot_MouseLeftButtonDown(object sender, PointerEventArgs args)
+        // {
+        //     var point = args.GetCurrentPoint(sender as Control);
            
-            if (point.Properties.IsLeftButtonPressed && args.ClickCount == 2)
-            {
-                 if (!Zoomout)
-                 {
-            //         BorderSnapShot.SetValue(Grid.ColumnProperty, 0);
-            //         BorderSnapShot.SetValue(Grid.ColumnSpanProperty, 2);
-            //         BorderTrainingPlot.SetValue(Grid.ColumnProperty, 0);
-            //         BorderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 2);
+        //     if (point.Properties.IsLeftButtonPressed && args.ClickCount == 2)
+        //     {
+        //          if (!Zoomout)
+        //          {
+        //     //         BorderSnapShot.SetValue(Grid.ColumnProperty, 0);
+        //     //         BorderSnapShot.SetValue(Grid.ColumnSpanProperty, 2);
+        //     //         BorderTrainingPlot.SetValue(Grid.ColumnProperty, 0);
+        //     //         BorderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 2);
 
-            //         gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Star);
-            //         gridMain.RowDefinitions[1].Height = new GridLength(0.0, GridUnitType.Pixel);
-            //         gridMain.RowDefinitions[2].Height = new GridLength(0.0, GridUnitType.Pixel);
-            //         Zoomout = true;
-                 }
-                 else
-                 {
-            //         BorderSnapShot.SetValue(Grid.ColumnProperty, 1);
-            //         BorderSnapShot.SetValue(Grid.ColumnSpanProperty, 1);
-            //         BorderTrainingPlot.SetValue(Grid.ColumnProperty, 1);
-            //         BorderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 1);
+        //     //         gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Star);
+        //     //         gridMain.RowDefinitions[1].Height = new GridLength(0.0, GridUnitType.Pixel);
+        //     //         gridMain.RowDefinitions[2].Height = new GridLength(0.0, GridUnitType.Pixel);
+        //     //         Zoomout = true;
+        //          }
+        //          else
+        //          {
+        //     //         BorderSnapShot.SetValue(Grid.ColumnProperty, 1);
+        //     //         BorderSnapShot.SetValue(Grid.ColumnSpanProperty, 1);
+        //     //         BorderTrainingPlot.SetValue(Grid.ColumnProperty, 1);
+        //     //         BorderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 1);
 
-            //         gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
-            //         gridMain.RowDefinitions[1].Height = new GridLength(20.0, GridUnitType.Pixel);
-            //         gridMain.RowDefinitions[2].Height = new GridLength(1.0, GridUnitType.Star);
+        //     //         gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
+        //     //         gridMain.RowDefinitions[1].Height = new GridLength(20.0, GridUnitType.Pixel);
+        //     //         gridMain.RowDefinitions[2].Height = new GridLength(1.0, GridUnitType.Star);
 
-            //         BorderSnapShot.MaxHeight = 0.0;
-            //         BorderSnapShot.UpdateLayout();
+        //     //         BorderSnapShot.MaxHeight = 0.0;
+        //     //         BorderSnapShot.UpdateLayout();
 
-            //         Binding binding = new Binding
-            //         {
-            //             Path = new PropertyPath("ActualHeight"),
-            //             Source = BorderWeightsMinMax
-            //         };
-            //         BorderSnapShot.SetBinding(Border.MaxHeightProperty, binding);
+        //     //         Binding binding = new Binding
+        //     //         {
+        //     //             Path = new PropertyPath("ActualHeight"),
+        //     //             Source = BorderWeightsMinMax
+        //     //         };
+        //     //         BorderSnapShot.SetBinding(Border.MaxHeightProperty, binding);
 
-            //         BorderTrainingPlot.MaxHeight = 0.0;
-            //         BorderTrainingPlot.UpdateLayout();
+        //     //         BorderTrainingPlot.MaxHeight = 0.0;
+        //     //         BorderTrainingPlot.UpdateLayout();
 
-            //         binding = new Binding
-            //         {
-            //             Path = new PropertyPath("ActualHeight"),
-            //             Source = BorderWeightsMinMax
-            //         };
-            //         BorderTrainingPlot.SetBinding(Border.MaxHeightProperty, binding);
-            //         Zoomout = false;
-                 }
+        //     //         binding = new Binding
+        //     //         {
+        //     //             Path = new PropertyPath("ActualHeight"),
+        //     //             Source = BorderWeightsMinMax
+        //     //         };
+        //     //         BorderTrainingPlot.SetBinding(Border.MaxHeightProperty, binding);
+        //     //         Zoomout = false;
+        //          }
 
-                 args.Handled = true;
-            }
-        }
+        //          args.Handled = true;
+        //     }
+        // }
 }
