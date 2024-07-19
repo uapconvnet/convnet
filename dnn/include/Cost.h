@@ -74,13 +74,13 @@ namespace dnn
 		{
 			auto description = GetDescriptionHeader();
 
-			description.append(nwl + std::string(" Cost:") + dtab + std::string(magic_enum::enum_name<Costs>(CostFunction)));
-			description.append(nwl + std::string(" Channels:") + tab + std::to_string(C));
-			description.append(nwl + std::string(" LabelTrue:") + tab + FloatToStringFixed(LabelTrue));
-			description.append(nwl + std::string(" LabelFalse:") + tab + FloatToStringFixed(LabelFalse));
-			description.append(nwl + std::string(" Weight:") + tab + FloatToStringFixed(Weight));
+			description.append(nwl + std::string(" Cost:") + dtab + tab + std::string(magic_enum::enum_name<Costs>(CostFunction)));
+			description.append(nwl + std::string(" Channels:") + dtab + std::to_string(C));
+			description.append(nwl + std::string(" LabelTrue:") + dtab + FloatToStringFixed(LabelTrue));
+			description.append(nwl + std::string(" LabelFalse:") + dtab  + FloatToStringFixed(LabelFalse));
+			description.append(nwl + std::string(" Weight:") + dtab + FloatToStringFixed(Weight));
 			if (CostFunction == Costs::MeanAbsoluteEpsError || CostFunction == Costs::CategoricalCrossEntropy)
-				description.append(nwl + std::string(" Epsilon:") + tab + FloatToStringFixed(Eps, 6));
+				description.append(nwl + std::string(" Epsilon:") + dtab + FloatToStringFixed(Eps, 6));
 
 			return description;
 		}

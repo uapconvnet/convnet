@@ -33,8 +33,8 @@ namespace dnn
 		{
 			auto description = GetDescriptionHeader();
 
-			description.append(nwl + std::string(" Groups:") + tab + std::to_string(Groups));
-			description.append(nwl + std::string(" Group:") + dtab + std::to_string(Group));
+			description.append(nwl + std::string(" Groups:") + dtab + std::to_string(Groups));
+			description.append(nwl + std::string(" Group:") + dtab + tab + std::to_string(Group));
 
 			return description;
 		}

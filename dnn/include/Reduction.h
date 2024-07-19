@@ -36,7 +36,7 @@ namespace dnn
 
 		std::string GetDescription() const final override
 		{
-			return GetDescriptionHeader().append(nwl + std::string(" Operation:") + tab + std::string(magic_enum::enum_name<ReduceOperations>(Op)));
+			return GetDescriptionHeader().append(nwl + std::string(" Operation:") + dtab + std::string(magic_enum::enum_name<ReduceOperations>(Op)));
 		}
 
 		UInt FanIn() const final override
