@@ -52,7 +52,7 @@ namespace Convnet.PageViews
                         borderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 1);
 
                         gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
-                        gridMain.RowDefinitions[1].Height = new GridLength(20.0, GridUnitType.Pixel);
+                        gridMain.RowDefinitions[1].Height = new GridLength(26.0, GridUnitType.Pixel);
                         gridMain.RowDefinitions[2].Height = new GridLength(1.0, GridUnitType.Star);
 
                         borderSnapShot.MaxHeight = 0.0;
@@ -114,7 +114,7 @@ namespace Convnet.PageViews
                         borderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 1);
 
                         gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
-                        gridMain.RowDefinitions[1].Height = new GridLength(20.0, GridUnitType.Pixel);
+                        gridMain.RowDefinitions[1].Height = new GridLength(26.0, GridUnitType.Pixel);
                         gridMain.RowDefinitions[2].Height = new GridLength(1.0, GridUnitType.Star);
 
                         borderSnapShot.MaxHeight = 0.0;
