@@ -32,107 +32,117 @@ namespace Convnet.PageViews
 
             if (point.Properties.IsLeftButtonPressed && e.ClickCount == 2)
             {
-                if (!Zoomout)
+                var borderSnapShot = this.FindControl<Border>("BorderSnapShot");
+                var borderTrainingPlot = this.FindControl<Border>("BorderTrainingPlot");
+                var gridMain = this.FindControl<Grid>("GridMain");
+                if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null)
                 {
-                    BorderSnapShot.SetValue(Grid.ColumnProperty, 0);
-                    BorderSnapShot.SetValue(Grid.ColumnSpanProperty, 2);
-                    BorderTrainingPlot.SetValue(Grid.ColumnProperty, 0);
-                    BorderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 2);
-
-                    gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Star);
-                    gridMain.RowDefinitions[1].Height = new GridLength(0.0, GridUnitType.Pixel);
-                    gridMain.RowDefinitions[2].Height = new GridLength(0.0, GridUnitType.Pixel);
-                    Zoomout = true;
-                }
-                else
-                {
-                    BorderSnapShot.SetValue(Grid.ColumnProperty, 1);
-                    BorderSnapShot.SetValue(Grid.ColumnSpanProperty, 1);
-                    BorderTrainingPlot.SetValue(Grid.ColumnProperty, 1);
-                    BorderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 1);
-
-                    gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
-                    gridMain.RowDefinitions[1].Height = new GridLength(20.0, GridUnitType.Pixel);
-                    gridMain.RowDefinitions[2].Height = new GridLength(1.0, GridUnitType.Star);
-
-                    BorderSnapShot.MaxHeight = 0.0;
-                    BorderSnapShot.UpdateLayout();
-
-                    Binding binding = new Binding
+                    if (!Zoomout)
                     {
-                        Path = "ActualHeight",
-                        Source = BorderWeightsMinMax
-                    };
-                    BorderSnapShot.Bind(Border.MaxHeightProperty, binding);
+                        borderSnapShot.SetValue(Grid.ColumnProperty, 0);
+                        borderSnapShot.SetValue(Grid.ColumnSpanProperty, 2);
+                        borderTrainingPlot.SetValue(Grid.ColumnProperty, 0);
+                        borderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 2);
 
-                    BorderTrainingPlot.MaxHeight = 0.0;
-                    BorderTrainingPlot.UpdateLayout();
-
-                    binding = new Binding
+                        gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Star);
+                        gridMain.RowDefinitions[1].Height = new GridLength(0.0, GridUnitType.Pixel);
+                        gridMain.RowDefinitions[2].Height = new GridLength(0.0, GridUnitType.Pixel);
+                        Zoomout = true;
+                    }
+                    else
                     {
-                        Path = "ActualHeight",
-                        Source = BorderWeightsMinMax
-                    };
-                    BorderTrainingPlot.Bind(Border.MaxHeightProperty, binding);
-                    Zoomout = false;
-                }
+                        borderSnapShot.SetValue(Grid.ColumnProperty, 1);
+                        borderSnapShot.SetValue(Grid.ColumnSpanProperty, 1);
+                        borderTrainingPlot.SetValue(Grid.ColumnProperty, 1);
+                        borderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 1);
 
+                        gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
+                        gridMain.RowDefinitions[1].Height = new GridLength(20.0, GridUnitType.Pixel);
+                        gridMain.RowDefinitions[2].Height = new GridLength(1.0, GridUnitType.Star);
+
+                        borderSnapShot.MaxHeight = 0.0;
+                        borderSnapShot.UpdateLayout();
+
+                        Binding binding = new Binding
+                        {
+                            Path = "ActualHeight",
+                            Source = BorderWeightsMinMax
+                        };
+                        borderSnapShot.Bind(Border.MaxHeightProperty, binding);
+
+                        borderTrainingPlot.MaxHeight = 0.0;
+                        borderTrainingPlot.UpdateLayout();
+
+                        binding = new Binding
+                        {
+                            Path = "ActualHeight",
+                            Source = BorderWeightsMinMax
+                        };
+                        borderTrainingPlot.Bind(Border.MaxHeightProperty, binding);
+                        Zoomout = false;
+                    }
+                }
                 e.Handled = true;
             }
         }
-
+        
         private void SnapShot_PointerPressed(object sender, PointerPressedEventArgs e)
         {
             var point = e.GetCurrentPoint(sender as Control);
 
             if (point.Properties.IsLeftButtonPressed && e.ClickCount == 2)
             {
-                if (!Zoomout)
+                var borderSnapShot = this.FindControl<Border>("BorderSnapShot");
+                var borderTrainingPlot = this.FindControl<Border>("BorderTrainingPlot");
+                var gridMain = this.FindControl<Grid>("GridMain");
+                if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null)
                 {
-                    BorderSnapShot.SetValue(Grid.ColumnProperty, 0);
-                    BorderSnapShot.SetValue(Grid.ColumnSpanProperty, 2);
-                    BorderTrainingPlot.SetValue(Grid.ColumnProperty, 0);
-                    BorderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 2);
-
-                    gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Star);
-                    gridMain.RowDefinitions[1].Height = new GridLength(0.0, GridUnitType.Pixel);
-                    gridMain.RowDefinitions[2].Height = new GridLength(0.0, GridUnitType.Pixel);
-                    Zoomout = true;
-                }
-                else
-                {
-                    BorderSnapShot.SetValue(Grid.ColumnProperty, 1);
-                    BorderSnapShot.SetValue(Grid.ColumnSpanProperty, 1);
-                    BorderTrainingPlot.SetValue(Grid.ColumnProperty, 1);
-                    BorderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 1);
-
-                    gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
-                    gridMain.RowDefinitions[1].Height = new GridLength(20.0, GridUnitType.Pixel);
-                    gridMain.RowDefinitions[2].Height = new GridLength(1.0, GridUnitType.Star);
-
-                    BorderSnapShot.MaxHeight = 0.0;
-                    BorderSnapShot.UpdateLayout();
-
-                    Binding binding = new Binding
+                    if (!Zoomout)
                     {
-                        Path = "ActualHeight",
-                        Source = BorderWeightsMinMax
-                    };
-                    BorderSnapShot.Bind(Border.MaxHeightProperty, binding);
+                        borderSnapShot.SetValue(Grid.ColumnProperty, 0);
+                        borderSnapShot.SetValue(Grid.ColumnSpanProperty, 2);
+                        borderTrainingPlot.SetValue(Grid.ColumnProperty, 0);
+                        borderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 2);
 
-                    BorderTrainingPlot.MaxHeight = 0.0;
-                    BorderTrainingPlot.UpdateLayout();
-
-                    binding = new Binding
+                        gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Star);
+                        gridMain.RowDefinitions[1].Height = new GridLength(0.0, GridUnitType.Pixel);
+                        gridMain.RowDefinitions[2].Height = new GridLength(0.0, GridUnitType.Pixel);
+                        Zoomout = true;
+                    }
+                    else
                     {
-                        Path = "ActualHeight",
-                        Source = BorderWeightsMinMax
-                    };
-                    BorderTrainingPlot.Bind(Border.MaxHeightProperty, binding);
+                        borderSnapShot.SetValue(Grid.ColumnProperty, 1);
+                        borderSnapShot.SetValue(Grid.ColumnSpanProperty, 1);
+                        borderTrainingPlot.SetValue(Grid.ColumnProperty, 1);
+                        borderTrainingPlot.SetValue(Grid.ColumnSpanProperty, 1);
 
-                    Zoomout = false;
+                        gridMain.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
+                        gridMain.RowDefinitions[1].Height = new GridLength(20.0, GridUnitType.Pixel);
+                        gridMain.RowDefinitions[2].Height = new GridLength(1.0, GridUnitType.Star);
+
+                        borderSnapShot.MaxHeight = 0.0;
+                        borderSnapShot.UpdateLayout();
+
+                        Binding binding = new Binding
+                        {
+                            Path = "ActualHeight",
+                            Source = BorderWeightsMinMax
+                        };
+                        borderSnapShot.Bind(Border.MaxHeightProperty, binding);
+
+                        borderTrainingPlot.MaxHeight = 0.0;
+                        borderTrainingPlot.UpdateLayout();
+
+                        binding = new Binding
+                        {
+                            Path = "ActualHeight",
+                            Source = BorderWeightsMinMax
+                        };
+                        borderTrainingPlot.Bind(Border.MaxHeightProperty, binding);
+
+                        Zoomout = false;
+                    }
                 }
-
                 e.Handled = true;
             }
         }

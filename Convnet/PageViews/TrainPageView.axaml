@@ -9,7 +9,7 @@
              x:Class="Convnet.PageViews.TrainPageView"
              x:DataType="vm:TrainPageViewModel">
     
-  <Grid x:Name="gridMain" Background="{DynamicResource BackgroundBrushLight}">
+  <Grid x:Name="GridMain" Background="{DynamicResource BackgroundBrushLight}">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="26"/>
