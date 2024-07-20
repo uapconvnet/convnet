@@ -35,6 +35,7 @@ namespace Convnet.PageViews
                 var borderSnapShot = this.FindControl<Border>("BorderSnapShot");
                 var borderTrainingPlot = this.FindControl<Border>("BorderTrainingPlot");
                 var gridMain = this.FindControl<Grid>("GridMain");
+
                 if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null)
                 {
                     if (!Zoomout)
@@ -81,8 +82,9 @@ namespace Convnet.PageViews
                         borderTrainingPlot.Bind(Border.MaxHeightProperty, binding);
                         Zoomout = false;
                     }
+
+                    e.Handled = true;
                 }
-                e.Handled = true;
             }
         }
         
@@ -95,6 +97,7 @@ namespace Convnet.PageViews
                 var borderSnapShot = this.FindControl<Border>("BorderSnapShot");
                 var borderTrainingPlot = this.FindControl<Border>("BorderTrainingPlot");
                 var gridMain = this.FindControl<Grid>("GridMain");
+
                 if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null)
                 {
                     if (!Zoomout)
@@ -142,8 +145,9 @@ namespace Convnet.PageViews
 
                         Zoomout = false;
                     }
+
+                    e.Handled = true;
                 }
-                e.Handled = true;
             }
         }
     }
