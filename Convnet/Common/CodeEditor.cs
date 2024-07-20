@@ -53,8 +53,8 @@ namespace Convnet.Common
 
         public CodeEditor()
         {
-            FontSize = 13;
-            FontFamily = new FontFamily("Cascadia Mono,Consolas,Menlo,Monospace");
+            FontSize = 14;
+            FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo,Monospace");
             Options = new TextEditorOptions
             {
                 IndentationSize = 4,
