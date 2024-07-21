@@ -7,10 +7,9 @@
 
     <props:Settings x:Key="Settings"/>
 
-    <FontFamily x:Key="ConsolasFontFamily">avares://Convnet/Resources/Fonts/Consolas.ttf#Consolas</FontFamily>
-    <FontFamily x:Key="CascadiaFontFamily">avares://Convnet/Resources/Fonts/CascadiaMono.ttf#Cascadia Mono</FontFamily>
     <FontFamily x:Key="CascadiaCodeFontFamily">avares://Convnet/Resources/Fonts/CascadiaCode.ttf#Cascadia Code</FontFamily>
-
+    <FontFamily x:Key="CascadiaMonoFontFamily">avares://Convnet/Resources/Fonts/CascadiaMono.ttf#Cascadia Mono</FontFamily>
+    
     <converters:BooleanValueInverter x:Key="Inverter" />
     <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
     <converters:BatchSizeToBool x:Key="BatchSizeToBool"/>
