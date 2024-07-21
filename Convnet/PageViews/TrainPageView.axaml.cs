@@ -26,12 +26,12 @@ namespace Convnet.PageViews
 
             if (point.Properties.IsLeftButtonPressed && e.ClickCount == 2)
             {
+                var gridMain = this.FindControl<Grid>("GridMain");
                 var borderSnapShot = this.FindControl<Border>("BorderSnapShot");
                 var borderTrainingPlot = this.FindControl<Border>("BorderTrainingPlot");
-                var gridMain = this.FindControl<Grid>("GridMain");
                 var borderWeightsMinMax = this.FindControl<Border>("BorderWeightsMinMax");
 
-                if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null && borderWeightsMinMax != null)
+                if (gridMain != null && borderSnapShot != null && borderTrainingPlot != null && borderWeightsMinMax != null)
                 {
                     if (!Zoomout)
                     {
@@ -89,12 +89,12 @@ namespace Convnet.PageViews
 
             if (point.Properties.IsLeftButtonPressed && e.ClickCount == 2)
             {
+                var gridMain = this.FindControl<Grid>("GridMain");
                 var borderSnapShot = this.FindControl<Border>("BorderSnapShot");
                 var borderTrainingPlot = this.FindControl<Border>("BorderTrainingPlot");
-                var gridMain = this.FindControl<Grid>("GridMain");
                 var borderWeightsMinMax = this.FindControl<Border>("BorderWeightsMinMax");
 
-                if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null && borderWeightsMinMax != null)
+                if (gridMain != null && borderSnapShot != null && borderTrainingPlot != null && borderWeightsMinMax != null)
                 {
                     if (!Zoomout)
                     {
