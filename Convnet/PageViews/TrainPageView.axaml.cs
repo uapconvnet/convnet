@@ -29,8 +29,9 @@ namespace Convnet.PageViews
                 var borderSnapShot = this.FindControl<Border>("BorderSnapShot");
                 var borderTrainingPlot = this.FindControl<Border>("BorderTrainingPlot");
                 var gridMain = this.FindControl<Grid>("GridMain");
+                var borderWeightsMinMax = this.FindControl<Border>("BorderWeightsMinMax");
 
-                if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null)
+                if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null && borderWeightsMinMax != null)
                 {
                     if (!Zoomout)
                     {
@@ -61,7 +62,7 @@ namespace Convnet.PageViews
                         Binding binding = new Binding
                         {
                             Path = "ActualHeight",
-                            Source = BorderWeightsMinMax
+                            Source = borderWeightsMinMax
                         };
                         borderSnapShot.Bind(Border.MaxHeightProperty, binding);
 
@@ -71,7 +72,7 @@ namespace Convnet.PageViews
                         binding = new Binding
                         {
                             Path = "ActualHeight",
-                            Source = BorderWeightsMinMax
+                            Source = borderWeightsMinMax
                         };
                         borderTrainingPlot.Bind(Border.MaxHeightProperty, binding);
                         Zoomout = false;
@@ -91,8 +92,9 @@ namespace Convnet.PageViews
                 var borderSnapShot = this.FindControl<Border>("BorderSnapShot");
                 var borderTrainingPlot = this.FindControl<Border>("BorderTrainingPlot");
                 var gridMain = this.FindControl<Grid>("GridMain");
+                var borderWeightsMinMax = this.FindControl<Border>("BorderWeightsMinMax");
 
-                if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null)
+                if (borderSnapShot != null && borderTrainingPlot != null && gridMain != null && borderWeightsMinMax != null)
                 {
                     if (!Zoomout)
                     {
@@ -123,7 +125,7 @@ namespace Convnet.PageViews
                         Binding binding = new Binding
                         {
                             Path = "ActualHeight",
-                            Source = BorderWeightsMinMax
+                            Source = borderWeightsMinMax
                         };
                         borderSnapShot.Bind(Border.MaxHeightProperty, binding);
 
@@ -133,10 +135,9 @@ namespace Convnet.PageViews
                         binding = new Binding
                         {
                             Path = "ActualHeight",
-                            Source = BorderWeightsMinMax
+                            Source = borderWeightsMinMax
                         };
                         borderTrainingPlot.Bind(Border.MaxHeightProperty, binding);
-
                         Zoomout = false;
                     }
 
