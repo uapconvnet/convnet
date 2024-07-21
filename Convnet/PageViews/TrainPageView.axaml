@@ -44,7 +44,7 @@
           </ScrollViewer>
         </Border>
         <Border x:Name="BorderTrainingPlot" BorderThickness="1" CornerRadius="3" Margin="1,1,1,1" Padding="2" IsVisible="{Binding ShowTrainingPlot, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1" Background="{DynamicResource BackgroundBrushLight}">
-          <oxy:PlotView x:Name="TrainingPlot" PointerPressed="TrainingPlot_PointerPressed" Model="{Binding PlotModel, Mode=OneWay}" Background="{DynamicResource BackgroundBrushLight}" IIsVisible="{Binding ShowTrainingPlot, Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="True">
+          <oxy:PlotView x:Name="TrainingPlot" PointerPressed="TrainingPlot_PointerPressed" Model="{Binding PlotModel, Mode=OneWay}" Background="{DynamicResource BackgroundBrushLight}" IsVisible="{Binding ShowTrainingPlot, Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="True">
             <oxy:PlotView.DefaultTrackerTemplate>
               <ControlTemplate>
                 <oxy:TrackerControl VerticalLineVisibility="False" LineExtents="{Binding PlotModel.PlotArea}" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextBrush}">
