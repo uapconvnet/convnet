@@ -87,7 +87,7 @@
 #ifdef _WIN32
 #pragma fenv_access (on)
 #else
-#pragma STDC FENV_ACCESS ON
+#pragma STDC FENV_ACCESS on
 #endif
 #endif
 
@@ -571,7 +571,7 @@ namespace
 			}
 		}
 		inline auto data() noexcept { return dataPtr; }
-		inline auto data() const noexcept { return dataPtr; }
+		inline const auto data() const noexcept { return dataPtr; }
 		inline auto size() const noexcept { return nelems; }
 		void resize(size_type elements, const T value = T()) NOEXCEPT
 		{ 
@@ -659,7 +659,7 @@ namespace
 		}
 		inline auto memory() noexcept { return arrPtr.get(); }
 		inline auto data() noexcept { return dataPtr; }
-		inline auto data() const noexcept { return dataPtr; }
+		inline const auto data() const noexcept { return dataPtr; }
 		inline auto size() const noexcept { return nelems; }
 		auto desc() { return description; }
 		void resizeMem(const dnnl::memory::desc& md, const dnnl::engine& engine, const T value = T()) NOEXCEPT
@@ -734,7 +734,9 @@ namespace
 	constexpr auto inline GetColorFromRange(const T& range, const T& minimum, const T& value) NOEXCEPT { return Saturate<T>(T(255) - ((value - minimum) * range)); }
 	template<typename T>
 	constexpr auto inline GetColorRange(const T& min, const T& max) NOEXCEPT { return (min == max) ? T(0) : T(255) / ((std::signbit(min) && std::signbit(max)) ? -(min + max) : (max - min)); }
-	
+		
+	static auto inline ClampVecFloat(const VecFloat& v, const VecFloat& lo, const VecFloat& hi) NOEXCEPT { return min(max(v, lo), hi); }
+
 	/* https://en.wikipedia.org/wiki/Kahan_summation_algorithm */
 	template<typename T>
 	inline void KahanSum(const T& value, T& sum, T& correction) NOEXCEPT
