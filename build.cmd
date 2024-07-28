@@ -1,4 +1,4 @@
 cd dnn
-build.cmd
+call build.cmd
 cd ..
 msbuild Convnet.sln /p:Configuration=Release
