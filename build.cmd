@@ -1,0 +1,2 @@
+cd dnn
+build.cmd
