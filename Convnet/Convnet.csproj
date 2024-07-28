@@ -203,7 +203,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="xcopy /Y $(SolutionDir)\dnn\build\Release\dnn.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <Exec Command="xcopy /Y $(SolutionDir)\dnn\build\$(ConfigurationName)\dnn.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
     <Exec Command="cp $(SolutionDir)/dnn/build/libdnn.so $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
   </Target>
 </Project>
