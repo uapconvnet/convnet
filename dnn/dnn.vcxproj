@@ -189,17 +189,6 @@
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="deps\libjpeg-turbo\build\jpeg-static.vcxproj">
-      <Project>{cbddf2db-4407-3d56-87f9-0846eaa8c9d5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="deps\oneDNN\build\src\dnnl.vcxproj">
-      <Project>{2f09a747-18cb-3043-85bf-83bba99c5137}</Project>
-    </ProjectReference>
-    <ProjectReference Include="deps\version2\build\vectorclass.vcxproj">
-      <Project>{3d71fa2c-b993-3172-9b1e-63ff8b886e84}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>
