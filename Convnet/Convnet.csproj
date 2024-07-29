@@ -83,6 +83,7 @@
  
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.1.1" />
+    <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.22087.20231008" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.0.6" />
     <PackageReference Include="Avalonia.BuildServices" Version="0.0.31" />
     <PackageReference Include="Avalonia.Desktop" Version="11.1.1" />
@@ -101,6 +102,7 @@
     <PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" />
     <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0" />
     <PackageReference Include="Oxyplot.AvaloniaCore" Version="2.1.2" />
+    <PackageReference Include="Splat" Version="15.1.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     <PackageReference Include="AvaloniaEdit.TextMate" Version="11.0.6" />
     <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
