@@ -104,7 +104,7 @@ namespace dnn
 			    
 			description.append(GetWeightsDescription());
 
-			description.append(nwl +     std::string(" Connections:") + tab + std::to_string(Groups * (InputLayer->C / Groups) * (C / Groups) * (H / StrideW) * (W / StrideH) * (HasBias ? KernelH * KernelW + 1 : KernelH * KernelW)));
+			description.append(nwl + std::string(" Connections:") + tab + std::to_string(Groups * (InputLayer->C / Groups) * (C / Groups) * (H / StrideW) * (W / StrideH) * (HasBias ? KernelH * KernelW + 1 : KernelH * KernelW)));
 
 			return description;
 		}

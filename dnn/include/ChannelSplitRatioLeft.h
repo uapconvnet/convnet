@@ -27,7 +27,7 @@ namespace dnn
 		{
 			auto description = GetDescriptionHeader();
 
-			description.append(nwl + std::string(" Ratio:") + dtab + FloatToString(Ratio));
+			description.append(nwl + std::string(" Ratio:  ") + dtab + FloatToString(Ratio));
 
 			return description;
 		}
