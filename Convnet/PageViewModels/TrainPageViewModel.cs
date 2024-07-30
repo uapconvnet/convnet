@@ -329,6 +329,7 @@ namespace Convnet.PageViewModels
                 Source = this,
                 Path = "ShowTrainingPlot",
                 Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             trainingPlotCheckBox.Bind(CheckBox.IsCheckedProperty, tpBinding);
             trainingPlotCheckBox.IsCheckedChanged += TrainingPlotCheckBox_IsCheckedChanged;
@@ -345,6 +346,7 @@ namespace Convnet.PageViewModels
                 Path = "ShowTrainingPlot",
                 Mode = BindingMode.TwoWay,
                 Converter = new Converters.BooleanToVisibilityConverter(),
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             plotTypeComboBox.Bind(ComboBox.IsVisibleProperty, binding);
             plotTypeComboBox.SelectionChanged += PlotTypeComboBox_SelectionChanged;
@@ -377,7 +379,8 @@ namespace Convnet.PageViewModels
                 Source = this,
                 Path = "ShowTrainingPlot",
                 Mode = BindingMode.TwoWay,
-                Converter = new Converters.InverseBooleanToVisibilityConverter()
+                Converter = new Converters.InverseBooleanToVisibilityConverter(),
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             pixelSizeSlider.Bind(Slider.IsVisibleProperty, binding);
             pixelSizeSlider.ValueChanged += PixelSizeSlider_ValueChanged;
@@ -583,7 +586,7 @@ namespace Convnet.PageViewModels
                         {
                             sb.Append("<Span><Bold>Testing</Bold></Span><LineBreak/>");
                             sb.Append("<Span>");
-                            sb.AppendFormat(" Sample:\t\t  {0:G}\n Loss:\t\t\t{1:N7}\n Errors:\t\t  {2:G}\n Error:\t\t   {3:N2} %\n Accuracy:\t\t{4:N2} %", SampleIndex, AvgTestLoss, TestErrors, TestErrorPercentage, (Float)100 - TestErrorPercentage);
+                            sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Loss:\t\t\t  {6:N7}\n Errors:\t\t\t{7:G}\n Error:\t\t\t {8:N2} %\n Accuracy:\t\t  {9:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, (Float)100 - TestErrorPercentage);
                             sb.Append("</Span>");
                         }
                         break;
