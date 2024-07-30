@@ -37,6 +37,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlibstatic", "dnn\build\dep
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZERO_CHECK", "dnn\build\ZERO_CHECK.vcxproj", "{916FECB8-76F6-3045-B4E5-B7A441D4389F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnnl_cpu_x64", "dnn\build\deps\oneDNN\src\cpu\x64\dnnl_cpu_x64.vcxproj", "{2677630D-CB7D-35A5-B094-FA1F301E5288}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnnl_cpu", "dnn\build\deps\oneDNN\src\cpu\dnnl_cpu.vcxproj", "{D1C9C7BF-9A29-31DD-87E9-EEB2AFE5291F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnnl_common", "dnn\build\deps\oneDNN\src\common\dnnl_common.vcxproj", "{A7EDF693-4C19-32DD-B5CF-F1797B9E5E21}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnnl_graph_backend_dnnl", "dnn\build\deps\oneDNN\src\graph\backend\dnnl\dnnl_graph_backend_dnnl.vcxproj", "{89F0EEF7-1651-31FB-AF43-5B511C77030C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnnl_graph_backend_fake", "dnn\build\deps\oneDNN\src\graph\backend\fake\dnnl_graph_backend_fake.vcxproj", "{30F9E33A-878A-3157-A719-0FD22C343466}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnnl_graph_interface", "dnn\build\deps\oneDNN\src\graph\interface\dnnl_graph_interface.vcxproj", "{D53A250D-F8C9-3408-9715-F7B7467909CB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnnl_graph_utils", "dnn\build\deps\oneDNN\src\graph\utils\dnnl_graph_utils.vcxproj", "{23844F44-6B14-3A2D-83B4-2AB46D090BBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -87,6 +101,34 @@ Global
 		{916FECB8-76F6-3045-B4E5-B7A441D4389F}.Debug|x64.Build.0 = Debug|x64
 		{916FECB8-76F6-3045-B4E5-B7A441D4389F}.Release|x64.ActiveCfg = Release|x64
 		{916FECB8-76F6-3045-B4E5-B7A441D4389F}.Release|x64.Build.0 = Release|x64
+		{2677630D-CB7D-35A5-B094-FA1F301E5288}.Debug|x64.ActiveCfg = Debug|x64
+		{2677630D-CB7D-35A5-B094-FA1F301E5288}.Debug|x64.Build.0 = Debug|x64
+		{2677630D-CB7D-35A5-B094-FA1F301E5288}.Release|x64.ActiveCfg = Release|x64
+		{2677630D-CB7D-35A5-B094-FA1F301E5288}.Release|x64.Build.0 = Release|x64
+		{D1C9C7BF-9A29-31DD-87E9-EEB2AFE5291F}.Debug|x64.ActiveCfg = Debug|x64
+		{D1C9C7BF-9A29-31DD-87E9-EEB2AFE5291F}.Debug|x64.Build.0 = Debug|x64
+		{D1C9C7BF-9A29-31DD-87E9-EEB2AFE5291F}.Release|x64.ActiveCfg = Release|x64
+		{D1C9C7BF-9A29-31DD-87E9-EEB2AFE5291F}.Release|x64.Build.0 = Release|x64
+		{A7EDF693-4C19-32DD-B5CF-F1797B9E5E21}.Debug|x64.ActiveCfg = Debug|x64
+		{A7EDF693-4C19-32DD-B5CF-F1797B9E5E21}.Debug|x64.Build.0 = Debug|x64
+		{A7EDF693-4C19-32DD-B5CF-F1797B9E5E21}.Release|x64.ActiveCfg = Debug|x64
+		{A7EDF693-4C19-32DD-B5CF-F1797B9E5E21}.Release|x64.Build.0 = Debug|x64
+		{89F0EEF7-1651-31FB-AF43-5B511C77030C}.Debug|x64.ActiveCfg = Debug|x64
+		{89F0EEF7-1651-31FB-AF43-5B511C77030C}.Debug|x64.Build.0 = Debug|x64
+		{89F0EEF7-1651-31FB-AF43-5B511C77030C}.Release|x64.ActiveCfg = Release|x64
+		{89F0EEF7-1651-31FB-AF43-5B511C77030C}.Release|x64.Build.0 = Release|x64
+		{30F9E33A-878A-3157-A719-0FD22C343466}.Debug|x64.ActiveCfg = Debug|x64
+		{30F9E33A-878A-3157-A719-0FD22C343466}.Debug|x64.Build.0 = Debug|x64
+		{30F9E33A-878A-3157-A719-0FD22C343466}.Release|x64.ActiveCfg = Release|x64
+		{30F9E33A-878A-3157-A719-0FD22C343466}.Release|x64.Build.0 = Release|x64
+		{D53A250D-F8C9-3408-9715-F7B7467909CB}.Debug|x64.ActiveCfg = Debug|x64
+		{D53A250D-F8C9-3408-9715-F7B7467909CB}.Debug|x64.Build.0 = Debug|x64
+		{D53A250D-F8C9-3408-9715-F7B7467909CB}.Release|x64.ActiveCfg = Release|x64
+		{D53A250D-F8C9-3408-9715-F7B7467909CB}.Release|x64.Build.0 = Release|x64
+		{23844F44-6B14-3A2D-83B4-2AB46D090BBD}.Debug|x64.ActiveCfg = Debug|x64
+		{23844F44-6B14-3A2D-83B4-2AB46D090BBD}.Debug|x64.Build.0 = Debug|x64
+		{23844F44-6B14-3A2D-83B4-2AB46D090BBD}.Release|x64.ActiveCfg = Release|x64
+		{23844F44-6B14-3A2D-83B4-2AB46D090BBD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
