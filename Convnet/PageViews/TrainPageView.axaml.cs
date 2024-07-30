@@ -61,7 +61,7 @@ namespace Convnet.PageViews
 
                         Binding binding = new Binding
                         {
-                            Path = "ActualHeight",
+                            Path = "Bounds.Height",
                             Source = borderWeightsMinMax
                         };
                         borderSnapShot.Bind(Border.MaxHeightProperty, binding);
@@ -71,7 +71,7 @@ namespace Convnet.PageViews
 
                         binding = new Binding
                         {
-                            Path = "ActualHeight",
+                            Path = "Bounds.Height",
                             Source = borderWeightsMinMax
                         };
                         borderTrainingPlot.Bind(Border.MaxHeightProperty, binding);
@@ -124,7 +124,7 @@ namespace Convnet.PageViews
 
                         Binding binding = new Binding
                         {
-                            Path = "ActualHeight",
+                            Path = "Bounds.Height",
                             Source = borderWeightsMinMax
                         };
                         borderSnapShot.Bind(Border.MaxHeightProperty, binding);
@@ -134,7 +134,7 @@ namespace Convnet.PageViews
 
                         binding = new Binding
                         {
-                            Path = "ActualHeight",
+                            Path = "Bounds.Height",
                             Source = borderWeightsMinMax
                         };
                         borderTrainingPlot.Bind(Border.MaxHeightProperty, binding);

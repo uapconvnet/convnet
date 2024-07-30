@@ -2450,7 +2450,7 @@ namespace Interop
         private DNNActivations activation;
         private DNNCosts cost;
         private System.Collections.Generic.List<UInt> inputs;
-        //private System.Collections.Generic.List<string> InputsNames;
+        private System.Collections.Generic.List<string> inputsNames;
         private Avalonia.Media.Imaging.WriteableBitmap weightsSnapshot;
         private bool lockable;
         private bool? lockUpdate = false;
@@ -2576,7 +2576,18 @@ namespace Interop
                 OnPropertyChanged(nameof(Inputs));
             }
         }
-        //public System.Collections.Generic.List<string> InputsNames;
+        public System.Collections.Generic.List<string> InputsNames
+        {
+            get { return inputsNames; }
+            set
+            {
+                if (value == inputsNames)
+                    return;
+
+                inputsNames = value;
+                OnPropertyChanged(nameof(InputsNames));
+            }
+        }
         public Avalonia.Media.Imaging.WriteableBitmap WeightsSnapshot
         {
             get { return weightsSnapshot; }
@@ -3638,13 +3649,13 @@ namespace Interop
             infoManaged.LockUpdate = infoNative.Lockable ? (bool?)infoNative.Locked : (bool?)false;
             infoManaged.Lockable = infoNative.Lockable;
 
-            //infoManaged.InputsNames = new System.Collections.Generic.List<string>();
-            //foreach (var index in infoManaged.Inputs)
-            //{
-            //    var infoNativ = new LayerInfo();
-            //    DNNGetLayerInfo(index, ref infoNativ);
-            //    infoManaged.InputsNames.Add(infoNativ.Name);
-            //}
+            infoManaged.InputsNames = new System.Collections.Generic.List<string>();
+            foreach (var index in infoManaged.Inputs)
+            {
+                var infoNativ = new LayerInfo();
+                DNNGetLayerInfo(index, ref infoNativ);
+                infoManaged.InputsNames.Add(infoNativ.Name);
+            }
 
             return ref infoManaged;
 	    }
