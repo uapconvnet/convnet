@@ -943,10 +943,9 @@ namespace Interop
             get { return momentum; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == momentum || value < (Float)0 || value > (Float)1)
+                if (value == momentum)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 momentum = value;
@@ -958,10 +957,9 @@ namespace Interop
             get { return beta2; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == beta2 || value < (Float)0 || value > (Float)1)
+                if (value == beta2)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 beta2 = value;
@@ -973,10 +971,9 @@ namespace Interop
             get { return l2Penalty; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == l2Penalty || value < (Float)0 || value > (Float)1)
+                if (value == l2Penalty)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 l2Penalty = value;
@@ -988,10 +985,9 @@ namespace Interop
             get { return dropout; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == dropout || value < (Float)0 || value > (Float)1)
+                if (value == dropout)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 dropout = value;
@@ -1003,10 +999,9 @@ namespace Interop
             get { return eps; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == eps || value < (Float)0 || value > (Float)1)
+                if (value == eps)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 eps = value;
@@ -1018,10 +1013,9 @@ namespace Interop
             get { return n; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == n && value == 0)
+                if (value == n)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 n = value;
@@ -1033,10 +1027,9 @@ namespace Interop
             get { return d; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == d && value == 0)
+                if (value == d)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 d = value;
@@ -1048,10 +1041,9 @@ namespace Interop
             get { return h; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == h && value == 0)
+                if (value == h)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 h = value;
@@ -1063,10 +1055,9 @@ namespace Interop
             get { return w; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == w && value == 0)
+                if (value == w)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 w = value;
@@ -1078,10 +1069,7 @@ namespace Interop
             get { return padD; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == padD && value == 0)
+                if (value == padD)
                     return;
 
                 padD = value;
@@ -1093,10 +1081,9 @@ namespace Interop
             get { return padH; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == padH && value == 0)
+                if (value == padH)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 padH = value;
@@ -1108,10 +1095,9 @@ namespace Interop
             get { return padW; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == padW && value == 0)
+                if (value == padW)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 padW = value;
@@ -1123,10 +1109,9 @@ namespace Interop
             get { return cycles; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == cycles && value == 0)
+                if (value == cycles)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 cycles = value;
@@ -1138,10 +1123,9 @@ namespace Interop
             get { return epochs; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == epochs && value == 0)
+                if (value == epochs)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 epochs = value;
@@ -1153,10 +1137,9 @@ namespace Interop
             get { return epochMultiplier; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == epochMultiplier && value == 0)
+                if (value == epochMultiplier)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 epochMultiplier = value;
@@ -1168,10 +1151,9 @@ namespace Interop
             get { return maximumRate; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == maximumRate || value < (Float)0 || value > (Float)1)
+                if (value == maximumRate)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 maximumRate = value;
@@ -1183,10 +1165,9 @@ namespace Interop
             get { return minimumRate; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == minimumRate || value < (Float)0 || value > (Float)1)
+                if (value == minimumRate)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 minimumRate = value;
@@ -1198,10 +1179,9 @@ namespace Interop
             get { return finalRate; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == finalRate || value < (Float)0 || value > (Float)1)
+                if (value == finalRate)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 finalRate = value;
@@ -1213,10 +1193,9 @@ namespace Interop
             get { return gamma; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == gamma || value < (Float)0 || value > (Float)1)
+                if (value == gamma)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 gamma = value;
@@ -1228,10 +1207,9 @@ namespace Interop
             get { return decayAfterEpochs; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == decayAfterEpochs && value == 0)
+                if (value == decayAfterEpochs)
+                    return;
+                if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
                 decayAfterEpochs = value;
@@ -1243,10 +1221,9 @@ namespace Interop
             get { return decayFactor; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == decayFactor || value < (Float)0 || value > (Float)1)
+                if (value == decayFactor)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 decayFactor = value;
@@ -1282,10 +1259,9 @@ namespace Interop
             get { return inputDropout; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == inputDropout || value < (Float)0 || value > (Float)1)
+                if (value == inputDropout)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 inputDropout = value;
@@ -1297,10 +1273,9 @@ namespace Interop
             get { return cutout; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == cutout || value < (Float)0 || value > (Float)1)
+                if (value == cutout)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 cutout = value;
@@ -1324,10 +1299,9 @@ namespace Interop
             get { return autoAugment; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == autoAugment || value < (Float)0 || value > (Float)1)
+                if (value == autoAugment)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 autoAugment = value;
@@ -1339,13 +1313,10 @@ namespace Interop
             get { return colorCast; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-
-                if (value == colorCast || value < (Float)0 || value > (Float)1)
+                if (value == colorCast)
+                    return;
+                if (value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
-            
                 colorCast = value;
                 OnPropertyChanged(nameof(ColorCast));
             }
@@ -1355,10 +1326,9 @@ namespace Interop
             get { return colorAngle; }
             set
             {
-                if (!(value is UInt))
-                    throw new DataValidationException("This field is required");
-
-                if (value == colorAngle || value > (Float)360)
+                if (value == colorAngle)
+                    return;
+                if (value > (Float)360)
                     throw new DataValidationException("This field is out of bounds [0-360]");
 
                 colorAngle = value;
@@ -1370,10 +1340,9 @@ namespace Interop
             get { return distortion; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == distortion || value < (Float)0 || value > (Float)1)
+                if (value == distortion)
+                    return;
+                if(value < (Float)0 || value > (Float)1)
                     throw new DataValidationException("This field is out of bounds [0-1]");
 
                 distortion = value;
@@ -1397,10 +1366,9 @@ namespace Interop
             get { return scaling; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == scaling || value <= (Float)0 || value > (Float)200)
+                if (value == scaling)
+                    return;
+                if (value <= (Float)0 || value > (Float)200)
                     throw new DataValidationException("This field is out of bounds [0-200]");
 
                 scaling = value;
@@ -1412,10 +1380,9 @@ namespace Interop
             get { return rotation; }
             set
             {
-                if (!(value is Float))
-                    throw new DataValidationException("This field is required");
-
-                if (value == rotation || value < (Float)0 || value > (Float)360)
+                if (value == rotation)
+                    return;
+                if (value < (Float)0 || value > (Float)360)
                     throw new DataValidationException("This field is out of bounds [0-360]");
 
                 rotation = value;
