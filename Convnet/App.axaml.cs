@@ -1,8 +1,10 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -24,6 +26,15 @@ namespace Convnet
 
         public override void OnFrameworkInitializationCompleted()
         {
+            //// Get an array of plugins to remove
+            //var dataValidationPluginsToRemove = BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
+
+            //// remove each entry found
+            //foreach (var plugin in dataValidationPluginsToRemove)
+            //{
+            //    BindingPlugins.DataValidators.Remove(plugin);
+            //}
+
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 if (SingleInstanceApp && sim.IsOtherInstanceRunning)

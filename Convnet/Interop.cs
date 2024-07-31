@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Data;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using System;
@@ -942,8 +943,11 @@ namespace Interop
             get { return momentum; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == momentum || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 momentum = value;
                 OnPropertyChanged(nameof(Momentum));
@@ -954,8 +958,11 @@ namespace Interop
             get { return beta2; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == beta2 || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 beta2 = value;
                 OnPropertyChanged(nameof(Beta2));
@@ -966,8 +973,11 @@ namespace Interop
             get { return l2Penalty; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == l2Penalty || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 l2Penalty = value;
                 OnPropertyChanged(nameof(L2Penalty));
@@ -978,8 +988,11 @@ namespace Interop
             get { return dropout; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == dropout || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 dropout = value;
                 OnPropertyChanged(nameof(Dropout));
@@ -990,8 +1003,11 @@ namespace Interop
             get { return eps; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == eps || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 eps = value;
                 OnPropertyChanged(nameof(Eps));
@@ -1002,8 +1018,11 @@ namespace Interop
             get { return n; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == n && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 n = value;
                 OnPropertyChanged(nameof(N));
@@ -1014,8 +1033,11 @@ namespace Interop
             get { return d; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == d && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 d = value;
                 OnPropertyChanged(nameof(D));
@@ -1026,8 +1048,11 @@ namespace Interop
             get { return h; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == h && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 h = value;
                 OnPropertyChanged(nameof(H));
@@ -1038,8 +1063,11 @@ namespace Interop
             get { return w; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == w && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 w = value;
                 OnPropertyChanged(nameof(W));
@@ -1050,6 +1078,9 @@ namespace Interop
             get { return padD; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == padD && value == 0)
                     return;
 
@@ -1062,8 +1093,11 @@ namespace Interop
             get { return padH; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == padH && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 padH = value;
                 OnPropertyChanged(nameof(PadH));
@@ -1074,8 +1108,11 @@ namespace Interop
             get { return padW; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == padW && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 padW = value;
                 OnPropertyChanged(nameof(PadW));
@@ -1086,8 +1123,11 @@ namespace Interop
             get { return cycles; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == cycles && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 cycles = value;
                 OnPropertyChanged(nameof(Cycles));
@@ -1098,8 +1138,11 @@ namespace Interop
             get { return epochs; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == epochs && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 epochs = value;
                 OnPropertyChanged(nameof(Epochs));
@@ -1110,8 +1153,11 @@ namespace Interop
             get { return epochMultiplier; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == epochMultiplier && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 epochMultiplier = value;
                 OnPropertyChanged(nameof(EpochMultiplier));
@@ -1122,8 +1168,11 @@ namespace Interop
             get { return maximumRate; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == maximumRate || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 maximumRate = value;
                 OnPropertyChanged(nameof(MaximumRate));
@@ -1134,8 +1183,11 @@ namespace Interop
             get { return minimumRate; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == minimumRate || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 minimumRate = value;
                 OnPropertyChanged(nameof(MinimumRate));
@@ -1146,8 +1198,11 @@ namespace Interop
             get { return finalRate; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == finalRate || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 finalRate = value;
                 OnPropertyChanged(nameof(FinalRate));
@@ -1158,8 +1213,11 @@ namespace Interop
             get { return gamma; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == gamma || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 gamma = value;
                 OnPropertyChanged(nameof(Gamma));
@@ -1170,8 +1228,11 @@ namespace Interop
             get { return decayAfterEpochs; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == decayAfterEpochs && value == 0)
-                    return;
+                    throw new DataValidationException("This field is not > 0");
 
                 decayAfterEpochs = value;
                 OnPropertyChanged(nameof(DecayAfterEpochs));
@@ -1182,8 +1243,11 @@ namespace Interop
             get { return decayFactor; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == decayFactor || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 decayFactor = value;
                 OnPropertyChanged(nameof(DecayFactor));
@@ -1218,8 +1282,11 @@ namespace Interop
             get { return inputDropout; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == inputDropout || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 inputDropout = value;
                 OnPropertyChanged(nameof(InputDropout));
@@ -1230,8 +1297,11 @@ namespace Interop
             get { return cutout; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == cutout || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 cutout = value;
                 OnPropertyChanged(nameof(Cutout));
@@ -1254,8 +1324,11 @@ namespace Interop
             get { return autoAugment; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == autoAugment || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 autoAugment = value;
                 OnPropertyChanged(nameof(AutoAugment));
@@ -1266,9 +1339,13 @@ namespace Interop
             get { return colorCast; }
             set
             {
-                if (value == colorCast || value < (Float)0 || value > (Float)1)
-                    return;
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
 
+
+                if (value == colorCast || value < (Float)0 || value > (Float)1)
+                    throw new DataValidationException("This field is out of bounds [0-1]");
+            
                 colorCast = value;
                 OnPropertyChanged(nameof(ColorCast));
             }
@@ -1278,8 +1355,11 @@ namespace Interop
             get { return colorAngle; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("This field is required");
+
                 if (value == colorAngle || value > (Float)360)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-360]");
 
                 colorAngle = value;
                 OnPropertyChanged(nameof(ColorAngle));
@@ -1290,8 +1370,11 @@ namespace Interop
             get { return distortion; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == distortion || value < (Float)0 || value > (Float)1)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-1]");
 
                 distortion = value;
                 OnPropertyChanged(nameof(Distortion));
@@ -1314,8 +1397,11 @@ namespace Interop
             get { return scaling; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == scaling || value <= (Float)0 || value > (Float)200)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-200]");
 
                 scaling = value;
                 OnPropertyChanged(nameof(Scaling));
@@ -1326,8 +1412,11 @@ namespace Interop
             get { return rotation; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("This field is required");
+
                 if (value == rotation || value < (Float)0 || value > (Float)360)
-                    return;
+                    throw new DataValidationException("This field is out of bounds [0-360]");
 
                 rotation = value;
                 OnPropertyChanged(nameof(Rotation));
