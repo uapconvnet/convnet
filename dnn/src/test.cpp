@@ -229,7 +229,7 @@ int main(int argc, char* argv[])
 
     scripts::ScriptParameters p;
 
-    p.Script = scripts::Scripts::shufflenetv2;
+    p.Script = scripts::Scripts::augshufflenet;
     p.Dataset = scripts::Datasets::cifar10;
     p.C = 3;
     p.H = 32;
