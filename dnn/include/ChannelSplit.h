@@ -93,7 +93,7 @@ namespace dnn
 					if (!plain)
 					{
 						VecFloat In;
-						for (auto c = 0ull; c < part; c += VectorSize)
+						for (auto c = 0ull; c < (part - VectorSize); c += VectorSize)
 						{
 							const auto inputOffset = InputLayer->OffsetPaddedMem(0, c + ChannelsLeft, 0, 0);
 							const auto outputOffset = OffsetPaddedMem(0, c, 0, 0);
@@ -107,7 +107,7 @@ namespace dnn
 							}
 						}
 
-						for (auto c = part; c < C; c++)
+						for (auto c = (part - VectorSize); c < C; c++)
 							for (auto h = 0ull; h < H; h++)
 								PRAGMA_OMP_SIMD()
 								for (auto w = 0ull; w < W; w++)
@@ -151,7 +151,7 @@ namespace dnn
 					if (!plain)
 					{
 						VecFloat In;
-						for (auto c = 0ull; c < part; c += VectorSize)
+						for (auto c = 0ull; c < (part - VectorSize); c += VectorSize)
 						{
 							const auto inputOffset = InputLayer->OffsetPaddedMem(0, c + ChannelsLeft, 0, 0);
 							const auto outputOffset = OffsetPaddedMem(0, c, 0, 0);
@@ -162,7 +162,7 @@ namespace dnn
 							}
 						}
 
-						for (auto c = part; c < C; c++)
+						for (auto c = (part - VectorSize); c < C; c++)
 							for (auto h = 0ull; h < H; h++)
 								PRAGMA_OMP_SIMD()
 								for (auto w = 0ull; w < W; w++)
@@ -197,7 +197,7 @@ namespace dnn
 						for_i(batchSize, threads, [=](UInt n)
 						{
 							VecFloat In;
-							for (auto c = 0ull; c < part; c += VectorSize)
+							for (auto c = 0ull; c < (part - VectorSize); c += VectorSize)
 							{
 								const auto inputOffset = InputLayer->OffsetPaddedMem(n, c + ChannelsLeft, 0, 0);
 								const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
@@ -211,7 +211,7 @@ namespace dnn
 								}
 							}
 
-							for (auto c = part; c < C; c++)
+							for (auto c = (part - VectorSize); c < C; c++)
 								for (auto h = 0ull; h < H; h++)
 									PRAGMA_OMP_SIMD()
 									for (auto w = 0ull; w < W; w++)
@@ -259,7 +259,7 @@ namespace dnn
 						for_i(batchSize, threads, [=](UInt n)
 						{
 							VecFloat In;
-							for (auto c = 0ull; c < part; c += VectorSize)
+							for (auto c = 0ull; c < (part - VectorSize); c += VectorSize)
 							{
 								const auto inputOffset = InputLayer->OffsetPaddedMem(n, c + ChannelsLeft, 0, 0);
 								const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
@@ -270,7 +270,7 @@ namespace dnn
 								}
 							}
 
-							for (auto c = part; c < C; c++)
+							for (auto c = (part - VectorSize); c < C; c++)
 								for (auto h = 0ull; h < H; h++)
 									PRAGMA_OMP_SIMD()
 									for (auto w = 0ull; w < W; w++)
@@ -320,7 +320,7 @@ namespace dnn
 				if (!plain)
 				{
 					VecFloat inputD1, D1;
-					for (auto c = 0ull; c < part; c += VectorSize)
+					for (auto c = 0ull; c < (part - VectorSize); c += VectorSize)
 					{
 						const auto inputOffset = InputLayer->OffsetPaddedMem(0, c + ChannelsLeft, 0, 0);
 						const auto outputOffset = OffsetPaddedMem(0, c, 0, 0);
@@ -333,7 +333,7 @@ namespace dnn
 						}
 					}
 
-					for (auto c = part; c < C; c++)
+					for (auto c = (part - VectorSize); c < C; c++)
 						for (auto h = 0ull; h < H; h++)
 							PRAGMA_OMP_SIMD()
 							for (auto w = 0ull; w < W; w++)
@@ -358,7 +358,7 @@ namespace dnn
 					{
 						
 						VecFloat inputD1, D1;
-						for (auto c = 0ull; c < part; c += VectorSize)
+						for (auto c = 0ull; c < (part - VectorSize); c += VectorSize)
 						{
 							const auto inputOffset = InputLayer->OffsetPaddedMem(n, c + ChannelsLeft, 0, 0);
 							const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
@@ -371,7 +371,7 @@ namespace dnn
 							}
 						}
 
-						for (auto c = part; c < C; c++)
+						for (auto c = (part - VectorSize); c < C; c++)
 							for (auto h = 0ull; h < H; h++)
 								PRAGMA_OMP_SIMD()
 								for (auto w = 0ull; w < W; w++)
