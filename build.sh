@@ -7,6 +7,7 @@ chmod +rwx ./build.sh
 ./build.sh
 cd ..
 cd Convnet
+dotnet restore
 dotnet build Convnet.csproj -c:Release
 cd ..
 
