@@ -765,7 +765,34 @@ namespace Convnet.PageViewModels
             if (Model != null)
                 Model.BlockSize = (ulong)temp;
 
-            LayersComboBox_SelectionChanged(this, null);
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                if (Model != null && layersComboBox.SelectedIndex >= 0)
+                {
+                    var index = layersComboBox.SelectedIndex;
+                    if (index < (int)Model.LayerCount)
+                    {
+                        Settings.Default.SelectedLayer = index;
+                        Settings.Default.Save();
+                        Model.SelectedIndex = index;
+
+                        ShowSample = Model.TaskState == DNNTaskStates.Running;
+                        ShowWeights = Model.Layers[index].WeightCount > 0 || Settings.Default.Timings;
+                        ShowWeightsSnapshot = (Model.Layers[index].IsNormLayer && Model.Layers[index].Scaling) || Model.Layers[index].LayerType == DNNLayerTypes.PartialDepthwiseConvolution || Model.Layers[index].LayerType == DNNLayerTypes.DepthwiseConvolution || Model.Layers[index].LayerType == DNNLayerTypes.ConvolutionTranspose || Model.Layers[index].LayerType == DNNLayerTypes.Convolution || Model.Layers[index].LayerType == DNNLayerTypes.Dense || (Model.Layers[index].LayerType == DNNLayerTypes.Activation && Model.Layers[index].WeightCount > 0);
+
+                        if (index == 0)
+                            Model.UpdateLayerInfo((ulong)index, ShowSample);
+                        else
+                            Model.UpdateLayerInfo((ulong)index, ShowWeightsSnapshot);
+
+                        WeightsSnapshotX = Model.Layers[index].WeightsSnapshotX;
+                        WeightsSnapshotY = Model.Layers[index].WeightsSnapshotY;
+                        WeightsSnapshot = Model.Layers[index].WeightsSnapshot;
+                    }
+                }
+            }, DispatcherPriority.Render);
+
+            //LayersComboBox_SelectionChanged(this, null);
         }
 
         private void TrainingPlotCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)

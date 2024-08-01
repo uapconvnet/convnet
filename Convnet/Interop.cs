@@ -1086,7 +1086,7 @@ namespace Interop
                 if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
-                padH = value;
+                padH = value;[field: NonSerializedAttribute()]
                 OnPropertyChanged(nameof(PadH));
             }
         }
@@ -1096,10 +1096,7 @@ namespace Interop
             set
             {
                 if (value == padW)
-                    return;
-                if (value == 0)
-                    throw new DataValidationException("This field is not > 0");
-
+                    return;[field: NonSerializedAttribute()]
                 padW = value;
                 OnPropertyChanged(nameof(PadW));
             }
@@ -1388,8 +1385,8 @@ namespace Interop
                 rotation = value;
                 OnPropertyChanged(nameof(Rotation));
             }
-        }
 
+        }
 
         public DNNTrainingRate()
         {
