@@ -943,6 +943,8 @@ namespace Interop
             get { return momentum; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == momentum)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -957,6 +959,8 @@ namespace Interop
             get { return beta2; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == beta2)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -971,6 +975,8 @@ namespace Interop
             get { return l2Penalty; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == l2Penalty)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -985,6 +991,8 @@ namespace Interop
             get { return dropout; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == dropout)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -999,6 +1007,8 @@ namespace Interop
             get { return eps; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == eps)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1013,6 +1023,8 @@ namespace Interop
             get { return n; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == n)
                     return;
                 if (value == 0)
@@ -1027,6 +1039,8 @@ namespace Interop
             get { return d; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == d)
                     return;
                 if (value == 0)
@@ -1041,6 +1055,8 @@ namespace Interop
             get { return h; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == h)
                     return;
                 if (value == 0)
@@ -1055,6 +1071,8 @@ namespace Interop
             get { return w; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == w)
                     return;
                 if (value == 0)
@@ -1081,6 +1099,8 @@ namespace Interop
             get { return padH; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == padH)
                     return;
                 if (value == 0)
@@ -1095,6 +1115,8 @@ namespace Interop
             get { return padW; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == padW)
                     return;
                 if (value == 0)
@@ -1109,6 +1131,8 @@ namespace Interop
             get { return cycles; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == cycles)
                     return;
                 if (value == 0)
@@ -1123,6 +1147,8 @@ namespace Interop
             get { return epochs; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == epochs)
                     return;
                 if (value == 0)
@@ -1137,6 +1163,8 @@ namespace Interop
             get { return epochMultiplier; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == epochMultiplier)
                     return;
                 if (value == 0)
@@ -1151,6 +1179,8 @@ namespace Interop
             get { return maximumRate; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == maximumRate)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1165,6 +1195,8 @@ namespace Interop
             get { return minimumRate; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == minimumRate)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1179,6 +1211,8 @@ namespace Interop
             get { return finalRate; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == finalRate)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1193,6 +1227,8 @@ namespace Interop
             get { return gamma; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == gamma)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1207,6 +1243,8 @@ namespace Interop
             get { return decayAfterEpochs; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
                 if (value == decayAfterEpochs)
                     return;
                 if (value == 0)
@@ -1221,6 +1259,8 @@ namespace Interop
             get { return decayFactor; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == decayFactor)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1259,6 +1299,8 @@ namespace Interop
             get { return inputDropout; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == inputDropout)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1273,6 +1315,8 @@ namespace Interop
             get { return cutout; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == cutout)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1299,6 +1343,8 @@ namespace Interop
             get { return autoAugment; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == autoAugment)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1313,6 +1359,8 @@ namespace Interop
             get { return colorCast; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
                 if (value == colorCast)
                     return;
                 if (value < (Float)0 || value > (Float)1)
@@ -1326,6 +1374,9 @@ namespace Interop
             get { return colorAngle; }
             set
             {
+                if (!(value is UInt))
+                    throw new DataValidationException("Required field");
+
                 if (value == colorAngle)
                     return;
                 if (value > (Float)360)
@@ -1340,6 +1391,9 @@ namespace Interop
             get { return distortion; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
+
                 if (value == distortion)
                     return;
                 if(value < (Float)0 || value > (Float)1)
@@ -1366,6 +1420,9 @@ namespace Interop
             get { return scaling; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
+
                 if (value == scaling)
                     return;
                 if (value <= (Float)0 || value > (Float)200)
@@ -1380,6 +1437,9 @@ namespace Interop
             get { return rotation; }
             set
             {
+                if (!(value is Float))
+                    throw new DataValidationException("Required field");
+
                 if (value == rotation)
                     return;
                 if (value < (Float)0 || value > (Float)360)
