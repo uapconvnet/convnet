@@ -1086,7 +1086,7 @@ namespace Interop
                 if (value == 0)
                     throw new DataValidationException("This field is not > 0");
 
-                padH = value;[field: NonSerializedAttribute()]
+                padH = value;
                 OnPropertyChanged(nameof(PadH));
             }
         }
@@ -1096,7 +1096,7 @@ namespace Interop
             set
             {
                 if (value == padW)
-                    return;[field: NonSerializedAttribute()]
+                    return;
                 padW = value;
                 OnPropertyChanged(nameof(PadW));
             }
