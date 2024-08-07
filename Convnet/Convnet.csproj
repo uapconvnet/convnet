@@ -27,6 +27,7 @@
     <None Remove="Resources\Fonts\*" />
     <None Remove="Resources\Calculator.png" />
     <None Remove="Resources\Cancel.png" />
+    <None Remove="Resources\dark_vs.json" />
     <None Remove="Resources\Delete.png" />
     <None Remove="Resources\OpenFile.png" />
     <None Remove="Resources\SaveAs.png" />
@@ -82,20 +83,20 @@
 
  
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.1.1" />
+    <PackageReference Include="Avalonia" Version="11.1.2" />
     <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.22087.20231008" />
-    <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.0.6" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.1.0" />
     <PackageReference Include="Avalonia.BuildServices" Version="0.0.31" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.1.1" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.1.1" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.1" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.1" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.1.2" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.1.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.2" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.2" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.1" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.1" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.2" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.2" />
     <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.1.0" />
     <PackageReference Include="AvaloniaControlsToolBar" Version="0.0.1" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.1.1" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.1.2" />
     <PackageReference Include="AvaloniaEdit.TextMate.Grammars" Version="0.10.12" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="CustomMessageBox.Avalonia" Version="11.0.0.2" />
@@ -104,11 +105,11 @@
     <PackageReference Include="Oxyplot.AvaloniaCore" Version="2.1.2" />
     <PackageReference Include="Splat" Version="15.1.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
-    <PackageReference Include="AvaloniaEdit.TextMate" Version="11.0.6" />
+    <PackageReference Include="AvaloniaEdit.TextMate" Version="11.1.0" />
     <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="System.Text.Json" Version="8.0.4" />
-    <PackageReference Include="TextMateSharp.Grammars" Version="1.0.56" />
+    <PackageReference Include="TextMateSharp.Grammars" Version="1.0.60" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="XamlNameReferenceGenerator" Version="1.6.1" />
     <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
@@ -141,6 +142,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <AvaloniaResource Include="Resources\Cut.png" />
+    <Content Include="Resources\dark_vs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Resources\Definition.xshd">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>

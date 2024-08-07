@@ -13,11 +13,18 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using TextMateSharp.Internal.Themes.Reader;
+using TextMateSharp.Themes;
 
 namespace Convnet.Common
 {
     public static class ApplicationHelper
     {
+#if DEBUG
+        const string Mode = "Debug";
+#else
+        const string Mode = "Release";
+#endif
         public static KeyModifiers GetPlatformCommandKey()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -27,7 +34,17 @@ namespace Convnet.Common
 
             return KeyModifiers.Control;
         }
-       
+
+        public static IRawTheme GetDefaultTheme()
+        {
+            var themePath = Path.GetFullPath(@"../../" + Mode + @"/net8.0/Resources/dark_vs.json");
+
+            using (StreamReader reader = new StreamReader(themePath))
+            {
+                return ThemeReader.ReadThemeSync(reader);
+            }
+        }
+
         public static Image LoadFromResource(string fileName)
         {
             var img = new Image

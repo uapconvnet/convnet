@@ -15,7 +15,7 @@ namespace Convnet.Common
         Type IStyleable.StyleKey => typeof(TextBlock);
 
         public new event PropertyChangedEventHandler? PropertyChanged;
-
+        private string? formattedText = null;
         //public static readonly StyledProperty<string> FormattedTextProperty = AvaloniaProperty.Register<FormattedTextBlock, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
 
         public static readonly DirectProperty<FormattedTextBlock, string?> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string?>(
@@ -26,18 +26,19 @@ namespace Convnet.Common
               if (string.Compare(o.FormattedText, v) != 0)
                   o.FormattedText = v;
           },
-          string.Empty,
-          Avalonia.Data.BindingMode.OneWay);
+          null,
+          Avalonia.Data.BindingMode.TwoWay, 
+          false);
 
         public string? FormattedText
         {
-            get { return base.Text; }
+            get { return formattedText; }
             set
             {
-                if (value != base.Text)
+                //if (value != formattedText)
                 {
-                    string? formattedText = (string?)value ?? string.Empty;
-                    formattedText = string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", formattedText);
+                    //string? formattedText = value;
+                    formattedText = string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value);
 
                     using (TextReader sr = new StringReader(formattedText))
                     {

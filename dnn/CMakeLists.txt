@@ -51,7 +51,7 @@ if(WIN32 OR MSVC)
     "$<$<COMPILE_LANGUAGE:CXX>:${flags}>"
     "$<$<COMPILE_LANGUAGE:C>:${flags}>")
   set(debug_flags /bigobj /openmp:llvm /W4 /Od)
-  set(release_flags /bigobj /openmp:llvm /W3 /O2 /Ob2 /Oi /Ot /GL /GF /Gy /fp:fast)
+  set(release_flags /bigobj /openmp:llvm /W3 /O3 /Ob2 /Oi /Ot /GL /GF /Gy /fp:fast)
 else()
   set(flags -mrdseed -mrdrnd -mfma -mavx512f -mavx512dq -mavx512vl -mavx512bw -mavx512ifma -mavx512vbmi -mavx512vbmi2 -mavx512bitalg -mavx512vpopcntdq -mavx512vnni -mavx512bf16 -march=native -fopenmp)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

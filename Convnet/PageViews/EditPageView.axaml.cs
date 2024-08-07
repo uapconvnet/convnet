@@ -16,6 +16,9 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using TextMateSharp.Grammars;
+using TextMateSharp.Internal.Themes.Reader;
+using TextMateSharp.Internal.Types;
+using TextMateSharp.Registry;
 using TextMateSharp.Themes;
 
 namespace Convnet.PageViews
@@ -175,7 +178,7 @@ namespace Convnet.PageViews
         //{
         //    if (!e.TryGetThemeColor(colorKeyNameFromJson, out var colorString))
         //        return false;
-           
+
         //    if (!Color.TryParse(colorString, out Color color))
         //        return false;
 
@@ -218,5 +221,28 @@ namespace Convnet.PageViews
         //        return x.Key.CompareTo(y.Key);
         //    }
         //}
+
+        class LocalRegistryOptions : IRegistryOptions
+        {
+            public ICollection<string> GetInjections(string scopeName)
+            {
+                return null;
+            }
+
+            public IRawGrammar GetGrammar(string scopeName)
+            {
+                return null;
+            }
+
+            public IRawTheme GetTheme(string scopeName)
+            {
+                return null;
+            }
+
+            public IRawTheme GetDefaultTheme()
+            {
+                return ApplicationHelper.GetDefaultTheme();
+            }
+        }
     }
 }
