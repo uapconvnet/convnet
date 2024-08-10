@@ -35,15 +35,15 @@ namespace Convnet.Common
             return KeyModifiers.Control;
         }
 
-        public static IRawTheme GetDefaultTheme()
-        {
-            var themePath = Path.GetFullPath(@"../../" + Mode + @"/net8.0/Resources/dark_vs.json");
+        //public static IRawTheme GetDefaultTheme()
+        //{
+        //    var themePath = Path.GetFullPath(@"../../" + Mode + @"/net8.0/Resources/dark_vs.json");
 
-            using (StreamReader reader = new StreamReader(themePath))
-            {
-                return ThemeReader.ReadThemeSync(reader);
-            }
-        }
+        //    using (StreamReader reader = new StreamReader(themePath))
+        //    {
+        //        return ThemeReader.ReadThemeSync(reader);
+        //    }
+        //}
 
         public static Image LoadFromResource(string fileName)
         {

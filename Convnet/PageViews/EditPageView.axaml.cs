@@ -222,27 +222,27 @@ namespace Convnet.PageViews
         //    }
         //}
 
-        class LocalRegistryOptions : IRegistryOptions
-        {
-            public ICollection<string> GetInjections(string scopeName)
-            {
-                return null;
-            }
+        //class LocalRegistryOptions : IRegistryOptions
+        //{
+        //    public ICollection<string> GetInjections(string scopeName)
+        //    {
+        //        return null;
+        //    }
 
-            public IRawGrammar GetGrammar(string scopeName)
-            {
-                return null;
-            }
+        //    public IRawGrammar GetGrammar(string scopeName)
+        //    {
+        //        return null;
+        //    }
 
-            public IRawTheme GetTheme(string scopeName)
-            {
-                return null;
-            }
+        //    public IRawTheme GetTheme(string scopeName)
+        //    {
+        //        return null;
+        //    }
 
-            public IRawTheme GetDefaultTheme()
-            {
-                return ApplicationHelper.GetDefaultTheme();
-            }
-        }
+        //    public IRawTheme GetDefaultTheme()
+        //    {
+        //        return ApplicationHelper.GetDefaultTheme();
+        //    }
+        //}
     }
 }
