@@ -20,9 +20,9 @@ namespace dnn
 		{
 			assert(Inputs.size() == 1);
 
-			FwdInferenceWeight = Float(5);
-			FwdTrainingWeight = Float(10);
-			BwdTrainingWeight = Float(10);
+			FwdInferenceWeight = Float(2);
+			FwdTrainingWeight = Float(4);
+			BwdTrainingWeight = Float(4);
 		}
 
 		void UpdateResolution() final override
