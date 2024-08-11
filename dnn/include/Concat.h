@@ -24,15 +24,11 @@ namespace dnn
 
 		auto IsInputPadded(const std::vector<Layer*>& inputs) const
 		{
-			auto isPadded = true;
 			for (const auto& layer : inputs)
 				if (layer->C != layer->PaddedC)
-				{
-					isPadded = false;
-					break;
-				}
-
-			return isPadded;
+					return false;
+					
+			return true;
 		}
 
 	public:
@@ -266,7 +262,7 @@ namespace dnn
 #endif
 											}
 										}*/
-										for (auto c = channelOffset; c < channelOffset + Inputs[inputLayer]->PaddedC; c++)
+										for (auto c = channelOffset; c < channelOffset + Inputs[inputLayer]->C; c++)
 											for (auto h = 0ull; h < H; h++)
 												PRAGMA_OMP_SIMD()
 												for (auto w = 0ull; w < W; w++)
@@ -284,16 +280,16 @@ namespace dnn
 													NeuronsD1[OffsetPaddedMem(n, c, h, w)] = Float(0);
 												}*/
 
-										channelOffset += Inputs[inputLayer]->PaddedC;
+										channelOffset += Inputs[inputLayer]->C;
 
-										/*for (auto c = channelOffset; c < DivUp(channelOffset); c++)
+										for (auto c = channelOffset; c < DivUp(channelOffset); c++)
 											for (auto h = 0ull; h < H; h++)
 												PRAGMA_OMP_SIMD()
 												for (auto w = 0ull; w < W; w++)
 												{
 													Neurons[OffsetPaddedMem(n, c, h, w)] = Float(0);
 													NeuronsD1[OffsetPaddedMem(n, c, h, w)] = Float(0);
-												}*/
+												}
 									}
 								});
 
@@ -564,7 +560,7 @@ namespace dnn
 							//VecFloat inputD1, D1;
 							for (auto inputLayer = 0ull; inputLayer < Inputs.size(); inputLayer++)
 							{
-								for (auto c = channelOffset; c < channelOffset + Inputs[inputLayer]->PaddedC; c++)
+								for (auto c = channelOffset; c < channelOffset + Inputs[inputLayer]->C; c++)
 									for (auto h = 0ull; h < H; h++)
 										PRAGMA_OMP_SIMD()
 										for (auto w = 0ull; w < W; w++)
@@ -583,7 +579,13 @@ namespace dnn
 										inputD1.store_a(&Inputs[inputLayer]->NeuronsD1[hw + inputIndex]);
 									}
 								}*/
-								channelOffset += Inputs[inputLayer]->PaddedC;
+								channelOffset += Inputs[inputLayer]->C;
+
+								/*for (auto c = channelOffset; c < DivUp(channelOffset); c++)
+									for (auto h = 0ull; h < H; h++)
+										PRAGMA_OMP_SIMD()
+										for (auto w = 0ull; w < W; w++)
+											Inputs[inputLayer]->NeuronsD1[Inputs[inputLayer]->OffsetPaddedMem(n, c - channelOffset, h, w)] += NeuronsD1[OffsetPaddedMem(n, c, h, w)];*/
 							}
 						});
 					}
