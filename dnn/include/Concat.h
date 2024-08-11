@@ -130,7 +130,6 @@ namespace dnn
 				{
 					const auto plain = IsPlainFormat();
 					const auto threads = GetThreads(batchSize * (plain ? CDHW() : PaddedCDHW()), Float(10));
-					const auto strideHW = HW() * VectorSize;
 
 #ifdef DNN_STOCHASTIC
 					if (batchSize == 1)
@@ -192,7 +191,6 @@ namespace dnn
 					{
 #endif
 						if (!plain)
-						{
 							for_i(batchSize, threads, [=](UInt n)
 							{
 								auto channelOffset = 0ull;
@@ -223,7 +221,6 @@ namespace dnn
 											}
 								}
 							});
-						}
 						else
 							for_i(batchSize, threads, [=](UInt n)
 							{
@@ -295,8 +292,9 @@ namespace dnn
 					dnnl::concat(*fwdDesc).execute(Device.stream, fwdArgs);
 #endif
 					Device.stream.wait();
-
+#ifndef DNN_LEAN
 					InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW());
+#endif
 				}
 #endif
 			}
@@ -319,7 +317,6 @@ namespace dnn
 
 			const auto plain = IsPlainFormat();
 			const auto threads = GetThreads(batchSize * (plain ? CDHW() : PaddedCDHW()), Float(10));
-			const auto strideHW = HW() * VectorSize;
 
 #ifdef DNN_STOCHASTIC
 			if (batchSize == 1)
