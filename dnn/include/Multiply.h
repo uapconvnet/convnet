@@ -27,6 +27,10 @@ namespace dnn
 			assert(Inputs[0]->D >= Inputs[1]->D);
 			assert(Inputs[0]->H >= Inputs[1]->H);
 			assert(Inputs[0]->W >= Inputs[1]->W);
+
+			FwdInferenceWeight = Float(5);
+			FwdTrainingWeight = Float(10);
+			BwdTrainingWeight = Float(10);
 		}
 
 		void UpdateResolution() final override
@@ -112,8 +116,6 @@ namespace dnn
 				if constexpr (!Reference && !ReferenceMultiply)
 				{
 					const auto plain = IsPlainFormat();
-					const auto size = plain ? CDHW() : PaddedCDHW();
-					const auto threads = batchSize == 1 ? 1ull : GetThreads(batchSize * size, Float(10));
 					const auto strideHW = HW() * VectorSize;
 
 #ifdef DNN_STOCHASTIC
@@ -226,6 +228,8 @@ namespace dnn
 					else
 					{
 #endif
+						const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), FwdTrainingWeight);
+
 						if (!plain)
 						{
 							if (EqualChannels(Inputs))
@@ -424,8 +428,7 @@ namespace dnn
 #endif // DNN_LEAN
 
 			const auto plain = IsPlainFormat();
-			const auto elements = batchSize * (plain ? CDHW() : PaddedCDHW());
-			const auto threads = batchSize == 1 ? 1ull : GetThreads(elements, Float(10));
+			const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 			const auto strideHW = HW() * VectorSize;
 
 			if (EqualChannels(Inputs))
