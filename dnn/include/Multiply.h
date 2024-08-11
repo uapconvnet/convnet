@@ -400,8 +400,9 @@ namespace dnn
 					dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
 #endif
 					Device.stream.wait();
-
+#ifndef DNN_LEAN
 					InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW());
+#endif
 				}
 #endif
 			}

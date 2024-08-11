@@ -41,7 +41,6 @@ namespace Convnet.PageViews
                 editorDefinition.TextChanged += EditorDefinition_TextChanged;
             }
 
-
             //IHighlightingDefinition CSharpHighlighting;
             //using (Stream? s = typeof(EditPageView).Assembly.GetManifestResourceStream("Convnet.Resources.CSharp-Mode.xshd"))
             //{
