@@ -17,6 +17,10 @@ namespace dnn
 			assert(Inputs.size() == 1);
 			assert(Ratio > Float(0));
 			assert(Ratio < Float(1));
+
+			FwdInferenceWeight = Float(10);
+			FwdTrainingWeight = Float(10);
+			BwdTrainingWeight = Float(10);
 		}
 
 		void UpdateResolution() final override
@@ -72,8 +76,7 @@ namespace dnn
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 			const auto plain = IsPlainFormat();
-			const auto threads = GetThreads(batchSize * (plain ? CDHW() : PaddedCDHW()), Float(10));
-
+			
 #ifdef DNN_STOCHASTIC
 			if (batchSize == 1)
 			{
@@ -155,8 +158,9 @@ namespace dnn
 #endif
 				if (training)
 				{
+					const auto threads = GetThreads(batchSize * GetElementsCount(), FwdTrainingWeight);
+
 					if (!plain)
-					{
 						for_i(batchSize, threads, [=](UInt n)
 						{
 							for (auto c = 0ull; c < C; c++)
@@ -181,7 +185,6 @@ namespace dnn
 #endif  // DNN_LEAN
 									}
 						});
-					}
 					else
 						for_i(batchSize, threads, [=](UInt n)
 						{
@@ -202,8 +205,9 @@ namespace dnn
 				}
 				else
 				{
+					const auto threads = GetThreads(batchSize * GetElementsCount(), FwdInferenceWeight);
+
 					if (!plain)
-					{						
 						for_i(batchSize, threads, [=](UInt n)
 						{
 							for (auto c = 0ull; c < C; c++)
@@ -218,7 +222,6 @@ namespace dnn
 									for (auto w = 0ull; w < W; w++)
 										Neurons[OffsetPaddedMem(n, c, h, w)] = Float(0);
 						});
-					}
 					else
 						for_i(batchSize, threads, [=](UInt n)
 						{
@@ -244,8 +247,7 @@ namespace dnn
 #endif // DNN_LEAN
 
 			const auto plain = IsPlainFormat();
-			const auto threads = GetThreads(batchSize * (plain ? CDHW() : PaddedCDHW()), Float(10));
-
+			
 #ifdef DNN_STOCHASTIC
 			if (batchSize == 1)
 			{
@@ -270,8 +272,9 @@ namespace dnn
 			else
 			{
 #endif
+				const auto threads = GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
+
 				if (!plain)
-				{
 					for_i(batchSize, threads, [=](UInt n)
 					{
 						for (auto c = 0ull; c < C; c++)
@@ -280,7 +283,6 @@ namespace dnn
 								for (auto w = 0ull; w < W; w++)
 									InputLayer->NeuronsD1[InputLayer->OffsetPaddedMem(n, c + ChannelsLeft, h, w)] += NeuronsD1[OffsetPaddedMem(n, c, h, w)];
 					});
-				}
 				else
 					for_i(batchSize, threads, [=](UInt n)
 					{

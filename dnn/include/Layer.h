@@ -504,6 +504,9 @@ namespace dnn
 		Float B1;
 		Float B2;
 		Float Gamma;
+		Float FwdInferenceWeight;
+		Float FwdTrainingWeight;
+		Float BwdTrainingWeight;
 		FloatArray Neurons;
 		FloatArray NeuronsD1;
 		FloatVector Weights;
@@ -633,6 +636,11 @@ namespace dnn
 				ChosenFormat == dnnl::memory::format_tag::abc || 
 				ChosenFormat == dnnl::memory::format_tag::abcd || 
 				ChosenFormat == dnnl::memory::format_tag::abcde; 
+		}
+
+		UInt GetElementsCount() const
+		{
+			return IsPlainFormat() ? CDHW() : PaddedCDHW();
 		}
 
 		std::string GetDescriptionHeader() const

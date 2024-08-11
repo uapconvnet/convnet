@@ -30,6 +30,10 @@ namespace dnn
 			InputNeurons(FloatArray())
 		{
 			assert(Inputs.size() > 1);
+
+			FwdInferenceWeight = Float(10);
+			FwdTrainingWeight = Float(10);
+			BwdTrainingWeight = Float(10);
 		}
 
 		void UpdateResolution() final override
@@ -129,7 +133,7 @@ namespace dnn
 				if constexpr (!Reference && !ReferenceConcat)
 				{
 					const auto plain = IsPlainFormat();
-					const auto threads = GetThreads(batchSize * (plain ? CDHW() : PaddedCDHW()), Float(10));
+					const auto threads = GetThreads(batchSize * GetElementsCount(), FwdTrainingWeight);
 
 #ifdef DNN_STOCHASTIC
 					if (batchSize == 1)
@@ -316,8 +320,7 @@ namespace dnn
 #endif // DNN_LEAN
 
 			const auto plain = IsPlainFormat();
-			const auto threads = GetThreads(batchSize * (plain ? CDHW() : PaddedCDHW()), Float(10));
-
+			
 #ifdef DNN_STOCHASTIC
 			if (batchSize == 1)
 			{
@@ -356,8 +359,9 @@ namespace dnn
 			else
 			{
 #endif
+				const auto threads = GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
+
 				if (!plain)
-				{
 					for_i(batchSize, threads, [=](UInt n)
 					{
 						auto channelOffset = 0ull;
@@ -372,7 +376,6 @@ namespace dnn
 							channelOffset += Inputs[inputLayer]->C;
 						}
 					});
-				}
 				else
 					for_i(batchSize, threads, [=](UInt n)
 					{
