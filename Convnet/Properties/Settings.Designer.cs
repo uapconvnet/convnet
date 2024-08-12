@@ -383,10 +383,12 @@ namespace Convnet.Properties {
             "     private bool bottleneck = false;\r\n        private Float dropout = 0;\r\n     " +
             "   private Float compression = 0;\r\n        private bool squeezeExcitation = fals" +
             "e;\r\n        private bool channelZeroPad = true;\r\n        private Activations act" +
-            "ivation = Activations.Relu;\r\n        private ObservableCollection<EfficientNetRe" +
-            "cord> efficientnet = new ObservableCollection<EfficientNetRecord>();\r\n        pr" +
-            "ivate ObservableCollection<ShuffleNetRecord> shufflenet = new ObservableCollecti" +
-            "on<ShuffleNetRecord>();\r\n        private UInt strideHFirstConv = 2;\r\n        pri" +
+            "ivation = Activations.Relu;\r\n        private ObservableCollection<EfficientNetReco" + 
+            "rd> efficientnet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, " +
+            "2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true" + 
+            ")];\r\n        private shufflenet = [new(5, 3, 1, 2, false) , new(6, 3, 1, 2, false)" +
+            ", new(7, 3, 1, 2, true), new(8, 3, 1, 2, true)];;\r\n        private UInt strideHFir" + 
+            "stConv = 2;\r\n        pri" +
             "vate UInt strideWFirstConv = 2;\r\n        private Float depthDrop = (Float)0.2;\r\n" +
             "        private bool fixedDepthDrop = false;\r\n\r\n        public ScriptParameters(" +
             ")\r\n        {\r\n        }\r\n\r\n        public ScriptParameters(Scripts script = Scri" +
@@ -422,19 +424,9 @@ namespace Convnet.Properties {
             "citation = squeezeExcitation;\r\n            ChannelZeroPad = channelZeroPad;\r\n   " +
             "         Activation = activation;\r\n            StrideHFirstConv = strideHFirstCo" +
             "nv;\r\n            StrideWFirstConv = strideWFirstConv;\r\n            DepthDrop = d" +
-            "epthDrop;\r\n            FixedDepthDrop = fixedDepthDrop;\r\n\r\n            var effic" +
-            "ientnetv2 = new ObservableCollection<EfficientNetRecord>();\r\n            efficie" +
-            "ntnetv2.Add(new EfficientNetRecord(1, 24, 2, 1, false));\r\n            efficientn" +
-            "etv2.Add(new EfficientNetRecord(4, 48, 4, 2, false));\r\n            efficientnetv" +
-            "2.Add(new EfficientNetRecord(4, 64, 4, 2, false));\r\n            efficientnetv2.A" +
-            "dd(new EfficientNetRecord(4, 128, 6, 2, true));\r\n            efficientnetv2.Add(" +
-            "new EfficientNetRecord(6, 160, 9, 1, true));\r\n            efficientnetv2.Add(new" +
-            " EfficientNetRecord(6, 256, 15, 2, true));\r\n            EfficientNet = efficient" +
-            "netv2;\r\n\r\n            var shufflenetv2 = new ObservableCollection<ShuffleNetReco" +
-            "rd>();\r\n            shufflenetv2.Add(new ShuffleNetRecord(5, 3, 1, 2, false));\r\n" +
-            "            shufflenetv2.Add(new ShuffleNetRecord(6, 3, 1, 2, false));\r\n        " +
-            "    shufflenetv2.Add(new ShuffleNetRecord(7, 3, 1, 2, true));\r\n            shuff" +
-            "lenetv2.Add(new ShuffleNetRecord(8, 3, 1, 2, true));\r\n            ShuffleNet = s" +
+            "epthDrop;\r\n            FixedDepthDrop = fixedDepthDrop;\r\n\r\n EfficientNet = eff" + 
+            "icient" +
+            "netv2;\r\n\r\n   ShuffleNet = s" +
             "hufflenetv2;\r\n        }\r\n\r\n        public IEnumerable<Scripts> ScriptsList { get" +
             " { return Enum.GetValues(typeof(Scripts)).Cast<Scripts>(); } }\r\n\r\n        public" +
             " IEnumerable<Datasets> DatasetsList { get { return Enum.GetValues(typeof(Dataset" +
