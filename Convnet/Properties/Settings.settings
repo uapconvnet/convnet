@@ -785,8 +785,8 @@ namespace Scripts
         private bool squeezeExcitation = false;
         private bool channelZeroPad = true;
         private Activations activation = Activations.Relu;
-        private ObservableCollection&lt;EfficientNetRecord&gt; efficientnet = new ObservableCollection&lt;EfficientNetRecord&gt;();
-        private ObservableCollection&lt;ShuffleNetRecord&gt; shufflenet = new ObservableCollection&lt;ShuffleNetRecord&gt;();
+        private ObservableCollection&lt;EfficientNetRecord&gt; efficientnet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)];
+        private ObservableCollection&lt;ShuffleNetRecord&gt; shufflenet = [new(5, 3, 1, 2, false) , new(6, 3, 1, 2, false), new(7, 3, 1, 2, true), new(8, 3, 1, 2, true)];
         private UInt strideHFirstConv = 2;
         private UInt strideWFirstConv = 2;
         private Float depthDrop = (Float)0.2;
@@ -838,22 +838,8 @@ namespace Scripts
             StrideWFirstConv = strideWFirstConv;
             DepthDrop = depthDrop;
             FixedDepthDrop = fixedDepthDrop;
-
-            var efficientnetv2 = new ObservableCollection&lt;EfficientNetRecord&gt;();
-            efficientnetv2.Add(new EfficientNetRecord(1, 24, 2, 1, false));
-            efficientnetv2.Add(new EfficientNetRecord(4, 48, 4, 2, false));
-            efficientnetv2.Add(new EfficientNetRecord(4, 64, 4, 2, false));
-            efficientnetv2.Add(new EfficientNetRecord(4, 128, 6, 2, true));
-            efficientnetv2.Add(new EfficientNetRecord(6, 160, 9, 1, true));
-            efficientnetv2.Add(new EfficientNetRecord(6, 256, 15, 2, true));
-            EfficientNet = efficientnetv2;
-
-            var shufflenetv2 = new ObservableCollection&lt;ShuffleNetRecord&gt;();
-            shufflenetv2.Add(new ShuffleNetRecord(5, 3, 1, 2, false));
-            shufflenetv2.Add(new ShuffleNetRecord(6, 3, 1, 2, false));
-            shufflenetv2.Add(new ShuffleNetRecord(7, 3, 1, 2, true));
-            shufflenetv2.Add(new ShuffleNetRecord(8, 3, 1, 2, true));
-            ShuffleNet = shufflenetv2;
+            EfficientNet = efficientnet;
+			ShuffleNet = shufflenet;
         }
 
         public IEnumerable&lt;Scripts&gt; ScriptsList { get { return Enum.GetValues(typeof(Scripts)).Cast&lt;Scripts&gt;(); } }
@@ -873,7 +859,7 @@ namespace Scripts
                 switch (Script)
                 {
                     case Scripts.densenet:
-                        return Script.ToString() + "-" + Groups.ToString() + "-" + Iterations.ToString() + "-" + GrowthRate.ToString() + (Dropout &gt; 0 ? "-dropout" : "") + (DepthDrop &gt; 0 ? (FixedDepthDrop ? "-fixeddepthdrop" : "-depthdrop") : "") + (Compression &gt; 0 ? "-compression" : "") + (Bottleneck ? "-bottleneck" : "") + "-" + Activation.ToString().ToLower();
+                        return Script.ToString() + "-" + Groups.ToString() + "-" + Iterations.ToString() + "-" + GrowthRate.ToString() + (Dropout gt; 0 ? "-dropout" : "") + (DepthDrop &gt; 0 ? (FixedDepthDrop ? "-fixeddepthdrop" : "-depthdrop") : "") + (Compression &gt; 0 ? "-compression" : "") + (Bottleneck ? "-bottleneck" : "") + "-" + Activation.ToString().ToLower();
                     case Scripts.efficientnetv2:
                         {
                             string name = "";
@@ -1061,7 +1047,7 @@ namespace Scripts
 
         public bool RandomCrop
         {
-            get { return padH &gt; 0 || padW &gt; 0; }
+             get { return padH &gt; 0 || padW &gt; 0; }
         }
 
         public bool MeanStdNormalization
@@ -2123,6 +2109,7 @@ namespace Scripts
             return blocks;
         }
 
+
         public static string InvertedResidual(UInt A, UInt C, UInt channels, UInt kernel = 3, UInt pad = 1, bool subsample = false, UInt shuffle = 2, bool se = false, Activations activation = Activations.HardSwish)
         {
             if (subsample)
@@ -2246,7 +2233,7 @@ namespace Scripts
                 "[" + p.ModelName + "]" + nwl +
                 "Dataset=" + to_string(p.Dataset) + nwl +
                 "Dim=" + to_string(p.C) + "," + to_string(p.H) + "," + to_string(p.W) + nwl +
-                ((p.PadH &gt; 0 || p.PadW &gt; 0) ? (!p.MirrorPad ? "ZeroPad=" + to_string(p.PadH) + "," + to_string(p.PadW) + nwl : "MirrorPad=" + to_string(p.PadH) + "," + to_string(p.PadW) + nwl) : "") +
+                 ((p.PadH &gt; 0 || p.PadW &gt; 0) ? (!p.MirrorPad ? "ZeroPad=" + to_string(p.PadH) + "," + to_string(p.PadW) + nwl : "MirrorPad=" + to_string(p.PadH) + "," + to_string(p.PadW) + nwl) : "") +
                 ((p.PadH &gt; 0 || p.PadW &gt; 0) ? "RandomCrop=Yes" + nwl : "") +
                 "WeightsFiller=" + to_string(p.WeightsFiller) + (p.WeightsFillerModeVisible ? "(" + p.WeightsFillerMode.ToString() + "," + to_string(p.WeightsGain) + ")" : "") + (p.WeightsGainVisible &amp;&amp; !p.WeightsFillerModeVisible ? "(" + to_string(p.WeightsGain) + ")" : "") + (p.WeightsScaleVisible ? "(" + to_string(p.WeightsScale) + ")" : "") + nwl +
                 (p.WeightsLRM != 1 ? "WeightsLRM=" + to_string(p.WeightsLRM) + nwl : "") +
@@ -2366,7 +2353,7 @@ namespace Scripts
                                 channels += DIV8(p.GrowthRate);
                             }
 
-                            if (g &lt; p.Groups)
+                           if (g &lt; p.Groups)
                             {
                                 channels = DIV8((UInt)System.Math.Floor(2.0 * channels * p.Compression));
 
@@ -2434,7 +2421,7 @@ namespace Scripts
                         var input = In("B", C++);
                         foreach (var rec in p.EfficientNet)
                         {
-                            var beginStage = stage &lt; 3ul;
+                           var beginStage = stage &lt; 3ul;
                             var outputChannels = DIV8((UInt)((Float)rec.Channels * width));
                             for (var n = 0ul; n &lt; rec.Iterations; n++)
                             {
@@ -2519,9 +2506,9 @@ namespace Scripts
                                 C += 3;
                             }
 
-                            for (var i = 1ul; i &lt; p.Iterations; i++)
+                            for (var i = 1ul; i lt; p.Iterations; i++)
                             {
-                                var strOutputLayer = (i == 1 &amp;&amp; g &gt; 1) ? In("B", C - 1) : (i == 1 &amp;&amp; g == 1) ? In("B", 4) : In("A", A);
+                                var strOutputLayer = (i == 1 &amp;&amp; g gt; 1) ? In("B", C - 1) : (i == 1 &amp;&amp; g == 1) ? In("B", 4) : In("A", A);
 
                                 var group = In("SE", C + 1);
 
@@ -2557,7 +2544,7 @@ namespace Scripts
                             Convolution(C + 1, In("B", C), p.Classes, 1, 1, 1, 1, 0, 0) +
                             BatchNorm(C + 1, In("C", C + 1)) +
                             GlobalAvgPooling(In("B", C + 1)) +
-                               LogSoftmax("GAP") +
+                            LogSoftmax("GAP") +
                             Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
                     }
                     break;
@@ -2570,8 +2557,7 @@ namespace Scripts
                         var A = 1ul;
                         var C = 5ul;
 
-                        net +=
-                            Convolution(1, "Input", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1);
+                        net += Convolution(1, "Input", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1);
 
                         if (p.Bottleneck)
                         {
@@ -2580,7 +2566,7 @@ namespace Scripts
                                 Convolution(2, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
                                 BatchNormActivation(2, "C2", p.Activation) +
                                 Convolution(3, "B2", DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
-                                (p.Dropout &gt; 0 ? BatchNormActivationDropout(3, "C3", p.Activation) : BatchNormActivation(3, "C3", p.Activation)) +
+                                (p.Dropout gt; 0 ? BatchNormActivationDropout(3, "C3", p.Activation) : BatchNormActivation(3, "C3", p.Activation)) +
                                 Convolution(4, "B3", DIV8(W), 1, 1, 1, 1, 0, 0) +
                                 Convolution(5, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
                                 Add(1, "C4,C5"));
@@ -2592,15 +2578,15 @@ namespace Scripts
                             blocks.Add(
                                 BatchNormActivation(1, "C1", p.Activation) +
                                 Convolution(2, "B1", DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                (p.Dropout &gt; 0 ? BatchNormActivationDropout(2, "C2", p.Activation) : BatchNormActivation(2, "C2", p.Activation)) +
+                                (p.Dropout gt; 0 ? BatchNormActivationDropout(2, "C2", p.Activation) : BatchNormActivation(2, "C2", p.Activation)) +
                                 Convolution(3, "B2", DIV8(W), 3, 3, 1, 1, 1, 1) +
                                 Convolution(4, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
                                 Add(1, "C3,C4"));
                         }
 
-                        for (var g = 0ul; g &lt; p.Groups; g++)
+                        for (var g = 0ul; g lt; p.Groups; g++)
                         {
-                            if (g &gt; 0)
+                            if (g gt; 0)
                             {
                                 W *= 2;
 
@@ -2619,7 +2605,7 @@ namespace Scripts
                                         Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
                                         BatchNormActivation(C + 1, In("C", C), p.Activation) +
                                         Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 2, 2, 1, 1) +
-                                        (p.Dropout &gt; 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
+                                        (p.Dropout gt; 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
                                         Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
                                         strChannelZeroPad);
                                 }
@@ -2628,7 +2614,7 @@ namespace Scripts
                                     blocks.Add(
                                         BatchNormActivation(C, In("A", A), p.Activation) +
                                         Convolution(C, In("B", C), DIV8(W), 3, 3, 2, 2, 1, 1) +
-                                        (p.Dropout &gt; 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
+                                        (p.Dropout gt; 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
                                         Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
                                         strChannelZeroPad);
                                 }
@@ -2637,7 +2623,7 @@ namespace Scripts
                                 C += p.ChannelZeroPad ? 2 + bn : 3 + bn;
                             }
 
-                            for (var i = 1ul; i &lt; p.Iterations; i++)
+                            for (var i = 1ul; i lt; p.Iterations; i++)
                             {
                                 if (p.Bottleneck)
                                 {
@@ -2646,7 +2632,7 @@ namespace Scripts
                                         Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
                                         BatchNormActivation(C + 1, In("C", C), p.Activation) +
                                         Convolution(C + 1, In("B", C + 1), DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
-                                        (p.Dropout &gt; 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
+                                        (p.Dropout gt; 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
                                         Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
                                         Add(A + 1, In("C", C + 2) + "," + In("A", A)));
 
@@ -2657,7 +2643,7 @@ namespace Scripts
                                     blocks.Add(
                                         BatchNormActivation(C, In("A", A), p.Activation) +
                                         Convolution(C, In("B", C), DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                        (p.Dropout &gt; 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
+                                        (p.Dropout gt; 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
                                         Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
                                         Add(A + 1, In("C", C + 1) + "," + In("A", A)));
 
@@ -2671,11 +2657,11 @@ namespace Scripts
                             net += block;
 
                         net +=
-                               BatchNormActivation(C, In("A", A), p.Activation) +
+                            BatchNormActivation(C, In("A", A), p.Activation) +
                             Convolution(C + 1, In("B", C), p.Classes, 1, 1, 1, 1, 0, 0) +
                             BatchNorm(C + 1, In("C", C + 1)) +
                             GlobalAvgPooling(In("B", C + 1)) +
-                               LogSoftmax("GAP") +
+                            LogSoftmax("GAP") +
                             Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
                     }
                     break;
@@ -2707,7 +2693,7 @@ namespace Scripts
                                 net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation);
                                 C += 5;
                             }
-                            for (var n = 0ul; n &lt; rec.Iterations; n++)
+                            for (var n = 0ul; n lt; rec.Iterations; n++)
                             {
                                 net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);
                                 C += 3;
