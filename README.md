@@ -119,7 +119,7 @@
 * [shufflenetv2](https://arxiv.org/abs/1807.11164)
 
 ### Dependencies & Licenses
-* [AvalonEdit WPF Text Editor - MIT License](https://github.com/icsharpcode/AvalonEdit)
+* [AvaloniaEdit Text Editor - MIT License](https://github.com/avaloniaui/avaloniaedit)
 * [Bitsery C++ Binary Serialization Library - MIT License](https://github.com/fraillt/bitsery)
 * [C++ Vector Class Library - Apache License 2.0](https://github.com/vectorclass)
 * [CImg Library - CeCILL License](https://github.com/dtschump/CImg)
@@ -129,9 +129,8 @@
 * [libjpeg-turbo - BSD Licenses](https://github.com/libjpeg-turbo/libjpeg-turbo)
 * [libpng - PNG Reference Library License version 2](https://github.com/glennrp/libpng)
 * [Magic Enum C++ - MIT License](https://github.com/Neargye/magic_enum)
-* [OxyPlot .NET Plotting Library - MIT License](https://github.com/oxyplot/oxyplot)
-* [WpfExToolkit - Xceed Software Community License](https://github.com/dotnetprojects/WpfExtendedToolkit)
-* [WpfMath - MIT License](https://github.com/ForNeVeR/wpf-math)
+* [OxyPlot Avalonia Plotting Library - MIT License](https://github.com/oxyplot/oxyplot-avalonia)
+* [XAML Math - MIT License](https://github.com/ForNeVeR/xaml-math)
 * [zlib - zlib License](https://github.com/madler/zlib)
 
 ### Screenshots
