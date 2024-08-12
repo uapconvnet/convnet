@@ -244,14 +244,17 @@ namespace Convnet.PageViewModels
                 costLayersComboBox.Items.Add(item);
             }
             ToolTip.SetTip(costLayersComboBox, "Cost Layer");
-            costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
+            if (Model != null) 
+                costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
             selectedCostIndex = costLayersComboBox.SelectedIndex;
             costLayersComboBox.SelectionChanged += CostLayersComboBox_SelectionChanged;
-            costLayersComboBox.IsVisible = Model.CostLayerCount > 1;
+            if (Model != null)
+                costLayersComboBox.IsVisible = Model.CostLayerCount > 1;
 
             layersComboBox = new ComboBox { Name = "ComboBoxLayers" };
             layersComboBox.DataContext = Model;
-            layersComboBox.ItemsSource = Model.Layers;
+            if (Model != null)
+                layersComboBox.ItemsSource = Model.Layers;
             var template = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), });
             layersComboBox.ItemTemplate = template;
             //layersComboBox.ItemTemplate = GetLockTemplate();
@@ -260,7 +263,8 @@ namespace Convnet.PageViewModels
             layersComboBox.SelectedIndex = Settings.Default.SelectedLayer;
             layersComboBox.SelectionChanged += LayersComboBox_SelectionChanged;
             ToolTip.SetTip(layersComboBox, "Layer");
-            Model.SelectedIndex = Settings.Default.SelectedLayer;
+            if (Model != null)
+                Model.SelectedIndex = Settings.Default.SelectedLayer;
 
             disableLockingCheckBox = new CheckBox
             {
@@ -276,7 +280,7 @@ namespace Convnet.PageViewModels
                 Name = "UnlockAllButton",
                 Content = ApplicationHelper.LoadFromResource("Unlock.png"),
                 ClickMode = ClickMode.Release,
-                IsVisible = !Settings.Default.DisableLocking && Model.Layers[Settings.Default.SelectedLayer].Lockable
+                IsVisible = !Settings.Default.DisableLocking && Model != null && Model.Layers[Settings.Default.SelectedLayer].Lockable
             };
             ToolTip.SetTip(unlockAllButton, "Unlock All");
             unlockAllButton.Click += UnlockAll_Click;
@@ -286,7 +290,7 @@ namespace Convnet.PageViewModels
                 Name = "LockAllButton",
                 Content = ApplicationHelper.LoadFromResource("Lock.png"),
                 ClickMode = ClickMode.Release,
-                IsVisible = !Settings.Default.DisableLocking && Model.Layers[Settings.Default.SelectedLayer].Lockable
+                IsVisible = !Settings.Default.DisableLocking && Model != null && Model.Layers[Settings.Default.SelectedLayer].Lockable
             };
             ToolTip.SetTip(lockAllButton, "Lock All");
             lockAllButton.Click += LockAll_Click;
@@ -355,7 +359,8 @@ namespace Convnet.PageViewModels
                 Path = "CurrentPlotType",
                 Mode = BindingMode.TwoWay,
                 Converter = new Converters.EnumConverter(),
-                ConverterParameter = typeof(PlotType)
+                ConverterParameter = typeof(PlotType),
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             plotTypeComboBox.Bind(ComboBox.SelectedValueProperty, binding);
 
@@ -456,7 +461,7 @@ namespace Convnet.PageViewModels
             showSample = false;
             showWeights = false;
             showWeightsSnapshot = false;
-            
+
             gotoEpoch = Settings.Default.GotoEpoch;
             showTrainingPlot = Settings.Default.ShowTrainingPlot;
             currentPlotType = (PlotType)Settings.Default.PlotType;
@@ -479,14 +484,18 @@ namespace Convnet.PageViewModels
                 };
                 costLayersComboBox.Items.Add(item);
             }
-            costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
-            selectedCostIndex = costLayersComboBox.SelectedIndex;
-            costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
-            costLayersComboBox.IsVisible = Model.CostLayerCount > 1;
 
-            layersComboBox.ItemsSource = Model.Layers;
-            layersComboBox.SelectedIndex = 0;
-            Model.SelectedIndex = 0;
+            if (Model != null)
+            { 
+                costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
+                selectedCostIndex = costLayersComboBox.SelectedIndex;
+                costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
+                costLayersComboBox.IsVisible = Model.CostLayerCount > 1;
+                layersComboBox.ItemsSource = Model.Layers;
+                layersComboBox.SelectedIndex = 0;
+                Model.SelectedIndex = 0;
+            }
+                       
             Settings.Default.SelectedLayer = 0;
             Settings.Default.Save();
             dataProviderComboBox.SelectedIndex = (int)Dataset;
@@ -1656,7 +1665,7 @@ namespace Convnet.PageViewModels
             RefreshTrainingPlot();
         }
 
-        public void LayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        public void LayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
             Dispatcher.UIThread.Invoke(() =>
             {
