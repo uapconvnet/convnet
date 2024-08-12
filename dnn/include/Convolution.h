@@ -550,8 +550,8 @@ namespace dnn
 						temp[mapping++] = image[i + size];
 						temp[mapping++] = image[i + (size * 2)];
 					}
-					/*for (auto i = 0ull; i < totalSize; i++)
-						image[i] = temp[i];*/
+					for (auto i = 0ull; i < totalSize; i++)
+						image[i] = temp[i];
 
 					return image;
 				}
