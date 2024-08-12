@@ -3979,7 +3979,7 @@ namespace Interop
                                         Marshal.FreeHGlobal(pnt);
                                         InputSnapshot = bitmap;
                                         Label = LabelsCollection[LabelIndex][labelVector[LabelIndex]];
-                                        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+                                        //GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
                                     }
                                     else
                                         Label = System.String.Empty;
@@ -4040,7 +4040,7 @@ namespace Interop
                                     info.WeightsSnapshotX = (int)(width * BlockSize);
                                     info.WeightsSnapshotY = (int)(height * BlockSize);
                                     info.WeightsSnapshot = bitmap;
-                                    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+                                    //GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
                                 }
                             }
                             break;
@@ -4085,7 +4085,7 @@ namespace Interop
                                         info.WeightsSnapshotX = (int)(width * BlockSize);
                                         info.WeightsSnapshotY = (int)(height * BlockSize);
                                         info.WeightsSnapshot = bitmap;
-                                        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+                                        //GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
                                     }
                                 }
                             }
@@ -4123,7 +4123,7 @@ namespace Interop
                                     info.WeightsSnapshotX = (int)(width * BlockSize);
                                     info.WeightsSnapshotY = (int)(height * BlockSize);
                                     info.WeightsSnapshot = bitmap;
-                                    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+                                    //GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
                                 }
                             }
                             break;

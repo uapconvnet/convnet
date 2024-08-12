@@ -308,7 +308,7 @@ namespace dnn
 #endif // DNN_LEAN		
 		}
 
-		ByteArray GetImage(const Byte fillColor) final override
+		/*ByteArray GetImage(const Byte fillColor) final override
 		{
 			const auto rangeWeights = GetColorRange<Float>(WeightsStats.Min, WeightsStats.Max);
 			const auto rangeBiases = GetColorRange<Float>(BiasesStats.Min, BiasesStats.Max);
@@ -427,6 +427,131 @@ namespace dnn
 					}
 					for (auto i = 0ull; i < totalSize; i++)
 						image[i] = temp[i];
+
+					return image;
+				}
+			}
+		}*/
+
+		ByteArray GetImage(const Byte fillColor) final override
+		{
+			const auto rangeWeights = GetColorRange<Float>(WeightsStats.Min, WeightsStats.Max);
+			const auto rangeBiases = GetColorRange<Float>(BiasesStats.Min, BiasesStats.Max);
+
+			auto weights = FloatVector();
+			if (*WeightsMemDesc != *PersistWeightsMemDesc)
+			{
+				weights = FloatVector(WeightsMemDesc->get_size() / sizeof(Float));
+
+				auto memWeights = dnnl::memory(*WeightsMemDesc, Device.engine, Weights.data());
+				auto weightsMem = dnnl::memory(*PersistWeightsMemDesc, Device.engine, weights.data());
+
+				dnnl::reorder(memWeights, weightsMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memWeights}, { DNNL_ARG_TO, weightsMem } });
+				Device.stream.wait();
+			}
+			else
+				weights = Weights;
+
+			if (Groups > 1)
+			{
+				const auto border = 1ull;
+				const auto pitchH = KernelH + border;
+				const auto pitchW = KernelW + border;
+				const auto width = C * pitchH + border;
+				const auto height = (InputLayer->C / Groups) * pitchW + border;
+				const auto biasOffset = height * width;
+				auto image = ByteArray(biasOffset + width, fillColor);
+
+				for (auto g = 0ull; g < Groups; g++)
+				{
+					for (auto c = 0ull; c < (C / Groups); c++)
+					{
+						const auto left = (g * (C / Groups) + c) * pitchH + border;
+						for (auto r = 0ull; r < (InputLayer->C / Groups); r++)
+						{
+							const auto top = r * pitchW + border;
+							const auto idx = ((g * (C / Groups) + c) * (InputLayer->C / Groups) + r) * KernelH * KernelW;
+							for (auto y = 0ull; y < KernelH; y++)
+								for (auto x = 0ull; x < KernelW; x++)
+									image[((top + y) * width) + left + x] = GetColorFromRange<Float>(rangeWeights, WeightsStats.Min, weights[idx + (y * KernelW) + x]);
+						}
+						if (HasBias)
+							image[left + biasOffset] = GetColorFromRange<Float>(rangeBiases, BiasesStats.Min, Biases[g * (C / Groups) + c]);
+					}
+				}
+
+				return image;
+			}
+			else
+			{
+				if (InputLayer->C != 3)
+				{
+					const auto border = (KernelH == 1ull && KernelW == 1ull) ? 0ull : 1ull;
+					const auto pitchH = KernelH + border;
+					const auto pitchW = KernelW + border;
+					const auto width = C * pitchH + border;
+					const auto height = InputLayer->C * pitchW + border;
+					const auto biasOffset = height * width;
+					auto image = ByteArray(biasOffset + width, fillColor);
+
+					for (auto c = 0ull; c < C; c++)
+					{
+						const auto left = c * pitchH + border;
+						for (auto r = 0ull; r < InputLayer->C; r++)
+						{
+							const auto top = r * pitchW + border;
+							const auto idx = (c * InputLayer->C + r) * KernelH * KernelW;
+							for (auto y = 0ull; y < KernelH; y++)
+								for (auto x = 0ull; x < KernelW; x++)
+									image[((top + y) * width) + left + x] = GetColorFromRange<Float>(rangeWeights, WeightsStats.Min, weights[idx + (y * KernelW) + x]);
+						}
+						if (HasBias)
+							image[left + biasOffset] = GetColorFromRange<Float>(rangeBiases, BiasesStats.Min, Biases[c]);
+					}
+
+					return image;
+				}
+				else
+				{
+					const auto border = 1ull;
+					const auto pitchH = KernelH + border;
+					const auto pitchW = KernelW + border;
+					const auto width = C * pitchH + border;
+					const auto height = pitchW + 3 * border;
+					const auto size = width * height;
+					const auto totalSize = 3 * size;
+					auto image = ByteArray(totalSize, fillColor);
+
+					auto mapping = 0ull;
+					for (auto c = 0ull; c < C; c++)
+					{
+						const auto mapOffset = 1 + (c * (KernelH + 1));
+						for (auto inputC = 0ull; inputC < 3; inputC++)
+						{
+							const auto channelOffset = inputC * size;
+							const auto mapIndex = mapping * KernelH * KernelW;
+
+							for (auto y = 0ull; y < KernelW; y++)
+								for (auto x = 0ull; x < KernelH; x++)
+									image[x + mapOffset + ((1 + y) * width) + channelOffset] = GetColorFromRange<Float>(rangeWeights, WeightsStats.Min, weights[x + (y * KernelW) + mapIndex]);
+
+							if (HasBias)
+								image[mapOffset + ((2 + KernelW) * width) + channelOffset] = GetColorFromRange<Float>(rangeBiases, BiasesStats.Min, Biases[c]);
+
+							mapping++;
+						}
+					}
+
+					auto temp = ByteArray(totalSize);
+					mapping = 0ull;
+					for (auto i = 0ull; i < size; i++)
+					{
+						temp[mapping++] = image[i];
+						temp[mapping++] = image[i + size];
+						temp[mapping++] = image[i + (size * 2)];
+					}
+					/*for (auto i = 0ull; i < totalSize; i++)
+						image[i] = temp[i];*/
 
 					return image;
 				}
