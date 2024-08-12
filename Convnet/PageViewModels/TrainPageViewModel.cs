@@ -345,7 +345,6 @@ namespace Convnet.PageViewModels
                 Source = this,
                 Path = "ShowTrainingPlot",
                 Mode = BindingMode.TwoWay,
-                Converter = new Converters.BooleanToVisibilityConverter(),
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             plotTypeComboBox.Bind(ComboBox.IsVisibleProperty, binding);
