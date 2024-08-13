@@ -407,10 +407,9 @@ namespace dnn
 							const auto mapIndex = mapping * KernelH * KernelW;
 
 							for (auto y = 0ull; y < KernelW; y++)
-								PRAGMA_OMP_SIMD()
 								for (auto x = 0ull; x < KernelH; x++)
 									image[x + mapOffset + ((border + y) * width) + channelOffset] = GetColorFromRange<Float>(rangeWeights, WeightsStats.Min, weights[x + (y * KernelW) + mapIndex]);
-
+								
 							if (HasBias)
 								image[mapOffset + ((1ull + pitchW) * width) + channelOffset] = GetColorFromRange<Float>(rangeBiases, BiasesStats.Min, Biases[c]);
 
@@ -419,7 +418,6 @@ namespace dnn
 					}
 
 					auto temp = ByteArray(totalSize);
-					PRAGMA_OMP_SIMD()
 					for (auto i = 0ull; i < size; i++)
 					{
 						temp[0 + (3 * i)] = image[i + (0 * size)];
