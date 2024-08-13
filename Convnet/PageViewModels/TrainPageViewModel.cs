@@ -527,11 +527,13 @@ namespace Convnet.PageViewModels
                         DNNTrainingResult item = new DNNTrainingResult(Cycle, Epoch, cost.GroupIndex, c, cost.Name, N, D, H, W, PadD, PadH, PadW, (DNNOptimizers)Optimizer, Rate, Eps, Momentum, Beta2, Gamma, L2Penalty, Dropout, InputDropout, Cutout, CutMix, AutoAugment, HorizontalFlip, VerticalFlip, ColorCast, ColorAngle, Distortion, (DNNInterpolations)Interpolation, Scaling, Rotation, cost.AvgTrainLoss, cost.TrainErrors, cost.TrainErrorPercentage, cost.TrainAccuracy, cost.AvgTestLoss, cost.TestErrors, cost.TestErrorPercentage, cost.TestAccuracy, (Int64)span.TotalMilliseconds, span);
                         TrainingLog.Add(item);
                     }
-                    SelectedIndex = TrainingLog.Count - 1;  
+                    SelectedIndex = TrainingLog.Count - 1;
                 }
             }, DispatcherPriority.Send);
 
             RefreshTrainingPlot();
+
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
         }
 
         private void TrainProgress(DNNOptimizers Optim, UInt BatchSize, UInt Cycle, UInt TotalCycles, UInt Epoch, UInt TotalEpochs, bool HorizontalFlip, bool VerticalFlip, Float InputDropout, Float Cutout, bool CutMix, Float AutoAugment, Float ColorCast, UInt ColorAngle, Float Distortion, DNNInterpolations Interpolation, Float Scaling, Float Rotation, UInt SampleIndex, Float Rate, Float Momentum, Float Beta2, Float Gamma, Float L2Penalty, Float Dropout, Float AvgTrainLoss, Float TrainErrorPercentage, Float TrainAccuracy, UInt TrainErrors, Float AvgTestLoss, Float TestErrorPercentage, Float TestAccuracy, UInt TestErrors, DNNStates State, DNNTaskStates TaskState)
@@ -1245,71 +1247,74 @@ namespace Convnet.PageViewModels
             {
                 if (Model?.TaskState == DNNTaskStates.Running)
                 {
-
                     await MessageBox.Show("You must stop testing first.", "Information", MessageBoxButtons.OK);
-
                     return;
                 }
 
                 if (Model?.TaskState == DNNTaskStates.Stopped)
                 {
-                    var dialog = new TrainParameters
+                    if (App.MainWindow != null)
                     {
-                        Model = this.Model,
-                        Path = DefinitionsDirectory,
-                        IsEnabled = true,
-                        Rate = TrainRate,
-                        tpvm = this,
-                    };
-
-                    await dialog.ShowDialog(App.MainWindow);
-
-                    if (dialog.DialogResult)
-                    {
-                        TrainRate = dialog.Rate;
-
-                        if (SGDR)
-                            Model.AddTrainingRateSGDR(TrainRate, true, GotoEpoch, GotoCycle, Model.TrainingSamples);
-                        else
-                            Model.AddTrainingRate(TrainRate, true, GotoEpoch, Model.TrainingSamples);
-
-                        Model.SetOptimizer(TrainRate.Optimizer);
-                        Model.Optimizer = TrainRate.Optimizer;
-                        Optimizer = TrainRate.Optimizer;
-
-                        EpochDuration = TimeSpan.Zero;
-
-                        RefreshTimer = new Timer(1000 * Settings.Default.RefreshInterval);
-                        RefreshTimer.Elapsed += new ElapsedEventHandler(RefreshTimer_Elapsed);
-
-                        Model.SetCostIndex((uint)SelectedCostIndex);
-                        Model.Start(true);
-                        RefreshTimer.Start();
-                        CommandToolBar[0].IsVisible = false;
-                        CommandToolBar[1].IsVisible = true;
-                        CommandToolBar[2].IsVisible = true;
-
-                        CommandToolBar[6].IsVisible = false;
-                        CommandToolBar[7].IsVisible = true;
-                        CommandToolBar[8].IsVisible = false;
-
-                        CommandToolBar[17].IsVisible = false;
-                        CommandToolBar[18].IsVisible = false;
-                        CommandToolBar[19].IsVisible = false;
-                        CommandToolBar[20].IsVisible = false;
-                        CommandToolBar[21].IsVisible = false;
-
-                        if (Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
+                        var dialog = new TrainParameters
                         {
-                            if ((Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && Model.Layers[layersComboBox.SelectedIndex].Scaling) || !Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
-                            {
-                                CommandToolBar[17].IsVisible = !Settings.Default.DisableLocking;
-                                CommandToolBar[18].IsVisible = !Settings.Default.DisableLocking;
-                                CommandToolBar[20].IsVisible = true;
-                            }
-                        }
+                            Model = this.Model,
+                            Path = DefinitionsDirectory,
+                            IsEnabled = true,
+                            Rate = TrainRate,
+                            tpvm = this,
+                        };
 
-                        ShowProgress = true;
+                        await dialog.ShowDialog(App.MainWindow);
+
+                        if (dialog.DialogResult)
+                        {
+                            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+
+                            TrainRate = dialog.Rate;
+
+                            if (SGDR)
+                                Model.AddTrainingRateSGDR(TrainRate, true, GotoEpoch, GotoCycle, Model.TrainingSamples);
+                            else
+                                Model.AddTrainingRate(TrainRate, true, GotoEpoch, Model.TrainingSamples);
+
+                            Model.SetOptimizer(TrainRate.Optimizer);
+                            Model.Optimizer = TrainRate.Optimizer;
+                            Optimizer = TrainRate.Optimizer;
+
+                            EpochDuration = TimeSpan.Zero;
+
+                            RefreshTimer = new Timer(1000 * Settings.Default.RefreshInterval);
+                            RefreshTimer.Elapsed += new ElapsedEventHandler(RefreshTimer_Elapsed);
+
+                            Model.SetCostIndex((uint)SelectedCostIndex);
+                            Model.Start(true);
+                            RefreshTimer.Start();
+                            CommandToolBar[0].IsVisible = false;
+                            CommandToolBar[1].IsVisible = true;
+                            CommandToolBar[2].IsVisible = true;
+
+                            CommandToolBar[6].IsVisible = false;
+                            CommandToolBar[7].IsVisible = true;
+                            CommandToolBar[8].IsVisible = false;
+
+                            CommandToolBar[17].IsVisible = false;
+                            CommandToolBar[18].IsVisible = false;
+                            CommandToolBar[19].IsVisible = false;
+                            CommandToolBar[20].IsVisible = false;
+                            CommandToolBar[21].IsVisible = false;
+
+                            if (Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
+                            {
+                                if ((Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && Model.Layers[layersComboBox.SelectedIndex].Scaling) || !Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
+                                {
+                                    CommandToolBar[17].IsVisible = !Settings.Default.DisableLocking;
+                                    CommandToolBar[18].IsVisible = !Settings.Default.DisableLocking;
+                                    CommandToolBar[20].IsVisible = true;
+                                }
+                            }
+
+                            ShowProgress = true;
+                        }
                     }
                 }
                 else
@@ -1691,6 +1696,7 @@ namespace Convnet.PageViewModels
                         {
                             if (index != 0)
                                 Model.UpdateLayerInfo(0ul, ShowSample);
+
                             InputSnapshot = Model.InputSnapshot;
                             Label = Model.Label;
                         }
