@@ -1703,11 +1703,44 @@ namespace Convnet.PageViewModels
                         CommandToolBar[19].IsVisible = Model.Layers[index].Lockable && Model.TaskState == DNNTaskStates.Stopped;
                         CommandToolBar[20].IsVisible = Model.Layers[index].Lockable;
                         CommandToolBar[21].IsVisible = Model.Layers[index].Lockable && Model.TaskState == DNNTaskStates.Stopped;
+                        
+                        var sb = new StringBuilder();
+
 
                         layerInfo = "<Span><Bold>Layer</Bold></Span><LineBreak/><Span>" + Model.Layers[index].Description + "</Span><LineBreak/>";
+
+                        if (Settings.Default.Timings)
+                        {
+                            if (Model.State == DNNStates.Training)
+                            {
+                                layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
+                                sb.Length = 0;
+                                sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
+                                layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                                sb.Length = 0;
+                                sb.AppendFormat(" bprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].BPropLayerTime, (int)Model.bpropTime);
+                                layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                                if (ShowWeightsSnapshot)
+                                {
+                                    sb.Length = 0;
+                                    sb.AppendFormat(" update: \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].UpdateLayerTime, (int)Model.updateTime);
+                                    layerInfo += "<Span>" + sb.ToString() + "</Span>";
+                                }
+                            }
+                            else if (Model.State == DNNStates.Testing)
+                            {
+                                layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
+                                sb.Length = 0;
+                                sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
+                                layerInfo += "<Span>" + sb.ToString() + "</Span>";
+                            }
+                        }
+
+                        this.RaisePropertyChanged(nameof(LayerInfo));
+
+
                         weightsMinMax = "<Span><Bold>Neurons</Bold></Span><LineBreak/>";
 
-                        var sb = new StringBuilder();
                         sb.Length = 0;
                         if (Model.Layers[index].NeuronsStats.StdDev >= 0.0f)
                             sb.AppendFormat(" Std:     {0:N8}", Model.Layers[index].NeuronsStats.StdDev);
@@ -1815,35 +1848,7 @@ namespace Convnet.PageViewModels
 
                         this.RaisePropertyChanged(nameof(WeightsMinMax));
 
-                        if (Settings.Default.Timings)
-                        {
-                            if (Model.State == DNNStates.Training)
-                            {
-                                layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
-                                sb.Length = 0;
-                                sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
-                                layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                                sb.Length = 0;
-                                sb.AppendFormat(" bprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].BPropLayerTime, (int)Model.bpropTime);
-                                layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                                if (ShowWeightsSnapshot)
-                                {
-                                    sb.Length = 0;
-                                    sb.AppendFormat(" update: \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].UpdateLayerTime, (int)Model.updateTime);
-                                    layerInfo += "<Span>" + sb.ToString() + "</Span>";
-                                }
-                            }
-                            else if (Model.State == DNNStates.Testing)
-                            {
-                                layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
-                                sb.Length = 0;
-                                sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
-                                layerInfo += "<Span>" + sb.ToString() + "</Span>";
-                            }
-                        }
 
-                        this.RaisePropertyChanged(nameof(LayerInfo));
-                                               
                         if (e != null)
                             e.Handled = true;
                     }
