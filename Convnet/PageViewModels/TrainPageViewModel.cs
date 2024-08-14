@@ -1705,12 +1705,9 @@ namespace Convnet.PageViewModels
                         CommandToolBar[21].IsVisible = Model.Layers[index].Lockable && Model.TaskState == DNNTaskStates.Stopped;
 
                         layerInfo = "<Span><Bold>Layer</Bold></Span><LineBreak/><Span>" + Model.Layers[index].Description + "</Span><LineBreak/>";
+                        weightsMinMax = "<Span><Bold>Neurons</Bold></Span><LineBreak/>";
 
                         var sb = new StringBuilder();
-                        weightsMinMax = String.Empty;
-
-                        weightsMinMax += "<Span><Bold>Neurons</Bold></Span><LineBreak/>";
-
                         sb.Length = 0;
                         if (Model.Layers[index].NeuronsStats.StdDev >= 0.0f)
                             sb.AppendFormat(" Std:     {0:N8}", Model.Layers[index].NeuronsStats.StdDev);
