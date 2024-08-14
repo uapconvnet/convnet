@@ -1738,6 +1738,10 @@ namespace Convnet.PageViewModels
 
                         if (ShowWeightsSnapshot)
                         {
+                            WeightsSnapshotX = Model.Layers[index].WeightsSnapshotX;
+                            WeightsSnapshotY = Model.Layers[index].WeightsSnapshotY;
+                            WeightsSnapshot = Model.Layers[index].WeightsSnapshot;
+
                             weightsMinMax += "<Span><Bold>Weights</Bold></Span><LineBreak/>";
 
                             sb.Length = 0;
@@ -1839,10 +1843,6 @@ namespace Convnet.PageViewModels
                         }
 
                         this.RaisePropertyChanged(nameof(LayerInfo));
-
-                        WeightsSnapshotX = Model.Layers[index].WeightsSnapshotX;
-                        WeightsSnapshotY = Model.Layers[index].WeightsSnapshotY;
-                        WeightsSnapshot = Model.Layers[index].WeightsSnapshot;
                                                
                         if (e != null)
                             e.Handled = true;
