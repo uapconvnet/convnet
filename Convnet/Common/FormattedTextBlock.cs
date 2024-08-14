@@ -15,10 +15,10 @@ namespace Convnet.Common
         Type IStyleable.StyleKey => typeof(TextBlock);
 
         public new event PropertyChangedEventHandler? PropertyChanged;
-        private string? formattedText = null;
-        //public static readonly StyledProperty<string> FormattedTextProperty = AvaloniaProperty.Register<FormattedTextBlock, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
+        private string formattedText = string.Empty;
+        //public static readonly StyledProperty<string> FormattedTextProperty = AvaloniaProperty.Register<FormattedTextBlock, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.OwoWay);
 
-        public static readonly DirectProperty<FormattedTextBlock, string?> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string?>(
+        public static readonly DirectProperty<FormattedTextBlock, string> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string>(
           nameof(FormattedText),
           o => o.FormattedText,
           (o, v) =>
@@ -26,18 +26,17 @@ namespace Convnet.Common
               if (string.Compare(o.FormattedText, v) != 0)
                   o.FormattedText = v;
           },
-          null,
-          Avalonia.Data.BindingMode.TwoWay, 
+          string.Empty,
+          Avalonia.Data.BindingMode.OneWay,
           false);
 
-        public string? FormattedText
+        public string FormattedText
         {
             get { return formattedText; }
             set
             {
-                //if (value != formattedText)
+                if (value != formattedText)
                 {
-                    //string? formattedText = value;
                     formattedText = string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value);
 
                     using (TextReader sr = new StringReader(formattedText))
@@ -49,20 +48,14 @@ namespace Convnet.Common
                         }
                     }
 
-                    //base.Text = value;
-                    //SetValue<string?>(FormattedTextProperty, value);
                     OnPropertyChanged(nameof(FormattedText));
-                    //OnPropertyChanged(nameof(Text));
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }
-
         public FormattedTextBlock()
         {
-            
         }
-  
-
 
         #region INotifyPropertyChanged Members
 
