@@ -1700,7 +1700,6 @@ namespace Convnet.PageViewModels
                             Label = Model.Label;
                         }
 
-
                         CommandToolBar[17].IsVisible = !Settings.Default.DisableLocking;
                         CommandToolBar[18].IsVisible = !Settings.Default.DisableLocking;
                         CommandToolBar[19].IsVisible = Model.Layers[index].Lockable && Model.TaskState == DNNTaskStates.Stopped;
@@ -1849,18 +1848,12 @@ namespace Convnet.PageViewModels
                         WeightsSnapshotX = Model.Layers[index].WeightsSnapshotX;
                         WeightsSnapshotY = Model.Layers[index].WeightsSnapshotY;
                         WeightsSnapshot = Model.Layers[index].WeightsSnapshot;
-
-                        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
-
-                        //layersComboBox.ItemsSource = Model.Layers;
-
+                                               
                         if (e != null)
                             e.Handled = true;
                     }
                 }
-            }, DispatcherPriority.MaxValue);
-
-            //   RefreshTrainingPlot();
+            }, DispatcherPriority.Render);
         }
     }
 }
