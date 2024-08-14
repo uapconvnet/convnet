@@ -43,8 +43,11 @@ namespace Convnet.Common
                     {
                         if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
                         {
+                            //this.BeginInit();
                             Inlines?.Clear();
                             Inlines?.Add(result);
+                            //this.EndInit();
+                            //this.InvalidateVisual();
                         }
                     }
 

@@ -109,10 +109,13 @@ namespace Convnet.PageViewModels
                 costLayersComboBox.Items.Add(item);
             }
             ToolTip.SetTip(costLayersComboBox, "Cost Layer");
-            costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
+            if (Model != null)
+            {
+                costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
+                costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
+            }
             costLayersComboBox.SelectionChanged += CostLayersComboBox_SelectionChanged;
-            costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
-
+            
             CommandToolBar.Add(startButton);
             CommandToolBar.Add(stopButton);
             CommandToolBar.Add(pauseButton);
@@ -121,7 +124,7 @@ namespace Convnet.PageViewModels
             CommandToolBar.Add(costLayersComboBox);
         }
 
-        public void CostLayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        public void CostLayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
             if (costLayersComboBox.SelectedIndex >= 0)
             {

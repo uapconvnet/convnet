@@ -817,7 +817,7 @@ namespace Convnet.PageViewModels
             RefreshTrainingPlot();
         }
                
-        public void CostLayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        public void CostLayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
             if (costLayersComboBox.SelectedIndex >= 0)
             {
