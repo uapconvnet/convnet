@@ -593,10 +593,13 @@ namespace Convnet.PageViewModels
 
                     case DNNStates.Testing:
                         {
-                            sb.Append("<Span><Bold>Testing</Bold></Span><LineBreak/>");
-                            sb.Append("<Span>");
-                            sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Loss:\t\t\t  {6:N7}\n Errors:\t\t\t{7:G}\n Error:\t\t\t {8:N2} %\n Accuracy:\t\t  {9:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, (Float)100 - TestErrorPercentage);
-                            sb.Append("</Span>");
+                            if (Model != null)
+                            {
+                                sb.Append("<Span><Bold>Testing</Bold></Span><LineBreak/>");
+                                sb.Append("<Span>");
+                                sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Loss:\t\t\t  {6:N7}\n Errors:\t\t\t{7:G}\n Error:\t\t\t {8:N2} %\n Accuracy:\t\t  {9:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, (Float)100 - TestErrorPercentage);
+                                sb.Append("</Span>");
+                            }
                         }
                         break;
 
@@ -1661,7 +1664,7 @@ namespace Convnet.PageViewModels
             }
         }
 
-        public void RefreshButtonClick(object? sender, RoutedEventArgs e)
+        public void RefreshButtonClick(object? sender, RoutedEventArgs? e)
         {
             LayersComboBox_SelectionChanged(sender, null);
             RefreshTrainingPlot();

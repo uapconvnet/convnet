@@ -46,10 +46,8 @@ namespace dnn
 			auto description = GetDescriptionHeader();
 
 			description.append(nwl + std::string(" Scaling:") + dtab + FloatToString(FactorH, 4) + std::string("x") + FloatToString(FactorW, 4));
-			if (Algorithm == Algorithms::Linear)
-				description.append(nwl + std::string(" Algorithm:  ") + tab + std::string("Linear"));
-			else
-				description.append(nwl + std::string(" Algorithm:  ") + tab + std::string("Nearest"));
+			description.append(nwl + std::string(" Algorithm:  ") + tab + std::string(magic_enum::enum_name<Algorithms>(Algorithm)));
+			
 			return description;
 		}
 

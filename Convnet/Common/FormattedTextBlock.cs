@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
-using Avalonia.Styling;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,12 +9,14 @@ using System.IO;
 
 namespace Convnet.Common
 {
-    public class FormattedTextBlock : TextBlock, INotifyPropertyChanged, IStyleable
+    public class FormattedTextBlock : TextBlock, INotifyPropertyChanged
     {
-        Type IStyleable.StyleKey => typeof(TextBlock);
-
+        protected override Type StyleKeyOverride => typeof(TextBlock);
+       
         public new event PropertyChangedEventHandler? PropertyChanged;
+        
         private string formattedText = string.Empty;
+        
         //public static readonly StyledProperty<string> FormattedTextProperty = AvaloniaProperty.Register<FormattedTextBlock, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.OwoWay);
 
         public static readonly DirectProperty<FormattedTextBlock, string> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string>(
@@ -35,7 +36,7 @@ namespace Convnet.Common
             get { return formattedText; }
             set
             {
-                if (value != formattedText)
+                if (value != string.Empty)
                 {
                     formattedText = string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value);
 
@@ -43,16 +44,14 @@ namespace Convnet.Common
                     {
                         if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
                         {
-                            //this.BeginInit();
                             Inlines?.Clear();
                             Inlines?.Add(result);
-                            //this.EndInit();
-                            //this.InvalidateVisual();
                         }
                     }
 
                     OnPropertyChanged(nameof(FormattedText));
-                    OnPropertyChanged(nameof(Text));
+                    //OnPropertyChanged(nameof(Text));
+                    //InvalidateVisual();
                 }
             }
         }

@@ -2,7 +2,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Avalonia.Threading;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
@@ -45,10 +44,10 @@ namespace Convnet.Common
     //}
 
 
-    public class CodeEditor : TextEditor, INotifyPropertyChanged, IStyleable
+    public class CodeEditor : TextEditor, INotifyPropertyChanged
     {
-        Type IStyleable.StyleKey => typeof(AvaloniaEdit.TextEditor);
-
+        protected override Type StyleKeyOverride => typeof(TextEditor);
+        
         public new event PropertyChangedEventHandler? PropertyChanged;
 
         public CodeEditor()
