@@ -800,8 +800,6 @@ namespace Convnet.PageViewModels
                     }
                 }
             }, DispatcherPriority.Render);
-
-            //LayersComboBox_SelectionChanged(this, null);
         }
 
         private void TrainingPlotCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
