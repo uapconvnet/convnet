@@ -1687,9 +1687,9 @@ namespace Convnet.PageViewModels
                         ShowWeightsSnapshot = (Model.Layers[index].IsNormLayer && Model.Layers[index].Scaling) || Model.Layers[index].LayerType == DNNLayerTypes.PartialDepthwiseConvolution || Model.Layers[index].LayerType == DNNLayerTypes.DepthwiseConvolution || Model.Layers[index].LayerType == DNNLayerTypes.ConvolutionTranspose || Model.Layers[index].LayerType == DNNLayerTypes.Convolution || Model.Layers[index].LayerType == DNNLayerTypes.Dense || (Model.Layers[index].LayerType == DNNLayerTypes.Activation && Model.Layers[index].WeightCount > 0);
 
                         if (index == 0)
-                            Model.UpdateLayerInfo((ulong)index, ShowSample);
+                            Model.UpdateLayerInfo((UInt)index, ShowSample);
                         else
-                            Model.UpdateLayerInfo((ulong)index, ShowWeightsSnapshot);
+                            Model.UpdateLayerInfo((UInt)index, ShowWeightsSnapshot);
 
                         if (ShowSample)
                         {
