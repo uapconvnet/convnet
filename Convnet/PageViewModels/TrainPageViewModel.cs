@@ -255,8 +255,7 @@ namespace Convnet.PageViewModels
             layersComboBox.DataContext = Model;
             if (Model != null)
                 layersComboBox.ItemsSource = Model.Layers;
-            var template = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), });
-            layersComboBox.ItemTemplate = template;
+            layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), }); ;
             //layersComboBox.ItemTemplate = GetLockTemplate();
             //layersComboBox.SourceUpdated += LayersComboBox_SourceUpdated;
             //layersComboBox.IsSynchronizedWithCurrentItem = true;
@@ -1708,8 +1707,7 @@ namespace Convnet.PageViewModels
                         CommandToolBar[20].IsVisible = Model.Layers[index].Lockable;
                         CommandToolBar[21].IsVisible = Model.Layers[index].Lockable && Model.TaskState == DNNTaskStates.Stopped;
 
-                        LayerInfo = "<Span><Bold>Layer</Bold></Span><LineBreak/>";
-                        LayerInfo += "<Span>" + Model.Layers[index].Description + "</Span><LineBreak/>";
+                        layerInfo = "<Span><Bold>Layer</Bold></Span><LineBreak/><Span>" + Model.Layers[index].Description + "</Span><LineBreak/>";
 
                         var sb = new StringBuilder();
                         weightsMinMax = String.Empty;
@@ -1816,43 +1814,51 @@ namespace Convnet.PageViewModels
                                     weightsMinMax += "<Span>" + sb.ToString() + "</Span>";
                             }
                         }
+
                         this.RaisePropertyChanged(nameof(WeightsMinMax));
 
                         if (Settings.Default.Timings)
                         {
-                            LayerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
-
                             if (Model.State == DNNStates.Training)
                             {
+                                layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
                                 sb.Length = 0;
                                 sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
-                                LayerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                                layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
                                 sb.Length = 0;
                                 sb.AppendFormat(" bprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].BPropLayerTime, (int)Model.bpropTime);
-                                LayerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                                layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
                                 if (ShowWeightsSnapshot)
                                 {
                                     sb.Length = 0;
                                     sb.AppendFormat(" update: \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].UpdateLayerTime, (int)Model.updateTime);
-                                    LayerInfo += "<Span>" + sb.ToString() + "</Span>";
+                                    layerInfo += "<Span>" + sb.ToString() + "</Span>";
                                 }
                             }
-                            else
+                            else if (Model.State == DNNStates.Testing)
                             {
+                                layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
                                 sb.Length = 0;
                                 sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
-                                LayerInfo += "<Span>" + sb.ToString() + "</Span>";
+                                layerInfo += "<Span>" + sb.ToString() + "</Span>";
                             }
                         }
+
+                        this.RaisePropertyChanged(nameof(LayerInfo));
 
                         WeightsSnapshotX = Model.Layers[index].WeightsSnapshotX;
                         WeightsSnapshotY = Model.Layers[index].WeightsSnapshotY;
                         WeightsSnapshot = Model.Layers[index].WeightsSnapshot;
 
-                        layersComboBox.ItemsSource = Model.Layers;
+                        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+
+                        //layersComboBox.ItemsSource = Model.Layers;
+
+                        if (e != null)
+                            e.Handled = true;
                     }
                 }
-            }, DispatcherPriority.Render);
+            }, DispatcherPriority.MaxValue);
 
             //   RefreshTrainingPlot();
         }
