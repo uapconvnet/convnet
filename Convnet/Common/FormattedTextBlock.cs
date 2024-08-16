@@ -50,7 +50,7 @@ namespace Convnet.Common
                     }
 
                     OnPropertyChanged(nameof(FormattedText));
-                    //OnPropertyChanged(nameof(Text));
+                    OnPropertyChanged(nameof(Text));
                     //InvalidateVisual();
                 }
             }
