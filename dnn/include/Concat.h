@@ -8,11 +8,11 @@ namespace dnn
 	private:
 		std::unique_ptr<dnnl::concat::primitive_desc> fwdDesc;
 		std::unordered_map<int, dnnl::memory> fwdArgs;
-		std::vector<dnnl::memory::desc> srcsMemsDesc;
+		std::vector<dnnl::memory::desc> srcMemsDesc;
 #ifdef DNN_CACHE_PRIMITIVES
 		std::unique_ptr<dnnl::concat> fwd;
 #endif
-		
+
 		auto InputChannels(const std::vector<Layer*>& inputs) const
 		{
 			auto channels = 0ull;
@@ -70,7 +70,7 @@ namespace dnn
 			if (GetMemoryNDims(*InputLayer->DstMemDesc) == 2)
 			{
 				ChosenFormat = dnnl::memory::format_tag::nc;
-				
+
 				DstMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C) }), dnnl::memory::data_type::f32, ChosenFormat));
 				DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C) }), dnnl::memory::data_type::f32, ChosenFormat));
 			}
@@ -96,20 +96,20 @@ namespace dnn
 					throw std::invalid_argument("Incompatible memory formats in " + std::string(magic_enum::enum_name<LayerTypes>(LayerType)) + " layer " + Inputs[i]->Name);
 			}
 
-			srcsMemsDesc = std::vector<dnnl::memory::desc>();
+			srcMemsDesc = std::vector<dnnl::memory::desc>();
 			for (auto i = 0ull; i < Inputs.size(); i++)
 			{
 				if (GetMemoryNDims(*Inputs[i]->DstMemDesc) == 2)
-					srcsMemsDesc.push_back(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(Inputs[i]->C) }), dnnl::memory::data_type::f32, ChosenFormat));
+					srcMemsDesc.push_back(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(Inputs[i]->C) }), dnnl::memory::data_type::f32, ChosenFormat));
 				else
-					srcsMemsDesc.push_back(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(Inputs[i]->C), dnnl::memory::dim(Inputs[i]->H), dnnl::memory::dim(Inputs[i]->W) }), dnnl::memory::data_type::f32, ChosenFormat));
+					srcMemsDesc.push_back(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(Inputs[i]->C), dnnl::memory::dim(Inputs[i]->H), dnnl::memory::dim(Inputs[i]->W) }), dnnl::memory::data_type::f32, ChosenFormat));
 			}
 
-			fwdDesc = std::make_unique<dnnl::concat::primitive_desc>(dnnl::concat::primitive_desc(Device.engine, *DstMemDesc, 1, srcsMemsDesc));
+			fwdDesc = std::make_unique<dnnl::concat::primitive_desc>(dnnl::concat::primitive_desc(Device.engine, *DstMemDesc, 1, srcMemsDesc));
 
 			fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) } };
-			for (auto i = 0ull; i < InputsFwd.size(); i++)
-				fwdArgs.insert({ DNNL_ARG_MULTIPLE_SRC + int(i), dnnl::memory(srcsMemsDesc[i], Device.engine, Inputs[i]->Neurons.data())});
+			for (auto i = 0ull; i < Inputs.size(); i++)
+				fwdArgs.insert({ DNNL_ARG_MULTIPLE_SRC + int(i), dnnl::memory(srcMemsDesc[i], Device.engine, Inputs[i]->Neurons.data())});
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::concat>(dnnl::concat(*fwdDesc));
@@ -257,7 +257,7 @@ namespace dnn
 					{
 						fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, InputNeurons.data()) } };
 						for (auto i = 0ull; i < InputsFwd.size(); i++)
-							fwdArgs.insert({ DNNL_ARG_MULTIPLE_SRC + int(i), dnnl::memory(srcsMemsDesc[i], Device.engine, Inputs[i]->Neurons.data()) });
+							fwdArgs.insert({ DNNL_ARG_MULTIPLE_SRC + int(i), dnnl::memory(srcMemsDesc[i], Device.engine, Inputs[i]->Neurons.data()) });
 
 						for (auto i = 0ull; i < InputNeurons.size(); i++)
 							InputNeurons[i] = Float(0);
@@ -320,7 +320,7 @@ namespace dnn
 #endif // DNN_LEAN
 
 			const auto plain = IsPlainFormat();
-			
+
 #ifdef DNN_STOCHASTIC
 			if (batchSize == 1)
 			{

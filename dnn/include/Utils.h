@@ -106,10 +106,6 @@
 #define MAGIC_ENUM_RANGE_MAX 255
 #include "magic_enum/magic_enum.hpp"
 
-// #define NAMEOF_ENUM_RANGE_MIN 0
-// #define NAMEOF_ENUM_RANGE_MAX 255
-// #include "nameof.hpp"
-
 #include "bitsery/bitsery.h"
 #include "bitsery/adapter/stream.h"
 #include "bitsery/traits/string.h"
@@ -135,8 +131,8 @@ namespace
 	constexpr auto TestMultiply = false;
 
 	constexpr auto ReferenceBatchNormalization = false;
-	constexpr auto ReferenceConcat = true;
-	constexpr auto ReferenceMultiply = true;
+	constexpr auto ReferenceConcat = false;
+	constexpr auto ReferenceMultiply = false;
 
 	typedef float Float;
 	typedef double Double;
@@ -746,7 +742,7 @@ namespace
 
 	/* https://en.wikipedia.org/wiki/Kahan_summation_algorithm */
 	template<typename T>
-	static inline void KahanSum(const T& value, T& sum, T& correction) NOEXCEPT
+	static void KahanSum(const T& value, T& sum, T& correction) NOEXCEPT
 	{
 		if constexpr (Kahan)
 		{

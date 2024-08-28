@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Convnet.Common;
 using Convnet.Properties;
@@ -110,6 +111,18 @@ namespace Convnet.PageViewModels
 
         private async void PageVM_Open(object? sender, EventArgs e)
         {
+            //var topLevel = TopLevel.GetTopLevel((Avalonia.Visual?)sender);
+            //if (topLevel != null)
+            //{
+            //    IStorageFolder? folder = Path.Combine(DefinitionsDirectory, Model.Name);
+            //    var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            //    {
+            //        Title = "Load",
+            //        AllowMultiple = false,
+            //        SuggestedStartLocation = folder
+            //    });
+            //}
+
             var dialog = new OpenFileDialog
             {
                 AllowMultiple = false,

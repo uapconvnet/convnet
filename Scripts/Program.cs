@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System;
+
 using Float = System.Single;
 using UInt = System.UInt64;
 
@@ -134,44 +135,8 @@ namespace Scripts
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            this.VerifyPropertyName(propertyName);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        /// <summary>
-        /// Warns the developer if this object does not have
-        /// a public property with the specified name. This 
-        /// method does not exist in a Release build.
-        /// </summary>
-        [Conditional("DEBUG")]
-        [DebuggerStepThrough]
-        public void VerifyPropertyName(string propertyName)
-        {
-            // If you raise PropertyChanged and do not specify a property name,
-            // all properties on the object are considered to be changed by the binding system.
-            if (String.IsNullOrEmpty(propertyName))
-                return;
-
-            // Verify that the property name matches a real,  
-            // public, instance property on this object.
-            if (TypeDescriptor.GetProperties(this)[propertyName] == null)
-            {
-                string msg = "Invalid property name: " + propertyName;
-
-                if (this.ThrowOnInvalidPropertyName)
-                    throw new ArgumentException(msg);
-                else
-                    Debug.Fail(msg);
-            }
-        }
-
-        /// <summary>
-        /// Returns whether an exception is thrown, or if a Debug.Fail() is used
-        /// when an invalid property name is passed to the VerifyPropertyName method.
-        /// The default value is false, but subclasses used by unit tests might 
-        /// override this property's getter to return true.
-        /// </summary>
-        protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
     }
 
     [Serializable()]
@@ -241,44 +206,8 @@ namespace Scripts
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            this.VerifyPropertyName(propertyName);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        /// <summary>
-        /// Warns the developer if this object does not have
-        /// a public property with the specified name. This 
-        /// method does not exist in a Release build.
-        /// </summary>
-        [Conditional("DEBUG")]
-        [DebuggerStepThrough]
-        public void VerifyPropertyName(string propertyName)
-        {
-            // If you raise PropertyChanged and do not specify a property name,
-            // all properties on the object are considered to be changed by the binding system.
-            if (String.IsNullOrEmpty(propertyName))
-                return;
-
-            // Verify that the property name matches a real,  
-            // public, instance property on this object.
-            if (TypeDescriptor.GetProperties(this)[propertyName] == null)
-            {
-                string msg = "Invalid property name: " + propertyName;
-
-                if (this.ThrowOnInvalidPropertyName)
-                    throw new ArgumentException(msg);
-                else
-                    Debug.Fail(msg);
-            }
-        }
-
-        /// <summary>
-        /// Returns whether an exception is thrown, or if a Debug.Fail() is used
-        /// when an invalid property name is passed to the VerifyPropertyName method.
-        /// The default value is false, but subclasses used by unit tests might 
-        /// override this property's getter to return true.
-        /// </summary>
-        protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
     }
 
     [Serializable()]
@@ -324,8 +253,8 @@ namespace Scripts
         private bool squeezeExcitation = false;
         private bool channelZeroPad = true;
         private Activations activation = Activations.Relu;
-        private ObservableCollection<EfficientNetRecord> efficientnet = new ObservableCollection<EfficientNetRecord>();
-        private ObservableCollection<ShuffleNetRecord> shufflenet = new ObservableCollection<ShuffleNetRecord>();
+        private ObservableCollection<EfficientNetRecord> efficientnet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)];
+        private ObservableCollection<ShuffleNetRecord> shufflenet = [new(5, 3, 1, 2, false), new(6, 3, 1, 2, false), new(7, 3, 1, 2, true), new(8, 3, 1, 2, true)];
         private UInt strideHFirstConv = 2;
         private UInt strideWFirstConv = 2;
         private Float depthDrop = (Float)0.2;
@@ -377,22 +306,8 @@ namespace Scripts
             StrideWFirstConv = strideWFirstConv;
             DepthDrop = depthDrop;
             FixedDepthDrop = fixedDepthDrop;
-
-            var efficientnetv2 = new ObservableCollection<EfficientNetRecord>();
-            efficientnetv2.Add(new EfficientNetRecord(1, 24, 2, 1, false));
-            efficientnetv2.Add(new EfficientNetRecord(4, 48, 4, 2, false));
-            efficientnetv2.Add(new EfficientNetRecord(4, 64, 4, 2, false));
-            efficientnetv2.Add(new EfficientNetRecord(4, 128, 6, 2, true));
-            efficientnetv2.Add(new EfficientNetRecord(6, 160, 9, 1, true));
-            efficientnetv2.Add(new EfficientNetRecord(6, 256, 15, 2, true));
-            EfficientNet = efficientnetv2;
-
-            var shufflenetv2 = new ObservableCollection<ShuffleNetRecord>();
-            shufflenetv2.Add(new ShuffleNetRecord(5, 3, 1, 2, false));
-            shufflenetv2.Add(new ShuffleNetRecord(6, 3, 1, 2, false));
-            shufflenetv2.Add(new ShuffleNetRecord(7, 3, 1, 2, true));
-            shufflenetv2.Add(new ShuffleNetRecord(8, 3, 1, 2, true));
-            ShuffleNet = shufflenetv2;
+            EfficientNet = efficientnet;
+            ShuffleNet = shufflenet;
         }
 
         public IEnumerable<Scripts> ScriptsList { get { return Enum.GetValues(typeof(Scripts)).Cast<Scripts>(); } }
@@ -1164,49 +1079,15 @@ namespace Scripts
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            this.VerifyPropertyName(propertyName);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        /// <summary>
-        /// Warns the developer if this object does not have
-        /// a public property with the specified name. This 
-        /// method does not exist in a Release build.
-        /// </summary>
-        [Conditional("DEBUG")]
-        [DebuggerStepThrough]
-        public void VerifyPropertyName(string propertyName)
-        {
-            // If you raise PropertyChanged and do not specify a property name,
-            // all properties on the object are considered to be changed by the binding system.
-            if (String.IsNullOrEmpty(propertyName))
-                return;
-
-            // Verify that the property name matches a real,  
-            // public, instance property on this object.
-            if (TypeDescriptor.GetProperties(this)[propertyName] == null)
-            {
-                string msg = "Invalid property name: " + propertyName;
-
-                if (this.ThrowOnInvalidPropertyName)
-                    throw new ArgumentException(msg);
-                else
-                    Debug.Fail(msg);
-            }
-        }
-
-        /// <summary>
-        /// Returns whether an exception is thrown, or if a Debug.Fail() is used
-        /// when an invalid property name is passed to the VerifyPropertyName method.
-        /// The default value is false, but subclasses used by unit tests might 
-        /// override this property's getter to return true.
-        /// </summary>
-        protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
     }
 
     public class ScriptCatalog
     {
         public static string nwl { get; } = Environment.NewLine;
+
 
         public static string to_string(bool variable)
         {
@@ -1301,18 +1182,18 @@ namespace Scripts
                 }
                 else
                 {
-                    return "[" + group + prefix + to_string(id) + "]" + nwl +
-                        "Type=BatchNormActivation" + nwl +
-                        "Inputs=" + inputs + nwl +
-                        "Activation=" + activation.ToString() + nwl + nwl;
+                    //return "[" + group + prefix + to_string(id) + "]" + nwl +
+                    //    "Type=BatchNormActivation" + nwl +
+                    //    "Inputs=" + inputs + nwl +
+                    //    "Activation=" + activation.ToString() + nwl + nwl;
 
-                    //return "[" + group + "BN" + to_string(id) + "]" + nwl +
-                    //   "Type=BatchNorm" + nwl +
-                    //	"Inputs=" + inputs + nwl + nwl +
-                    //	"[" + group + prefix + to_string(id) + "]" + nwl +
-                    //	"Type=Activation" + nwl +
-                    //	"Inputs=" + group + "BN" + to_string(id) + nwl +
-                    //	"Activation=" + activation.ToString() + nwl + nwl;
+                    return "[" + group + "BN" + to_string(id) + "]" + nwl +
+                        "Type=BatchNorm" + nwl +
+                    	"Inputs=" + inputs + nwl + nwl +
+                    	"[" + group + prefix + to_string(id) + "]" + nwl +
+                    	"Type=Activation" + nwl +
+                    	"Inputs=" + group + "BN" + to_string(id) + nwl +
+                    	"Activation=" + activation.ToString() + nwl + nwl;
                 }
             }
             else
@@ -1695,6 +1576,7 @@ namespace Scripts
 
             return blocks;
         }
+
 
         public static string InvertedResidual(UInt A, UInt C, UInt channels, UInt kernel = 3, UInt pad = 1, bool subsample = false, UInt shuffle = 2, bool se = false, Activations activation = Activations.HardSwish)
         {
@@ -2130,172 +2012,171 @@ namespace Scripts
                             Convolution(C + 1, In("B", C), p.Classes, 1, 1, 1, 1, 0, 0) +
                             BatchNorm(C + 1, In("C", C + 1)) +
                             GlobalAvgPooling(In("B", C + 1)) +
-                               LogSoftmax("GAP") +
+                            LogSoftmax("GAP") +
                             Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
                     }
                     break;
 
                 case Scripts.resnet:
+                {
+                    var bn = p.Bottleneck ? 1ul : 0ul;
+                    const Float K = 2.0f;
+                    var W = p.Width * 16;
+                    var A = 1ul;
+                    var C = 5ul;
+
+                    net += Convolution(1, "Input", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1);
+
+                    if (p.Bottleneck)
                     {
-                        var bn = p.Bottleneck ? 1ul : 0ul;
-                        const Float K = 2.0f;
-                        var W = p.Width * 16;
-                        var A = 1ul;
-                        var C = 5ul;
-
-                        net +=
-                            Convolution(1, "Input", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1);
-
-                        if (p.Bottleneck)
-                        {
-                            blocks.Add(
-                                BatchNormActivation(1, "C1", p.Activation) +
-                                Convolution(2, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                BatchNormActivation(2, "C2", p.Activation) +
-                                Convolution(3, "B2", DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
-                                (p.Dropout > 0 ? BatchNormActivationDropout(3, "C3", p.Activation) : BatchNormActivation(3, "C3", p.Activation)) +
-                                Convolution(4, "B3", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                Convolution(5, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                Add(1, "C4,C5"));
-
-                            C = 6;
-                        }
-                        else
-                        {
-                            blocks.Add(
-                                BatchNormActivation(1, "C1", p.Activation) +
-                                Convolution(2, "B1", DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                (p.Dropout > 0 ? BatchNormActivationDropout(2, "C2", p.Activation) : BatchNormActivation(2, "C2", p.Activation)) +
-                                Convolution(3, "B2", DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                Convolution(4, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                Add(1, "C3,C4"));
-                        }
-
-                        for (var g = 0ul; g < p.Groups; g++)
-                        {
-                            if (g > 0)
-                            {
-                                W *= 2;
-
-                                var strChannelZeroPad = p.ChannelZeroPad ?
-                                    AvgPooling(g, In("A", A)) +
-                                    "[CZP" + to_string(g) + "]" + nwl + "Type=ChannelZeroPad" + nwl + "Inputs=" + In("P", g) + nwl + "Channels=" + to_string(W) + nwl + nwl +
-                                    Add(A + 1, In("C", C + 1 + bn) + "," + In("CZP", g)) :
-                                    AvgPooling(g, In("B", C)) +
-                                    Convolution(C + 2 + bn, In("P", g), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                    Add(A + 1, In("C", C + 1 + bn) + "," + In("C", C + 2 + bn));
-
-                                if (p.Bottleneck)
-                                {
-                                    blocks.Add(
-                                        BatchNormActivation(C, In("A", A), p.Activation) +
-                                        Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                        BatchNormActivation(C + 1, In("C", C), p.Activation) +
-                                        Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 2, 2, 1, 1) +
-                                        (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
-                                        Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                        strChannelZeroPad);
-                                }
-                                else
-                                {
-                                    blocks.Add(
-                                        BatchNormActivation(C, In("A", A), p.Activation) +
-                                        Convolution(C, In("B", C), DIV8(W), 3, 3, 2, 2, 1, 1) +
-                                        (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
-                                        Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                        strChannelZeroPad);
-                                }
-
-                                A++;
-                                C += p.ChannelZeroPad ? 2 + bn : 3 + bn;
-                            }
-
-                            for (var i = 1ul; i < p.Iterations; i++)
-                            {
-                                if (p.Bottleneck)
-                                {
-                                    blocks.Add(
-                                        BatchNormActivation(C, In("A", A), p.Activation) +
-                                        Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                        BatchNormActivation(C + 1, In("C", C), p.Activation) +
-                                        Convolution(C + 1, In("B", C + 1), DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
-                                        (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
-                                        Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                        Add(A + 1, In("C", C + 2) + "," + In("A", A)));
-
-                                    C += 3;
-                                }
-                                else
-                                {
-                                    blocks.Add(
-                                        BatchNormActivation(C, In("A", A), p.Activation) +
-                                        Convolution(C, In("B", C), DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                        (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
-                                        Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                        Add(A + 1, In("C", C + 1) + "," + In("A", A)));
-
-                                    C += 2;
-                                }
-                                A++;
-                            }
-                        }
-
-                        foreach (var block in blocks)
-                            net += block;
-
-                        net +=
-                            BatchNormActivation(C, In("A", A), p.Activation) +
-                            Convolution(C + 1, In("B", C), p.Classes, 1, 1, 1, 1, 0, 0) +
-                            BatchNorm(C + 1, In("C", C + 1)) +
-                            GlobalAvgPooling(In("B", C + 1)) +
-                            LogSoftmax("GAP") +
-                            Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
-                    }
-                    break;
-
-                case Scripts.shufflenetv2:
-                    {
-                        var channels = DIV8(p.Width * 16);
-
-                        net +=
-                            Convolution(1, "Input", channels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +
+                        blocks.Add(
                             BatchNormActivation(1, "C1", p.Activation) +
-                            Convolution(2, "B1", channels, 1, 1, 1, 1, 0, 0) +
+                            Convolution(2, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
                             BatchNormActivation(2, "C2", p.Activation) +
-                            DepthwiseConvolution(3, "B2", 1, 3, 3, 1, 1, 1, 1) +
-                            BatchNorm(3, "DC3") +
-                            Convolution(4, "B3", channels, 1, 1, 1, 1, 0, 0) +
-                            BatchNormActivation(4, "C4", p.Activation) +
-                            Convolution(5, "B1", channels, 1, 1, 1, 1, 0, 0) +
-                            Concat(1, "C5,B4");
+                            Convolution(3, "B2", DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
+                            (p.Dropout > 0 ? BatchNormActivationDropout(3, "C3", p.Activation) : BatchNormActivation(3, "C3", p.Activation)) +
+                            Convolution(4, "B3", DIV8(W), 1, 1, 1, 1, 0, 0) +
+                            Convolution(5, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
+                            Add(1, "C4,C5"));
 
-                        var C = 6ul;
-                        var A = 1ul;
-                        var subsample = false;
-                        foreach (var rec in p.ShuffleNet)
+                        C = 6;
+                    }
+                    else
+                    {
+                        blocks.Add(
+                            BatchNormActivation(1, "C1", p.Activation) +
+                            Convolution(2, "B1", DIV8(W), 3, 3, 1, 1, 1, 1) +
+                            (p.Dropout > 0 ? BatchNormActivationDropout(2, "C2", p.Activation) : BatchNormActivation(2, "C2", p.Activation)) +
+                            Convolution(3, "B2", DIV8(W), 3, 3, 1, 1, 1, 1) +
+                            Convolution(4, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
+                            Add(1, "C3,C4"));
+                    }
+
+                    for (var g = 0ul; g < p.Groups; g++)
                         {
-                            if (subsample)
+                        if (g > 0)
                             {
-                                channels *= 2;
-                                net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation);
-                                C += 5;
+                            W *= 2;
+
+                            var strChannelZeroPad = p.ChannelZeroPad ?
+                                AvgPooling(g, In("A", A)) +
+                                "[CZP" + to_string(g) + "]" + nwl + "Type=ChannelZeroPad" + nwl + "Inputs=" + In("P", g) + nwl + "Channels=" + to_string(W) + nwl + nwl +
+                                Add(A + 1, In("C", C + 1 + bn) + "," + In("CZP", g)) :
+                                AvgPooling(g, In("B", C)) +
+                                Convolution(C + 2 + bn, In("P", g), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                Add(A + 1, In("C", C + 1 + bn) + "," + In("C", C + 2 + bn));
+
+                            if (p.Bottleneck)
+                            {
+                                blocks.Add(
+                                    BatchNormActivation(C, In("A", A), p.Activation) +
+                                    Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                    BatchNormActivation(C + 1, In("C", C), p.Activation) +
+                                    Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 2, 2, 1, 1) +
+                                    (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
+                                    Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                    strChannelZeroPad);
                             }
-                            for (var n = 0ul; n < rec.Iterations; n++)
+                            else
                             {
-                                net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);
+                                blocks.Add(
+                                    BatchNormActivation(C, In("A", A), p.Activation) +
+                                    Convolution(C, In("B", C), DIV8(W), 3, 3, 2, 2, 1, 1) +
+                                    (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
+                                    Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
+                                    strChannelZeroPad);
+                            }
+
+                            A++;
+                            C += p.ChannelZeroPad ? 2 + bn : 3 + bn;
+                        }
+
+                        for (var i = 1ul; i < p.Iterations; i++)
+                            {
+                            if (p.Bottleneck)
+                            {
+                                blocks.Add(
+                                    BatchNormActivation(C, In("A", A), p.Activation) +
+                                    Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                    BatchNormActivation(C + 1, In("C", C), p.Activation) +
+                                    Convolution(C + 1, In("B", C + 1), DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
+                                    (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
+                                    Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                    Add(A + 1, In("C", C + 2) + "," + In("A", A)));
+
                                 C += 3;
                             }
-                            subsample = true;
-                        }
+                            else
+                            {
+                                blocks.Add(
+                                    BatchNormActivation(C, In("A", A), p.Activation) +
+                                    Convolution(C, In("B", C), DIV8(W), 3, 3, 1, 1, 1, 1) +
+                                    (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
+                                    Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
+                                    Add(A + 1, In("C", C + 1) + "," + In("A", A)));
 
-                        net +=
-                            Convolution(C, In("CC", A), p.Classes, 1, 1, 1, 1, 0, 0) +
-                            BatchNorm(C + 1, In("C", C)) +
-                            GlobalAvgPooling(In("B", C + 1)) +
-                            LogSoftmax("GAP") +
-                            Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
+                                C += 2;
+                            }
+                            A++;
+                        }
                     }
-                    break;
+
+                    foreach (var block in blocks)
+                        net += block;
+
+                    net +=
+                        BatchNormActivation(C, In("A", A), p.Activation) +
+                        Convolution(C + 1, In("B", C), p.Classes, 1, 1, 1, 1, 0, 0) +
+                        BatchNorm(C + 1, In("C", C + 1)) +
+                        GlobalAvgPooling(In("B", C + 1)) +
+                        LogSoftmax("GAP") +
+                        Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
+                }
+                break;
+
+            case Scripts.shufflenetv2:
+                {
+                    var channels = DIV8(p.Width * 16);
+
+                    net +=
+                        Convolution(1, "Input", channels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +
+                        BatchNormActivation(1, "C1", p.Activation) +
+                        Convolution(2, "B1", channels, 1, 1, 1, 1, 0, 0) +
+                        BatchNormActivation(2, "C2", p.Activation) +
+                        DepthwiseConvolution(3, "B2", 1, 3, 3, 1, 1, 1, 1) +
+                        BatchNorm(3, "DC3") +
+                        Convolution(4, "B3", channels, 1, 1, 1, 1, 0, 0) +
+                        BatchNormActivation(4, "C4", p.Activation) +
+                        Convolution(5, "B1", channels, 1, 1, 1, 1, 0, 0) +
+                        Concat(1, "C5,B4");
+
+                    var C = 6ul;
+                    var A = 1ul;
+                    var subsample = false;
+                    foreach (var rec in p.ShuffleNet)
+                    {
+                        if (subsample)
+                        {
+                            channels *= 2;
+                            net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation);
+                            C += 5;
+                        }
+                        for (var n = 0ul; n < rec.Iterations; n++)
+                            {
+                            net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);
+                            C += 3;
+                        }
+                        subsample = true;
+                    }
+
+                    net +=
+                        Convolution(C, In("CC", A), p.Classes, 1, 1, 1, 1, 0, 0) +
+                        BatchNorm(C + 1, In("C", C)) +
+                        GlobalAvgPooling(In("B", C + 1)) +
+                        LogSoftmax("GAP") +
+                        Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
+                }
+                break;
             }
 
             return net;
@@ -2308,6 +2189,7 @@ namespace Scripts
 #else
         const string Mode = "Release";
 #endif
+
         public static string StorageDirectory { get; } = Path.Combine(Environment.GetFolderPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Environment.SpecialFolder.MyDocuments : Environment.SpecialFolder.UserProfile), "convnet");
         public static string ScriptsDirectory { get; } = Path.Combine(StorageDirectory, "scripts");
         public static string ScriptPath { get; } = Path.Combine(ScriptsDirectory, "bin", Mode, Framework);
@@ -2320,7 +2202,6 @@ namespace Scripts
             };
 
             var script = Generate(param);
-
             var fileInfo = new FileInfo(Path.Combine(ScriptPath, @"script.txt"));
             if (fileInfo.Directory != null)
             {
