@@ -8,15 +8,15 @@ namespace dnn
 	public:
 		const Float Ratio;
 		const UInt ChannelsLeft;
-		//const bool Padded;
+		const bool Padded;
 
-		//std::unique_ptr<dnnl::memory::desc> MemDesc;
+		std::unique_ptr<dnnl::memory::desc> MemDesc;
 
 		ChannelSplitRatioRight(const dnn::Device& device, const dnnl::memory::format_tag format, const std::string& name, const std::vector<Layer*>& inputs, const Float ratio = Float(0.375)) :
 			Layer(device, format, name, LayerTypes::ChannelSplitRatioRight, 0, 0, UInt(std::roundf(Float(inputs[0]->C)) * ratio), inputs[0]->D, inputs[0]->H, inputs[0]->W, 0, 0, 0, inputs),
 			Ratio(ratio),
-			ChannelsLeft(UInt(std::roundf(Float(inputs[0]->C)) * (std::roundf(Float(1)) - ratio)))
-			//Padded(InputLayer->C % VectorSize == 0 && C % VectorSize == 0 && ChannelsLeft % VectorSize == 0)
+			ChannelsLeft(UInt(std::roundf(Float(inputs[0]->C)) * (std::roundf(Float(1)) - ratio))),
+			Padded(InputLayer->C % VectorSize == 0 && C % VectorSize == 0 && ChannelsLeft % VectorSize == 0)
 		{
 			assert(Inputs.size() == 1);
 			assert(Ratio > Float(0));
@@ -72,8 +72,8 @@ namespace dnn
 				else
 					ChosenFormat = PlainFmt;
 
-				//if (Padded)
-					//MemDesc = std::make_unique<dnnl::memory::desc>(InputLayer->DstMemDesc->submemory_desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::dims({ dnnl::memory::dim(0), dnnl::memory::dim(ChannelsLeft), dnnl::memory::dim(0), dnnl::memory::dim(0) })));
+				if (Padded)
+					MemDesc = std::make_unique<dnnl::memory::desc>(InputLayer->DstMemDesc->submemory_desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::dims({ dnnl::memory::dim(0), dnnl::memory::dim(ChannelsLeft), dnnl::memory::dim(0), dnnl::memory::dim(0) })));
 
 				DstMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::data_type::f32, ChosenFormat));
 				DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::data_type::f32, ChosenFormat));
@@ -82,19 +82,14 @@ namespace dnn
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
-			/*if (Padded)
+			if (Padded && !training)
 			{
 				auto memSrc = dnnl::memory(*MemDesc, Device.engine, InputLayer->Neurons.data());
 				auto srcMem = dnnl::memory(*DstMemDesc, Device.engine, Neurons.data());
 				dnnl::reorder(memSrc, srcMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memSrc}, { DNNL_ARG_TO, srcMem } });
 				Device.stream.wait();
-
-#ifndef DNN_LEAN
-				if (training)
-					InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW());
-#endif
 			}
-			else*/
+			else
 			{
 				const auto plain = IsPlainFormat();
 
