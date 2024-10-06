@@ -13,8 +13,8 @@ namespace dnn
 				                                                                               
 		ChannelSplitRatioLeft(const dnn::Device& device, const dnnl::memory::format_tag format, const std::string& name, const std::vector<Layer*>& inputs, const Float ratio = Float(0.375)) :
 			Layer(device, format, name, LayerTypes::ChannelSplitRatioLeft, 0, 0, UInt(std::roundf(Float(inputs[0]->C)) * (std::roundf(Float(1)) - ratio)), inputs[0]->D, inputs[0]->H, inputs[0]->W, 0, 0, 0, inputs),
-			Ratio(ratio),
-			Padded(InputLayer->C % VectorSize == 0 && C % VectorSize == 0)
+			Ratio(ratio)
+			//Padded(InputLayer->C % VectorSize == 0 && C % VectorSize == 0)
 		{
 			assert(Inputs.size() == 1);
 			assert(Ratio > Float(0));
