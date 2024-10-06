@@ -267,14 +267,14 @@ namespace dnn
 			ZeroGradient(batchSize);
 #endif // DNN_LEAN
 
-			if (Padded)
+			/*if (Padded)
 			{
 				auto srcMem = dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data());
 				auto memSrc = dnnl::memory(*MemDesc, Device.engine, InputLayer->NeuronsD1.data());
 				dnnl::reorder(srcMem, memSrc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, srcMem}, { DNNL_ARG_TO, memSrc } });
 				Device.stream.wait();
 			}
-			else
+			else*/
 			{
 
 				const auto plain = IsPlainFormat();
