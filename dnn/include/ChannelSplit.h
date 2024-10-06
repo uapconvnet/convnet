@@ -93,6 +93,13 @@ namespace dnn
 				auto srcMem = dnnl::memory(*DstMemDesc, Device.engine, Neurons.data());
 				dnnl::reorder(memSrc, srcMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memSrc}, { DNNL_ARG_TO, srcMem } });
 				Device.stream.wait();
+
+#ifndef DNN_LEAN
+				/*if (training)
+					InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW());*/
+#else
+				DNN_UNREF_PAR(batchSize);
+#endif // DNN_LEAN		
 			}
 			else
 			{
