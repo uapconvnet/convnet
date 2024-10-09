@@ -228,8 +228,8 @@ namespace dnn
 
 						for_i(PaddedC / VectorSize, threads, [=](UInt c)
 						{
-							const auto overflow = ((!padded) && (c >= (part / VectorSize)));
-							const auto cutoff = overflow ? int(VectorSize - (PaddedC - C)) : int(VectorSize);
+							//const auto overflow = ((!padded) && (c >= (part / VectorSize)));
+							//const auto cutoff = overflow ? int(VectorSize - (PaddedC - C)) : int(VectorSize);
 
 							const auto channelOffset = c * VectorSize;
 							const auto mapOffset = channelOffset * HW();
