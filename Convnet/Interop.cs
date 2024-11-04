@@ -157,8 +157,16 @@ namespace Interop
     public enum Algorithms
     {
         Linear = 0,
-		Nearest = 1
-	};
+        Nearest = 1
+    };
+
+    public enum ReduceOperations
+    {
+        Avg = 0,
+        Min = 1,
+        Max = 2,
+        Sum = 3
+    };
 
     public enum Datasets
     {
@@ -547,6 +555,7 @@ namespace Interop
         public LayerTypes LayerType;
         public Activations Activation;
         public Algorithms Algorithm;
+        public ReduceOperations ReduceOperation;
         public Costs Cost;
         public UInt NeuronCount;
         public UInt WeightCount;
@@ -582,6 +591,8 @@ namespace Interop
         public Float K;
         public Float fH;
         public Float fW;
+        public Float P;
+        public Float Eps;
         [MarshalAs(UnmanagedType.U1)]
         public bool HasBias;
         [MarshalAs(UnmanagedType.U1)]
@@ -638,6 +649,14 @@ namespace Interop
     {
         Linear = 0,
         Nearest = 1
+    };
+
+    public enum DNNReduceOperations
+    {
+        Avg = 0,
+        Min = 1,
+        Max = 2,
+        Sum = 3
     };
 
     [Serializable()]
@@ -2550,6 +2569,9 @@ namespace Interop
         private Float alpha;
         private Float beta;
         private Float k;
+        private Float p;
+        private Float eps;
+        private DNNReduceOperations reduceOperation;
         private DNNAlgorithms algorithm;
         private Float factorH;
         private Float factorW;
@@ -3193,6 +3215,42 @@ namespace Interop
                 OnPropertyChanged(nameof(K));
             }
         }
+        public Float P
+        {
+            get { return p; }
+            set
+            {
+                if (value == p)
+                    return;
+
+                p = value;
+                OnPropertyChanged(nameof(P));
+            }
+        }
+        public Float Eps
+        {
+            get { return eps; }
+            set
+            {
+                if (value == eps)
+                    return;
+
+                eps = value;
+                OnPropertyChanged(nameof(Eps));
+            }
+        }
+        public DNNReduceOperations ReduceOperation
+        {
+            get { return reduceOperation; }
+            set
+            {
+                if (value == reduceOperation)
+                    return;
+
+                reduceOperation = value;
+                OnPropertyChanged(nameof(ReduceOperation));
+            }
+        }
         public DNNAlgorithms Algorithm
         {
             get { return algorithm; }
@@ -3660,6 +3718,7 @@ namespace Interop
 
             infoManaged.Activation = (DNNActivations)infoNative.Activation;
             infoManaged.Algorithm = (DNNAlgorithms)infoNative.Algorithm;
+            infoManaged.ReduceOperation = (DNNReduceOperations)infoNative.ReduceOperation;
             infoManaged.Cost = (DNNCosts)infoNative.Cost;
             infoManaged.NeuronCount = infoNative.NeuronCount;
             infoManaged.WeightCount = infoNative.WeightCount;
@@ -3694,6 +3753,8 @@ namespace Interop
             infoManaged.Alpha = infoNative.Alpha;
             infoManaged.Beta = infoNative.Beta;
             infoManaged.K = infoNative.K;
+            infoManaged.P = infoNative.P;
+            infoManaged.Eps = infoNative.Eps;
             infoManaged.FactorH = infoNative.fH;
             infoManaged.FactorW = infoNative.fW;
             infoManaged.HasBias = infoNative.HasBias;

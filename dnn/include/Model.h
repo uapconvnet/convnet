@@ -286,6 +286,7 @@ namespace dnn
 		LayerTypes LayerType;
 		Activations Activation;
 		Algorithms Algorithm;
+		ReduceOperations ReduceOperation;
 		Costs Cost;
 		UInt NeuronCount;
 		UInt WeightCount;
@@ -321,6 +322,8 @@ namespace dnn
 		Float K;
 		Float fH;
 		Float fW;
+		Float P;
+		Float Eps;
 		bool HasBias;
 		bool Scaling;
 		bool AcrossChannels;

@@ -725,7 +725,7 @@ namespace
 	typedef AlignedArray<Byte, 64ull> ByteArray;
 	typedef std::vector<Float, AlignedAllocator<Float, 64ull>> FloatVector;
 	//constexpr bool IS_LITTLE_ENDIAN = std::endian::native == std::endian::little;
-	constexpr auto NEURONS_LIMIT = Float(5000);	// limit for all the neurons and derivatives [-NEURONS_LIMIT,NEURONS_LIMIT]
+	//constexpr auto NEURONS_LIMIT = Float(5000);	// limit for all the neurons and derivatives [-NEURONS_LIMIT,NEURONS_LIMIT]
 	constexpr auto WEIGHTS_LIMIT = Float(500);	// limit for all the weights and biases [-WEIGHTS_LIMIT,WEIGHTS_LIMIT]
 	
 	template<typename T>

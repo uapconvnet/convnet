@@ -812,6 +812,13 @@ extern "C" DNN_API void DNNGetLayerInfo(const UInt layerIndex, LayerInfo* info)
 
 		case LayerTypes::Reduction:
 		{
+			auto reduction = dynamic_cast<Reduction*>(model->Layers[layerIndex].get());
+			if (reduction)
+			{
+				info->ReduceOperation = reduction->Op;
+				info->P = reduction->P;
+				info->Eps = reduction->Eps;
+			}
 		}
 		break;
 

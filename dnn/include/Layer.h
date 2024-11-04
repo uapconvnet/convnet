@@ -296,7 +296,9 @@ namespace dnn
 		const dnnl::engine engine;
 		dnnl::stream stream;
 		
-		Device(const dnnl::engine& eng, dnnl::stream str) : engine(eng), stream(str) 
+		Device(const dnnl::engine& eng, dnnl::stream str) : 
+			engine(eng), 
+			stream(str) 
 		{ 
 		}
 	};
@@ -807,16 +809,16 @@ namespace dnn
 						variance /= batchSize;
 						variance -= Square<Float>(mean);
 
-						if ((stats.Min < -NEURONS_LIMIT) || (stats.Max > NEURONS_LIMIT))
-							goto FAIL;
+						/*if ((stats.Min < -NEURONS_LIMIT) || (stats.Max > NEURONS_LIMIT))
+							goto FAIL;*/
 						
-						if (!std::isnan(mean) && !std::isinf(mean) && !std::isnan(variance) && !std::isinf(variance))
+						//if (!std::isnan(mean) && !std::isinf(mean) && !std::isnan(variance) && !std::isinf(variance))
 						{
 							stats.Mean = mean;
 							stats.StdDev = std::sqrt(std::max(Float(0), variance));
 						}
-						else
-							goto FAIL;
+						/*else
+							goto FAIL;*/
 					}
 					else
 					{
@@ -834,20 +836,20 @@ namespace dnn
 							KahanSum<Float>(Square<Float>(Neurons[i]), variance, correctionVariance);
 						}
 
-						if ((stats.Min < -NEURONS_LIMIT) || (stats.Max > NEURONS_LIMIT))
-							goto FAIL;
+						/*if ((stats.Min < -NEURONS_LIMIT) || (stats.Max > NEURONS_LIMIT))
+							goto FAIL;*/
 
 						mean /= ncdhw;
 						variance /= ncdhw;
 						variance -= Square<Float>(mean);
 
-						if (!std::isnan(mean) && !std::isinf(mean) && !std::isnan(variance) && !std::isinf(variance))
+						//if (!std::isnan(mean) && !std::isinf(mean) && !std::isnan(variance) && !std::isinf(variance))
 						{
 							stats.Mean = mean;
 							stats.StdDev = std::sqrt(std::max(0.f, variance));
 						}
-						else
-							goto FAIL;
+						/*else
+							goto FAIL;*/
 					}
 
 					NeuronsStats = stats;
@@ -958,10 +960,10 @@ namespace dnn
 				return true;
 
 			FAIL:
-				NeuronsStats.Min = Float(0);
-				NeuronsStats.Max = Float(0);
-				NeuronsStats.Mean = Float(0);
-				NeuronsStats.StdDev = Float(0);
+				//NeuronsStats.Min = Float(0);
+				//NeuronsStats.Max = Float(0);
+				//NeuronsStats.Mean = Float(0);
+				//NeuronsStats.StdDev = Float(0);
 
 				WeightsStats.Min = Float(0);
 				WeightsStats.Max = Float(0);
