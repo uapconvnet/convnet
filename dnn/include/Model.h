@@ -344,9 +344,9 @@ namespace dnn
 		UInt Hierarchies;
 		UInt TrainSamplesCount;
 		UInt TestSamplesCount;
-		bool MeanStdNormalization;
 		Float MeanTrainSet[3];
 		Float StdTrainSet[3];
+		bool MeanStdNormalization;
 	};
 
 	struct CostInfo
@@ -355,6 +355,7 @@ namespace dnn
 		Float TrainLoss;
 		Float AvgTrainLoss;
 		Float TrainErrorPercentage;
+		
 		UInt TestErrors;
 		Float TestLoss;
 		Float AvgTestLoss;
@@ -363,6 +364,7 @@ namespace dnn
 
 	struct StatsInfo
 	{
+		char Description[2048];
 		Stats NeuronsStats;
 		Stats WeightsStats;
 		Stats BiasesStats;
@@ -373,7 +375,6 @@ namespace dnn
 		Float BPropTime;
 		Float UpdateTime;
 		bool Locked;
-		char Description[2048];
 	};
 
 	struct LogRecord
@@ -546,13 +547,13 @@ namespace dnn
 		bool HasBias;
 		bool PersistOptimizer;
 		bool DisableLocking;
+		bool UseTrainingStrategy;
 		std::vector<Flip> TrainSamplesFlip;
 		std::vector<Flip> TestSamplesFlip;
 		std::vector<UInt> RandomTrainSamples;
 		TrainingRate CurrentTrainingRate;
 		std::vector<TrainingRate> TrainingRates;
 		std::vector<TrainingStrategy> TrainingStrategies;
-		bool UseTrainingStrategy;
 		std::vector<LogRecord> TrainingLog;
 		std::vector<std::unique_ptr<Layer>> Layers;
 		std::vector<Cost*> CostLayers;
@@ -684,10 +685,10 @@ namespace dnn
 			HasBias(true),							// Biases
 			PersistOptimizer(false),
 			DisableLocking(true),
+			UseTrainingStrategy(false),
 			NewEpoch(nullptr),
 			TrainingRates(std::vector<TrainingRate>()),
 			TrainingStrategies(std::vector<TrainingStrategy>()),
-			UseTrainingStrategy(false),
 			TrainingLog(std::vector<LogRecord>()),
 			Layers(std::vector<std::unique_ptr<Layer>>()),
 			CostLayers(std::vector<Cost*>()),
@@ -3520,13 +3521,13 @@ namespace dnn
 		s.boolValue(o.HasBias);
 		s.boolValue(o.PersistOptimizer);
 		s.boolValue(o.DisableLocking);
+		s.boolValue(o.UseTrainingStrategy);
 		s.object(o.CurrentTrainingRate);
 		s.container(o.TrainSamplesFlip, 1000000);
 		s.container(o.TestSamplesFlip, 500000);
 		s.container8b(o.RandomTrainSamples, 1000000);
 		s.container(o.TrainingRates, 1024);
 		s.container(o.TrainingStrategies, 1024);
-		s.boolValue(o.UseTrainingStrategy);
 		s.container(o.TrainingLog, 4096);
 		//s.value8b(o.FirstUnlockedLayer);
 	}
