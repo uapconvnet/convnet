@@ -631,7 +631,7 @@ namespace dnn
 			BiasesWDM = biasesWDM;
 		}
 
-		bool IsPlainFormat() const 
+		bool IsPlainFormat() const noexcept
 		{ 
 			return 
 				ChosenFormat == dnnl::memory::format_tag::ab || 
@@ -640,7 +640,7 @@ namespace dnn
 				ChosenFormat == dnnl::memory::format_tag::abcde; 
 		}
 
-		UInt GetElementsCount() const
+		UInt GetElementsCount() const noexcept
 		{
 			return IsPlainFormat() ? CDHW() : PaddedCDHW();
 		}
@@ -809,16 +809,16 @@ namespace dnn
 						variance /= batchSize;
 						variance -= Square<Float>(mean);
 
-						if ((stats.Min < -NEURONS_LIMIT) || (stats.Max > NEURONS_LIMIT))
-							goto FAIL;
+						/*if ((stats.Min < -NEURONS_LIMIT) || (stats.Max > NEURONS_LIMIT))
+							goto FAIL;*/
 						
-						if (!std::isnan(mean) && !std::isinf(mean) && !std::isnan(variance) && !std::isinf(variance))
+						//if (!std::isnan(mean) && !std::isinf(mean) && !std::isnan(variance) && !std::isinf(variance))
 						{
 							stats.Mean = mean;
 							stats.StdDev = std::sqrt(std::max(Float(0), variance));
 						}
-						else
-							goto FAIL;
+						/*else
+							goto FAIL;*/
 					}
 					else
 					{
@@ -836,20 +836,20 @@ namespace dnn
 							KahanSum<Float>(Square<Float>(Neurons[i]), variance, correctionVariance);
 						}
 
-						if ((stats.Min < -NEURONS_LIMIT) || (stats.Max > NEURONS_LIMIT))
-							goto FAIL;
+						/*if ((stats.Min < -NEURONS_LIMIT) || (stats.Max > NEURONS_LIMIT))
+							goto FAIL;*/
 
 						mean /= ncdhw;
 						variance /= ncdhw;
 						variance -= Square<Float>(mean);
 
-						if (!std::isnan(mean) && !std::isinf(mean) && !std::isnan(variance) && !std::isinf(variance))
+						//if (!std::isnan(mean) && !std::isinf(mean) && !std::isnan(variance) && !std::isinf(variance))
 						{
 							stats.Mean = mean;
 							stats.StdDev = std::sqrt(std::max(0.f, variance));
 						}
-						else
-							goto FAIL;
+						/*else
+							goto FAIL;*/
 					}
 
 					NeuronsStats = stats;
