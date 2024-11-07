@@ -315,7 +315,7 @@ namespace dnn
 #endif
 
 			const auto plain = IsPlainFormat();
-			const auto size = plain ? CDHW() : PaddedCDHW();
+			const auto size = GetElementsCount();
 			const auto part = GetVectorPart(size);
 
 			const auto fullDepth = SurvivalProbability[0] == Float(1) && SurvivalProbability[1] == Float(1);

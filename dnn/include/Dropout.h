@@ -88,7 +88,7 @@ namespace dnn
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
-			const auto size = IsPlainFormat() ? CDHW() : PaddedCDHW();
+			const auto size = GetElementsCount();
 			const auto part = GetVectorPart(size);
 			
 			if (Enabled && training)
@@ -175,7 +175,7 @@ namespace dnn
 #ifdef DNN_LEAN
 			ZeroGradient(batchSize);
 #endif
-			const auto size = IsPlainFormat() ? CDHW() : PaddedCDHW();
+			const auto size = GetElementsCount();
 			const auto part = GetVectorPart(size);
 						
 			if (Enabled)

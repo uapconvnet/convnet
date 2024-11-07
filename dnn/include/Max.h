@@ -297,7 +297,7 @@ namespace dnn
 #ifdef DNN_LEAN
 			ZeroGradientMulti(batchSize);
 #endif
-			const auto size = IsPlainFormat() ? CDHW() : PaddedCDHW();
+			const auto size = GetElementsCount();
 			const auto part = GetVectorPart(size);
 			
 #ifdef DNN_STOCHASTIC

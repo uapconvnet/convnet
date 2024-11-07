@@ -195,9 +195,9 @@ namespace dnn
 			ZeroGradient(batchSize);
 #endif // DNN_LEAN
 
-			const auto plain = IsPlainFormat();
-			const auto elements = plain ? batchSize * CDHW() : batchSize * PaddedCDHW();
-			const auto threads = GetThreads(elements);
+			//const auto plain = IsPlainFormat();
+			
+			const auto threads = GetThreads(batchSize * GetElementsCount());
 			const auto strideHW = HW() * VectorSize;
 
 			auto dstMem = dnnl::memory(bwdDescPRelu->dst_desc(), Device.engine, Neurons.data());

@@ -460,7 +460,6 @@ namespace dnn
 					{
 #endif
 						if (!plain)
-						{
 							for_i(batchSize, threads, [=](UInt n)
 							{
 								VecFloat neuronsD1;
@@ -475,9 +474,7 @@ namespace dnn
 									}
 								}
 							});
-						}
 						else
-						{
 							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * CDHW();
@@ -489,7 +486,6 @@ namespace dnn
 									Inputs[second]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * InputsFwd[first]->Neurons[cdhw];
 								}
 							});
-						}
 #ifdef DNN_STOCHASTIC
 					}
 #endif
@@ -531,7 +527,6 @@ namespace dnn
 					{
 #endif
 						if (!plain)
-						{
 							for_i(batchSize, threads, [=](UInt n)
 							{
 								VecFloat neuronsD1;
@@ -547,9 +542,7 @@ namespace dnn
 									}
 								}
 							});
-						}
 						else
-						{
 							for_i(batchSize, threads, [=](UInt n)
 							{
 								for (auto c = 0ull; c < C; c++)
@@ -564,7 +557,6 @@ namespace dnn
 									}
 								}
 							});
-						}
 #ifdef DNN_STOCHASTIC
 					}
 #endif
@@ -575,7 +567,6 @@ namespace dnn
 				if (EqualDimensions(Inputs))
 				{
 					if (!plain)
-					{
 						for_i(batchSize, threads, [=](UInt n)
 						{
 							const auto channelOffset = n * Inputs[second]->PaddedCDHW();
@@ -592,9 +583,7 @@ namespace dnn
 								}
 							}
 						});
-					}
 					else
-					{
 						for_i(batchSize, threads, [=](UInt n)
 						{
 							const auto channelOffset = n * HW();
@@ -609,7 +598,6 @@ namespace dnn
 								}
 							}
 						});
-					}
 				}
 			}
 #ifdef DNN_LEAN

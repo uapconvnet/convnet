@@ -68,7 +68,7 @@ namespace dnn
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 			const auto plain = IsPlainFormat();
-			const auto threads = GetThreads(batchSize * (plain ? CDHW() : PaddedCDHW()));
+			const auto threads = GetThreads(batchSize * GetElementsCount());
 			const auto strideHW = HW() * VectorSize;
 
 			DNN_UNREF_PAR(training);
@@ -267,7 +267,7 @@ namespace dnn
 #endif // DNN_LEAN
 
 			const auto plain = IsPlainFormat();
-			const auto threads = GetThreads(batchSize * (plain ? CDHW() : PaddedCDHW()));
+			const auto threads = GetThreads(batchSize * GetElementsCount());
 			const auto strideHW = HW() * VectorSize;
 
 			if (GetMemoryNDims(*InputLayer->DstMemDesc) == 2)

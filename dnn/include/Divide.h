@@ -96,7 +96,7 @@ namespace dnn
 			if (training)
 			{
 				const auto plain = IsPlainFormat();
-				const auto size = plain ? CDHW() : PaddedCDHW();
+				const auto size = GetElementsCount();
 				const auto part = GetVectorPart(size);
 				const auto threads = batchSize == 1 ? 1ull : GetThreads(batchSize * size, Float(4));
 
@@ -457,7 +457,7 @@ namespace dnn
 #endif // DNN_LEAN
 
 			const auto plain = IsPlainFormat();
-			const auto size = plain ? CDHW() : PaddedCDHW();
+			const auto size = GetElementsCount();
 			const auto threads = batchSize == 1 ? 1ull : GetThreads(batchSize * size, Float(4));
 
 #ifdef DNN_STOCHASTIC

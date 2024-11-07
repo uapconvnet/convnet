@@ -261,8 +261,8 @@ namespace dnn
 									const auto inputOffset = (n * InputLayer->CDHW()) + ((c + ChannelsLeft) * HW());
 									const auto outputOffset = (n * CDHW()) + (c * HW());
 									PRAGMA_OMP_SIMD()
-										for (auto hw = 0ull; hw < HW(); hw++)
-											Neurons[hw + outputOffset] = InputLayer->Neurons[hw + inputOffset];
+									for (auto hw = 0ull; hw < HW(); hw++)
+										Neurons[hw + outputOffset] = InputLayer->Neurons[hw + inputOffset];
 								}
 							});
 					}
