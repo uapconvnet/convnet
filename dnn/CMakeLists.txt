@@ -139,6 +139,7 @@ set(libdnn_headers
   include/Layer.h
   include/LayerNorm.h
   include/LocalResponseNorm.h
+  include/LogSoftmax.h
   include/Max.h
   include/MaxPooling.h
   include/Min.h
@@ -151,6 +152,7 @@ set(libdnn_headers
   include/Resampling.h
   include/Scripts.h
   include/Shuffle.h
+  include/Softmax.h
   include/stdafx.h
   include/Substract.h
   include/Utils.h
