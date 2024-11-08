@@ -120,7 +120,7 @@ namespace dnn
 				InputNeurons.resize(batchSize, C, H, W, dnnl::memory::data_type::f32, BlockedFmt, Device.engine);
 		}
 
-		void InitializeDescriptors(const UInt batchSize) final override
+		void InitializeDescriptorsFwd(const UInt batchSize) final override
 		{
 			if (GetMemoryNDims(*InputLayer->DstMemDesc) == 2)
 			{
@@ -178,6 +178,10 @@ namespace dnn
 #endif
 				}
 			}
+		}
+
+		void InitializeDescriptorsBwd(const UInt batchSize) final override
+		{
 		}
 
 		bool Lockable() const final override
@@ -809,7 +813,7 @@ namespace dnn
 				if (!inference)
 				{
 					inference = true;
-					InitializeDescriptors(batchSize);
+					InitializeDescriptorsFwd(batchSize);
 				}
 
 				auto memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());
@@ -848,7 +852,7 @@ namespace dnn
 				if (inference)
 				{
 					inference = false;
-					InitializeDescriptors(batchSize);
+					InitializeDescriptorsFwd(batchSize);
 				}
 
 				auto memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());

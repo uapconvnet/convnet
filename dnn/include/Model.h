@@ -1249,7 +1249,7 @@ namespace dnn
 			{
 				for (auto& layer : Layers)
 				{
-					layer->InitializeDescriptors(N);
+					layer->InitializeDescriptorsFwd(N);
 					layer->SetOptimizer(optimizer);
 				}
 

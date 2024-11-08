@@ -47,7 +47,7 @@ namespace dnn
 			return 1;
 		}
 
-		void InitializeDescriptors(const UInt batchSize) final override
+		void InitializeDescriptorsFwd(const UInt batchSize) final override
 		{
 			std::unique_ptr<dnnl::memory::desc> InputLayerDstMemDesc;
 			std::unique_ptr<dnnl::memory::desc> InputLayerDiffDstMemDesc;
@@ -87,6 +87,10 @@ namespace dnn
 			bwd = std::make_unique<dnnl::softmax_backward>(dnnl::softmax_backward(*bwdDesc));
 			bwdAdd = std::make_unique<dnnl::binary>(dnnl::binary(*bwdAddDesc));
 #endif
+		}
+
+		void InitializeDescriptorsBwd(const UInt batchSize) final override
+		{
 		}
 
 		void ForwardProp(const UInt batchSize, const bool training) final override

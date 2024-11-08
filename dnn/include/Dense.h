@@ -62,7 +62,7 @@ namespace dnn
 			return CDHW();
 		}
 
-		void InitializeDescriptors(const UInt batchSize) final override
+		void InitializeDescriptorsFwd(const UInt batchSize) final override
 		{
 			std::vector<dnnl::memory::desc> memDesc;
 			if (GetMemoryNDims(*InputLayer->DstMemDesc) == 2)
@@ -127,6 +127,10 @@ namespace dnn
 			bwdData = std::make_unique<dnnl::inner_product_backward_data>(dnnl::inner_product_backward_data(*bwdDataDesc));
 			bwdAdd = std::make_unique<dnnl::binary>(dnnl::binary(*bwdAddDesc));
 #endif
+		}
+
+		void InitializeDescriptorsBwd(const UInt batchSize) final override
+		{
 		}
 
 		void ForwardProp(const UInt batchSize, const bool training) final override

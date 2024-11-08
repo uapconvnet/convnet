@@ -702,7 +702,9 @@ namespace dnn
 			return WeightCount > 0;
 		}
 
-		virtual void InitializeDescriptors(const UInt) = 0;
+		virtual void InitializeDescriptorsFwd(const UInt) = 0;
+		
+		virtual void InitializeDescriptorsBwd(const UInt) = 0;
 
 #ifdef DNN_LEAN
 		inline void ZeroGradient(const UInt batchSize)
@@ -739,7 +741,7 @@ namespace dnn
 			ReleaseGradient();
 #endif // DNN_LEAN
 
-			InitializeDescriptors(batchSize);
+			InitializeDescriptorsFwd(batchSize);
 		}
 
 		virtual void ForwardProp(const UInt batchSize, const bool training) = 0;
