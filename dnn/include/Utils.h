@@ -119,7 +119,7 @@ using namespace dnn;
 namespace
 {
 	constexpr auto DefaultDatasetMeanStdDev = false;
-	constexpr auto Inplace = false;
+	constexpr auto Inplace = true;
 	constexpr auto Kahan = true;
 	constexpr auto PlainOptimizerWeights = true;
 	constexpr auto Reference = false;
