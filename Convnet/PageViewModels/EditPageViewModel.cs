@@ -494,7 +494,7 @@ namespace Convnet.PageViewModels
 
                 try
                 {
-                    var csproj = "<Project Sdk=\"Microsoft.NET.Sdk\">\r\n\r\n  <PropertyGroup>\r\n    <OutputType>Exe</OutputType>\r\n    <TargetFramework>net8.0</TargetFramework>\r\n    <ImplicitUsings>enable</ImplicitUsings>\r\n    <Nullable>enable</Nullable>\r\n  </PropertyGroup>\r\n\r\n</Project>";
+                    var csproj = "<Project Sdk=\"Microsoft.NET.Sdk\">\r\n\r\n  <PropertyGroup>\r\n    <OutputType>Exe</OutputType>\r\n    <TargetFramework>net9.0</TargetFramework>\r\n    <ImplicitUsings>enable</ImplicitUsings>\r\n    <Nullable>enable</Nullable>\r\n  </PropertyGroup>\r\n\r\n</Project>";
                     File.WriteAllText(Path.Combine(ScriptsDirectory, "Scripts.csproj"), csproj);
                     File.WriteAllText(Path.Combine(ScriptsDirectory, "Program.cs"), Script);
 

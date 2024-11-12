@@ -36,7 +36,7 @@ namespace Convnet.Common
             get { return formattedText; }
             set
             {
-                if (value != string.Empty)
+                if (value != formattedText)
                 {
                     formattedText = string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value);
 

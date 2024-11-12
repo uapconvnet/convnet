@@ -21,7 +21,7 @@ namespace Convnet.PageViews
 {
     public partial class MainWindow : Window
     {
-        const string Framework = "net8.0";
+        const string Framework = "net9.0";
 #if DEBUG
         const string Mode = "Debug";
 #else

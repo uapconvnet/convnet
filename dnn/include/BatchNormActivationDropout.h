@@ -182,7 +182,7 @@ namespace dnn
 #endif
 				if (!inference)
 				{
-					bwdDesc = std::make_unique<dnnl::batch_normalization_backward::primitive_desc>(dnnl::batch_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DiffDstMemDesc, *DiffDstMemDesc, *DstMemDesc, Eps, flags, *fwdDesc));
+					bwdDesc = std::make_unique<dnnl::batch_normalization_backward::primitive_desc>(dnnl::batch_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DiffDstMemDesc, *InputLayer->DiffDstMemDesc, *DstMemDesc, Eps, flags, *fwdDesc));
 
 					reorderBwdSrc = bwdDesc->src_desc() != *InputLayer->DstMemDesc;
 					reorderBwdDiffSrc = bwdDesc->diff_src_desc() != *InputLayer->DiffDstMemDesc;
@@ -200,6 +200,18 @@ namespace dnn
 
 		void InitializeDescriptorsBwd(const UInt batchSize) final override
 		{
+			bwdDesc = std::make_unique<dnnl::batch_normalization_backward::primitive_desc>(dnnl::batch_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DiffDstMemDesc, *InputLayer->DiffDstMemDesc, *DstMemDesc, Eps, flags, *fwdDesc));
+
+			reorderBwdSrc = bwdDesc->src_desc() != *InputLayer->DstMemDesc;
+			reorderBwdDiffSrc = bwdDesc->diff_src_desc() != *InputLayer->DiffDstMemDesc;
+			reorderBwdDiffDst = bwdDesc->diff_dst_desc() != *DiffDstMemDesc;
+
+			bwdAddDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputLayer->DiffDstMemDesc, *InputLayer->DiffDstMemDesc, *InputLayer->DiffDstMemDesc));
+
+#ifdef DNN_CACHE_PRIMITIVES
+			bwd = std::make_unique<dnnl::batch_normalization_backward>(dnnl::batch_normalization_backward(*bwdDesc));
+			bwdAdd = std::make_unique<dnnl::binary>(dnnl::binary(*bwdAddDesc));
+#endif
 		}
 
 		void SetBatchSize(const UInt batchSize) final override
