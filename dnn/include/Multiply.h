@@ -184,13 +184,13 @@ namespace dnn
 								if (EqualDimensions(Inputs))
 								{
 									PRAGMA_OMP_SIMD()
-										for (auto cdhw = 0ull; cdhw < CDHW(); cdhw++)
-										{
-											Neurons[cdhw] = Inputs[0]->Neurons[cdhw] * Inputs[1]->Neurons[cdhw];
+									for (auto cdhw = 0ull; cdhw < CDHW(); cdhw++)
+									{
+										Neurons[cdhw] = Inputs[0]->Neurons[cdhw] * Inputs[1]->Neurons[cdhw];
 #ifndef DNN_LEAN
-											NeuronsD1[cdhw] = 0;
+										NeuronsD1[cdhw] = 0;
 #endif
-										}
+									}
 								}
 								else
 								{
@@ -217,13 +217,13 @@ namespace dnn
 										const auto outputOffset = c * HW();
 										auto offset = 0ull;
 										PRAGMA_OMP_SIMD()
-											for (auto hw = 0ull; hw < HW(); hw++)
-											{
-												Neurons[hw + outputOffset] = Inputs[first]->Neurons[hw + outputOffset] * Inputs[second]->Neurons[offset++];
+										for (auto hw = 0ull; hw < HW(); hw++)
+										{
+											Neurons[hw + outputOffset] = Inputs[first]->Neurons[hw + outputOffset] * Inputs[second]->Neurons[offset++];
 #ifndef DNN_LEAN
-												NeuronsD1[hw + outputOffset] = 0;
+											NeuronsD1[hw + outputOffset] = 0;
 #endif
-											}
+										}
 									}
 								}
 							}
