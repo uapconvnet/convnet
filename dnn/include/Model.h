@@ -1472,10 +1472,10 @@ namespace dnn
 								break;
 							/*case LayerTypes::Multiply:
 								dynamic_cast<Multiply*>(layer.get())->SurvivalProbability[inputLayer] = survivalProb;
-								break;*/
+								break;
 							case LayerTypes::Divide:
 								dynamic_cast<Divide*>(layer.get())->SurvivalProbability[inputLayer] = survivalProb;
-								break;
+								break;*/
 							default:
 								break;
 							}

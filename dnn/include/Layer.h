@@ -383,13 +383,13 @@ namespace dnn
 			if constexpr (Inplace)
 			{
 				if ((layerType == LayerTypes::Activation || 
-					layerType == LayerTypes::LayerNorm || 
 					layerType == LayerTypes::BatchNorm || 
 					layerType == LayerTypes::BatchNormActivation || 
 					layerType == LayerTypes::BatchNormActivationDropout || 
 					layerType == LayerTypes::BatchNormRelu ||
-					layerType == LayerTypes::GroupNorm) &&
-					(inputs.size() == 1) &&
+					layerType == LayerTypes::GroupNorm || 
+					layerType == LayerTypes::LayerNorm) &&
+					(inputs.size() == 1) && 
 					(inputs[0]->LayerType == LayerTypes::Convolution || 
 					inputs[0]->LayerType == LayerTypes::DepthwiseConvolution || 
 					inputs[0]->LayerType == LayerTypes::ConvolutionTranspose))
