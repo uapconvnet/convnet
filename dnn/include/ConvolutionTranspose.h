@@ -134,8 +134,10 @@ namespace dnn
 			}
 
 			WeightsFormat = GetMemoryFormat(*WeightsMemDesc);
+
 			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(bwdWeightsDesc->diff_dst_desc());
+			
 			ChosenFormat = GetMemoryFormat(*DstMemDesc);
 						
 			reorderFwdSrc = fwdDesc->src_desc() != *InputLayer->DstMemDesc;

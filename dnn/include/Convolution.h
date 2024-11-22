@@ -163,8 +163,10 @@ namespace dnn
 			}
 
 			WeightsFormat = GetMemoryFormat(*WeightsMemDesc);
+			
 			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(bwdWeightsDesc->diff_dst_desc());
+			
 			ChosenFormat = GetMemoryFormat(*DstMemDesc);
 
 			reorderFwdSrc = fwdDesc->src_desc() != *InputLayer->DstMemDesc;
@@ -173,12 +175,6 @@ namespace dnn
 			reorderBwdDataDiffSrc = bwdDataDesc->diff_src_desc() != *InputLayer->DiffDstMemDesc;
 			reorderBwdDataWeights = bwdDataDesc->weights_desc() != *WeightsMemDesc;
 			reorderBwdDataDiffDst = bwdDataDesc->diff_dst_desc() != *DiffDstMemDesc;
-						
-//#if defined DNN_LOG		
-//			std::cout << std::string("convolution") << std::endl;
-//			std::cout << std::string(dnnl_fmt_tag2str(static_cast<dnnl_format_tag_t>(GetMemoryFormat(bwdWeightsDesc->diff_dst_desc())))) << std::endl;
-//			std::cout << std::string(dnnl_fmt_tag2str(static_cast<dnnl_format_tag_t>(GetMemoryFormat(bwdDataDesc->diff_dst_desc())))) << std::endl;
-//#endif
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::convolution_forward>(dnnl::convolution_forward(*fwdDesc));
@@ -216,6 +212,8 @@ namespace dnn
 			bwdDataDesc = std::make_unique<dnnl::convolution_backward_data::primitive_desc>(dnnl::convolution_backward_data::primitive_desc(Device.engine, dnnl::algorithm::convolution_auto, memDesc[0], memDesc[2], memDesc[1], Strides, Dilates, Padding, Padding, *fwdDesc));
 
 			bwdAddDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputLayer->DiffDstMemDesc, *InputLayer->DiffDstMemDesc, *InputLayer->DiffDstMemDesc));
+
+			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(bwdWeightsDesc->diff_dst_desc());
 
 			reorderBwdWeightsSrc = bwdWeightsDesc->src_desc() != *InputLayer->DstMemDesc;
 			reorderBwdWeightsDiffWeights = bwdWeightsDesc->diff_weights_desc() != *WeightsMemDesc;
