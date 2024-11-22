@@ -186,46 +186,6 @@ namespace dnn
 
 		void InitializeDescriptorsBwd(const UInt batchSize) final override
 		{
-			std::vector<dnnl::memory::desc> memDesc;
-
-			if (Groups > 1)
-			{
-				memDesc = std::vector<dnnl::memory::desc>({
-					dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(InputLayer->C), dnnl::memory::dim(InputLayer->H), dnnl::memory::dim(InputLayer->W) }), dnnl::memory::data_type::f32, NeuronsFormat),
-					dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::data_type::f32, NeuronsFormat),
-					dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(Groups), dnnl::memory::dim(C / Groups), dnnl::memory::dim(InputLayer->C / Groups), dnnl::memory::dim(KernelH), dnnl::memory::dim(KernelW) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::any),
-					dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(C) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::any) });
-			}
-			else
-			{
-				memDesc = std::vector<dnnl::memory::desc>({
-					dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(InputLayer->C), dnnl::memory::dim(InputLayer->H), dnnl::memory::dim(InputLayer->W) }), dnnl::memory::data_type::f32, NeuronsFormat),
-					dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::data_type::f32, NeuronsFormat),
-					dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(C), dnnl::memory::dim(InputLayer->C), dnnl::memory::dim(KernelH), dnnl::memory::dim(KernelW) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::any),
-					dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(C) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::any) });
-			}
-
-			bwdWeightsDesc = std::make_unique<dnnl::convolution_backward_weights::primitive_desc>(HasBias ?
-				dnnl::convolution_backward_weights::primitive_desc(Device.engine, dnnl::algorithm::convolution_auto, memDesc[0], memDesc[2], memDesc[3], memDesc[1], Strides, Dilates, Padding, Padding, *fwdDesc) :
-				dnnl::convolution_backward_weights::primitive_desc(Device.engine, dnnl::algorithm::convolution_auto, memDesc[0], memDesc[2], memDesc[1], Strides, Dilates, Padding, Padding, *fwdDesc));
-
-			bwdDataDesc = std::make_unique<dnnl::convolution_backward_data::primitive_desc>(dnnl::convolution_backward_data::primitive_desc(Device.engine, dnnl::algorithm::convolution_auto, memDesc[0], memDesc[2], memDesc[1], Strides, Dilates, Padding, Padding, *fwdDesc));
-
-			bwdAddDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputLayer->DiffDstMemDesc, *InputLayer->DiffDstMemDesc, *InputLayer->DiffDstMemDesc));
-
-			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(bwdWeightsDesc->diff_dst_desc());
-
-			reorderBwdWeightsSrc = bwdWeightsDesc->src_desc() != *InputLayer->DstMemDesc;
-			reorderBwdWeightsDiffWeights = bwdWeightsDesc->diff_weights_desc() != *WeightsMemDesc;
-			reorderBwdDataDiffSrc = bwdDataDesc->diff_src_desc() != *InputLayer->DiffDstMemDesc;
-			reorderBwdDataWeights = bwdDataDesc->weights_desc() != *WeightsMemDesc;
-			reorderBwdDataDiffDst = bwdDataDesc->diff_dst_desc() != *DiffDstMemDesc;
-			
-#ifdef DNN_CACHE_PRIMITIVES
-			bwdWeights = std::make_unique<dnnl::convolution_backward_weights>(dnnl::convolution_backward_weights(*bwdWeightsDesc));
-			bwdData = std::make_unique<dnnl::convolution_backward_data>(dnnl::convolution_backward_data(*bwdDataDesc));
-			bwdAdd = std::make_unique<dnnl::binary>(dnnl::binary(*bwdAddDesc));
-#endif
 		}
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
