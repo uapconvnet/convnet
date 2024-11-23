@@ -668,18 +668,18 @@ namespace Convnet.PageViewModels
 
                 //layersComboBox.ItemTemplate = GetLockTemplate();
 
-                int index = layersComboBox.SelectedIndex;
-                if (index > 0)
-                {
-                    layersComboBox.SelectedIndex = index - 1;
-                    layersComboBox.SelectedIndex = index;
-                }
-                else
-                    if (Model?.LayerCount > (ulong)(index + 1))
-                {
-                    layersComboBox.SelectedIndex = index + 1;
-                    layersComboBox.SelectedIndex = index;
-                }
+                //int index = layersComboBox.SelectedIndex;
+                //if (index > 0)
+                //{
+                //    layersComboBox.SelectedIndex = index - 1;
+                //    layersComboBox.SelectedIndex = index;
+                //}
+                //else
+                //    if (Model?.LayerCount > (ulong)(index + 1))
+                //{
+                //    layersComboBox.SelectedIndex = index + 1;
+                //    layersComboBox.SelectedIndex = index;
+                //}
             }
         }
 
