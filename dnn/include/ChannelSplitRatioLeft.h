@@ -82,10 +82,6 @@ namespace dnn
 			}
 		}
 
-		void InitializeDescriptorsBwd(const UInt batchSize) final override
-		{
-		}
-
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 			if (Padded && !training)

@@ -703,8 +703,6 @@ namespace dnn
 		}
 
 		virtual void InitializeDescriptorsFwd(const UInt) = 0;
-		
-		virtual void InitializeDescriptorsBwd(const UInt) = 0;
 
 #ifdef DNN_LEAN
 		inline void ZeroGradient(const UInt batchSize)

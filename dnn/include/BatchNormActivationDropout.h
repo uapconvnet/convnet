@@ -198,10 +198,6 @@ namespace dnn
 			}
 		}
 
-		void InitializeDescriptorsBwd(const UInt batchSize) final override
-		{
-		}
-
 		void SetBatchSize(const UInt batchSize) final override
 		{
 			Layer::SetBatchSize(batchSize);

@@ -122,10 +122,6 @@ namespace dnn
 #endif
 		}
 
-		void InitializeDescriptorsBwd(const UInt batchSize) final override
-		{
-		}
-
 		ByteArray GetImage(const Byte fillColor) final override
 		{
 			if (HasWeights)
@@ -198,11 +194,6 @@ namespace dnn
 #ifdef DNN_LEAN
 			ZeroGradient(batchSize);
 #endif // DNN_LEAN
-
-			//const auto plain = IsPlainFormat();
-			
-			const auto threads = GetThreads(batchSize * GetElementsCount());
-			const auto strideHW = HW() * VectorSize;
 
 			auto dstMem = dnnl::memory(bwdDescPRelu->dst_desc(), Device.engine, Neurons.data());
 			auto diffDstMem = dnnl::memory(bwdDescPRelu->diff_dst_desc(), Device.engine, NeuronsD1.data());

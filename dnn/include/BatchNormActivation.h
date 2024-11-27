@@ -180,10 +180,6 @@ namespace dnn
 			}
 		}
 
-		void InitializeDescriptorsBwd(const UInt batchSize) final override
-		{
-		}
-
 		bool Lockable() const final override
 		{
 			return WeightCount > 0 && Scaling;

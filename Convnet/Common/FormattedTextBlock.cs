@@ -15,8 +15,8 @@ namespace Convnet.Common
        
         public new event PropertyChangedEventHandler? PropertyChanged;
         
-        private string formattedText = string.Empty;
-        
+        private string formattedText = string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", string.Empty);
+
         //public static readonly StyledProperty<string> FormattedTextProperty = AvaloniaProperty.Register<FormattedTextBlock, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.OwoWay);
 
         public static readonly DirectProperty<FormattedTextBlock, string> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string>(
@@ -27,9 +27,8 @@ namespace Convnet.Common
               if (string.Compare(o.FormattedText, v) != 0)
                   o.FormattedText = v;
           },
-          string.Empty,
-          Avalonia.Data.BindingMode.OneWay,
-          false);
+          unsetValue: string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", string.Empty),
+          defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
 
         public string FormattedText
         {
@@ -48,10 +47,9 @@ namespace Convnet.Common
                             Inlines?.Add(result);
                         }
                     }
-
+                    InvalidateTextLayout();
                     OnPropertyChanged(nameof(FormattedText));
-                    OnPropertyChanged(nameof(Text));
-                    //InvalidateVisual();
+                    //OnPropertyChanged(nameof(Text));
                 }
             }
         }

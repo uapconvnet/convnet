@@ -114,10 +114,6 @@ namespace dnn
 			reorderBwdDiffSrc = *DiffDstMemDesc != *InputLayer->DiffDstMemDesc;
 		}
 
-		void InitializeDescriptorsBwd(const UInt batchSize) final override
-		{
-		}
-
 		void SetSampleLabel(const std::vector<LabelInfo>& label)
 		{
 			sampleLabel = label;

@@ -71,10 +71,6 @@ namespace dnn
 			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(*InputLayer->DiffDstMemDesc);
 		}
 
-		void InitializeDescriptorsBwd(const UInt batchSize) final override
-		{
-		}
-
 		void SetBatchSize(const UInt batchSize) final override
 		{
 			Layer::SetBatchSize(batchSize);
