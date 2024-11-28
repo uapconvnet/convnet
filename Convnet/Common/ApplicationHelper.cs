@@ -113,7 +113,7 @@ namespace Convnet.Common
         //[SecurityPermissionAttribute(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         public static void DoEvents(DispatcherPriority priority)
         {
-            Func<object, object> functionDelegate = new Func<object, object>(ExitFrameOperation);
+            Func<object, object>? functionDelegate = new Func<object, object>(ExitFrameOperation);
             DispatcherFrame frame = new DispatcherFrame();
             DispatcherOperation dispatcherOperation = Dispatcher.UIThread.InvokeAsync(() => functionDelegate, priority);
             Dispatcher.UIThread.PushFrame(frame);
@@ -137,7 +137,7 @@ namespace Convnet.Common
         /// <summary>
         /// Stops the dispatcher from continuing
         /// </summary>
-        private static object ExitFrameOperation(object obj)
+        private static object? ExitFrameOperation(object obj)
         {
             ((DispatcherFrame)obj).Continue = false;
             return null;

@@ -144,27 +144,29 @@ namespace Convnet.PageViewModels
 
         private void TestPageViewModel_ModelChanged(object? sender, EventArgs e)
         {
-            Model.TestProgress += TestProgress;
-            ShowProgress = false;
-            ShowSample = false;
-            ConfusionDataTable = null;
-
-            costLayersComboBox.Items.Clear();
-            for (uint layer = 0u; layer < Model.CostLayerCount; layer++)
+            if (Model != null)
             {
-                ComboBoxItem item = new ComboBoxItem
+                Model.TestProgress += TestProgress;
+                ShowProgress = false;
+                ShowSample = false;
+                ConfusionDataTable = null;
+
+                costLayersComboBox.Items.Clear();
+                for (uint layer = 0u; layer < Model.CostLayerCount; layer++)
                 {
-                    Name = "CostLayer" + layer.ToString(),
-                    Content = Model.CostLayers[layer].Name,
-                    Tag = layer
-                };
-                costLayersComboBox.Items.Add(item);
+                    ComboBoxItem item = new ComboBoxItem
+                    {
+                        Name = "CostLayer" + layer.ToString(),
+                        Content = Model.CostLayers[layer].Name,
+                        Tag = layer
+                    };
+                    costLayersComboBox.Items.Add(item);
+                }
+                costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
+                costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
+
+                dataProviderComboBox.SelectedIndex = (int)Dataset;
             }
-            costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
-            costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
-
-            dataProviderComboBox.SelectedIndex = (int)Dataset;
-
             //Dispatcher.UIThread.Post(() => LayerIndexChanged(this, null), DispatcherPriority.Render);
         }
 

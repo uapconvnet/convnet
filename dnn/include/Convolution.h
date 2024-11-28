@@ -115,7 +115,7 @@ namespace dnn
 			return C / Groups * KernelH * KernelW / StrideH * StrideW;
 		}
 
-		void InitializeDescriptorsFwd(const UInt batchSize) final override
+		void InitializeDescriptors(const UInt batchSize) final override
 		{
 			std::vector<dnnl::memory::desc> memDesc;
 

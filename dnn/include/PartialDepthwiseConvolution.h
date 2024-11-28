@@ -115,7 +115,7 @@ namespace dnn
 			return Multiplier * KernelH * KernelW / StrideH * StrideW;
 		}
 
-		void InitializeDescriptorsFwd(const UInt batchSize) final override
+		void InitializeDescriptors(const UInt batchSize) final override
 		{
 			if (InputLayer->PaddedC % Groups != 0)
 				throw std::invalid_argument("input not splittable in PartialDepthwiseConvolution");

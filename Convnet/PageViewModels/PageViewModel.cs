@@ -148,7 +148,7 @@ namespace Convnet.PageViewModels
                 {
                     if (CurrentPage is TrainPageViewModel tpvm)
                     {
-                        ObservableCollection<DNNTrainingResult> backup = new ObservableCollection<DNNTrainingResult>(Settings.Default.TrainingLog);
+                        ObservableCollection<DNNTrainingResult> backup = Settings.Default.TrainingLog != null ? new ObservableCollection<DNNTrainingResult>(Settings.Default.TrainingLog) : new ObservableCollection<DNNTrainingResult>();
 
                         try
                         {
@@ -165,7 +165,7 @@ namespace Convnet.PageViewModels
                             {
                                 var records = csv.GetRecords<DNNTrainingResult>();
 
-                                if (Settings.Default.TrainingLog.Count > 0)
+                                if (Settings.Default.TrainingLog?.Count > 0)
                                 {
                                     var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to clear the log?", "Clear Log", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
 
@@ -177,7 +177,7 @@ namespace Convnet.PageViewModels
                                 }
 
                                 foreach (var record in records)
-                                    Settings.Default.TrainingLog.Add(record);
+                                    Settings.Default.TrainingLog?.Add(record);
                             }
 
                             Model?.LoadLog(files[0]);
@@ -323,7 +323,7 @@ namespace Convnet.PageViewModels
 
         private void EditPageVM_ModelChanged(object? sender, EventArgs e)
         {
-            if (Pages != null && Pages.Count > 0)
+            if (Pages != null && Pages.Count > (int)ViewModels.Train)
             {
                 Model = Pages[(int)ViewModels.Edit]?.Model;
                 if (Model != null)

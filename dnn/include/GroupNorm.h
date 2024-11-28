@@ -88,7 +88,7 @@ namespace dnn
 			return 1;
 		}
 
-		void InitializeDescriptorsFwd(const UInt batchSize) final override
+		void InitializeDescriptors(const UInt batchSize) final override
 		{
 			if (GetMemoryNDims(*InputLayer->DstMemDesc) == 2)
 			{
@@ -160,7 +160,7 @@ namespace dnn
 				if (!inference)
 				{
 					inference = true;
-					InitializeDescriptorsFwd(batchSize);
+					InitializeDescriptors(batchSize);
 				}
 
 				auto memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());
@@ -205,7 +205,7 @@ namespace dnn
 				if (inference)
 				{
 					inference = false;
-					InitializeDescriptorsFwd(batchSize);
+					InitializeDescriptors(batchSize);
 				}
 
 				auto memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());

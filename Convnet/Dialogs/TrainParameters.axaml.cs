@@ -193,10 +193,13 @@ namespace Convnet.Dialogs
                 Settings.Default.Optimizer = (int)Rate.Optimizer;
                 Settings.Default.Save();
 
-                Model.ClearTrainingStrategies();
-                foreach (DNNTrainingStrategy strategy in Settings.Default.TrainingStrategies)
-                    Model.AddTrainingStrategy(strategy);
-                Model.TrainingStrategies = Settings.Default.TrainingStrategies;
+                if (Settings.Default.TrainingStrategies != null)
+                {
+                    Model.ClearTrainingStrategies();
+                    foreach (DNNTrainingStrategy strategy in Settings.Default.TrainingStrategies)
+                        Model.AddTrainingStrategy(strategy);
+                    Model.TrainingStrategies = Settings.Default.TrainingStrategies;
+                }
 
                 DialogResult = true;
                 Close();
@@ -260,7 +263,8 @@ namespace Convnet.Dialogs
             if (cbs != null)
             {
                 var useStrategy = cbs.IsChecked.HasValue && cbs.IsChecked.Value;
-                tpvm.Model.SetUseTrainingStrategy(useStrategy);
+                if (tpvm.Model != null)
+                    tpvm.Model.SetUseTrainingStrategy(useStrategy);
                 Settings.Default.UseTrainingStrategy = useStrategy;
                 Settings.Default.Save();
 
@@ -274,7 +278,8 @@ namespace Convnet.Dialogs
             if (cbs != null)
             {
                 var useStrategy = cbs.IsChecked.HasValue && cbs.IsChecked.Value;
-                tpvm.Model.SetUseTrainingStrategy(useStrategy);
+                if (tpvm.Model != null)
+                    tpvm.Model.SetUseTrainingStrategy(useStrategy);
                 Settings.Default.UseTrainingStrategy = useStrategy;
                 Settings.Default.Save();
 

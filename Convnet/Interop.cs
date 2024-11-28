@@ -2516,14 +2516,14 @@ namespace Interop
         [field: NonSerializedAttribute()]
         public virtual event PropertyChangedEventHandler? PropertyChanged;
 
-        private string name;
-        private string description;
+        private string? name;
+        private string? description;
         private DNNLayerTypes layerType;
         private DNNActivations activation;
         private DNNCosts cost;
-        private System.Collections.Generic.List<UInt> inputs;
-        private System.Collections.Generic.List<string> inputsNames;
-        private Avalonia.Media.Imaging.WriteableBitmap weightsSnapshot;
+        private System.Collections.Generic.List<UInt>? inputs;
+        private System.Collections.Generic.List<string>? inputsNames;
+        private Avalonia.Media.Imaging.WriteableBitmap? weightsSnapshot;
         private bool lockable;
         private bool? lockUpdate = false;
         private bool isNormLayer;
@@ -2562,9 +2562,9 @@ namespace Interop
         private UInt labelIndex;
         private Float dropout;
         private Float cutout;
-        private DNNStats neuronsStats;
-        private DNNStats weightsStats;
-        private DNNStats biasesStats;
+        private DNNStats? neuronsStats;
+        private DNNStats? weightsStats;
+        private DNNStats? biasesStats;
         private Float weight;
         private Float alpha;
         private Float beta;
@@ -2579,7 +2579,7 @@ namespace Interop
         private Float bPropLayerTime;
         private Float updateLayerTime;
 
-        public string Name
+        public string? Name
         {
             get { return name; }
             set
@@ -2591,7 +2591,7 @@ namespace Interop
                 OnPropertyChanged(nameof(Name));
             }
         }
-        public string Description
+        public string? Description
         {
             get { return description; }
             set
@@ -2639,7 +2639,7 @@ namespace Interop
                 OnPropertyChanged(nameof(Cost));
             }
         }
-        public System.Collections.Generic.List<UInt> Inputs
+        public System.Collections.Generic.List<UInt>? Inputs
         {
             get { return inputs; }
             set
@@ -2651,7 +2651,7 @@ namespace Interop
                 OnPropertyChanged(nameof(Inputs));
             }
         }
-        public System.Collections.Generic.List<string> InputsNames
+        public System.Collections.Generic.List<string>? InputsNames
         {
             get { return inputsNames; }
             set
@@ -2663,7 +2663,7 @@ namespace Interop
                 OnPropertyChanged(nameof(InputsNames));
             }
         }
-        public Avalonia.Media.Imaging.WriteableBitmap WeightsSnapshot
+        public Avalonia.Media.Imaging.WriteableBitmap? WeightsSnapshot
         {
             get { return weightsSnapshot; }
             set
@@ -3131,7 +3131,7 @@ namespace Interop
                 OnPropertyChanged(nameof(Cutout));
             }
         }
-        public DNNStats NeuronsStats
+        public DNNStats? NeuronsStats
         {
             get { return neuronsStats; }
             set
@@ -3143,7 +3143,7 @@ namespace Interop
                 OnPropertyChanged(nameof(NeuronsStats));
             }
         }
-        public DNNStats WeightsStats
+        public DNNStats? WeightsStats
         {
             get { return weightsStats; }
             set
@@ -3155,7 +3155,7 @@ namespace Interop
                 OnPropertyChanged(nameof(WeightsStats));
             }
         }
-        public DNNStats BiasesStats
+        public DNNStats? BiasesStats
         {
             get { return biasesStats; }
             set

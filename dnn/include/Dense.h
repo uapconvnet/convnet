@@ -58,7 +58,7 @@ namespace dnn
 			return CDHW();
 		}
 
-		void InitializeDescriptorsFwd(const UInt batchSize) final override
+		void InitializeDescriptors(const UInt batchSize) final override
 		{
 			std::vector<dnnl::memory::desc> memDesc;
 			if (GetMemoryNDims(*InputLayer->DstMemDesc) == 2)
