@@ -49,14 +49,11 @@ namespace Convnet.Common
                     }
                     InvalidateTextLayout();
                     OnPropertyChanged(nameof(FormattedText));
-                    //OnPropertyChanged(nameof(Text));
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }
-        public FormattedTextBlock()
-        {
-        }
-
+       
         #region INotifyPropertyChanged Members
 
         protected virtual void OnPropertyChanged(string propertyName)
