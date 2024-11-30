@@ -1646,15 +1646,17 @@ namespace dnn
 				TaskState.store(TaskStates::Running);
 				State.store(States::Idle);
 
-				auto msg = std::string();
-				if (!Activation::CheckActivations(msg))
+				if constexpr (TestActivations)
 				{
-					cimg_library::cimg::dialog("Activations Sanity Check", msg.c_str(), "OK");
+					auto msg = std::string();
+					if (!Activation::CheckActivations(msg))
+					{
+						cimg_library::cimg::dialog("Activations Sanity Check", msg.c_str(), "OK");
 
-					State.store(States::Completed);
-					return;
-				};
-
+						State.store(States::Completed);
+						return;
+					};
+				}
 				const auto totalSkipConnections = GetTotalSkipConnections();
 
 				auto timer = std::chrono::high_resolution_clock();
