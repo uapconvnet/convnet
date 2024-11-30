@@ -182,7 +182,7 @@ namespace dnn
 					for (auto c = 0ull; c < InputLayer->C; c++)
 						for (auto h = 0ull; h < H; h++)
 							for (auto w = 0ull; w < W; w++)
-								InputLayer->NeuronsD1[InputLayer->OffsetPaddedMem(0, c, h, w)] += NeuronsD1[OffsetPaddedMem(0, 0, h, w)] / Float(InputLayerFwd->C);
+								InputLayer->NeuronsD1[InputLayer->OffsetPaddedMem(0, c, h, w)] += NeuronsD1[OffsetPaddedMem(0, 0, h, w)] / Float(InputLayer->C);
 				}
 				else
 				{
@@ -197,13 +197,12 @@ namespace dnn
 #endif
 				const auto strideHW = HW() * VectorSize;
 				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
-
+				const auto factor = Float(1) / Float(InputLayer->C);
+				const bool padded = InputLayer->PaddedC == InputLayer->C;
 				if (!plain)
 					for_i(batchSize, threads, [=](UInt n)
 					{
-						//const auto factor = Float(1) / Float(InputLayer->C);
-
-						if (InputLayer->PaddedC == InputLayer->C)
+						if (padded)
 							for (auto c = 0ull; c < InputLayer->PaddedC; c += VectorSize)
 							{
 								const auto inputOffset = n * InputLayer->PaddedCDHW() + c * HW();
@@ -213,17 +212,17 @@ namespace dnn
 									auto inputD1 = VecFloat().load_a(&InputLayer->NeuronsD1[hw + inputOffset]);
 									auto neuronsD1 = VecFloat().load_a(&NeuronsD1[hw + outputOffset]);
 
-									inputD1 += neuronsD1 / Float(InputLayer->C);
-									inputD1.store_a(&InputLayer->NeuronsD1[hw + inputOffset]);
+									//inputD1 += neuronsD1 / Float(InputLayer->C);
+									//inputD1.store_a(&InputLayer->NeuronsD1[hw + inputOffset]);
 
-									//mul_add(neuronsD1, factor, inputD1).store_a(&InputLayer->NeuronsD1[hw + inputOffset]);
+									mul_add(neuronsD1, factor, inputD1).store_a(&InputLayer->NeuronsD1[hw + inputOffset]);
 								}
 							}
 						else
 							for (auto c = 0ull; c < InputLayer->C; c++)
 								for (auto h = 0ull; h < H; h++)
 									for (auto w = 0ull; w < W; w++)
-										InputLayer->NeuronsD1[InputLayer->OffsetPaddedMem(n, c, h, w)] += NeuronsD1[OffsetPaddedMem(n, 0, h, w)] / Float(InputLayer->C);
+										InputLayer->NeuronsD1[InputLayer->OffsetPaddedMem(n, c, h, w)] += NeuronsD1[OffsetPaddedMem(n, 0, h, w)] * factor;
 					});
 				else
 					for_i(batchSize, threads, [=](UInt n)
@@ -233,7 +232,7 @@ namespace dnn
 						for (auto c = 0ull; c < InputLayer->C; c++)
 							PRAGMA_OMP_SIMD()
 							for (auto hw = 0ull; hw < HW(); hw++)
-								InputLayer->NeuronsD1[inStart + (c * HW()) + hw] += NeuronsD1[start + hw] / Float(InputLayer->C);
+								InputLayer->NeuronsD1[inStart + (c * HW()) + hw] += NeuronsD1[start + hw] * factor;
 					});
 #ifdef DNN_STOCHASTIC
 			}
@@ -274,7 +273,7 @@ namespace dnn
 						for (auto c = 0ull; c < InputLayer->C; c++)
 							for (auto h = 0ull; h < H; h++)
 								for (auto w = 0ull; w < W; w++)
-									InputLayer->NeuronsD1[InputLayer->OffsetPaddedMem(n, c, h, w)] += (InputLayerFwd->Neurons[InputLayerFwd->OffsetPaddedMem(n, c, h, w)] == Neurons[OffsetPaddedMem(n, 0, h, w)] ? NeuronsD1[OffsetPaddedMem(n, 0, h, w)] : Float(0));
+									InputLayer->NeuronsD1[InputLayer->OffsetPaddedMem(n, c, h, w)] += (InputLayer->Neurons[InputLayer->OffsetPaddedMem(n, c, h, w)] == Neurons[OffsetPaddedMem(n, 0, h, w)] ? NeuronsD1[OffsetPaddedMem(n, 0, h, w)] : Float(0));
 					});
 				else
 					for_i(batchSize, threads, [=](UInt n)
@@ -319,25 +318,24 @@ namespace dnn
 #endif
 				const auto strideHW = HW() * VectorSize;
 				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
+				const bool padded = InputLayer->PaddedC == InputLayer->C;
 
 				if (!plain)
 					for_i(batchSize, threads, [=](UInt n)
 					{
-						const auto outputOffset = n * HW();
+						const auto outputOffset = OffsetPaddedMem(n, 0, 0, 0);
 
-						if (InputLayer->PaddedC == InputLayer->C)
+						if (padded)
 							for (auto c = 0ull; c < InputLayer->PaddedC; c += VectorSize)
 							{
-								const auto inputOffset = n * InputLayer->PaddedCDHW() + c * HW();
-
+								const auto inputOffset = InputLayer->OffsetPaddedMem(n, c, 0, 0);
+								
 								for (auto hw = 0ull; hw < strideHW; hw += VectorSize)
 								{
 									auto inputNeurons = VecFloat().load_a(&InputLayer->Neurons[hw + inputOffset]);
 									auto inputNeuronsD1 = VecFloat().load_a(&InputLayer->NeuronsD1[hw + inputOffset]);
-									auto neurons = VecFloat().load_a(&Neurons[hw + outputOffset]);
-									auto neuronsD1 = VecFloat().load_a(&NeuronsD1[hw + outputOffset]);
-
-									if_add(inputNeurons == Neurons[(hw / VectorSize) + outputOffset], inputNeuronsD1, neuronsD1).store_a(&InputLayer->NeuronsD1[hw + inputOffset]);
+								
+									if_add(inputNeurons == Neurons[hw + outputOffset], inputNeuronsD1, NeuronsD1[hw + outputOffset]).store_a(&InputLayer->NeuronsD1[hw + inputOffset]);
 								}
 							}
 						else
@@ -478,10 +476,10 @@ namespace dnn
 			switch (Op)
 			{
 			case ReduceOperations::Avg:
-				BackwardPropAvgRef(batchSize);
+				BackwardPropAvg(batchSize);
 				break;
 			case ReduceOperations::Max:
-				BackwardPropMaxRef(batchSize);
+				BackwardPropMax(batchSize);
 				break;
 			case ReduceOperations::Min:
 				BackwardPropMin(batchSize);
@@ -501,14 +499,13 @@ namespace dnn
 				for (auto i = 0ull; i < InputLayer->NeuronsD1.size(); i++)
 					InputLayer->NeuronsD1[i] = output[i];
 
-				
 				switch (Op)
 				{
 				case ReduceOperations::Avg:
-					BackwardPropAvg(batchSize);
+					BackwardPropAvgRef(batchSize);
 					break;
 				case ReduceOperations::Max:
-					BackwardPropMax(batchSize);
+					BackwardPropMaxRef(batchSize);
 					break;
 				case ReduceOperations::Min:
 					BackwardPropMin(batchSize);
