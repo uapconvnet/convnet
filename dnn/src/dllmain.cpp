@@ -11,7 +11,7 @@ std::unique_ptr<dnn::Dataprovider> dataprovider;
 FILE* stream;
 #endif
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpReserved)
+BOOL APIENTRY DllMain([[maybe_unused]] HMODULE hModule, DWORD fdwReason, [[maybe_unused]] LPVOID lpReserved)
 {
 	switch (fdwReason)
 	{

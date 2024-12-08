@@ -22,11 +22,11 @@ namespace Convnet.Common
         public static readonly DirectProperty<FormattedTextBlock, string> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string>(
           nameof(FormattedText),
           o => o.FormattedText,
-          (o, v) =>
-          {
-              if (string.Compare(o.FormattedText, v) != 0)
-                  o.FormattedText = v;
-          },
+          (o, v) => o.FormattedText = v,
+          //{
+              //if (string.Compare(o.FormattedText, v) != 0)
+            //      o.FormattedText = v;
+          //},
           unsetValue: string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", string.Empty),
           defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
 
