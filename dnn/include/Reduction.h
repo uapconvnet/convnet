@@ -447,7 +447,7 @@ namespace dnn
 							for (auto c = 0ull; c < InputLayer->PaddedC; c += VectorSize)
 							{
 								const auto inputOffset = InputLayer->OffsetPaddedMem(n, c, 0, 0);
-
+								
 								for (auto hw = 0ull; hw < strideHW; hw += VectorSize)
 								{
 									auto inputNeurons = VecFloat().load_a(&InputLayerFwd->Neurons[hw + inputOffset]);
@@ -609,22 +609,43 @@ namespace dnn
 					output[i] = InputLayer->NeuronsD1[i];
 			}
 
-			switch (Op)
+			if constexpr ((Reference || ReferenceReduction) && !TestReduction)
 			{
-			case ReduceOperations::Avg:
-				BackwardPropAvg(batchSize);
-				break;
-			case ReduceOperations::Max:
-				BackwardPropMax(batchSize);
-				break;
-			case ReduceOperations::Min:
-				BackwardPropMin(batchSize);
-				break;
-			case ReduceOperations::Sum:
-				BackwardPropSum(batchSize);
-				break;
+				switch (Op)
+				{
+				case ReduceOperations::Avg:
+					BackwardPropAvgRef(batchSize);
+					break;
+				case ReduceOperations::Max:
+					BackwardPropMaxRef(batchSize);
+					break;
+				case ReduceOperations::Min:
+					BackwardPropMinRef(batchSize);
+					break;
+				case ReduceOperations::Sum:
+					BackwardPropSumRef(batchSize);
+					break;
+				}
 			}
-		
+			else
+			{
+				switch (Op)
+				{
+				case ReduceOperations::Avg:
+					BackwardPropAvg(batchSize);
+					break;
+				case ReduceOperations::Max:
+					BackwardPropMax(batchSize);
+					break;
+				case ReduceOperations::Min:
+					BackwardPropMin(batchSize);
+					break;
+				case ReduceOperations::Sum:
+					BackwardPropSum(batchSize);
+					break;
+				}
+			}
+
 			if constexpr (TestReduction)
 			{
 				auto input = FloatArray();
