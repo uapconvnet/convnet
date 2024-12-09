@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -14,20 +15,20 @@ namespace Convnet.Common
         protected override Type StyleKeyOverride => typeof(TextBlock);
        
         public new event PropertyChangedEventHandler? PropertyChanged;
-        
-        private string formattedText = string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", string.Empty);
+
+        private string formattedText = string.Empty; // string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", string.Empty);
 
         //public static readonly StyledProperty<string> FormattedTextProperty = AvaloniaProperty.Register<FormattedTextBlock, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.OwoWay);
 
         public static readonly DirectProperty<FormattedTextBlock, string> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string>(
           nameof(FormattedText),
           o => o.FormattedText,
-          (o, v) => o.FormattedText = v,
-          //{
-              //if (string.Compare(o.FormattedText, v) != 0)
-            //      o.FormattedText = v;
-          //},
-          unsetValue: string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", string.Empty),
+          (o, v) => 
+          {
+             // if (string.Compare(o.FormattedText, v) != 0)
+                  o.FormattedText = v;
+          },
+          unsetValue: string.Empty,
           defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
 
         public string FormattedText
@@ -37,19 +38,22 @@ namespace Convnet.Common
             {
                 if (value != formattedText)
                 {
-                    formattedText = string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value);
-
-                    using (TextReader sr = new StringReader(formattedText))
+                    formattedText = value;
+                    base.BeginInit();
+                    using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)))
                     {
                         if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
                         {
+                            Text = null;
                             Inlines?.Clear();
                             Inlines?.Add(result);
                         }
                     }
-                    InvalidateTextLayout();
+                    base.EndInit();
+                    //InvalidateTextLayout();
                     OnPropertyChanged(nameof(FormattedText));
-                    OnPropertyChanged(nameof(Text));
+                    //OnPropertyChanged(nameof(Text));
+                    //OnPropertyChanged(nameof(Inlines));
                 }
             }
         }

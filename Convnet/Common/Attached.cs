@@ -41,18 +41,17 @@ namespace Convnet.Common
         private static void FormattedTextPropertyChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
             if (d is TextBlock textBlock)
-            {
-                string? formattedText = (string?)e.NewValue ?? string.Empty;
-                formattedText = string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", formattedText);
+            {               
+                var formattedText = (string?)e.NewValue ?? string.Empty;
 
-                using (TextReader sr = new StringReader(formattedText))
+                using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", formattedText)))
                 {
                     if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
                     {
                         textBlock.Inlines?.Clear();
                         textBlock.Inlines?.Add(result);
                     }
-                }
+                }  
             }
         }
     }
