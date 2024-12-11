@@ -75,7 +75,7 @@ namespace Convnet.PageViewModels
         private Avalonia.Media.Imaging.WriteableBitmap? weightsSnapshot;
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private readonly StringBuilder sb;
-
+        private const bool WPF = false;
         public Timer RefreshTimer;
         public TimeSpan EpochDuration { get; set; }
         public event EventHandler Open;
@@ -85,6 +85,7 @@ namespace Convnet.PageViewModels
         public TrainPageViewModel(DNNModel model) : base(model)
         {
             sb = new StringBuilder();
+        
             refreshRate = Settings.Default.RefreshInterval;
 
             InitializeTrainingPlot();
@@ -538,7 +539,7 @@ namespace Convnet.PageViewModels
         private void TrainProgress(DNNOptimizers Optim, UInt BatchSize, UInt Cycle, UInt TotalCycles, UInt Epoch, UInt TotalEpochs, bool HorizontalFlip, bool VerticalFlip, Float InputDropout, Float Cutout, bool CutMix, Float AutoAugment, Float ColorCast, UInt ColorAngle, Float Distortion, DNNInterpolations Interpolation, Float Scaling, Float Rotation, UInt SampleIndex, Float Rate, Float Momentum, Float Beta2, Float Gamma, Float L2Penalty, Float Dropout, Float AvgTrainLoss, Float TrainErrorPercentage, Float TrainAccuracy, UInt TrainErrors, Float AvgTestLoss, Float TestErrorPercentage, Float TestAccuracy, UInt TestErrors, DNNStates State, DNNTaskStates TaskState)
         {
             Dispatcher.UIThread.Invoke(() =>
-            { 
+            {
                 sb.Length = 0;
                 switch (State)
                 {
@@ -550,10 +551,14 @@ namespace Convnet.PageViewModels
                                 Model.Optimizer = Optim;
                             }
 
-                            //sb.Append("<Span><Bold>Training</Bold></Span><LineBreak/>");
-                            //sb.Append("<Span>");
-                            sb.Append("Training");
-                            sb.Append("\r\n");
+                            if (WPF)
+                            {
+                                sb.Append("<Span><Bold>Training</Bold></Span><LineBreak/>");
+                                sb.Append("<Span>");
+                            }
+                            else
+                                sb.AppendLine("Training");
+                            
                             switch (Model?.Optimizer)
                             {
                                 case DNNOptimizers.AdaGrad:
@@ -589,7 +594,8 @@ namespace Convnet.PageViewModels
                                     sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Momentum:\t\t  {7:0.#######}\n L2 Penalty:\t\t{8:0.#######}\n Dropout:\t\t   " + (Dropout > 0 ? Dropout.ToString() + "\n" : "No\n") + (CutMix ? " CutMix:\t\t\t" : " Cutout:\t\t\t") + (Cutout > 0 ? Cutout.ToString() + "\n" : "No\n") + " Auto Augment:\t  " + (AutoAugment > 0 ? AutoAugment.ToString() + "\n" : "No\n") + (HorizontalFlip ? " Horizontal Flip:   Yes\n" : " Horizontal Flip:\tNo\n") + (VerticalFlip ? " Vertical Flip:   Yes\n" : " Vertical Flip:\t No\n") + " Color Cast:\t\t" + (ColorCast > 0u ? ColorCast.ToString() + "\n" : "No\n") + " Distortion:\t\t" + (Model.Distortion > 0 ? Distortion.ToString() + "\n" : "No\n") + " Loss:\t\t\t  {9:N7}\n Errors:\t\t\t{10:G}\n Error:\t\t\t {11:N2} %\n Accuracy:\t\t  {12:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, L2Penalty, AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
                             }
-                            //sb.Append("</Span>");
+                            if (WPF)
+                                sb.Append("</Span>");
                         }
                         break;
 
@@ -597,21 +603,26 @@ namespace Convnet.PageViewModels
                         {
                             if (Model != null)
                             {
-                                //sb.Append("<Span><Bold>Testing</Bold></Span><LineBreak/>");
-                                //sb.Append("<Span>");
-                                //sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Loss:\t\t\t  {6:N7}\n Errors:\t\t\t{7:G}\n Error:\t\t\t {8:N2} %\n Accuracy:\t\t  {9:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, (Float)100 - TestErrorPercentage);
-                                //sb.Append("</Span>");
-
-                                sb.Append("Testing");
-                                sb.Append("\r\n");
+                                if (WPF)
+                                {
+                                    sb.Append("<Span><Bold>Testing</Bold></Span><LineBreak/>");
+                                    sb.Append("<Span>");
+                                }
+                                else
+                                    sb.AppendLine("Testing");
+                                
                                 sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Loss:\t\t\t  {6:N7}\n Errors:\t\t\t{7:G}\n Error:\t\t\t {8:N2} %\n Accuracy:\t\t  {9:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, (Float)100 - TestErrorPercentage);
+                                if (WPF)
+                                    sb.Append("</Span>");
                             }
                         }
                         break;
 
                     case DNNStates.SaveWeights:
-                        //sb.Append("<Span><Bold>Saving weights</Bold></Span>");
-                        sb.Append("Saving weights");
+                        if (WPF)
+                            sb.Append("<Span><Bold>Saving weights</Bold></Span>");
+                        else
+                            sb.Append("Saving weights");
                         break;
 
                     case DNNStates.Completed:
@@ -1714,95 +1725,106 @@ namespace Convnet.PageViewModels
                         CommandToolBar[20].IsVisible = Model.Layers[index].Lockable;
                         CommandToolBar[21].IsVisible = Model.Layers[index].Lockable && Model.TaskState == DNNTaskStates.Stopped;
                         
-                        var sb = new StringBuilder();
+                        //var sb = new StringBuilder();
 
 
-                        //layerInfo = "<Span><Bold>Layer</Bold></Span><LineBreak/><Span>" + Model.Layers[index].Description + "</Span><LineBreak/>";
-
-                        layerInfo = "Layer";
-                        layerInfo += "\r\n";
-                        layerInfo += Model.Layers[index].Description;
-                        layerInfo += "\r\n";
-
+                        if (WPF)
+                            layerInfo = "<Span><Bold>Layer</Bold></Span><LineBreak/><Span>" + Model.Layers[index].Description + "</Span><LineBreak/>";
+                        else
+                            layerInfo = "Layer" + Environment.NewLine + Model.Layers[index].Description + Environment.NewLine;
+                        
                         if (Settings.Default.Timings)
                         {
                             if (Model.State == DNNStates.Training)
                             {
-                                //layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
-                                layerInfo += "Timings";
-                                layerInfo += "\r\n";
+                                if (WPF)
+                                    layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
+                                else
+                                    layerInfo += "Timings" + Environment.NewLine;
                                 sb.Length = 0;
                                 sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
-                                //layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                                layerInfo += sb.ToString();
-                                layerInfo += "\r\n";
+                                if (WPF)
+                                    layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                                else
+                                    layerInfo += sb.ToString() + Environment.NewLine;
                                 sb.Length = 0;
                                 sb.AppendFormat(" bprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].BPropLayerTime, (int)Model.bpropTime);
-                                //layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                                layerInfo += sb.ToString();
-                                layerInfo += "\r\n";
+                                if (WPF)
+                                    layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                                else
+                                    layerInfo += sb.ToString() + Environment.NewLine;
+
                                 if (ShowWeightsSnapshot)
                                 {
                                     sb.Length = 0;
                                     sb.AppendFormat(" update: \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].UpdateLayerTime, (int)Model.updateTime);
-                                    //layerInfo += "<Span>" + sb.ToString() + "</Span>";
-                                    layerInfo += sb.ToString();
+                                    if (WPF)
+                                        layerInfo += "<Span>" + sb.ToString() + "</Span>";
+                                    else
+                                        layerInfo += sb.ToString();
                                 }
                             }
                             else if (Model.State == DNNStates.Testing)
                             {
-                                //layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
-                                layerInfo += "Timings";
-                                layerInfo += "\r\n";
+                                if (WPF)
+                                    layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
+                                else
+                                    layerInfo += "Timings" + Environment.NewLine;
                                 sb.Length = 0;
                                 sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
-                                //layerInfo += "<Span>" + sb.ToString() + "</Span>";
-                                layerInfo += sb.ToString();
+                                if (WPF)
+                                    layerInfo += "<Span>" + sb.ToString() + "</Span>";
+                                else
+                                    layerInfo += sb.ToString();
                             }
                         }
 
                         this.RaisePropertyChanged(nameof(LayerInfo));
 
-
-                        //weightsMinMax = "<Span><Bold>Neurons</Bold></Span><LineBreak/>";
-                        weightsMinMax = "Neurons";
-                        weightsMinMax += "\r\n";
+                        if (WPF)
+                            weightsMinMax = "<Span><Bold>Neurons</Bold></Span><LineBreak/>";
+                        else
+                            weightsMinMax = "Neurons" + Environment.NewLine;
 
                         sb.Length = 0;
                         if (Model.Layers[index].NeuronsStats?.StdDev >= 0.0f)
                             sb.AppendFormat(" Std:     {0:N8}", Model.Layers[index].NeuronsStats?.StdDev);
                         else
                             sb.AppendFormat(" Std:    {0:N8}", Model.Layers[index].NeuronsStats?.StdDev);
-                        //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                        weightsMinMax += sb.ToString();
-                        weightsMinMax += "\r\n";
+                        if (WPF)
+                            weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                        else
+                            weightsMinMax += sb.ToString() + Environment.NewLine;
 
                         sb.Length = 0;
                         if (Model.Layers[index].NeuronsStats?.Mean >= 0.0f)
                             sb.AppendFormat(" Mean:    {0:N8}", Model.Layers[index].NeuronsStats?.Mean);
                         else
                             sb.AppendFormat(" Mean:   {0:N8}", Model.Layers[index].NeuronsStats?.Mean);
-                        //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                        weightsMinMax += sb.ToString();
-                        weightsMinMax += "\r\n";
+                        if (WPF)
+                            weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                        else
+                            weightsMinMax += sb.ToString() + Environment.NewLine;
 
                         sb.Length = 0;
                         if (Model.Layers[index].NeuronsStats?.Min >= 0.0f)
                             sb.AppendFormat(" Min:     {0:N8}", Model.Layers[index].NeuronsStats?.Min);
                         else
                             sb.AppendFormat(" Min:    {0:N8}", Model.Layers[index].NeuronsStats?.Min);
-                        //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                        weightsMinMax += sb.ToString();
-                        weightsMinMax += "\r\n";
+                        if (WPF)
+                            weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                        else
+                            weightsMinMax += sb.ToString() + Environment.NewLine;
 
                         sb.Length = 0;
                         if (Model.Layers[index].NeuronsStats?.Max >= 0.0f)
                             sb.AppendFormat(" Max:     {0:N8}", Model.Layers[index].NeuronsStats?.Max);
                         else
                             sb.AppendFormat(" Max:    {0:N8}", Model.Layers[index].NeuronsStats?.Max);
-                        //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                        weightsMinMax += sb.ToString();
-                        weightsMinMax += "\r\n";
+                        if (WPF)
+                            weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                        else
+                            weightsMinMax += sb.ToString() + Environment.NewLine;
 
                         if (ShowWeightsSnapshot)
                         {
@@ -1810,36 +1832,39 @@ namespace Convnet.PageViewModels
                             WeightsSnapshotY = Model.Layers[index].WeightsSnapshotY;
                             WeightsSnapshot = Model.Layers[index].WeightsSnapshot;
 
-                            //weightsMinMax += "<Span><Bold>Weights</Bold></Span><LineBreak/>";
-                            weightsMinMax += "Weights";
-                            weightsMinMax += "\r\n";
+                            if (WPF)
+                                weightsMinMax += "<Span><Bold>Weights</Bold></Span><LineBreak/>";
+                            else
+                                weightsMinMax += "Weights" + Environment.NewLine;
                             sb.Length = 0;
                             if (Model.Layers[index].WeightsStats?.StdDev >= 0.0f)
                                 sb.AppendFormat(" Std:     {0:N8}", Model.Layers[index].WeightsStats?.StdDev);
                             else
                                 sb.AppendFormat(" Std:    {0:N8}", Model.Layers[index].WeightsStats?.StdDev);
-                            //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                            weightsMinMax += sb.ToString();
-                            weightsMinMax += "\r\n";
+                            if (WPF)
+                                weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                            else
+                                weightsMinMax += sb.ToString() + Environment.NewLine;
 
                             sb.Length = 0;
                             if (Model.Layers[index].WeightsStats?.Mean >= 0.0f)
                                 sb.AppendFormat(" Mean:    {0:N8}", Model.Layers[index].WeightsStats?.Mean);
                             else
                                 sb.AppendFormat(" Mean:   {0:N8}", Model.Layers[index].WeightsStats?.Mean);
-                            //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                            weightsMinMax += sb.ToString();
-                            weightsMinMax += "\r\n";
-
+                            if (WPF)
+                                weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                            else
+                                weightsMinMax += sb.ToString() + Environment.NewLine;
 
                             sb.Length = 0;
                             if (Model.Layers[index].WeightsStats?.Min >= 0.0f)
                                 sb.AppendFormat(" Min:     {0:N8}", Model.Layers[index].WeightsStats?.Min);
                             else
                                 sb.AppendFormat(" Min:    {0:N8}", Model.Layers[index].WeightsStats?.Min);
-                            //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                            weightsMinMax += sb.ToString();
-                            weightsMinMax += "\r\n";
+                            if (WPF) 
+                                weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                            else
+                                weightsMinMax += sb.ToString() + Environment.NewLine;
 
                             sb.Length = 0;
                             if (Model.Layers[index].WeightsStats?.Max >= 0.0f)
@@ -1847,65 +1872,64 @@ namespace Convnet.PageViewModels
                             else
                                 sb.AppendFormat(" Max:    {0:N8}", Model.Layers[index].WeightsStats?.Max);
 
-                            //if (ShowWeightsSnapshot)
-                            //    weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                            //else
-                            //    weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-
-                            weightsMinMax += sb.ToString();
-                            weightsMinMax += "\r\n";
+                            if (WPF)
+                                weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                            else
+                                weightsMinMax += sb.ToString() + Environment.NewLine;
 
                             if (Model.Layers[index].HasBias)
                             {
-                                //weightsMinMax += "<Span><Bold>Biases</Bold></Span><LineBreak/>";
-                                weightsMinMax += "Biases";
-                                weightsMinMax += "\r\n";
+                                if (WPF)
+                                    weightsMinMax += "<Span><Bold>Biases</Bold></Span><LineBreak/>";
+                                else
+                                    weightsMinMax += "Biases" + Environment.NewLine;
 
                                 sb.Length = 0;
                                 if (Model.Layers[index].BiasesStats?.StdDev >= 0.0f)
                                     sb.AppendFormat(" Std:     {0:N8}", Model.Layers[index].BiasesStats?.StdDev);
                                 else
                                     sb.AppendFormat(" Std:    {0:N8}", Model.Layers[index].BiasesStats?.StdDev);
-                                //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                                weightsMinMax += sb.ToString();
-                                weightsMinMax += "\r\n";
+                                if (WPF)
+                                    weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                                else
+                                    weightsMinMax += sb.ToString() + Environment.NewLine;
 
                                 sb.Length = 0;
                                 if (Model.Layers[index].BiasesStats?.Mean >= 0.0f)
                                     sb.AppendFormat(" Mean:    {0:N8}", Model.Layers[index].BiasesStats?.Mean);
                                 else
                                     sb.AppendFormat(" Mean:   {0:N8}", Model.Layers[index].BiasesStats?.Mean);
-                                //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                                weightsMinMax += sb.ToString();
-                                weightsMinMax += "\r\n";
+                                if (WPF)
+                                    weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                                else
+                                    weightsMinMax += sb.ToString() + Environment.NewLine;
 
                                 sb.Length = 0;
                                 if (Model.Layers[index].BiasesStats?.Min >= 0.0f)
                                     sb.AppendFormat(" Min:     {0:N8}", Model.Layers[index].BiasesStats?.Min);
                                 else
                                     sb.AppendFormat(" Min:    {0:N8}", Model.Layers[index].BiasesStats?.Min);
-                                //weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
-                                weightsMinMax += sb.ToString();
-                                weightsMinMax += "\r\n";
+                                if (WPF)
+                                    weightsMinMax += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
+                                else
+                                    weightsMinMax += sb.ToString() + Environment.NewLine;
 
                                 sb.Length = 0;
                                 if (Model.Layers[index].BiasesStats?.Max >= 0.0f)
                                     sb.AppendFormat(" Max:     {0:N8}", Model.Layers[index].BiasesStats?.Max);
                                 else
                                     sb.AppendFormat(" Max:    {0:N8}", Model.Layers[index].BiasesStats?.Max);
-                                //if (ShowWeightsSnapshot)
-                                //    weightsMinMax += "<Span>" + sb.ToString() + "</Span>";
-                                //else
-                                //    weightsMinMax += "<Span>" + sb.ToString() + "</Span>";
-
-                                weightsMinMax += sb.ToString();
+                               
+                                if (WPF)
+                                    weightsMinMax += "<Span>" + sb.ToString() + "</Span>";
+                                else
+                                    weightsMinMax += sb.ToString();
                                
                             }
                         }
 
                         this.RaisePropertyChanged(nameof(WeightsMinMax));
-
-
+                        
                         if (e != null)
                             e.Handled = true;
                     }

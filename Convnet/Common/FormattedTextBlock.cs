@@ -16,7 +16,7 @@ namespace Convnet.Common
        
         public new event PropertyChangedEventHandler? PropertyChanged;
 
-        private string formattedText = string.Empty; // string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", string.Empty);
+        private string formattedText = string.Empty;
 
         //public static readonly StyledProperty<string> FormattedTextProperty = AvaloniaProperty.Register<FormattedTextBlock, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.OwoWay);
 
@@ -38,22 +38,22 @@ namespace Convnet.Common
             {
                 if (value != formattedText)
                 {
-                    formattedText = value;
-                    base.BeginInit();
                     using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)))
                     {
                         if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
                         {
-                            Text = null;
-                            Inlines?.Clear();
-                            Inlines?.Add(result);
+                            //BeginInit();
+                            Text = string.Empty;
+                            Inlines = new InlineCollection();
+                            Inlines.Add(result);
+                            //EndInit();
+                            formattedText = value;
+                            OnPropertyChanged(nameof(FormattedText));
+                            OnPropertyChanged(nameof(Text));
+                            OnPropertyChanged(nameof(Inlines));
+                            InvalidateVisual();
                         }
-                    }
-                    base.EndInit();
-                    //InvalidateTextLayout();
-                    OnPropertyChanged(nameof(FormattedText));
-                    //OnPropertyChanged(nameof(Text));
-                    //OnPropertyChanged(nameof(Inlines));
+                    }                   
                 }
             }
         }
