@@ -44,16 +44,11 @@ namespace Convnet.Common
                         {
                             if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
                             {
-                                //BeginInit();
                                 Text = string.Empty;
                                 Inlines = new InlineCollection();
                                 Inlines?.Add(result);
-                                //EndInit();
                                 formattedText = value;
                                 OnPropertyChanged(nameof(FormattedText));
-                                OnPropertyChanged(nameof(Text));
-                                OnPropertyChanged(nameof(Inlines));
-                                InvalidateVisual();
                                 UpdateLayout();
                             }
                         }
@@ -63,16 +58,11 @@ namespace Convnet.Common
                             {
                                 if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
                                 {
-                                    //BeginInit();
                                     Text = string.Empty;
                                     Inlines = new InlineCollection();
                                     Inlines?.Add(result);
-                                    //EndInit();
                                     formattedText = value;
                                     OnPropertyChanged(nameof(FormattedText));
-                                    OnPropertyChanged(nameof(Text));
-                                    OnPropertyChanged(nameof(Inlines));
-                                    InvalidateVisual();
                                     UpdateLayout();
                                 }
                             }, DispatcherPriority.Render);
