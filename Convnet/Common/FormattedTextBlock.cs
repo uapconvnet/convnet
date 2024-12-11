@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
-using Newtonsoft.Json.Linq;
+using Avalonia.Threading;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -40,18 +40,42 @@ namespace Convnet.Common
                 {
                     using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)))
                     {
-                        if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
+                        if (Dispatcher.UIThread.CheckAccess()) //Check if we are already on the UI thread
                         {
-                            //BeginInit();
-                            Text = string.Empty;
-                            Inlines = new InlineCollection();
-                            Inlines.Add(result);
-                            //EndInit();
-                            formattedText = value;
-                            OnPropertyChanged(nameof(FormattedText));
-                            OnPropertyChanged(nameof(Text));
-                            OnPropertyChanged(nameof(Inlines));
-                            InvalidateVisual();
+                            if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
+                            {
+                                //BeginInit();
+                                Text = string.Empty;
+                                Inlines = new InlineCollection();
+                                Inlines?.Add(result);
+                                //EndInit();
+                                formattedText = value;
+                                OnPropertyChanged(nameof(FormattedText));
+                                OnPropertyChanged(nameof(Text));
+                                OnPropertyChanged(nameof(Inlines));
+                                InvalidateVisual();
+                                UpdateLayout();
+                            }
+                        }
+                        else
+                        {
+                            Dispatcher.UIThread.InvokeAsync(() =>
+                            {
+                                if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
+                                {
+                                    //BeginInit();
+                                    Text = string.Empty;
+                                    Inlines = new InlineCollection();
+                                    Inlines?.Add(result);
+                                    //EndInit();
+                                    formattedText = value;
+                                    OnPropertyChanged(nameof(FormattedText));
+                                    OnPropertyChanged(nameof(Text));
+                                    OnPropertyChanged(nameof(Inlines));
+                                    InvalidateVisual();
+                                    UpdateLayout();
+                                }
+                            }, DispatcherPriority.Render);
                         }
                     }                   
                 }

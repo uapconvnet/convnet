@@ -417,9 +417,9 @@ namespace Convnet.PageViews
             {
                 if (exception != null)
                     if (exception.InnerException != null)
-                        MessageBox.Show(exception.Message + "\r\n\r\n" + exception.GetBaseException().Message + "\r\n\r\n" + exception.InnerException.Message + "\r\n\r\nAn error occured while loading the Model:" + Settings.Default.ModelNameActive, "Information", MessageBoxButtons.OK);
+                        MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.GetBaseException().Message + Environment.NewLine + Environment.NewLine + exception.InnerException.Message + Environment.NewLine + Environment.NewLine + "An error occured while loading the Model:" + Settings.Default.ModelNameActive, "Information", MessageBoxButtons.OK);
                     else
-                        MessageBox.Show(exception.Message + "\r\n\r\n" + exception.GetBaseException().Message + "\r\n\r\nAn error occured while loading the Model:" + Settings.Default.ModelNameActive, "Information", MessageBoxButtons.OK);
+                        MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.GetBaseException().Message + Environment.NewLine + Environment.NewLine + "An error occured while loading the Model:" + Settings.Default.ModelNameActive, "Information", MessageBoxButtons.OK);
             }
         }
 
