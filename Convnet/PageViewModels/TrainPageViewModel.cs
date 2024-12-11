@@ -550,7 +550,7 @@ namespace Convnet.PageViewModels
                                 Model.Optimizer = Optim;
                             }
 
-                            sb.Append("<Span><Bold>Training</Bold></Span><LineBreak/>");
+                            sb.Append("<Span Foreground=\"White\"><Bold>Training</Bold></Span><LineBreak/>");
                             sb.Append("<Span>");
                             
                             switch (Model?.Optimizer)
@@ -596,7 +596,7 @@ namespace Convnet.PageViewModels
                         {
                             if (Model != null)
                             {
-                                sb.Append("<Span><Bold>Testing</Bold></Span><LineBreak/>");
+                                sb.Append("<Span Foreground=\"White\"><Bold>Testing</Bold></Span><LineBreak/>");
                                 sb.Append("<Span>");
                                 sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Loss:\t\t\t  {6:N7}\n Errors:\t\t\t{7:G}\n Error:\t\t\t {8:N2} %\n Accuracy:\t\t  {9:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, (Float)100 - TestErrorPercentage);
                                 sb.Append("</Span>");
@@ -605,7 +605,7 @@ namespace Convnet.PageViewModels
                         break;
 
                     case DNNStates.SaveWeights:
-                        sb.Append("<Span><Bold>Saving weights</Bold></Span>");
+                        sb.Append("<Span Foreground=\"White\"><Bold>Saving weights</Bold></Span>");
                         break;
 
                     case DNNStates.Completed:
@@ -1709,13 +1709,13 @@ namespace Convnet.PageViewModels
                         CommandToolBar[21].IsVisible = Model.Layers[index].Lockable && Model.TaskState == DNNTaskStates.Stopped;
                         
                        
-                        layerInfo = "<Span><Bold>Layer</Bold></Span><LineBreak/><Span>" + Model.Layers[index].Description + "</Span><LineBreak/>";
+                        layerInfo = "<Span Foreground=\"White\"><Bold>Layer</Bold></Span><LineBreak/><Span>" + Model.Layers[index].Description + "</Span><LineBreak/>";
                         
                         if (Settings.Default.Timings)
                         {
                             if (Model.State == DNNStates.Training)
                             {
-                                layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
+                                layerInfo += "<Span Foreground=\"White\"><Bold>Timings</Bold></Span><LineBreak/>";
                                 sb.Length = 0;
                                 sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
                                 layerInfo += "<Span>" + sb.ToString() + "</Span><LineBreak/>";
@@ -1732,7 +1732,7 @@ namespace Convnet.PageViewModels
                             }
                             else if (Model.State == DNNStates.Testing)
                             {
-                                layerInfo += "<Span><Bold>Timings</Bold></Span><LineBreak/>";
+                                layerInfo += "<Span Foreground=\"White\"><Bold>Timings</Bold></Span><LineBreak/>";
                                 sb.Length = 0;
                                 sb.AppendFormat(" fprop:  \t\t{0:D}/{1:D} ms", (int)Model.Layers[index].FPropLayerTime, (int)Model.fpropTime);
                                 layerInfo += "<Span>" + sb.ToString() + "</Span>";
@@ -1741,7 +1741,7 @@ namespace Convnet.PageViewModels
 
                         this.RaisePropertyChanged(nameof(LayerInfo));
 
-                        weightsMinMax = "<Span><Bold>Neurons</Bold></Span><LineBreak/>";
+                        weightsMinMax = "<Span Foreground=\"White\"><Bold>Neurons</Bold></Span><LineBreak/>";
                         
                         sb.Length = 0;
                         if (Model.Layers[index].NeuronsStats?.StdDev >= 0.0f)
@@ -1777,7 +1777,7 @@ namespace Convnet.PageViewModels
                             WeightsSnapshotY = Model.Layers[index].WeightsSnapshotY;
                             WeightsSnapshot = Model.Layers[index].WeightsSnapshot;
 
-                            weightsMinMax += "<Span><Bold>Weights</Bold></Span><LineBreak/>";
+                            weightsMinMax += "<Span Foreground=\"White\"><Bold>Weights</Bold></Span><LineBreak/>";
                             sb.Length = 0;
                             if (Model.Layers[index].WeightsStats?.StdDev >= 0.0f)
                                 sb.AppendFormat(" Std:     {0:N8}", Model.Layers[index].WeightsStats?.StdDev);
@@ -1808,7 +1808,7 @@ namespace Convnet.PageViewModels
                             
                             if (Model.Layers[index].HasBias)
                             {
-                                weightsMinMax += "<Span><Bold>Biases</Bold></Span><LineBreak/>";
+                                weightsMinMax += "<Span Foreground=\"White\"><Bold>Biases</Bold></Span><LineBreak/>";
                                 sb.Length = 0;
                                 if (Model.Layers[index].BiasesStats?.StdDev >= 0.0f)
                                     sb.AppendFormat(" Std:     {0:N8}", Model.Layers[index].BiasesStats?.StdDev);
