@@ -75,7 +75,7 @@ namespace Convnet.PageViewModels
         private Avalonia.Media.Imaging.WriteableBitmap? weightsSnapshot;
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private readonly StringBuilder sb;
-        private const bool WPF = false;
+        private const bool WPF = true;
         public Timer RefreshTimer;
         public TimeSpan EpochDuration { get; set; }
         public event EventHandler Open;
