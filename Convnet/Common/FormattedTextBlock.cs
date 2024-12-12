@@ -34,7 +34,7 @@ namespace Convnet.Common
             {
                 if (value != formattedText)
                 {
-                    Dispatcher.UIThread.Invoke(() =>
+                    Dispatcher.UIThread.Post(() =>
                     {
                         using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)))
                         {
