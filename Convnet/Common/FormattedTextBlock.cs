@@ -21,15 +21,11 @@ namespace Convnet.Common
         //public static readonly StyledProperty<string> FormattedTextProperty = AvaloniaProperty.Register<FormattedTextBlock, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.OwoWay);
 
         public static readonly DirectProperty<FormattedTextBlock, string> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string>(
-          nameof(FormattedText),
-          o => o.FormattedText,
-          (o, v) => 
-          {
-             // if (string.Compare(o.FormattedText, v) != 0)
-                  o.FormattedText = v;
-          },
-          unsetValue: string.Empty,
-          defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
+            nameof(FormattedText),
+            o => o.FormattedText,
+            (o, v) => o.FormattedText = v,
+            unsetValue: string.Empty,
+            defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
 
         public string FormattedText
         {
@@ -38,36 +34,21 @@ namespace Convnet.Common
             {
                 if (value != formattedText)
                 {
-                    using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)))
+                    Dispatcher.UIThread.Invoke(() =>
                     {
-                        if (Dispatcher.UIThread.CheckAccess()) //Check if we are already on the UI thread
+                        using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)))
                         {
                             if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
                             {
-                                Text = string.Empty;
-                                Inlines = new InlineCollection();
+                                Inlines?.Clear();
                                 Inlines?.Add(result);
                                 formattedText = value;
                                 OnPropertyChanged(nameof(FormattedText));
                                 UpdateLayout();
+                                InvalidateVisual();
                             }
                         }
-                        else
-                        {
-                            Dispatcher.UIThread.InvokeAsync(() =>
-                            {
-                                if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
-                                {
-                                    Text = string.Empty;
-                                    Inlines = new InlineCollection();
-                                    Inlines?.Add(result);
-                                    formattedText = value;
-                                    OnPropertyChanged(nameof(FormattedText));
-                                    UpdateLayout();
-                                }
-                            }, DispatcherPriority.Render);
-                        }
-                    }                   
+                    }, DispatcherPriority.Send);
                 }
             }
         }

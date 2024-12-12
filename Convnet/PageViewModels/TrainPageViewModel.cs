@@ -1738,9 +1738,10 @@ namespace Convnet.PageViewModels
                                 layerInfo += "<Span>" + sb.ToString() + "</Span>";
                             }
                         }
-
+                        
                         this.RaisePropertyChanged(nameof(LayerInfo));
 
+                        
                         weightsMinMax = "<Span Foreground=\"White\"><Bold>Neurons</Bold></Span><LineBreak/>";
                         
                         sb.Length = 0;
