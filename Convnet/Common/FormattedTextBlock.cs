@@ -44,11 +44,10 @@ namespace Convnet.Common
                                 Inlines?.Add(result);
                                 formattedText = value;
                                 OnPropertyChanged(nameof(FormattedText));
-                                UpdateLayout();
                                 InvalidateVisual();
                             }
                         }
-                    }, DispatcherPriority.Send);
+                    });
                 }
             }
         }

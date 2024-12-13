@@ -41,37 +41,23 @@ namespace Convnet.Common
 
         private static void FormattedTextPropertyChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
         {
-            if (d is TextBlock textBlock)
+            Dispatcher.UIThread.Post(() =>
             {
-                var text = (string?)e.NewValue ?? string.Empty;
-
-                using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", text)))
+                if (d is TextBlock textBlock)
                 {
-                    if (Dispatcher.UIThread.CheckAccess()) //Check if we are already on the UI thread
+                    var text = (string?)e.NewValue ?? string.Empty;
+
+                    using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", text)))
                     {
                         if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
                         {
-                            textBlock.Text = string.Empty;
-                            textBlock.Inlines = new InlineCollection();
+                            textBlock.Inlines?.Clear();
                             textBlock.Inlines?.Add(result);
-                            textBlock.UpdateLayout();
+                            textBlock.InvalidateVisual();
                         }
                     }
-                    else
-                    {
-                        Dispatcher.UIThread.InvokeAsync(() =>
-                        {
-                            if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
-                            {
-                                textBlock.Text = string.Empty;
-                                textBlock.Inlines = new InlineCollection();
-                                textBlock.Inlines?.Add(result);
-                                textBlock.UpdateLayout();
-                            }
-                        }, DispatcherPriority.Render);
-                    }
                 }
-            }
+            });
         }
     }
 }
