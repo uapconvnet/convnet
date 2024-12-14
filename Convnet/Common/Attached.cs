@@ -10,7 +10,7 @@ namespace Convnet.Common
 {
     public class Attached : AvaloniaObject
     {
-        public static readonly AttachedProperty<string> FormattedTextProperty = AvaloniaProperty.RegisterAttached<Attached, AvaloniaObject, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
+        public static readonly AttachedProperty<string> FormattedTextProperty = AvaloniaProperty.RegisterAttached<Attached, AvaloniaObject, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.OneWay);
 
         static Attached()
         {
@@ -23,20 +23,21 @@ namespace Convnet.Common
         /// <summary>
         /// Accessor for Attached property <see cref="FormattedTextProperty"/>.
         /// </summary>
-        public static void SetFormattedText(AvaloniaObject textBlock, string value)
+        public static void SetFormattedText(AvaloniaObject d, string value)
         {
-            textBlock.SetValue(FormattedTextProperty, value);
+            if (d is TextBlock textBlock)
+                textBlock.SetValue(FormattedTextProperty, value);
         }
 
         /// <summary>
         /// Accessor for Attached property <see cref="FormattedTextProperty"/>.
         /// </summary>
-        public static string GetFormattedText(AvaloniaObject textBlock)
+        public static string GetFormattedText(AvaloniaObject d)
         {
-            if (textBlock != null)
+            if (d is TextBlock textBlock)
                 return (string)textBlock.GetValue(FormattedTextProperty);
-            else
-                throw new ArgumentNullException("FormattedText");
+            
+            return string.Empty;
         }
 
         private static void FormattedTextPropertyChanged(AvaloniaObject d, AvaloniaPropertyChangedEventArgs e)
@@ -49,11 +50,17 @@ namespace Convnet.Common
 
                     using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", text)))
                     {
-                        if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
+                        try
                         {
-                            textBlock.Inlines?.Clear();
-                            textBlock.Inlines?.Add(result);
-                            textBlock.InvalidateVisual();
+                            if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
+                            {
+                                textBlock.Inlines?.Clear();
+                                textBlock.Inlines?.Add(result);
+                                textBlock.InvalidateVisual();
+                            }
+                        }
+                        catch (Exception)
+                        { 
                         }
                     }
                 }
