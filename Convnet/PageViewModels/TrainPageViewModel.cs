@@ -235,7 +235,7 @@ namespace Convnet.PageViewModels
             costLayersComboBox.Items.Clear();
             for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
             {
-                ComboBoxItem item = new ComboBoxItem
+                var item = new ComboBoxItem
                 {
                     Name = "CostLayer" + layer.ToString(),
                     Content = Model.CostLayers[layer].Name,
@@ -255,7 +255,7 @@ namespace Convnet.PageViewModels
             layersComboBox.DataContext = Model;
             if (Model != null)
                 layersComboBox.ItemsSource = Model.Layers;
-            layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), }); ;
+            layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding("HasWeights") }); ;
             //layersComboBox.ItemTemplate = GetLockTemplate();
             //layersComboBox.SourceUpdated += LayersComboBox_SourceUpdated;
             //layersComboBox.IsSynchronizedWithCurrentItem = true;
