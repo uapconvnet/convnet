@@ -186,7 +186,7 @@ namespace Convnet.PageViewModels
                         InputSnapshot = Model.InputSnapshot;
                         Label = Model.Label;
                     }
-                }, DispatcherPriority.Render);
+                });
             }
             else
             {
@@ -214,7 +214,7 @@ namespace Convnet.PageViewModels
 
                     IsValid = true;
                     ShowSample = false;
-                }, DispatcherPriority.Normal);
+                });
             }
         }
 
@@ -378,7 +378,7 @@ namespace Convnet.PageViewModels
                         CommandToolBar[2].IsVisible = true;
                     }
                 }
-            }, DispatcherPriority.Normal);
+            });
         }
 
         private async void StopButtonClick(object? sender, RoutedEventArgs e)
@@ -420,7 +420,7 @@ namespace Convnet.PageViewModels
                     CommandToolBar[1].IsVisible = true;
                     CommandToolBar[2].IsVisible = false;
                 }
-            }, DispatcherPriority.Normal);
+            });
         }
 
         private void OpenButtonClick(object? sender, RoutedEventArgs e)
