@@ -38,13 +38,19 @@ namespace Convnet.Common
                     {
                         using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)))
                         {
-                            if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
+                            try
                             {
-                                Inlines?.Clear();
-                                Inlines?.Add(result);
-                                formattedText = value;
-                                OnPropertyChanged(nameof(FormattedText));
-                                InvalidateVisual();
+                                if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
+                                {
+                                    Inlines?.Clear();
+                                    Inlines?.Add(result);
+                                    formattedText = value;
+                                    OnPropertyChanged(nameof(FormattedText));
+                                    InvalidateVisual();
+                                }
+                            }
+                            catch (Exception) 
+                            { 
                             }
                         }
                     });
