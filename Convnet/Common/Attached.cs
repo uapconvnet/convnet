@@ -48,20 +48,11 @@ namespace Convnet.Common
                 {
                     var text = (string?)e.NewValue ?? string.Empty;
 
-                    using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", text)))
+                    if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", text)) is Span result)
                     {
-                        try
-                        {
-                            if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
-                            {
-                                textBlock.Inlines?.Clear();
-                                textBlock.Inlines?.Add(result);
-                                textBlock.InvalidateVisual();
-                            }
-                        }
-                        catch (Exception)
-                        { 
-                        }
+                        textBlock.Inlines?.Clear();
+                        textBlock.Inlines?.Add(result);
+                        textBlock.InvalidateVisual();
                     }
                 }
             });

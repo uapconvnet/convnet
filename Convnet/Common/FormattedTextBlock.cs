@@ -36,23 +36,22 @@ namespace Convnet.Common
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        using (TextReader sr = new StringReader(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)))
-                        {
-                            try
+                        //try
+                        //{
+                            if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)) is Span result)
                             {
-                                if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(sr.ReadToEnd()) is Span result)
-                                {
-                                    Inlines?.Clear();
-                                    Inlines?.Add(result);
-                                    formattedText = value;
-                                    OnPropertyChanged(nameof(FormattedText));
-                                    InvalidateVisual();
-                                }
+                                Inlines?.Clear();
+                                Inlines?.Add(result);
+                                formattedText = value;
+                                OnPropertyChanged(nameof(FormattedText));
+                                InvalidateVisual();
                             }
-                            catch (Exception) 
-                            { 
-                            }
-                        }
+                        //}
+                        //catch (Exception ex) 
+                        //{
+                        //    File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "FormattedText.txt").ToString(), value + Environment.NewLine + ex.Message);
+                        //    File.WriteAllText(@"D:\FormattedText.txt", value + Environment.NewLine + ex.Message);
+                        //}
                     });
                 }
             }
