@@ -409,9 +409,8 @@ namespace dnn
 			{
 				auto inputsInplace = std::vector<Layer*>();
 				
-				if (inputs.size() > 0)
-					for (auto input : inputs)
-						inputsInplace.push_back(input->InplaceBwd ? input->InputLayerFwd : input);
+				for (auto input : inputs)
+					inputsInplace.push_back(input->InplaceBwd ? input->InputLayerFwd : input);
 				
 				return inputsInplace;
 			}
@@ -656,12 +655,35 @@ namespace dnn
 				description.append(nwl + std::string(" Inputs:     ") + tab);
 				for (auto i = 0ull; i < InputsFwd.size(); i++)
 					description.append((i == 0 ? std::string("") : std::string(",")) + InputsFwd[i]->Name);
+#ifndef NDEBUG			
+				if constexpr (Inplace)
+				{
+					auto print = false;
+					for (auto i = 0ull; i < Inputs.size(); i++)
+					{
+						if (InputsFwd[i] != InputsBwd[i])
+						{
+							print = true;
+							break;
+						}
+					}
+					
+					if (print)
+					{
+						description.append(nwl + std::string(" Inputs Bwd: ") + tab);
+						for (auto i = 0ull; i < InputsBwd.size(); i++)
+							description.append((i == 0 ? std::string("") : std::string(",")) + InputsBwd[i]->Name);
+					}
+				}
+#endif
 			}
 			
 			description.append(nwl + std::string(" Features:   ") + tab + std::to_string(C) + std::string("x") + std::to_string(H) + std::string("x") + std::to_string(W));
 			description.append(nwl + std::string(" Neurons:    ") + tab + std::to_string(CDHW()));
 			description.append(nwl + std::string(" Format:     ") + tab + std::string(dnnl_fmt_tag2str(static_cast<dnnl_format_tag_t>(ChosenFormat))));
 #ifndef NDEBUG
+			if (DiffDstMemDesc.get() != nullptr && ChosenFormat != GetMemoryFormat(*DiffDstMemDesc))
+				description.append(nwl + std::string(" Format Bwd: ") + tab + std::string(dnnl_fmt_tag2str(static_cast<dnnl_format_tag_t>(GetMemoryFormat(*DiffDstMemDesc)))));
 			description.append(nwl + std::string(" SharesInput:") + tab + BoolToString(SharesInput));
 			description.append(nwl + std::string(" InplaceBwd: ") + tab + BoolToString(InplaceBwd));
 #endif

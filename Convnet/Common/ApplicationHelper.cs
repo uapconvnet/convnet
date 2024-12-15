@@ -37,7 +37,7 @@ namespace Convnet.Common
 
         //public static IRawTheme GetDefaultTheme()
         //{
-        //    var themePath = Path.GetFullPath(@"../../" + Mode + @"/net8.0/Resources/dark_vs.json");
+        //    var themePath = Path.GetFullPath(@"../../" + Mode + @"/net9.0/Resources/dark_vs.json");
 
         //    using (StreamReader reader = new StreamReader(themePath))
         //    {

@@ -895,55 +895,58 @@ namespace Convnet.PageViewModels
 
         private void InitializeTrainingPlot()
         {
-            plotModel = new PlotModel();
-            var laLeft = new LinearAxis
+            Dispatcher.UIThread.Invoke(() =>
             {
-                Title = "",
-                Position = AxisPosition.Left,
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                IsAxisVisible = true,
-                IsPanEnabled = false,
-                IsZoomEnabled = false               
-            };
-            var laBottomn = new LinearAxis
-            {
-                Title = "Epochs",
-                TitleFontSize = 14,
-                Position = AxisPosition.Bottom,
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                IsAxisVisible = true,
-                IsPanEnabled = false,
-                IsZoomEnabled = false
-            };
-            plotModel.Axes.Add(laLeft);
-            plotModel.Axes.Add(laBottomn);
-            pointsTrain = new ObservableCollection<DataPoint>();
-            pointsTest = new ObservableCollection<DataPoint>();
-            var lsTrain = new OxyPlot.Series.LineSeries
-            {
-                ItemsSource = PointsTrain,
-                Title = PointsTrainLabel,
-                Color = OxyColor.FromRgb(237, 125, 49)
-            };
-            var lsTest = new OxyPlot.Series.LineSeries
-            {
-                ItemsSource = PointsTest,
-                Title = PointsTestLabel,
-                Color = OxyColor.FromRgb(91, 155, 213)
-            };
-            plotModel.Series.Add(lsTrain);
-            plotModel.Series.Add(lsTest);
-            var legend = new Legend();
-            legend.LegendFont = "Consolas";
-            legend.LegendPosition = CurrentLegendPosition;
-            legend.LegendTitleFontSize = 16;
-            legend.LegendFontSize = 16;
-            legend.LegendPosition = LegendPosition.RightBottom;
-            plotModel.Legends.Add(legend);
-            plotModel.TextColor = OxyColor.FromRgb(255, 255, 255);
-            //this.RaisePropertyChanged(nameof(PlotModel));
+                plotModel = new PlotModel();
+                var laLeft = new LinearAxis
+                {
+                    Title = "",
+                    Position = AxisPosition.Left,
+                    MajorGridlineStyle = LineStyle.Solid,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    IsAxisVisible = true,
+                    IsPanEnabled = false,
+                    IsZoomEnabled = false
+                };
+                var laBottomn = new LinearAxis
+                {
+                    Title = "Epochs",
+                    TitleFontSize = 14,
+                    Position = AxisPosition.Bottom,
+                    MajorGridlineStyle = LineStyle.Solid,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    IsAxisVisible = true,
+                    IsPanEnabled = false,
+                    IsZoomEnabled = false
+                };
+                plotModel.Axes.Add(laLeft);
+                plotModel.Axes.Add(laBottomn);
+                pointsTrain = new ObservableCollection<DataPoint>();
+                pointsTest = new ObservableCollection<DataPoint>();
+                var lsTrain = new OxyPlot.Series.LineSeries
+                {
+                    ItemsSource = PointsTrain,
+                    Title = PointsTrainLabel,
+                    Color = OxyColor.FromRgb(237, 125, 49)
+                };
+                var lsTest = new OxyPlot.Series.LineSeries
+                {
+                    ItemsSource = PointsTest,
+                    Title = PointsTestLabel,
+                    Color = OxyColor.FromRgb(91, 155, 213)
+                };
+                plotModel.Series.Add(lsTrain);
+                plotModel.Series.Add(lsTest);
+                var legend = new Legend();
+                legend.LegendFont = "Consolas";
+                legend.LegendPosition = CurrentLegendPosition;
+                legend.LegendTitleFontSize = 16;
+                legend.LegendFontSize = 16;
+                legend.LegendPosition = LegendPosition.RightBottom;
+                plotModel.Legends.Add(legend);
+                plotModel.TextColor = OxyColor.FromRgb(255, 255, 255);
+                //this.RaisePropertyChanged(nameof(PlotModel));
+            });
         }
 
         public PlotModel? PlotModel
