@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Avalonia.Threading;
-using System;
-using System.IO;
 
 namespace Convnet.Common
 {

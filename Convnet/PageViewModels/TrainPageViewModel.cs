@@ -1742,7 +1742,6 @@ namespace Convnet.PageViewModels
                         LayerInfo = sb.ToString();
                        
                         sb.Length = 0;
-
                         sb.Append("<Span Foreground=\"White\"><Bold>Neurons</Bold></Span><LineBreak/>");
                         sb.Append("<Span>");
                         if (Model.Layers[index].NeuronsStats?.StdDev >= 0.0f)
