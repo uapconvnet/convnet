@@ -3051,7 +3051,7 @@ namespace Interop
 
         public FontWeight HasWeights
         {
-            get { return WeightCount > 0 ? FontWeight.UltraBlack : FontWeight.UltraLight; }
+            get { return WeightCount > 0 ? FontWeight.UltraBlack : FontWeight.Normal; }
         }
 
         public UInt BiasCount
