@@ -131,6 +131,7 @@ namespace
 	constexpr auto TestReduction = false;
 
 	constexpr auto Reference = false;
+	constexpr auto ReferenceAdd = false;
 	constexpr auto ReferenceBatchNormalization = false;
 	constexpr auto ReferenceConcat = false;
 	constexpr auto ReferenceMultiply = false;

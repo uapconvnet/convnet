@@ -17,8 +17,6 @@ namespace Convnet.Common
 
         private string formattedText = string.Empty;
 
-        //public static readonly StyledProperty<string> FormattedTextProperty = AvaloniaProperty.Register<FormattedTextBlock, string>(nameof(FormattedText), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.OwoWay);
-
         public static readonly DirectProperty<FormattedTextBlock, string> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string>(
             nameof(FormattedText),
             o => o.FormattedText,
@@ -35,22 +33,14 @@ namespace Convnet.Common
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        //try
-                        //{
-                            if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)) is Span result)
-                            {
-                                Inlines?.Clear();
-                                Inlines?.Add(result);
-                                formattedText = value;
-                                OnPropertyChanged(nameof(FormattedText));
-                                InvalidateVisual();
-                            }
-                        //}
-                        //catch (Exception ex) 
-                        //{
-                        //    File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "FormattedText.txt").ToString(), value + Environment.NewLine + ex.Message);
-                        //    File.WriteAllText(@"D:\FormattedText.txt", value + Environment.NewLine + ex.Message);
-                        //}
+                        if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)) is Span result)
+                        {
+                            Inlines?.Clear();
+                            Inlines?.Add(result);
+                            formattedText = value;
+                            OnPropertyChanged(nameof(FormattedText));
+                            InvalidateVisual();
+                        }
                     });
                 }
             }

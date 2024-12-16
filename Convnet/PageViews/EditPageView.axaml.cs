@@ -34,7 +34,7 @@ namespace Convnet.PageViews
                 }
             }
             HighlightingManager.Instance.RegisterHighlighting("Definition", [".txt"], DefinitionHighlighting);
-            var editorDefinition = this.FindControl<TextEditor>("EditorDefinition");
+            var editorDefinition = this.FindControl<CodeEditor>("EditorDefinition");
             if (editorDefinition != null)
             {
                 editorDefinition.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".txt");
@@ -59,7 +59,7 @@ namespace Convnet.PageViews
             //    editorScript.TextChanged += EditorScript_TextChanged;
             //}
 
-            var editorScript = this.FindControl<TextEditor>("EditorScript");
+            var editorScript = this.FindControl<CodeEditor>("EditorScript");
             if (editorScript != null)
             {
                 editorScript.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".cs");

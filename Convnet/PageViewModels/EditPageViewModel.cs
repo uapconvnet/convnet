@@ -138,12 +138,12 @@ namespace Convnet.PageViewModels
             get => definition; 
             set
             {
-                if (value.Equals(definition))
+                if (value.Equals(definition) || value.Trim().Length < 3)
                     return;
 
                 this.RaiseAndSetIfChanged(ref definition, value);
+
                 Settings.Default.DefinitionEditing = definition;
-                
                 ModelName = definition.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0].Trim().Replace("[", "").Replace("]", "").Trim();
                 DefinitionStatus = false;
             }

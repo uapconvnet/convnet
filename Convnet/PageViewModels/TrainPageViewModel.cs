@@ -34,16 +34,16 @@ namespace Convnet.PageViewModels
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     public class TrainPageViewModel : PageViewModelBase
     {
-        private string progressText;
-        private bool showProgress;
-        private string layerInfo;
-        private string weightsMinMax;
-        private string? label;
-        private bool showSample;
-        private ObservableCollection<DNNTrainingRate> trainRates;
-        private ObservableCollection<DNNTrainingStrategy> trainingStrategies;
+        private string progressText = string.Empty;
+        private bool showProgress = false;
+        private string layerInfo = string.Empty;
+        private string weightsMinMax = string.Empty;
+        private string label = string.Empty;
+        private bool showSample = false;
+        private ObservableCollection<DNNTrainingRate> trainRates = new ObservableCollection<DNNTrainingRate>();
+        private ObservableCollection<DNNTrainingStrategy> trainingStrategies = new ObservableCollection<DNNTrainingStrategy>();
         private int selectedIndex = -1;
-        private bool sgdr;
+        private bool sgdr = false;
         private uint gotoEpoch = 1;
         private uint gotoCycle = 1;
         private int selectedCostIndex = 0;
@@ -59,26 +59,26 @@ namespace Convnet.PageViewModels
         private CheckBox trainingPlotCheckBox;
         private Slider pixelSizeSlider;
         private DNNOptimizers optimizer;
-        private int? refreshRate;
-        private int weightsSnapshotX;
-        private int weightsSnapshotY;
-        private bool showWeights;
-        private bool showWeightsSnapshot;
-        private bool showTrainingPlot;
-        private ObservableCollection<DataPoint> pointsTrain;
-        private ObservableCollection<DataPoint> pointsTest;
-        private string pointsTrainLabel;
-        private string pointsTestLabel;
+        private int refreshRate = 0;
+        private int weightsSnapshotX = 0;
+        private int weightsSnapshotY = 0;
+        private bool showWeights = false;
+        private bool showWeightsSnapshot = false;
+        private bool showTrainingPlot = false;
+        private ObservableCollection<DataPoint> pointsTrain = new ObservableCollection<DataPoint>();
+        private ObservableCollection<DataPoint> pointsTest = new ObservableCollection<DataPoint>();
+        private string pointsTrainLabel = string.Empty;
+        private string pointsTestLabel = string.Empty;
         private PlotType currentPlotType;
         private LegendPosition currentLegendPosition;
-        private PlotModel? plotModel;
-        private Avalonia.Media.Imaging.WriteableBitmap? weightsSnapshot;
-        private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
+        private PlotModel plotModel;
+        private Avalonia.Media.Imaging.WriteableBitmap weightsSnapshot;
+        private Avalonia.Media.Imaging.WriteableBitmap inputSnapshot;
         public Timer RefreshTimer;
         public TimeSpan EpochDuration { get; set; }
         public event EventHandler Open;
         public event EventHandler Save;
-        public event EventHandler<int?> RefreshRateChanged;
+        public event EventHandler<int> RefreshRateChanged;
 
         public TrainPageViewModel(DNNModel model) : base(model)
         {
@@ -445,10 +445,10 @@ namespace Convnet.PageViewModels
             CommandToolBar.Add(refreshRateIntegerUpDown);           // 28
         }
 
-        private void TrainPageViewModel_RefreshRateChanged(object? sender, int? e)
+        private void TrainPageViewModel_RefreshRateChanged(object? sender, int e)
         {
-            if (RefreshTimer != null && e.HasValue)
-               RefreshTimer.Interval = 1000 * e.Value;
+            if (RefreshTimer != null)
+               RefreshTimer.Interval = 1000 * e;
         }
 
         private async void TrainPageViewModel_ModelChanged(object? sender, EventArgs e)
@@ -1084,7 +1084,7 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref weightsSnapshotY, value);
         }
 
-        public String? Label
+        public String Label
         {
             get => label;
             set => this.RaiseAndSetIfChanged(ref label, value);
@@ -1114,13 +1114,13 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref showTrainingPlot, value);
         }
 
-        public Avalonia.Media.Imaging.WriteableBitmap? WeightsSnapshot
+        public Avalonia.Media.Imaging.WriteableBitmap WeightsSnapshot
         {
             get => weightsSnapshot;
             set => this.RaiseAndSetIfChanged(ref weightsSnapshot, value);
         }
 
-        public Avalonia.Media.Imaging.WriteableBitmap? InputSnapshot
+        public Avalonia.Media.Imaging.WriteableBitmap InputSnapshot
         {
             get => inputSnapshot;
             set => this.RaiseAndSetIfChanged(ref inputSnapshot, value);
@@ -1205,23 +1205,20 @@ namespace Convnet.PageViewModels
 
         public override string DisplayName => "Train";
 
-        public int? RefreshRate
+        public int RefreshRate
         {
             get => refreshRate;
             set
             {
-                if (value.HasValue && value.Value == refreshRate)
+                if (value == refreshRate)
                     return;
 
                 this.RaiseAndSetIfChanged(ref refreshRate, value);
 
-                if (refreshRate != null)
-                {
-                    Settings.Default.RefreshInterval = refreshRate.Value;
-                    Settings.Default.Save();
-                    EventHandler<int?> handler = RefreshRateChanged;
-                    handler.Invoke(this, refreshRate);
-                }
+                Settings.Default.RefreshInterval = refreshRate;
+                Settings.Default.Save();
+                EventHandler<int> handler = RefreshRateChanged;
+                handler.Invoke(this, refreshRate);
             }
         }
 
@@ -1742,6 +1739,7 @@ namespace Convnet.PageViewModels
                         LayerInfo = sb.ToString();
                        
                         sb.Length = 0;
+
                         sb.Append("<Span Foreground=\"White\"><Bold>Neurons</Bold></Span><LineBreak/>");
                         sb.Append("<Span>");
                         if (Model.Layers[index].NeuronsStats?.StdDev >= 0.0f)
