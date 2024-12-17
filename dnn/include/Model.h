@@ -1543,7 +1543,6 @@ namespace dnn
 							if (input->Name == layer->Name)
 							{
 								l->SharesInput = !l->InplaceBwd;
-								l->SharesInputOriginal = l->SharesInput;
 								outputsCount--;
 								break;
 							}

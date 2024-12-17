@@ -472,7 +472,6 @@ namespace dnn
 		const bool InplaceBwd;
 		bool LayerBeforeCost;
 		bool SharesInput;
-		bool SharesInputOriginal;
 		bool SharesInputInplace;
 		bool Enabled;
 		bool Skip;
@@ -481,7 +480,7 @@ namespace dnn
 		std::atomic<bool> Bwd;
 		std::atomic<bool> LockUpdate;
 		std::atomic<bool> RefreshingStats;
-		std::vector<Layer*> Inputs;
+		const std::vector<Layer*> Inputs;
 		const std::vector<Layer*> InputsBwd;
 		std::vector<Layer*> Outputs;
 		Layer* InputLayer;
