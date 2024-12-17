@@ -1520,7 +1520,7 @@ namespace dnn
 			// This determines how the backprop step correctly flows
 			// When SharesInput is true we have to add our diff vector instead of just copying it because there's more than one layer involved
 
-			// determine SharesInputOriginal and SharesInput
+			// determine SharesInput
 			for (auto& layer : Layers)
 				layer->SharesInput = false;
 			
@@ -1603,15 +1603,13 @@ namespace dnn
 			}
 
 			auto listB = std::vector<bool>();
-			SwitchInplaceBwd(true);
 			for (auto& layer : Layers)
 			{
-				listB.push_back(layer->SharesInput);
+				listB.push_back(layer->SharesInputInplace);
 
-				if (layer->InplaceBwd && layer->SharesInput)
+				if (layer->InplaceBwd && layer->SharesInputInplace)
 					return false;
 			}
-			SwitchInplaceBwd(false);
 
 			return std::equal(listA.begin(), listA.end(), listB.begin());
 		}
