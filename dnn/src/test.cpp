@@ -13,9 +13,9 @@
 #include "Scripts.h"
 
 #ifdef _WIN32
-static const std::string path = std::string(getenv("USERPROFILE")) + std::string("\\Documents\\convnet\\");
+static const auto path = std::string(getenv("USERPROFILE")) + std::string("\\Documents\\convnet\\");
 #else
-static const std::string path = std::string(getenv("HOME")) + std::string("/convnet/");
+static const auto path = std::string(getenv("HOME")) + std::string("/convnet/");
 #endif
 
 using namespace dnn;

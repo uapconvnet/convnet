@@ -33,7 +33,7 @@ namespace Convnet.Common
         public static string GetFormattedText(AvaloniaObject d)
         {
             if (d is TextBlock textBlock)
-                return (string)textBlock.GetValue(FormattedTextProperty);
+                return textBlock.GetValue(FormattedTextProperty);
             
             return string.Empty;
         }
