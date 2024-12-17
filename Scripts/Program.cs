@@ -1182,18 +1182,18 @@ namespace Scripts
                 }
                 else
                 {
-                    //return "[" + group + prefix + to_string(id) + "]" + nwl +
-                    //    "Type=BatchNormActivation" + nwl +
-                    //    "Inputs=" + inputs + nwl +
-                    //    "Activation=" + activation.ToString() + nwl + nwl;
+                    return "[" + group + prefix + to_string(id) + "]" + nwl +
+                        "Type=BatchNormActivation" + nwl +
+                        "Inputs=" + inputs + nwl +
+                        "Activation=" + activation.ToString() + nwl + nwl;
 
-                    return "[" + group + "BN" + to_string(id) + "]" + nwl +
-                        "Type=BatchNorm" + nwl +
-                    	"Inputs=" + inputs + nwl + nwl +
-                    	"[" + group + prefix + to_string(id) + "]" + nwl +
-                    	"Type=Activation" + nwl +
-                    	"Inputs=" + group + "BN" + to_string(id) + nwl +
-                    	"Activation=" + activation.ToString() + nwl + nwl;
+                    //return "[" + group + "BN" + to_string(id) + "]" + nwl +
+                    //    "Type=BatchNorm" + nwl +
+                    //	"Inputs=" + inputs + nwl + nwl +
+                    //	"[" + group + prefix + to_string(id) + "]" + nwl +
+                    //	"Type=Activation" + nwl +
+                    //	"Inputs=" + group + "BN" + to_string(id) + nwl +
+                    //	"Activation=" + activation.ToString() + nwl + nwl;
                 }
             }
             else

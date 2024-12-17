@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using AvaloniaEdit;
 using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
 using AvaloniaEdit.TextMate;
@@ -52,7 +51,7 @@ namespace Convnet.PageViews
             //    }
             //}
             //HighlightingManager.Instance.RegisterHighlighting("C#", [".cs"], CSharpHighlighting);
-            //var editorScript = this.FindControl<TextEditor>("EditorScript");
+            //var editorScript = this.FindControl<CodeEditor>("EditorScript");
             //if (editorScript != null)
             //{
             //    editorScript.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".cs");
