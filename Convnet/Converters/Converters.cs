@@ -1,4 +1,5 @@
 ﻿using Avalonia.Data.Converters;
+using Avalonia.Media;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -254,21 +255,24 @@ namespace Convnet.Converters
         }
     }
 
-    //public class BoolToGridLengthConverter : IValueConverter
-    //{
-    //    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        if (targetType != typeof(GridLength))
-    //            throw new InvalidOperationException("The target must be a GridLength");
+    public class BoolToFontWeightConverter : IValueConverter
+    {
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            if (targetType != typeof(FontWeight))
+                throw new InvalidOperationException("The target must be a FontWeight");
 
-    //        return (bool)value ? new GridLength(30, GridUnitType.Pixel) : new GridLength(0, GridUnitType.Pixel);
-    //    }
+            if (value is bool)
+                return (bool)value ? FontWeight.UltraBlack : FontWeight.Normal;
+            
+            return FontWeight.Normal;
+        }
 
-    //    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     ///// <summary>
     ///// Will return a*value + b
