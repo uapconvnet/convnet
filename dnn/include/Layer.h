@@ -723,7 +723,7 @@ namespace dnn
 #ifdef DNN_LEAN
 		inline void ZeroGradient(const UInt batchSize)
 		{
-			InputLayerBwd->NeuronsD1.resize(batchSize, InputLayer->C, InputLayer->H, InputLayer->W, dnnl::memory::data_type::f32, BlockedFmt, Device.engine);
+			InputLayerBwd->NeuronsD1.resize(batchSize, InputLayerBwd->C, InputLayerBwd->H, InputLayerBwd->W, dnnl::memory::data_type::f32, BlockedFmt, Device.engine);
 		}
 
 		inline void ZeroGradientMulti(const UInt batchSize)
