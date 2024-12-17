@@ -410,7 +410,7 @@ namespace dnn
 				auto inputsInplace = std::vector<Layer*>();
 				
 				for (auto input : inputs)
-					inputsInplace.push_back(input->InplaceBwd ? input->InputLayerFwd : input);
+					inputsInplace.push_back(input->InplaceBwd ? input->InputLayer : input);
 				
 				return inputsInplace;
 			}
@@ -481,13 +481,11 @@ namespace dnn
 		std::atomic<bool> Bwd;
 		std::atomic<bool> LockUpdate;
 		std::atomic<bool> RefreshingStats;
-		const std::vector<Layer*> InputsFwd;
-		const std::vector<Layer*> InputsBwd;
 		std::vector<Layer*> Inputs;
+		const std::vector<Layer*> InputsBwd;
 		std::vector<Layer*> Outputs;
 		Layer* InputLayer;
 		Layer* InputLayerBwd;
-		Layer* InputLayerFwd;
 		dnnl::memory::format_tag NeuronsFormat;
 		dnnl::memory::format_tag WeightsFormat;
 		Fillers WeightsFiller;
@@ -551,8 +549,7 @@ namespace dnn
 			HasWeights(IsNorm(layerType) ? scaling : (weightCount > 0)),
 			InplaceBwd(IsInplaceBwd(layerType, inputs)),
 			LayerBeforeCost(false),
-			SharesInput(false),										// 
-			SharesInputOriginal(false),
+			SharesInput(false),
 			SharesInputInplace(false),
 			Enabled(enabled),
 			Skip(false),
@@ -561,11 +558,9 @@ namespace dnn
 			Bwd(false),
 			LockUpdate(false),
 			RefreshingStats(false),
-			Inputs(std::vector<Layer*>(inputs)),					// Inputs is switched between non-inplace (forward) and inplace (backprop) during training 
-			InputsFwd(std::vector<Layer*>(inputs)),					// InputsFwd = the non-inplace inputs 
+			Inputs(std::vector<Layer*>(inputs)),					
 			InputsBwd(GetInputsBwd(layerType, inputs)),				// InputsBwd = the inplace inputs for backward prop
 			InputLayer(inputs.size() > 0 ? inputs[0] : nullptr),
-			InputLayerFwd(inputs.size() > 0 ? inputs[0] : nullptr),
 			InputLayerBwd(GetInputsBwd(layerType, inputs).size() > 0 ? GetInputsBwd(layerType, inputs)[0] : nullptr),
 			NeuronsFormat(format),
 			WeightsFormat(format),
@@ -653,15 +648,15 @@ namespace dnn
 			if (LayerType != LayerTypes::Input)
 			{
 				description.append(nwl + std::string(" Inputs:     ") + tab);
-				for (auto i = 0ull; i < InputsFwd.size(); i++)
-					description.append((i == 0 ? std::string("") : std::string(",")) + InputsFwd[i]->Name);
+				for (auto i = 0ull; i < Inputs.size(); i++)
+					description.append((i == 0 ? std::string("") : std::string(",")) + Inputs[i]->Name);
 #ifndef NDEBUG			
 				if constexpr (Inplace)
 				{
 					auto print = false;
 					for (auto i = 0ull; i < Inputs.size(); i++)
 					{
-						if (InputsFwd[i] != InputsBwd[i])
+						if (Inputs[i] != InputsBwd[i])
 						{
 							print = true;
 							break;

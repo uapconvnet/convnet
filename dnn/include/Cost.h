@@ -402,7 +402,7 @@ namespace dnn
 			ZeroGradient(batchSize);
 #endif // DNN_LEAN
 
-			auto memSrc = dnnl::memory(*InputLayerFwd->DstMemDesc, Device.engine, InputLayerFwd->Neurons.data());
+			auto memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());
 			auto srcMem = reorderFwdSrc ? dnnl::memory(*DstMemDesc, Device.engine) : memSrc;
 			if (reorderFwdSrc)
 			{

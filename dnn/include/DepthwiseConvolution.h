@@ -159,8 +159,8 @@ namespace dnn
 			
 			ChosenFormat = GetMemoryFormat(*DstMemDesc);
 			
-			reorderFwdSrc = fwdDesc->src_desc() != *InputLayerFwd->DstMemDesc;
-			reorderBwdWeightsSrc = bwdWeightsDesc->src_desc() != *InputLayerFwd->DstMemDesc;
+			reorderFwdSrc = fwdDesc->src_desc() != *InputLayer->DstMemDesc;
+			reorderBwdWeightsSrc = bwdWeightsDesc->src_desc() != *InputLayer->DstMemDesc;
 			reorderBwdWeightsDiffWeights = bwdWeightsDesc->diff_weights_desc() != *WeightsMemDesc;
 			reorderBwdDataDiffSrc = bwdDataDesc->diff_src_desc() != *InputLayerBwd->DiffDstMemDesc;
 			reorderBwdDataWeights = bwdDataDesc->weights_desc() != *WeightsMemDesc;
@@ -216,7 +216,7 @@ namespace dnn
 		
 			const auto& memDiffDst = dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data());
 			
-			const auto& memSrc = dnnl::memory(*InputLayerFwd->DstMemDesc, Device.engine, InputLayerFwd->Neurons.data());
+			const auto& memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());
 			auto srcMem = reorderBwdWeightsSrc ? dnnl::memory(bwdWeightsDesc->src_desc(), Device.engine) : memSrc;
 			if (reorderBwdWeightsSrc)
 			{

@@ -201,7 +201,7 @@ namespace dnn
 			auto memDiffSrc = SharesInputInplace ? dnnl::memory(*InputLayerBwd->DiffDstMemDesc, Device.engine) : dnnl::memory(*InputLayerBwd->DiffDstMemDesc, Device.engine, InputLayerBwd->NeuronsD1.data());
 			auto diffSrcMem = reorderBwdDiffSrc ? dnnl::memory(bwdDescPRelu->diff_src_desc(), Device.engine) : memDiffSrc;
 
-			auto memSrc = dnnl::memory(*InputLayerFwd->DstMemDesc, Device.engine, InputLayerFwd->Neurons.data());
+			auto memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());
 			auto srcMem = reorderBwdSrc ? dnnl::memory(bwdDescPRelu->src_desc(), Device.engine) : memSrc;
 			if (reorderBwdSrc)
 			{

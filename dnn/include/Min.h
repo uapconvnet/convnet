@@ -307,8 +307,8 @@ namespace dnn
 				VecFloat In0, In1, D1;
 				for (auto cdhw = 0ull; cdhw < part; cdhw += VectorSize)
 				{
-					In0.load_a(&InputsFwd[0]->Neurons[cdhw]);
-					In1.load_a(&InputsFwd[1]->Neurons[cdhw]);
+					In0.load_a(&Inputs[0]->Neurons[cdhw]);
+					In1.load_a(&Inputs[1]->Neurons[cdhw]);
 					D1.load_a(&NeuronsD1[cdhw]);
 
 					if_add(In0 <= In1, VecFloat().load_a(&InputsBwd[0]->NeuronsD1[cdhw]), D1).store_a(&InputsBwd[0]->NeuronsD1[cdhw]);
@@ -316,8 +316,8 @@ namespace dnn
 				}
 				for (auto cdhw = part; cdhw < size; cdhw++)
 				{
-					InputsBwd[0]->NeuronsD1[cdhw] += InputsFwd[0]->Neurons[cdhw] <= InputsFwd[1]->Neurons[cdhw] ? NeuronsD1[cdhw] : Float(0);
-					InputsBwd[1]->NeuronsD1[cdhw] += InputsFwd[0]->Neurons[cdhw] <= InputsFwd[1]->Neurons[cdhw] ? Float(0) : NeuronsD1[cdhw];
+					InputsBwd[0]->NeuronsD1[cdhw] += Inputs[0]->Neurons[cdhw] <= Inputs[1]->Neurons[cdhw] ? NeuronsD1[cdhw] : Float(0);
+					InputsBwd[1]->NeuronsD1[cdhw] += Inputs[0]->Neurons[cdhw] <= Inputs[1]->Neurons[cdhw] ? Float(0) : NeuronsD1[cdhw];
 				}
 			}
 			else
@@ -333,8 +333,8 @@ namespace dnn
 					VecFloat In0, In1, D1;
 					for (auto cdhw = start; cdhw < end; cdhw += VectorSize)
 					{
-						In0.load_a(&InputsFwd[0]->Neurons[cdhw]);
-						In1.load_a(&InputsFwd[1]->Neurons[cdhw]);
+						In0.load_a(&Inputs[0]->Neurons[cdhw]);
+						In1.load_a(&Inputs[1]->Neurons[cdhw]);
 						D1.load_a(&NeuronsD1[cdhw]);
 
 						if_add(In0 <= In1, VecFloat().load_a(&InputsBwd[0]->NeuronsD1[cdhw]), D1).store_a(&InputsBwd[0]->NeuronsD1[cdhw]);
@@ -342,8 +342,8 @@ namespace dnn
 					}
 					for (auto cdhw = end; cdhw < start + size; cdhw++)
 					{
-						InputsBwd[0]->NeuronsD1[cdhw] += InputsFwd[0]->Neurons[cdhw] <= InputsFwd[1]->Neurons[cdhw] ? NeuronsD1[cdhw] : Float(0);
-						InputsBwd[1]->NeuronsD1[cdhw] += InputsFwd[0]->Neurons[cdhw] <= InputsFwd[1]->Neurons[cdhw] ? Float(0) : NeuronsD1[cdhw];
+						InputsBwd[0]->NeuronsD1[cdhw] += Inputs[0]->Neurons[cdhw] <= Inputs[1]->Neurons[cdhw] ? NeuronsD1[cdhw] : Float(0);
+						InputsBwd[1]->NeuronsD1[cdhw] += Inputs[0]->Neurons[cdhw] <= Inputs[1]->Neurons[cdhw] ? Float(0) : NeuronsD1[cdhw];
 					}
 				});
 #ifdef DNN_STOCHASTIC

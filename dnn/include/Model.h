@@ -1398,27 +1398,6 @@ namespace dnn
 		}
 		*/
 
-		void SwitchInplaceBwd(const bool enable)
-		{
-			if constexpr (Inplace)
-			{
-				if (enable)
-					for (auto& layer : Layers)
-					{
-						layer->Inputs = std::vector<Layer*>(layer->InputsBwd);
-						layer->InputLayer = layer->InputLayerBwd;
-						layer->SharesInput = layer->SharesInputInplace;
-					}
-				else
-					for (auto& layer : Layers)
-					{
-						layer->Inputs = std::vector<Layer*>(layer->InputsFwd);
-						layer->InputLayer = layer->InputLayerFwd;
-						layer->SharesInput = layer->SharesInputOriginal;
-					}
-			}
-		}
-
 		auto IsSkippable(const Layer& layer) const
 		{
 			return layer.LayerType == LayerTypes::Add || layer.LayerType == LayerTypes::Average || layer.LayerType == LayerTypes::Substract; // || layer.LayerType == LayerTypes::Multiply || layer.LayerType == LayerTypes::Divide;
@@ -1529,7 +1508,7 @@ namespace dnn
 
 			for (auto& layer : Layers)
 				if (layer->Name != parentLayer->Name)
-					for (auto input : inplace ? layer->InputsBwd : layer->InputsFwd)
+					for (auto input : inplace ? layer->InputsBwd : layer->Inputs)
 						if (input->Name == parentLayer->Name)
 							outputs.push_back(layer.get());
 
@@ -1559,7 +1538,7 @@ namespace dnn
 						if (l->Name == layer->Name)
 							continue;
 
-						for (auto input : l->InputsFwd)
+						for (auto input : l->Inputs)
 						{
 							if (input->Name == layer->Name)
 							{
@@ -1809,7 +1788,6 @@ namespace dnn
 								// Backward
 								bpropTimeCount = std::chrono::duration<Float>(Float(0));
 								updateTimeCount = std::chrono::duration<Float>(Float(0));
-								SwitchInplaceBwd(true);
 								for (auto i = Layers.size() - 1; i >= FirstUnlockedLayer.load(); --i)
 								{
 									if (Layers[i]->HasWeights && TaskState.load() == TaskStates::Running)
@@ -1836,7 +1814,6 @@ namespace dnn
 									}
 									bpropTimeCount += Layers[i]->bpropTime;
 								}
-								SwitchInplaceBwd(false);
 								bpropTime = bpropTimeCount;
 								updateTime = updateTimeCount;
 
@@ -1887,7 +1864,6 @@ namespace dnn
 								// Backward
 								bpropTimeCount = std::chrono::duration<Float>(Float(0));
 								updateTimeCount = std::chrono::duration<Float>(Float(0));
-								SwitchInplaceBwd(true);
 								for (auto i = Layers.size() - 1; i >= FirstUnlockedLayer.load(); --i)
 								{
 									if (TaskState.load() == TaskStates::Running)
@@ -1924,7 +1900,6 @@ namespace dnn
 										}										
 									}
 								}
-								SwitchInplaceBwd(false);
 								bpropTime = bpropTimeCount;
 								updateTime = updateTimeCount;
 
@@ -2337,8 +2312,6 @@ namespace dnn
 
 				if (CheckTaskState())
 				{
-					SwitchInplaceBwd(false);
-
 					for (auto cost : CostLayers)
 						cost->Reset();
 
@@ -2877,9 +2850,6 @@ namespace dnn
 
 		void BackwardProp(const UInt batchSize)
 		{
-			if constexpr (Inplace)
-				SwitchInplaceBwd(true);
-
 			for (auto i = Layers.size() - 1; i > 0ull; --i)
 			{
 				if (Layers[i]->HasWeights && TaskState.load() == TaskStates::Running)
@@ -2892,9 +2862,6 @@ namespace dnn
 				else
 					Layers[i]->BackwardProp(batchSize);
 			}
-
-			if constexpr (Inplace)
-				SwitchInplaceBwd(false);
 		}
 		
 		bool SaveModel(const std::string& fileName) const

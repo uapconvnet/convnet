@@ -129,7 +129,7 @@ namespace dnn
 			
 			fwdDesc = std::make_unique<dnnl::batch_normalization_forward::primitive_desc>(dnnl::batch_normalization_forward::primitive_desc(Device.engine, inference ? dnnl::prop_kind::forward_inference : dnnl::prop_kind::forward_training, *DstMemDesc, *DstMemDesc, Eps, flags));
 			
-			reorderFwdSrc = fwdDesc->src_desc() != *InputLayerFwd->DstMemDesc;
+			reorderFwdSrc = fwdDesc->src_desc() != *InputLayer->DstMemDesc;
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::batch_normalization_forward>(dnnl::batch_normalization_forward(*fwdDesc));
@@ -138,7 +138,7 @@ namespace dnn
 			{
 				bwdDesc = std::make_unique<dnnl::batch_normalization_backward::primitive_desc>(dnnl::batch_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DiffDstMemDesc, *InputLayerBwd->DiffDstMemDesc, *DstMemDesc, Eps, flags, *fwdDesc));
 
-				reorderBwdSrc = bwdDesc->src_desc() != *InputLayerFwd->DstMemDesc;
+				reorderBwdSrc = bwdDesc->src_desc() != *InputLayer->DstMemDesc;
 				reorderBwdDiffSrc = bwdDesc->diff_src_desc() != *InputLayerBwd->DiffDstMemDesc;
 				reorderBwdDiffDst = bwdDesc->diff_dst_desc() != (!InplaceBwd ? *DiffDstMemDesc : *InputLayerBwd->DiffDstMemDesc);
 
@@ -260,7 +260,7 @@ namespace dnn
 			DNN_UNREF_PAR(batchSize);
 #endif // DNN_LEAN
 
-			const auto& memSrc = dnnl::memory(*InputLayerFwd->DstMemDesc, Device.engine, InputLayerFwd->Neurons.data());
+			const auto& memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());
 			auto srcMem = reorderBwdSrc ? dnnl::memory(bwdDesc->src_desc(), Device.engine) : memSrc;
 			if (reorderBwdSrc)
 			{
