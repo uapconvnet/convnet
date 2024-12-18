@@ -23,9 +23,9 @@ namespace Convnet.Common
             nameof(FormattedText),
             o => o.FormattedText,
             (o, v) => 
-            { 
-                if (!o.FormattedText.Equals(v))
-                    o.FormattedText = v; 
+            {
+                if (o != null && o.FormattedText != null && !o.FormattedText.Equals(v))
+                    o.FormattedText = v;
             },
             unsetValue: string.Empty,
             defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
@@ -37,21 +37,22 @@ namespace Convnet.Common
             {
                 if (value != formattedText)
                 {
-                    var body = string.Format(header, value);
-
                     Dispatcher.UIThread.Post(() =>
                     {
-                        var span = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Parse<Span>(body);
+                        var span = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Parse<Span>(string.Format(header, value));
                         if (span != null)
                         {
-                            Inlines?.Clear();
-                            Inlines?.Add(span);
+                            if (Inlines?.Count > 0)
+                                Inlines[0] = span;
+                            else 
+                                Inlines?.Add(span);
+                            
                             InvalidateVisual();
 
                             formattedText = value;
                             OnPropertyChanged(nameof(FormattedText));
                         }
-                    });
+                    }, DispatcherPriority.Send);
                 }
             }
         }
