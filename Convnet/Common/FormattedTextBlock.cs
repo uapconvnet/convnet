@@ -15,7 +15,7 @@ namespace Convnet.Common
        
         public new event PropertyChangedEventHandler? PropertyChanged;
 
-        private static readonly string header = "<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>";
+        private static readonly string spanHeader = "<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>";
 
         private string formattedText = string.Empty;   
         private Span? span = null;
@@ -40,7 +40,7 @@ namespace Convnet.Common
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        span = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Parse<Span>(string.Format(header, value));
+                        span = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Parse<Span>(string.Format(spanHeader, value));
                         if (span != null)
                         {
                             if (Inlines?.Count > 0)
