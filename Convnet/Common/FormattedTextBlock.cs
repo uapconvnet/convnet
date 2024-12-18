@@ -15,12 +15,18 @@ namespace Convnet.Common
        
         public new event PropertyChangedEventHandler? PropertyChanged;
 
-        private string formattedText = string.Empty;
+        private static readonly string header = "<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>";
+
+        private string formattedText = string.Empty;   
 
         public static readonly DirectProperty<FormattedTextBlock, string> FormattedTextProperty = AvaloniaProperty.RegisterDirect<FormattedTextBlock, string>(
             nameof(FormattedText),
             o => o.FormattedText,
-            (o, v) => o.FormattedText = v,
+            (o, v) => 
+            { 
+                if (!o.FormattedText.Equals(v))
+                    o.FormattedText = v; 
+            },
             unsetValue: string.Empty,
             defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
 
@@ -31,15 +37,19 @@ namespace Convnet.Common
             {
                 if (value != formattedText)
                 {
+                    var body = string.Format(header, value);
+
                     Dispatcher.UIThread.Post(() =>
                     {
-                        if (Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Load(string.Format("<Span xml:space=\"preserve\" xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">{0}</Span>", value)) is Span result)
+                        var span = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Parse<Span>(body);
+                        if (span != null)
                         {
                             Inlines?.Clear();
-                            Inlines?.Add(result);
+                            Inlines?.Add(span);
+                            InvalidateVisual();
+
                             formattedText = value;
                             OnPropertyChanged(nameof(FormattedText));
-                            InvalidateVisual();
                         }
                     });
                 }

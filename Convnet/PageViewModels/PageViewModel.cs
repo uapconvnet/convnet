@@ -114,12 +114,18 @@ namespace Convnet.PageViewModels
             //var topLevel = TopLevel.GetTopLevel((Avalonia.Visual?)sender);
             //if (topLevel != null)
             //{
-            //    IStorageFolder? folder = Path.Combine(DefinitionsDirectory, Model.Name);
-            //    var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            //    var folder = Path.Combine(DefinitionsDirectory, Model.Name);
+            //    var typeWeights = new FilePickerFileType("Weights (*.bin)");
+            //    typeWeights.Patterns = new string[] { "*.bin" };
+            //    var typeLog = new FilePickerFileType("Log (*.csv)");
+            //    typeLog.Patterns = new string[] { "*.csv" };
+
+            //    var file = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             //    {
-            //        Title = "Load",
             //        AllowMultiple = false,
-            //        SuggestedStartLocation = folder
+            //        Title = "Load",
+            //        SuggestedStartLocation = topLevel.StorageProvider.TryGetFolderFromPathAsync(folder).Result,
+            //        FileTypeFilter = [typeWeights, typeLog]
             //    });
             //}
 
