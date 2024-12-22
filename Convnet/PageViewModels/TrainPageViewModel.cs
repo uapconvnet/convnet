@@ -554,7 +554,7 @@ namespace Convnet.PageViewModels
 
         private string FloatToString(Float number)
         {
-            return number > 0 ? number.ToString() + "\n" : "No\n";
+            return number > 0 ? number.ToString() : "No";
         }
 
         private string BoolToString(bool value)
@@ -562,22 +562,10 @@ namespace Convnet.PageViewModels
             return value ? "Yes" : "No";
         }
 
-        private string Flip(bool horizontal, bool vertical)
-        {
-            return " Horizontal Flip:   " + BoolToString(horizontal) + "\n Vertical Flip:\t " + BoolToString(vertical) + "\n";
-        }
-
-        private string Mix(bool cutMix)
-        {
-            return (cutMix ? " CutMix:\t\t\t" : " Cutout:\t\t\t");
-        }
-
         private void TrainProgress(DNNOptimizers Optim, UInt BatchSize, UInt Cycle, UInt TotalCycles, UInt Epoch, UInt TotalEpochs, bool HorizontalFlip, bool VerticalFlip, Float InputDropout, Float Cutout, bool CutMix, Float AutoAugment, Float ColorCast, UInt ColorAngle, Float Distortion, DNNInterpolations Interpolation, Float Scaling, Float Rotation, UInt SampleIndex, Float Rate, Float Momentum, Float Beta2, Float Gamma, Float L2Penalty, Float Dropout, Float AvgTrainLoss, Float TrainErrorPercentage, Float TrainAccuracy, UInt TrainErrors, Float AvgTestLoss, Float TestErrorPercentage, Float TestAccuracy, UInt TestErrors, DNNStates State, DNNTaskStates TaskState)
         {
             Dispatcher.UIThread.Invoke(() =>
             {
-                var sb = new StringBuilder();
-                
                 switch (State)
                 {
                     case DNNStates.Training:
@@ -588,23 +576,21 @@ namespace Convnet.PageViewModels
                                 Model.Optimizer = Optim;
                             }
 
-                            sb.Append("<Span Foreground=\"White\"><Bold>Training</Bold></Span><LineBreak/>");
-                            sb.Append(stringSpanStart);
                             switch (Model?.Optimizer)
                             {
                                 case DNNOptimizers.AdaGrad:
-                                    sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Dropout:\t\t   " + FloatToString(Dropout) + Mix(CutMix) + FloatToString(Cutout) + " Auto Augment:\t  " + FloatToString(AutoAugment) + Flip(HorizontalFlip, VerticalFlip) + " Color Cast:\t\t" + FloatToString(ColorCast) + " Distortion:\t\t" + FloatToString(Distortion) + " Loss:\t\t\t  {7:N7}\n Errors:\t\t\t{8:G}\n Error:\t\t\t {9:N2} %\n Accuracy:\t\t  {10:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format("<Span Foreground=\"White\"><Bold>Training</Bold></Span><LineBreak/><Span> Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Dropout:\t\t   {7}\n" + (CutMix ? " CutMix:\t\t\t" : " Cutout:\t\t\t") + "{8}\n Auto Augment:\t  {9}\n Horizontal Flip:   {10}\n Vertical Flip:\t {11}\n Color Cast:\t\t{12}\n Distortion:\t\t{13}\n Loss:\t\t\t  {14:N7}\n Errors:\t\t\t{15:G}\n Error:\t\t\t {16:N2} %\n Accuracy:\t\t  {17:N2} %</Span>", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.AdaDelta:
                                 case DNNOptimizers.RMSProp:
-                                    sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Momentum:  \t\t{7:0.#######}\n Dropout:\t\t   " + FloatToString(Dropout) + Mix(CutMix) + FloatToString(Cutout) + " Auto Augment:\t  " + FloatToString(AutoAugment) + Flip(HorizontalFlip, VerticalFlip) + " Color Cast:\t\t" + FloatToString(ColorCast) + " Distortion:\t\t" + FloatToString(Distortion) + " Loss:  \t\t\t{8:N7}\n Errors:\t\t\t{9:G}\n Error:\t\t\t {10:N2} %\n Accuracy:\t\t  {11:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format("<Span Foreground=\"White\"><Bold>Training</Bold></Span><LineBreak/><Span> Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Momentum: \t\t {7:0.#######}\n Dropout:\t\t   {8}\n" + (CutMix ? " CutMix:\t\t\t" : " Cutout:\t\t\t") + "{9}\n Auto Augment:\t  {10}\n Horizontal Flip:   {11}\n Vertical Flip:\t {12}\n Color Cast:\t\t{13}\n Distortion:\t\t{14}\n Loss:\t\t\t  {15:N7}\n Errors:\t\t\t{16:G}\n Error:\t\t\t {17:N2} %\n Accuracy:\t\t  {18:N2} %</Span>", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.AdaBoundW:
                                 case DNNOptimizers.AdamW:
                                 case DNNOptimizers.AmsBoundW:
-                                    sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Momentum: \t\t {7:0.#######}\n Beta2:\t\t\t {8:0.#######}\n L2 Penalty:\t\t{9:0.#######}\n Dropout:\t\t   " + FloatToString(Dropout) + Mix(CutMix) + FloatToString(Cutout) + " Auto Augment:\t  " + FloatToString(AutoAugment) + Flip(HorizontalFlip, VerticalFlip) + " Color Cast:\t\t" + FloatToString(ColorCast) + " Distortion:\t\t" + FloatToString(Distortion) + " Loss:\t\t\t  {10:N7}\n Errors:\t\t\t{11:G}\n Error:\t\t\t {12:N2} %\n Accuracy:\t\t  {13:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, Beta2, L2Penalty, AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format("<Span Foreground=\"White\"><Bold>Training</Bold></Span><LineBreak/><Span> Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Momentum: \t\t {7:0.#######}\n Beta2:\t\t\t {8:0.#######}\n L2 Penalty:\t\t{9:0.#######}\n Dropout:\t\t   {10}\n" + (CutMix ? " CutMix:\t\t\t" : " Cutout:\t\t\t") + "{11}\n Auto Augment:\t  {12}\n Horizontal Flip:   {13}\n Vertical Flip:\t {14}\n Color Cast:\t\t{15}\n Distortion:\t\t{16}\n Loss:\t\t\t  {17:N7}\n Errors:\t\t\t{18:G}\n Error:\t\t\t {19:N2} %\n Accuracy:\t\t  {20:N2} %</Span>", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, Beta2, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.AdaBelief:
@@ -612,20 +598,19 @@ namespace Convnet.PageViewModels
                                 case DNNOptimizers.Adam:
                                 case DNNOptimizers.Adamax:
                                 case DNNOptimizers.AmsBound:
-                                    sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Momentum: \t\t {7:0.#######}\n Beta2:\t\t\t {8:0.#######}\n Dropout:\t\t   " + FloatToString(Dropout) + Mix(CutMix) + FloatToString(Cutout) + " Auto Augment:\t  " + FloatToString(AutoAugment) + Flip(HorizontalFlip, VerticalFlip) + " Color Cast:\t\t" + FloatToString(ColorCast) + " Distortion:\t\t" + FloatToString(Distortion) + " Loss:\t\t\t  {9:N7}\n Errors:\t\t\t{10:G}\n Error:\t\t\t {11:N2} %\n Accuracy:\t\t  {12:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, Beta2, AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format("<Span Foreground=\"White\"><Bold>Training</Bold></Span><LineBreak/><Span> Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Momentum: \t\t {7:0.#######}\n Beta2:\t\t\t {8:0.#######}\n Dropout:\t\t   {9}\n" + (CutMix ? " CutMix:\t\t\t" : " Cutout:\t\t\t") + "{10} Auto Augment:\t  {11}\n Horizontal Flip:   {12}\n Vertical Flip:\t {13}\n Color Cast:\t\t{14}\n Distortion:\t\t{15}\n Loss:\t\t\t  {16:N7}\n Errors:\t\t\t{17:G}\n Error:\t\t\t {18:N2} %\n Accuracy:\t\t  {19:N2} %</Span>", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, Beta2, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.SGD:
-                                    sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n L2 Penalty:\t\t{7:0.#######}\n Dropout:\t\t   " + FloatToString(Dropout) + Mix(CutMix) + FloatToString(Cutout) + " Auto Augment:\t  " + FloatToString(AutoAugment) + Flip(HorizontalFlip, VerticalFlip) + " Color Cast:\t\t" + FloatToString(ColorCast) + " Distortion:\t\t" + FloatToString(Distortion) + " Loss:\t\t\t  {8:N7}\n Errors:\t\t\t{9:G}\n Error:\t\t\t {10:N2} %\n Accuracy:\t\t  {11:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, L2Penalty, AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format("<Span Foreground=\"White\"><Bold>Training</Bold></Span><LineBreak/><Span> Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n L2 Penalty:\t\t{7:0.#######}\n Dropout:\t\t   {8}\n" + (CutMix ? " CutMix:\t\t\t" : " Cutout:\t\t\t") + "{9}\n Auto Augment:\t  {10}\n Horizontal Flip:   {11}\n Vertical Flip:\t {12}\n Color Cast:\t\t{13}\n Distortion:\t\t{14}\n Loss:\t\t\t  {15:N7}\n Errors:\t\t\t{16:G}\n Error:\t\t\t {17:N2} %\n Accuracy:\t\t  {18:N2} %</Span>", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.NAG:
                                 case DNNOptimizers.SGDMomentum:
                                 case DNNOptimizers.SGDW:
-                                    sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Momentum:\t\t  {7:0.#######}\n L2 Penalty:\t\t{8:0.#######}\n Dropout:\t\t   " + FloatToString(Dropout) + Mix(CutMix) + FloatToString(Cutout) + " Auto Augment:\t  " + FloatToString(AutoAugment) + Flip(HorizontalFlip, VerticalFlip) + " Color Cast:\t\t" + FloatToString(ColorCast) + " Distortion:\t\t" + FloatToString(Distortion) + " Loss:\t\t\t  {9:N7}\n Errors:\t\t\t{10:G}\n Error:\t\t\t {11:N2} %\n Accuracy:\t\t  {12:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, L2Penalty, AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format("<Span Foreground=\"White\"><Bold>Training</Bold></Span><LineBreak/><Span> Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n Momentum:\t\t  {7:0.#######}\n L2 Penalty:\t\t{8:0.#######}\n Dropout:\t\t   {9}\n" + (CutMix ? " CutMix:\t\t\t" : " Cutout:\t\t\t") + "{10}\n Auto Augment:\t  {11}\n Horizontal Flip:   {12}\n Vertical Flip:\t {13}\n Color Cast:\t\t{14}\n Distortion:\t\t{15}\n Loss:\t\t\t  {16:N7}\n Errors:\t\t\t{17:G}\n Error:\t\t\t {18:N2} %\n Accuracy:\t\t  {19:N2} %</Span>", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
                             }
-                            sb.Append(stringSpanClose);
                         }
                         break;
 
@@ -633,16 +618,13 @@ namespace Convnet.PageViewModels
                         {
                             if (Model != null)
                             {
-                                sb.Append("<Span Foreground=\"White\"><Bold>Testing</Bold></Span><LineBreak/>");
-                                sb.Append(stringSpanStart);
-                                sb.AppendFormat(" Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Loss:\t\t\t  {6:N7}\n Errors:\t\t\t{7:G}\n Error:\t\t\t {8:N2} %\n Accuracy:\t\t  {9:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, (Float)100 - TestErrorPercentage);
-                                sb.Append(stringSpanClose);
+                                ProgressText = string.Format("<Span Foreground=\"White\"><Bold>Testing</Bold></Span><LineBreak/><Span> Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Loss:\t\t\t  {6:N7}\n Errors:\t\t\t{7:G}\n Error:\t\t\t {8:N2} %\n Accuracy:\t\t  {9:N2} %</Span>", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, (Float)100 - TestErrorPercentage);
                             }
                         }
                         break;
 
                     case DNNStates.SaveWeights:
-                        sb.Append("<Span Foreground=\"White\"><Bold>Saving weights</Bold></Span>");
+                        ProgressText = "<Span Foreground=\"White\"><Bold>Saving weights</Bold></Span>";
                         break;
 
                     case DNNStates.Completed:
@@ -683,7 +665,6 @@ namespace Convnet.PageViewModels
                         }
                         break;
                 }
-                ProgressText = sb.ToString();
             });
         }
 
