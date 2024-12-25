@@ -37,7 +37,7 @@ namespace Convnet.PageViewModels
     {
         private static readonly string stringSpanBold               = "<Span Foreground=\"White\"><Bold>";
         private static readonly string stringCloseBoldSpanLineBreak = "</Bold></Span><LineBreak/>";
-        private readonly string stringTesting                       = stringSpanBold + "Testing" + stringCloseBoldSpanLineBreak + "<Span> Sample:\\t\\t\\t{0:G}\\n Cycle:\\t\\t\\t {1}/{2}\\n Epoch:\\t\\t\\t {3}/{4}\\n Batch Size:\\t\\t{5:G}\\n Loss:\\t\\t\\t  {6:N7}\\n Errors:\\t\\t\\t{7:G}\\n Error:\\t\\t\\t {8:N2} %\\n Accuracy:\\t\\t  {9:N2} %</Span>";
+        private readonly string stringTesting                       = stringSpanBold + "Testing" + stringCloseBoldSpanLineBreak + "<Span> Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Loss:\t\t\t  {6:N7}\n Errors:\t\t\t{7:G}\n Error:\t\t\t {8:N2} %\n Accuracy:\t\t  {9:N2} %</Span>";
         private readonly string stringTraining                      = stringSpanBold + "Training" + stringCloseBoldSpanLineBreak + "<Span> Sample:\t\t\t{0:G}\n Cycle:\t\t\t {1}/{2}\n Epoch:\t\t\t {3}/{4}\n Batch Size:\t\t{5:G}\n Rate:\t\t\t  {6:0.#######}\n";
         private readonly string stringNeurons                       = stringSpanBold + "Neurons" + stringCloseBoldSpanLineBreak;
         private readonly string stringWeights                       = stringSpanBold + "Weights" + stringCloseBoldSpanLineBreak;
