@@ -15,9 +15,6 @@ namespace Convnet.Common
             FormattedTextProperty.Changed.AddClassHandler<AvaloniaObject>(FormattedTextPropertyChanged);
         }
 
-        //public static readonly DependencyProperty FormattedTextProperty = DependencyProperty.RegisterAttached("FormattedText", typeof(string), typeof(Attached), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsMeasure, FormattedTextPropertyChanged));
-
-
         /// <summary>
         /// Accessor for Attached property <see cref="FormattedTextProperty"/>.
         /// </summary>

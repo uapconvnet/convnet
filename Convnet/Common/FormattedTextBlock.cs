@@ -43,11 +43,8 @@ namespace Convnet.Common
                         span = Avalonia.Markup.Xaml.AvaloniaRuntimeXamlLoader.Parse<Span>(string.Format(spanHeader, value));
                         if (span != null)
                         {
-                            if (Inlines?.Count > 0)
-                                Inlines[0] = span;
-                            else 
-                                Inlines?.Add(span);
-                            
+                            Inlines?.Clear();
+                            Inlines?.Add(span);
                             InvalidateVisual();
 
                             formattedText = value;
