@@ -587,7 +587,7 @@ namespace dnn
 					else
 						for_i(batchSize, threads, [=](UInt n)
 						{
-							const auto channelOffset = n * HW();
+							const auto channelOffset = n * Inputs[second]->CDHW();
 							for (auto c = 0ull; c < C; c++)
 							{
 								const auto outputOffset = n * CDHW() + c * HW();
