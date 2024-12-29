@@ -439,9 +439,9 @@ namespace Convnet.PageViewModels
             {
                 try
                 {
-                    var ProcStartInfo = new ProcessStartInfo(vspath + version + common + "devenv.exe", ScriptsDirectory + Path.DirectorySeparatorChar + "Scripts" + Path.DirectorySeparatorChar + "Scripts.csproj")
+                    var ProcStartInfo = new ProcessStartInfo(vspath + version + common + "devenv.exe", ScriptsDirectory + Path.DirectorySeparatorChar + "Scripts.csproj")
                     {
-                        WorkingDirectory = ScriptsDirectory + @"Scripts",
+                        WorkingDirectory = ScriptsDirectory,
                         Verb = "runas",
                         UseShellExecute = true,
                         CreateNoWindow = true,

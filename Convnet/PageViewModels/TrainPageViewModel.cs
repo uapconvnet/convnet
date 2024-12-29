@@ -37,8 +37,22 @@ namespace Convnet.PageViewModels
     {
         private static readonly string nwl              = Environment.NewLine;
 
-        private readonly string stringTesting           = "Testing" + nwl + " Sample:\t\t\t{0:G}" + nwl + " Cycle:\t\t\t {1}/{2}" + nwl + " Epoch:\t\t\t {3}/{4}" + nwl + " Batch Size:\t\t{5:G}" + nwl + " Loss:\t\t\t  {6:N7}" + nwl + " Errors:\t\t\t{7:G}" + nwl + " Error:\t\t\t {8:N2} %" + nwl + " Accuracy:\t\t  {9:N2} %";
-        private readonly string stringTraining          = "Training" + nwl + " Sample:\t\t\t{0:G}" + nwl + " Cycle:\t\t\t {1}/{2}" + nwl + " Epoch:\t\t\t {3}/{4}" + nwl + " Batch Size:\t\t{5:G}" + nwl + " Rate:\t\t\t  {6:0.#######}" + nwl;
+        private readonly string stringTesting           = "Testing" + nwl + 
+                                                          " Sample:\t\t\t{0:G}" + nwl + 
+                                                          " Cycle:\t\t\t {1}/{2}" + nwl + 
+                                                          " Epoch:\t\t\t {3}/{4}" + nwl + 
+                                                          " Batch Size:\t\t{5:G}" + nwl + 
+                                                          " Loss:\t\t\t  {6:N7}" + nwl + 
+                                                          " Errors:\t\t\t{7:G}" + nwl + 
+                                                          " Error:\t\t\t {8:N2} %" + nwl + 
+                                                          " Accuracy:\t\t  {9:N2} %";
+        private readonly string stringTraining          = "Training" + nwl + 
+                                                          " Sample:\t\t\t{0:G}" + nwl + 
+                                                          " Cycle:\t\t\t {1}/{2}" + nwl + 
+                                                          " Epoch:\t\t\t {3}/{4}" + nwl + 
+                                                          " Batch Size:\t\t{5:G}" + nwl + 
+                                                          " Rate:\t\t\t  {6:0.#######}" + nwl;
+
         private readonly string stringLayer             = "Layer" + nwl;
         private readonly string stringNeurons           = "Neurons" + nwl;
         private readonly string stringWeights           = "Weights" + nwl;
@@ -55,7 +69,6 @@ namespace Convnet.PageViewModels
         private readonly string stringMinNegative       = " Min:    {0:N8}" + nwl;
         private readonly string stringMaxPositive       = " Max:     {0:N8}" + nwl;
         private readonly string stringMaxNegative       = " Max:    {0:N8}" + nwl;
-
 
         private string progressText = string.Empty;
         private string layerInfo = string.Empty;
