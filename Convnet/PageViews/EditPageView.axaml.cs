@@ -4,6 +4,14 @@ using Avalonia.Markup.Xaml;
 using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
 using AvaloniaEdit.TextMate;
+using AvaloniaEdit.CodeCompletion;
+using AvaloniaEdit.Document;
+using AvaloniaEdit.Editing;
+using AvaloniaEdit.Folding;
+using AvaloniaEdit.Rendering;
+using TextMateSharp.Grammars;
+using Avalonia.Diagnostics;
+using AvaloniaEdit.Snippets;
 using Convnet.Common;
 using Convnet.PageViewModels;
 using Convnet.Properties;
@@ -11,7 +19,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using TextMateSharp.Grammars;
+using AvaloniaEdit.Indentation.CSharp;
 
 namespace Convnet.PageViews
 {
@@ -63,11 +71,13 @@ namespace Convnet.PageViews
             {
                 editorScript.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".cs");
                 editorScript.TextChanged += EditorScript_TextChanged;
+                editorScript.TextArea.IndentationStrategy = new CSharpIndentationStrategy(editorScript.Options);
 
                 var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
                 var textMateInstallation = editorScript.InstallTextMate(registryOptions);
                 var csharpLanguage = registryOptions.GetLanguageByExtension(".cs");
                 textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(csharpLanguage.Id));
+                
             }
 
             var gr = this.FindControl<Grid>("grid");
@@ -95,7 +105,7 @@ namespace Convnet.PageViews
             if (DataContext != null && sender != null)
             {
                 var epvm = DataContext as EditPageViewModel;
-                if (epvm != null )
+                if (epvm != null)
                     epvm.Script = ((CodeEditor)sender).Text;
             }
         }

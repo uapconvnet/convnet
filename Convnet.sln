@@ -25,8 +25,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "dnn\build\test.vcxp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnnl", "dnn\build\deps\oneDNN\src\dnnl.vcxproj", "{DC0F1B2F-E839-325C-AA75-6BCC4BBA1268}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "csv", "dnn\build\deps\csv-parser\include\internal\csv.vcxproj", "{5D84B5E3-8432-3E78-BB1A-202B934CA68A}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jpeg-static", "dnn\build\deps\libjpeg-turbo\jpeg-static.vcxproj", "{C4AA5300-7D2F-33A4-854C-ABEC29A9B49B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "png_static", "dnn\build\deps\libpng\png_static.vcxproj", "{6AB20A9B-5587-3002-A7B5-78586B009482}"
@@ -105,14 +103,6 @@ Global
 		{DC0F1B2F-E839-325C-AA75-6BCC4BBA1268}.Release|x64.Build.0 = Release|x64
 		{DC0F1B2F-E839-325C-AA75-6BCC4BBA1268}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 		{DC0F1B2F-E839-325C-AA75-6BCC4BBA1268}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
-		{5D84B5E3-8432-3E78-BB1A-202B934CA68A}.Debug|x64.ActiveCfg = Debug|x64
-		{5D84B5E3-8432-3E78-BB1A-202B934CA68A}.Debug|x64.Build.0 = Debug|x64
-		{5D84B5E3-8432-3E78-BB1A-202B934CA68A}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
-		{5D84B5E3-8432-3E78-BB1A-202B934CA68A}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
-		{5D84B5E3-8432-3E78-BB1A-202B934CA68A}.Release|x64.ActiveCfg = Release|x64
-		{5D84B5E3-8432-3E78-BB1A-202B934CA68A}.Release|x64.Build.0 = Release|x64
-		{5D84B5E3-8432-3E78-BB1A-202B934CA68A}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
-		{5D84B5E3-8432-3E78-BB1A-202B934CA68A}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
 		{C4AA5300-7D2F-33A4-854C-ABEC29A9B49B}.Debug|x64.ActiveCfg = Debug|x64
 		{C4AA5300-7D2F-33A4-854C-ABEC29A9B49B}.Debug|x64.Build.0 = Debug|x64
 		{C4AA5300-7D2F-33A4-854C-ABEC29A9B49B}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
