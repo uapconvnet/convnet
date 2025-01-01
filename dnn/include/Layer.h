@@ -403,15 +403,19 @@ namespace dnn
 
 		auto GetInputsBwd(const LayerTypes layerType, const std::vector<Layer*>& inputs) const
 		{
-			if (!IsInplaceBwd(layerType, inputs))
+			if (IsInplaceBwd(layerType, inputs))
 				return std::vector<Layer*>(inputs);
 			else
 			{
 				auto inputsInplace = std::vector<Layer*>();
 				
-				for (auto input : inputs)
-					inputsInplace.push_back(input->InplaceBwd ? input->InputLayer : input);
-				
+				for (auto& input : inputs)
+				{
+					if (IsInplaceBwd(input->LayerType, input->Inputs))
+						inputsInplace.push_back(input->InputLayer);
+					else
+						inputsInplace.push_back(input);
+				}
 				return inputsInplace;
 			}
 		}
@@ -482,7 +486,7 @@ namespace dnn
 		const std::vector<Layer*> Inputs;
 		const std::vector<Layer*> InputsBwd;
 		std::vector<Layer*> Outputs;
-		std::vector<Layer*> OutputsBwd;
+		//std::vector<Layer*> OutputsBwd;
 		Layer* InputLayer;
 		Layer* InputLayerBwd;
 		dnnl::memory::format_tag NeuronsFormat;
@@ -556,9 +560,9 @@ namespace dnn
 			Bwd(false),
 			LockUpdate(false),
 			RefreshingStats(false),
-			Inputs(std::vector<Layer*>(inputs)),					
-			InputsBwd(GetInputsBwd(layerType, inputs)),				// InputsBwd = the inplace inputs for backward prop
+			Inputs(std::vector<Layer*>(inputs)),	
 			InputLayer(inputs.size() > 0 ? inputs[0] : nullptr),
+			InputsBwd(GetInputsBwd(layerType, inputs)),				// InputsBwd = the inplace inputs for backward prop
 			InputLayerBwd(GetInputsBwd(layerType, inputs).size() > 0 ? GetInputsBwd(layerType, inputs)[0] : nullptr),
 			NeuronsFormat(format),
 			WeightsFormat(format),
@@ -594,6 +598,7 @@ namespace dnn
 			bpropTime(std::chrono::duration<Float>(Float(0))),
 			updateTime(std::chrono::duration<Float>(Float(0)))
 		{
+			assert(Inputs.size() == InputsBwd.size());
 		}
 
 		virtual ~Layer() = default;
@@ -652,7 +657,7 @@ namespace dnn
 				if constexpr (Inplace)
 				{
 					auto print = false;
-					for (auto i = 0ull; i < Inputs.size(); i++)
+					for (auto i = 0ull; i < InputsBwd.size(); i++)
 					{
 						if (Inputs[i] != InputsBwd[i])
 						{
@@ -664,16 +669,18 @@ namespace dnn
 					if (print)
 					{
 						description.append(nwl + std::string(" Inputs Bwd: ") + tab);
-						for (auto i = 0ull; i < Inputs.size(); i++)
+						for (auto i = 0ull; i < InputsBwd.size(); i++)
 							description.append((i == 0 ? std::string("") : std::string(",")) + InputsBwd[i]->Name);
 					}
 				}
+#endif
 
 				description.append(nwl + std::string(" Outputs:    ") + tab);
 				for (auto i = 0ull; i < Outputs.size(); i++)
 					description.append((i == 0 ? std::string("") : std::string(",")) + Outputs[i]->Name);
 
-				if constexpr (Inplace)
+#ifndef NDEBUG
+				/*if constexpr (Inplace)
 				{
 					auto print = false;
 					for (auto i = 0ull; i < OutputsBwd.size(); i++)
@@ -691,7 +698,7 @@ namespace dnn
 						for (auto i = 0ull; i < OutputsBwd.size(); i++)
 							description.append((i == 0 ? std::string("") : std::string(",")) + OutputsBwd[i]->Name);
 					}
-				}
+				}*/
 #endif
 			}
 			
