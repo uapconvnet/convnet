@@ -1,8 +1,6 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Convnet.Common;
 using Convnet.Dialogs;
@@ -24,6 +22,8 @@ namespace Convnet.PageViewModels
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     public class TestPageViewModel : PageViewModelBase, IDisposable
     {
+        private static readonly string nwl = Environment.NewLine;
+
         private string progressText;
         private bool showProgress;
         private string label;
@@ -135,9 +135,7 @@ namespace Convnet.PageViewModels
                     Model?.GetConfusionMatrix();
                     ConfusionDataTable = GetConfusionDataTable();
                     Model?.UpdateCostInfo(costIndex);
-                    sb.Length = 0;
-                    sb.AppendFormat("Loss:\t\t{0:N7}\nErrors:\t{1:G}\nError:\t\t{2:N2} %\nAccuracy:\t{3:N2} %", Model?.CostLayers[costIndex].AvgTestLoss, Model?.CostLayers[costIndex].TestErrors, Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - Model?.CostLayers[costIndex].TestErrorPercentage);
-                    ProgressText = sb.ToString();
+                    ProgressText = string.Format("Loss:\t\t{0:N7}" + nwl + "Errors:\t{1:G}" + nwl + "Error:\t\t{2:N2} %" + nwl + "Accuracy:\t{3:N2} %", Model?.CostLayers[costIndex].AvgTestLoss, Model?.CostLayers[costIndex].TestErrors, Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - Model?.CostLayers[costIndex].TestErrorPercentage);
                 }
             }
         }
@@ -176,9 +174,7 @@ namespace Convnet.PageViewModels
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    sb.Length = 0;
-                    sb.AppendFormat("Sample:\t\t{0:G}\nLoss:\t\t{1:N7}\nErrors:\t\t{2:G}\nError:\t\t{3:N2} %\nAccuracy:\t{4:N2} %", SampleIndex, AvgTestLoss, TestErrors, TestErrorPercentage, TestAccuracy);
-                    ProgressText = sb.ToString();
+                    ProgressText = string.Format("Sample:\t\t{0:G}" + nwl + "Loss:\t\t{1:N7}" + nwl + "Errors:\t\t{2:G}" + nwl + "Error:\t\t{3:N2} %" + nwl + "Accuracy:\t{4:N2} %", SampleIndex, AvgTestLoss, TestErrors, TestErrorPercentage, TestAccuracy);
 
                     if (Model != null)
                     {
@@ -192,9 +188,7 @@ namespace Convnet.PageViewModels
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    sb.Length = 0;
-                    sb.AppendFormat("Loss:\t\t{0:N7}\nErrors:\t\t{1:G}\nError:\t\t{2:N2} %\nAccuracy:\t{3:N2} %", AvgTestLoss, TestErrors, TestErrorPercentage, TestAccuracy);
-                    ProgressText = sb.ToString();
+                    ProgressText = string.Format("Loss:\t\t{0:N7}" + nwl + "Errors:\t\t{1:G}" + nwl + "Error:\t\t{2:N2} %" + nwl + "Accuracy:\t{3:N2} %", AvgTestLoss, TestErrors, TestErrorPercentage, TestAccuracy);
 
                     flag = 1;
                     RefreshTimer.Stop();

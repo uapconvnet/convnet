@@ -1,9 +1,7 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Convnet.Common;
-using Convnet.PageViews;
 using Convnet.Properties;
 using CsvHelper;
 using CustomMessageBox.Avalonia;
