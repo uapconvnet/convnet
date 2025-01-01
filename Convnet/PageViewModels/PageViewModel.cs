@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Convnet.Common;
+using Convnet.PageViews;
 using Convnet.Properties;
 using CsvHelper;
 using CustomMessageBox.Avalonia;
@@ -111,7 +112,7 @@ namespace Convnet.PageViewModels
 
         private async void PageVM_Open(object? sender, EventArgs e)
         {
-            var topLevel = TopLevel.GetTopLevel((Avalonia.Visual?)sender);
+            var topLevel = TopLevel.GetTopLevel(App.MainWindow);
             if (topLevel != null && Model != null)
             {
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
@@ -166,7 +167,7 @@ namespace Convnet.PageViewModels
                                     Delimiter = ";"
                                 };
 
-                                using (var reader = new StreamReader(files[0].Name, true))
+                                using (var reader = new StreamReader(files[0].TryGetLocalPath(), true))
                                 using (var csv = new CsvReader(reader, config))
                                 {
                                     var records = csv.GetRecords<DNNTrainingResult>();
@@ -197,7 +198,7 @@ namespace Convnet.PageViewModels
                             Settings.Default.Save();
 
                             tpvm.RefreshTrainingPlot();
-                            Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK));
+                            Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].Name + " is loaded", "Information", MessageBoxButtons.OK));
                         }
                     }
                     else if (files[0].Name.EndsWith(".bin"))
@@ -206,17 +207,17 @@ namespace Convnet.PageViewModels
                         {
                             if (tpvm.Model != null)
                             {
-                                if (tpvm.Model.LoadWeights(files[0].Name, Settings.Default.PersistOptimizer) == 0)
+                                if (tpvm.Model.LoadWeights(files[0].TryGetLocalPath(), Settings.Default.PersistOptimizer) == 0)
                                 {
                                     Dispatcher.UIThread.Post(() =>
                                     {
                                         tpvm.Optimizer = tpvm.Model.Optimizer;
                                         tpvm.RefreshButtonClick(this, null);
-                                        MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK);
+                                        MessageBox.Show(files[0].Name + " is loaded", "Information", MessageBoxButtons.OK);
                                     });
                                 }
                                 else
-                                    Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is incompatible", "Information", MessageBoxButtons.OK));
+                                    Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].Name + " is incompatible", "Information", MessageBoxButtons.OK));
                             }
                         }
                     }
@@ -226,12 +227,12 @@ namespace Convnet.PageViewModels
                         {
                             if (epvm.Model != null)
                             {
-                                var reader = new StreamReader(files[0].Name, true);
+                                var reader = new StreamReader(files[0].TryGetLocalPath(), true);
                                 var definition = reader.ReadToEnd().Trim();
                                 epvm.Definition = definition;
                                 Settings.Default.DefinitionEditing = definition.Trim();
                                 Settings.Default.Save();
-                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK));
+                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].Name + " is loaded", "Information", MessageBoxButtons.OK));
                             }
                         }
                     }
@@ -241,12 +242,12 @@ namespace Convnet.PageViewModels
                         {
                             if (epvm.Model != null)
                             {
-                                var reader = new StreamReader(files[0].Name, true);
+                                var reader = new StreamReader(files[0].TryGetLocalPath(), true);
                                 var script = reader.ReadToEnd().Trim();
                                 epvm.Script = script;
                                 Settings.Default.Script = script.Trim();
                                 Settings.Default.Save();
-                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK));
+                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].Name + " is loaded", "Information", MessageBoxButtons.OK));
                             }
                         }
                     }
