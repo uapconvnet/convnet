@@ -1505,13 +1505,16 @@ namespace dnn
 		std::vector<Layer*> GetLayerOutputs(const Layer* parentLayer, const bool inplace = false) const
 		{
 			auto outputs = std::vector<Layer*>();
-
+						
 			for (auto& layer : Layers)
 				if (layer->Name != parentLayer->Name)
-					for (auto input : inplace ? layer->InputsBwd : layer->Inputs)
+				{
+					auto inputs = inplace ? layer->InputsBwd : layer->Inputs;
+					for (auto input : inputs)
 						if (input->Name == parentLayer->Name)
 							outputs.push_back(layer.get());
-
+				}
+			
 			return outputs;
 		}
 
@@ -1561,7 +1564,8 @@ namespace dnn
 			// determine SharesInput
 			for (auto& layer : Layers)
 			{
-				auto outputsCount = GetLayerOutputs(layer.get(), true).size();
+				layer->OutputsBwd = GetLayerOutputs(layer.get(), true);
+				auto outputsCount = layer->OutputsBwd.size();
 
 				if (outputsCount > 1)  // layer is used as input more than once
 				{

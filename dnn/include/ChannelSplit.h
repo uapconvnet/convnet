@@ -324,8 +324,8 @@ namespace dnn
 							const auto inputOffset = (n * InputLayerBwd->CDHW()) + ((c + ChannelsLeft) * HW());
 							const auto outputOffset = (n * CDHW()) + (c * HW());
 							PRAGMA_OMP_SIMD()
-								for (auto hw = 0ull; hw < HW(); hw++)
-									InputLayerBwd->NeuronsD1[hw + inputOffset] += NeuronsD1[hw + outputOffset];
+							for (auto hw = 0ull; hw < HW(); hw++)
+								InputLayerBwd->NeuronsD1[hw + inputOffset] += NeuronsD1[hw + outputOffset];
 						}
 					});
 #ifdef DNN_STOCHASTIC

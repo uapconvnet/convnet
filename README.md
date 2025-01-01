@@ -124,7 +124,6 @@
 * [C++ Vector Class Library - Apache License 2.0](https://github.com/vectorclass)
 * [CImg Library - CeCILL License](https://github.com/dtschump/CImg)
 * [CsvHelper - Apache License 2.0](https://github.com/joshclose/csvhelper)
-* [CSV Parser - MIT License](https://github.com/vincentlaucsb/csv-parser)
 * [Intel(R) oneDNN Deep Neural Network Library - Apache License 2.0](https://github.com/oneapi-src/oneDNN)
 * [libjpeg-turbo - BSD Licenses](https://github.com/libjpeg-turbo/libjpeg-turbo)
 * [libpng - PNG Reference Library License version 2](https://github.com/glennrp/libpng)

@@ -403,7 +403,7 @@ namespace dnn
 
 		auto GetInputsBwd(const LayerTypes layerType, const std::vector<Layer*>& inputs) const
 		{
-			if (IsInplaceBwd(layerType, inputs))
+			if (!IsInplaceBwd(layerType, inputs))
 				return std::vector<Layer*>(inputs);
 			else
 			{
@@ -482,6 +482,7 @@ namespace dnn
 		const std::vector<Layer*> Inputs;
 		const std::vector<Layer*> InputsBwd;
 		std::vector<Layer*> Outputs;
+		std::vector<Layer*> OutputsBwd;
 		Layer* InputLayer;
 		Layer* InputLayerBwd;
 		dnnl::memory::format_tag NeuronsFormat;
@@ -665,6 +666,30 @@ namespace dnn
 						description.append(nwl + std::string(" Inputs Bwd: ") + tab);
 						for (auto i = 0ull; i < Inputs.size(); i++)
 							description.append((i == 0 ? std::string("") : std::string(",")) + InputsBwd[i]->Name);
+					}
+				}
+
+				description.append(nwl + std::string(" Outputs:    ") + tab);
+				for (auto i = 0ull; i < Outputs.size(); i++)
+					description.append((i == 0 ? std::string("") : std::string(",")) + Outputs[i]->Name);
+
+				if constexpr (Inplace)
+				{
+					auto print = false;
+					for (auto i = 0ull; i < OutputsBwd.size(); i++)
+					{
+						if (Outputs[i] != OutputsBwd[i])
+						{
+							print = true;
+							break;
+						}
+					}
+
+					if (print)
+					{
+						description.append(nwl + std::string(" Outputs Bwd:") + tab);
+						for (auto i = 0ull; i < OutputsBwd.size(); i++)
+							description.append((i == 0 ? std::string("") : std::string(",")) + OutputsBwd[i]->Name);
 					}
 				}
 #endif

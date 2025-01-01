@@ -111,142 +111,143 @@ namespace Convnet.PageViewModels
 
         private async void PageVM_Open(object? sender, EventArgs e)
         {
-            //var topLevel = TopLevel.GetTopLevel((Avalonia.Visual?)sender);
-            //if (topLevel != null)
-            //{
-            //    var folder = Path.Combine(DefinitionsDirectory, Model.Name);
-            //    var typeWeights = new FilePickerFileType("Weights (*.bin)");
-            //    typeWeights.Patterns = new string[] { "*.bin" };
-            //    var typeLog = new FilePickerFileType("Log (*.csv)");
-            //    typeLog.Patterns = new string[] { "*.csv" };
-
-            //    var file = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-            //    {
-            //        AllowMultiple = false,
-            //        Title = "Load",
-            //        SuggestedStartLocation = topLevel.StorageProvider.TryGetFolderFromPathAsync(folder).Result,
-            //        FileTypeFilter = [typeWeights, typeLog]
-            //    });
-            //}
-
-            var dialog = new OpenFileDialog
+            var topLevel = TopLevel.GetTopLevel((Avalonia.Visual?)sender);
+            if (topLevel != null && Model != null)
             {
-                AllowMultiple = false,
-                Title = "Load",
-                Directory = Path.Combine(DefinitionsDirectory, Model.Name)
-            };
-            if (CurrentPage is TrainPageViewModel)
-            {
-                dialog.Filters.Add(new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } });
-                dialog.Filters.Add(new FileDialogFilter() { Name = "Log|*.csv", Extensions = new List<string> { "csv" } });
-            }
-            if (CurrentPage is EditPageViewModel)
-            {
-                dialog.Filters.Add(new FileDialogFilter() { Name = "Definition|*.txt", Extensions = new List<string> { "txt" } });
-                dialog.Filters.Add(new FileDialogFilter() { Name = "C#|*.cs", Extensions = new List<string> { "cs" } });
-            }
+                var folder = Path.Combine(DefinitionsDirectory, Model.Name);
 
-            var files = await dialog.ShowAsync(App.MainWindow);
-
-            if (files != null && files.Length > 0)
-            {
-                if (files[0].EndsWith(".csv"))
+                var typeWeights = new FilePickerFileType("Weights")
                 {
-                    if (CurrentPage is TrainPageViewModel tpvm)
+                   Patterns = ["*.bin"]
+                };
+                var typeLog = new FilePickerFileType("Log")
+                {
+                    Patterns = ["*.csv"]
+                };
+
+                var typeDefinition = new FilePickerFileType("Definition")
+                {
+                    Patterns = ["*.txt"]
+                };
+                var typeCSharp = new FilePickerFileType("C#")
+                {
+                    Patterns = ["*.cs"]
+                };
+
+                var filterList = new List<FilePickerFileType>();
+                if (CurrentPage is TrainPageViewModel)
+                    filterList.AddRange([typeWeights, typeLog]);
+                if (CurrentPage is EditPageViewModel)
+                    filterList.AddRange([typeDefinition, typeCSharp]);
+
+                var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                {
+                    AllowMultiple = false,
+                    Title = "Load",
+                    SuggestedStartLocation = topLevel.StorageProvider.TryGetFolderFromPathAsync(folder).Result,
+                    FileTypeFilter = filterList
+                });
+
+                if (files != null && files.Count > 0)
+                {
+                    if (files[0].Name.EndsWith(".csv"))
                     {
-                        ObservableCollection<DNNTrainingResult> backup = Settings.Default.TrainingLog != null ? new ObservableCollection<DNNTrainingResult>(Settings.Default.TrainingLog) : new ObservableCollection<DNNTrainingResult>();
-
-                        try
+                        if (CurrentPage is TrainPageViewModel tpvm)
                         {
-                            CsvHelper.Configuration.CsvConfiguration config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.CurrentCulture)
-                            {
-                                HasHeaderRecord = true,
-                                DetectDelimiter = true,
-                                DetectDelimiterValues = new string[] { ";" },
-                                Delimiter = ";"
-                            };
+                            ObservableCollection<DNNTrainingResult> backup = Settings.Default.TrainingLog != null ? new ObservableCollection<DNNTrainingResult>(Settings.Default.TrainingLog) : new ObservableCollection<DNNTrainingResult>();
 
-                            using (var reader = new StreamReader(files[0], true))
-                            using (var csv = new CsvReader(reader, config))
+                            try
                             {
-                                var records = csv.GetRecords<DNNTrainingResult>();
-
-                                if (Settings.Default.TrainingLog?.Count > 0)
+                                CsvHelper.Configuration.CsvConfiguration config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.CurrentCulture)
                                 {
-                                    var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to clear the log?", "Clear Log", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+                                    HasHeaderRecord = true,
+                                    DetectDelimiter = true,
+                                    DetectDelimiterValues = [";"],
+                                    Delimiter = ";"
+                                };
 
-                                    if (result == MessageBoxResult.Yes)
+                                using (var reader = new StreamReader(files[0].Name, true))
+                                using (var csv = new CsvReader(reader, config))
+                                {
+                                    var records = csv.GetRecords<DNNTrainingResult>();
+
+                                    if (Settings.Default.TrainingLog?.Count > 0)
                                     {
-                                        Settings.Default.TrainingLog.Clear();
-                                        Model?.ClearLog();
+                                        var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to clear the log?", "Clear Log", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+
+                                        if (result == MessageBoxResult.Yes)
+                                        {
+                                            Settings.Default.TrainingLog.Clear();
+                                            Model?.ClearLog();
+                                        }
                                     }
+
+                                    foreach (var record in records)
+                                        Settings.Default.TrainingLog?.Add(record);
                                 }
 
-                                foreach (var record in records)
-                                    Settings.Default.TrainingLog?.Add(record);
+                                Model?.LoadLog(files[0].Name);
                             }
-
-                            Model?.LoadLog(files[0]);
-                        }
-                        catch (Exception ex)
-                        {
-                            Settings.Default.TrainingLog = backup;
-                            Dispatcher.UIThread.Post(() => MessageBox.Show(ex.Message, "Information", MessageBoxButtons.OK));
-                        }
-
-                        Settings.Default.Save();
-
-                        tpvm.RefreshTrainingPlot();
-                        Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK));
-                    }
-                }
-                else if (files[0].EndsWith(".bin"))
-                {
-                    if (CurrentPage is TrainPageViewModel tpvm)
-                    {
-                        if (tpvm.Model != null)
-                        {
-                            if (tpvm.Model.LoadWeights(files[0], Settings.Default.PersistOptimizer) == 0)
+                            catch (Exception ex)
                             {
-                                Dispatcher.UIThread.Post(() =>
-                                {
-                                    tpvm.Optimizer = tpvm.Model.Optimizer;
-                                    tpvm.RefreshButtonClick(this, null);
-                                    MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK);
-                                });
+                                Settings.Default.TrainingLog = backup;
+                                Dispatcher.UIThread.Post(() => MessageBox.Show(ex.Message, "Information", MessageBoxButtons.OK));
                             }
-                            else
-                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is incompatible", "Information", MessageBoxButtons.OK));
-                        }
-                    }
-                }
-                else if (files[0].EndsWith(".txt"))
-                {
-                    if (CurrentPage is EditPageViewModel epvm)
-                    {
-                        if (epvm.Model != null)
-                        {
-                            var reader = new StreamReader(files[0], true);
-                            var definition = reader.ReadToEnd().Trim();
-                            epvm.Definition = definition;
-                            Settings.Default.DefinitionEditing = definition.Trim();
+
                             Settings.Default.Save();
+
+                            tpvm.RefreshTrainingPlot();
                             Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK));
                         }
                     }
-                }
-                else if (files[0].EndsWith(".cs"))
-                {
-                    if (CurrentPage is EditPageViewModel epvm)
+                    else if (files[0].Name.EndsWith(".bin"))
                     {
-                        if (epvm.Model != null)
+                        if (CurrentPage is TrainPageViewModel tpvm)
                         {
-                            var reader = new StreamReader(files[0], true);
-                            var script = reader.ReadToEnd().Trim();
-                            epvm.Script = script;
-                            Settings.Default.Script = script.Trim();
-                            Settings.Default.Save();
-                            Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK));
+                            if (tpvm.Model != null)
+                            {
+                                if (tpvm.Model.LoadWeights(files[0].Name, Settings.Default.PersistOptimizer) == 0)
+                                {
+                                    Dispatcher.UIThread.Post(() =>
+                                    {
+                                        tpvm.Optimizer = tpvm.Model.Optimizer;
+                                        tpvm.RefreshButtonClick(this, null);
+                                        MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK);
+                                    });
+                                }
+                                else
+                                    Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is incompatible", "Information", MessageBoxButtons.OK));
+                            }
+                        }
+                    }
+                    else if (files[0].Name.EndsWith(".txt"))
+                    {
+                        if (CurrentPage is EditPageViewModel epvm)
+                        {
+                            if (epvm.Model != null)
+                            {
+                                var reader = new StreamReader(files[0].Name, true);
+                                var definition = reader.ReadToEnd().Trim();
+                                epvm.Definition = definition;
+                                Settings.Default.DefinitionEditing = definition.Trim();
+                                Settings.Default.Save();
+                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK));
+                            }
+                        }
+                    }
+                    else if (files[0].Name.EndsWith(".cs"))
+                    {
+                        if (CurrentPage is EditPageViewModel epvm)
+                        {
+                            if (epvm.Model != null)
+                            {
+                                var reader = new StreamReader(files[0].Name, true);
+                                var script = reader.ReadToEnd().Trim();
+                                epvm.Script = script;
+                                Settings.Default.Script = script.Trim();
+                                Settings.Default.Save();
+                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0] + " is loaded", "Information", MessageBoxButtons.OK));
+                            }
                         }
                     }
                 }
