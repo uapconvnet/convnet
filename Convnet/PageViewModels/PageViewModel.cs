@@ -198,7 +198,7 @@ namespace Convnet.PageViewModels
                             Settings.Default.Save();
 
                             tpvm.RefreshTrainingPlot();
-                            Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].Name + " is loaded", "Information", MessageBoxButtons.OK));
+                            Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK));
                         }
                     }
                     else if (files[0].Name.EndsWith(".bin"))
@@ -213,11 +213,11 @@ namespace Convnet.PageViewModels
                                     {
                                         tpvm.Optimizer = tpvm.Model.Optimizer;
                                         tpvm.RefreshButtonClick(this, null);
-                                        MessageBox.Show(files[0].Name + " is loaded", "Information", MessageBoxButtons.OK);
+                                        MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK);
                                     });
                                 }
                                 else
-                                    Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].Name + " is incompatible", "Information", MessageBoxButtons.OK));
+                                    Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is incompatible", "Information", MessageBoxButtons.OK));
                             }
                         }
                     }
@@ -232,7 +232,7 @@ namespace Convnet.PageViewModels
                                 epvm.Definition = definition;
                                 Settings.Default.DefinitionEditing = definition.Trim();
                                 Settings.Default.Save();
-                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].Name + " is loaded", "Information", MessageBoxButtons.OK));
+                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK));
                             }
                         }
                     }
@@ -247,7 +247,7 @@ namespace Convnet.PageViewModels
                                 epvm.Script = script;
                                 Settings.Default.Script = script.Trim();
                                 Settings.Default.Save();
-                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].Name + " is loaded", "Information", MessageBoxButtons.OK));
+                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK));
                             }
                         }
                     }
