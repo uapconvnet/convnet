@@ -363,7 +363,7 @@ namespace Convnet.PageViews
                         model.SetDisableLocking(Settings.Default.DisableLocking);
                         model.SetShuffleCount((ulong)Math.Round(Settings.Default.Shuffle));
 
-                        string path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".csv");
+                        var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".csv");
                         if (PersistLog(path))
                             File.Delete(path);
 

@@ -1,10 +1,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -14,10 +12,11 @@ namespace Convnet
     public partial class App : Application
     {
         public static readonly bool SingleInstanceApp = true;
-        private static readonly SingleInstanceMutex sim = new SingleInstanceMutex();
+        public static readonly bool ShowCloseApplicationDialog = true;
+        
+        public static PageViews.MainWindow? MainWindow = null;
         public event EventHandler<ShutdownRequestedEventArgs>? ShutdownRequested;
-        public static Convnet.PageViews.MainWindow? MainWindow = null;
-        public static bool ShowCloseApplicationDialog = true;
+        private static readonly SingleInstanceMutex sim = new SingleInstanceMutex();
 
         public override void Initialize()
         {

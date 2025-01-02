@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System;
 
 using Float = System.Single;
 using UInt = System.UInt64;
@@ -1079,8 +1078,7 @@ namespace Scripts
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

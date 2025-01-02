@@ -30,7 +30,8 @@ namespace Convnet.PageViewModels
         
         public void DocumentationCommand()
         {
-            ApplicationHelper.OpenBrowser("https://github.com/uapconvnet/convnet.git");
+            //if (ApplicationHelper.CheckForInternetConnection())
+                ApplicationHelper.OpenBrowser("https://github.com/uapconvnet/convnet.git");
         }
 
         public void Cut()
@@ -111,6 +112,7 @@ namespace Convnet.PageViewModels
         private async void PageVM_Open(object? sender, EventArgs e)
         {
             var topLevel = TopLevel.GetTopLevel(App.MainWindow);
+            
             if (topLevel != null && Model != null)
             {
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
@@ -135,9 +137,9 @@ namespace Convnet.PageViewModels
 
                 var filterList = new List<FilePickerFileType>();
                 if (CurrentPage is TrainPageViewModel)
-                    filterList.AddRange([typeWeights, typeLog]);
+                    filterList?.AddRange([typeWeights, typeLog]);
                 if (CurrentPage is EditPageViewModel)
-                    filterList.AddRange([typeDefinition, typeCSharp]);
+                    filterList?.AddRange([typeDefinition, typeCSharp]);
 
                 var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
                 {
@@ -153,7 +155,7 @@ namespace Convnet.PageViewModels
                     {
                         if (CurrentPage is TrainPageViewModel tpvm)
                         {
-                            ObservableCollection<DNNTrainingResult> backup = Settings.Default.TrainingLog != null ? new ObservableCollection<DNNTrainingResult>(Settings.Default.TrainingLog) : new ObservableCollection<DNNTrainingResult>();
+                            var backup = Settings.Default.TrainingLog != null ? new ObservableCollection<DNNTrainingResult>(Settings.Default.TrainingLog) : new ObservableCollection<DNNTrainingResult>();
 
                             try
                             {
@@ -228,7 +230,7 @@ namespace Convnet.PageViewModels
                                 var reader = new StreamReader(files[0].TryGetLocalPath(), true);
                                 var definition = reader.ReadToEnd().Trim();
                                 epvm.Definition = definition;
-                                Settings.Default.DefinitionEditing = definition.Trim();
+                                Settings.Default.DefinitionEditing = definition;
                                 Settings.Default.Save();
                                 Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK));
                             }
@@ -243,7 +245,7 @@ namespace Convnet.PageViewModels
                                 var reader = new StreamReader(files[0].TryGetLocalPath(), true);
                                 var script = reader.ReadToEnd().Trim();
                                 epvm.Script = script;
-                                Settings.Default.Script = script.Trim();
+                                Settings.Default.Script = script;
                                 Settings.Default.Save();
                                 Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK));
                             }

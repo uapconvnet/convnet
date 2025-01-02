@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using Avalonia.Data;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using System;
@@ -1885,9 +1884,7 @@ namespace Interop
         
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler? handler = PropertyChanged;
-            if (handler != null) 
-                handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     };
 
