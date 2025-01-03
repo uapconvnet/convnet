@@ -484,11 +484,10 @@ namespace dnn
 		std::atomic<bool> LockUpdate;
 		std::atomic<bool> RefreshingStats;
 		const std::vector<Layer*> Inputs;
-		const std::vector<Layer*> InputsBwd;
-		std::vector<Layer*> Outputs;
-		//std::vector<Layer*> OutputsBwd;
 		Layer* InputLayer;
+		const std::vector<Layer*> InputsBwd;
 		Layer* InputLayerBwd;
+		std::vector<Layer*> Outputs;
 		dnnl::memory::format_tag NeuronsFormat;
 		dnnl::memory::format_tag WeightsFormat;
 		Fillers WeightsFiller;
@@ -678,28 +677,6 @@ namespace dnn
 				description.append(nwl + std::string(" Outputs:    ") + tab);
 				for (auto i = 0ull; i < Outputs.size(); i++)
 					description.append((i == 0 ? std::string("") : std::string(",")) + Outputs[i]->Name);
-
-#ifndef NDEBUG
-				/*if constexpr (Inplace)
-				{
-					auto print = false;
-					for (auto i = 0ull; i < OutputsBwd.size(); i++)
-					{
-						if (Outputs[i] != OutputsBwd[i])
-						{
-							print = true;
-							break;
-						}
-					}
-
-					if (print)
-					{
-						description.append(nwl + std::string(" Outputs Bwd:") + tab);
-						for (auto i = 0ull; i < OutputsBwd.size(); i++)
-							description.append((i == 0 ? std::string("") : std::string(",")) + OutputsBwd[i]->Name);
-					}
-				}*/
-#endif
 			}
 			
 			description.append(nwl + std::string(" Features:   ") + tab + std::to_string(C) + std::string("x") + std::to_string(H) + std::string("x") + std::to_string(W));
