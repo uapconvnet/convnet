@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Float = System.Single;
 using UInt = System.UInt64;
 
@@ -111,9 +112,10 @@ namespace Convnet.PageViewModels
 
         private async void PageVM_Open(object? sender, EventArgs e)
         {
-            var topLevel = TopLevel.GetTopLevel(App.MainWindow);
-            
-            if (topLevel != null && Model != null)
+            //var topLevel = TopLevel.GetTopLevel(App.MainWindow);
+            var provider = App.MainWindow?.StorageProvider;
+
+            if (Model != null && provider != null && provider.CanOpen)
             {
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
 
@@ -141,17 +143,20 @@ namespace Convnet.PageViewModels
                 if (CurrentPage is EditPageViewModel)
                     filterList?.AddRange([typeDefinition, typeCSharp]);
 
-                var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
                 {
                     AllowMultiple = false,
                     Title = "Load",
-                    SuggestedStartLocation = topLevel.StorageProvider.TryGetFolderFromPathAsync(folder).Result,
+                    SuggestedStartLocation = provider.TryGetFolderFromPathAsync(folder).Result,
                     FileTypeFilter = filterList
                 });
 
-                if (files != null && files.Count > 0)
+                var file = files?.SingleOrDefault();
+                var path = file?.TryGetLocalPath();
+
+                if (file != null && path != null)
                 {
-                    if (files[0].Name.EndsWith(".csv"))
+                    if (file.Name.EndsWith(".csv"))
                     {
                         if (CurrentPage is TrainPageViewModel tpvm)
                         {
@@ -167,7 +172,7 @@ namespace Convnet.PageViewModels
                                     Delimiter = ";"
                                 };
 
-                                using (var reader = new StreamReader(files[0].TryGetLocalPath(), true))
+                                using (var reader = new StreamReader(path, true))
                                 using (var csv = new CsvReader(reader, config))
                                 {
                                     var records = csv.GetRecords<DNNTrainingResult>();
@@ -187,7 +192,7 @@ namespace Convnet.PageViewModels
                                         Settings.Default.TrainingLog?.Add(record);
                                 }
 
-                                Model?.LoadLog(files[0].Name);
+                                Model?.LoadLog(file.Name);
                             }
                             catch (Exception ex)
                             {
@@ -198,56 +203,56 @@ namespace Convnet.PageViewModels
                             Settings.Default.Save();
 
                             tpvm.RefreshTrainingPlot();
-                            Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK));
+                            Dispatcher.UIThread.Post(() => MessageBox.Show(path + " is loaded", "Information", MessageBoxButtons.OK));
                         }
                     }
-                    else if (files[0].Name.EndsWith(".bin"))
+                    else if (file.Name.EndsWith(".bin"))
                     {
                         if (CurrentPage is TrainPageViewModel tpvm)
                         {
                             if (tpvm.Model != null)
                             {
-                                if (tpvm.Model.LoadWeights(files[0].TryGetLocalPath(), Settings.Default.PersistOptimizer) == 0)
+                                if (tpvm.Model.LoadWeights(path, Settings.Default.PersistOptimizer) == 0)
                                 {
                                     Dispatcher.UIThread.Post(() =>
                                     {
                                         tpvm.Optimizer = tpvm.Model.Optimizer;
                                         tpvm.RefreshButtonClick(this, null);
-                                        MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK);
+                                        MessageBox.Show(path + " is loaded", "Information", MessageBoxButtons.OK);
                                     });
                                 }
                                 else
-                                    Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is incompatible", "Information", MessageBoxButtons.OK));
+                                    Dispatcher.UIThread.Post(() => MessageBox.Show(path + " is incompatible", "Information", MessageBoxButtons.OK));
                             }
                         }
                     }
-                    else if (files[0].Name.EndsWith(".txt"))
+                    else if (file.Name.EndsWith(".txt"))
                     {
                         if (CurrentPage is EditPageViewModel epvm)
                         {
                             if (epvm.Model != null)
                             {
-                                var reader = new StreamReader(files[0].TryGetLocalPath(), true);
+                                var reader = new StreamReader(path, true);
                                 var definition = reader.ReadToEnd().Trim();
                                 epvm.Definition = definition;
                                 Settings.Default.DefinitionEditing = definition;
                                 Settings.Default.Save();
-                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK));
+                                Dispatcher.UIThread.Post(() => MessageBox.Show(path + " is loaded", "Information", MessageBoxButtons.OK));
                             }
                         }
                     }
-                    else if (files[0].Name.EndsWith(".cs"))
+                    else if (file.Name.EndsWith(".cs"))
                     {
                         if (CurrentPage is EditPageViewModel epvm)
                         {
                             if (epvm.Model != null)
                             {
-                                var reader = new StreamReader(files[0].TryGetLocalPath(), true);
+                                var reader = new StreamReader(path, true);
                                 var script = reader.ReadToEnd().Trim();
                                 epvm.Script = script;
                                 Settings.Default.Script = script;
                                 Settings.Default.Save();
-                                Dispatcher.UIThread.Post(() => MessageBox.Show(files[0].TryGetLocalPath() + " is loaded", "Information", MessageBoxButtons.OK));
+                                Dispatcher.UIThread.Post(() => MessageBox.Show(path + " is loaded", "Information", MessageBoxButtons.OK));
                             }
                         }
                     }
