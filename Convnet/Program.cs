@@ -17,6 +17,7 @@ namespace Convnet
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
+                .With(new X11PlatformOptions { UseDBusFilePicker = false }) // to disable FreeDesktop file picker
                 .WithInterFont()
                 .LogToTrace()
                 .UseReactiveUI();
