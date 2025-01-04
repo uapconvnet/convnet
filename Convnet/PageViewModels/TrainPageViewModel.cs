@@ -1736,11 +1736,12 @@ namespace Convnet.PageViewModels
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
                 var dialog = new SaveFileDialog
                 {
-                    InitialFileName = Model.Layers[layerIndex].Name,
+                    InitialFileName = Model.Layers[layerIndex].Name + ".bin",
                     Title = "Save layer weights",
                     Directory = folder,
                     Filters = new List<FileDialogFilter> { new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } } },
-                    DefaultExtension = ".bin"
+                    DefaultExtension = ".bin",
+                    ShowOverwritePrompt = true
                 };
 
                 var path = await dialog.ShowAsync(App.MainWindow);
