@@ -1736,9 +1736,11 @@ namespace Convnet.PageViewModels
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
                 var dialog = new SaveFileDialog
                 {
+                    InitialFileName = Model.Layers[layerIndex].Name,
                     Title = "Save layer weights",
                     Directory = folder,
-                    Filters = new List<FileDialogFilter> { new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } } }
+                    Filters = new List<FileDialogFilter> { new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } } },
+                    DefaultExtension = ".bin"
                 };
 
                 var path = await dialog.ShowAsync(App.MainWindow);
@@ -1793,8 +1795,8 @@ namespace Convnet.PageViewModels
                         }
                     }
                 }
-            }
 #endif
+            }
         }
 
         private async void ForgetLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
