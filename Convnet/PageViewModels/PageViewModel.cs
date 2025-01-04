@@ -1,4 +1,5 @@
-﻿using Avalonia.Platform.Storage;
+﻿using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Convnet.Common;
 using Convnet.Properties;
@@ -111,50 +112,80 @@ namespace Convnet.PageViewModels
 
         private async void PageVM_Open(object? sender, EventArgs e)
         {
-            var provider = App.MainWindow?.StorageProvider;
+            var path = string.Empty;
 
-            if (Model != null && provider != null && provider.CanOpen)
+            if (Model != null)
             {
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
 
-                var typeWeights = new FilePickerFileType("Weights")
-                {
-                   Patterns = ["*.bin"]
-                };
-                var typeLog = new FilePickerFileType("Log")
-                {
-                    Patterns = ["*.csv"]
-                };
-
-                var typeDefinition = new FilePickerFileType("Definition")
-                {
-                    Patterns = ["*.txt"]
-                };
-                var typeCSharp = new FilePickerFileType("C#")
-                {
-                    Patterns = ["*.cs"]
-                };
-
-                var filterList = new List<FilePickerFileType>();
-                if (CurrentPage is TrainPageViewModel)
-                    filterList?.AddRange([typeWeights, typeLog]);
-                if (CurrentPage is EditPageViewModel)
-                    filterList?.AddRange([typeDefinition, typeCSharp]);
-
-                var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
+#if Linux
+                var dialog = new OpenFileDialog
                 {
                     AllowMultiple = false,
                     Title = "Load",
-                    SuggestedStartLocation = provider.TryGetFolderFromPathAsync(folder)?.Result,
-                    FileTypeFilter = filterList
-                }); 
+                    Directory = folder
+                };
 
-                var file = files?.SingleOrDefault();
-                var path = file?.TryGetLocalPath();
-
-                if (file != null && path != null)
+                if (CurrentPage is TrainPageViewModel)
                 {
-                    if (file.Name.EndsWith(".csv"))
+                    dialog.Filters.Add(new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } });
+                    dialog.Filters.Add(new FileDialogFilter() { Name = "Log|*.csv", Extensions = new List<string> { "csv" } });
+                }
+                if (CurrentPage is EditPageViewModel)
+                {
+                    dialog.Filters.Add(new FileDialogFilter() { Name = "Definition|*.txt", Extensions = new List<string> { "txt" } });
+                    dialog.Filters.Add(new FileDialogFilter() { Name = "C#|*.cs", Extensions = new List<string> { "cs" } });
+                }
+
+                var files = await dialog.ShowAsync(App.MainWindow);
+
+                if (files != null && files.Length > 0)
+                    path = files[0];
+#else
+                var provider = App.MainWindow?.StorageProvider;
+
+                if (provider != null && provider.CanOpen)
+                {
+                    var typeWeights = new FilePickerFileType("Weights")
+                    {
+                        Patterns = ["*.bin"]
+                    };
+                    var typeLog = new FilePickerFileType("Log")
+                    {
+                        Patterns = ["*.csv"]
+                    };
+
+                    var typeDefinition = new FilePickerFileType("Definition")
+                    {
+                        Patterns = ["*.txt"]
+                    };
+                    var typeCSharp = new FilePickerFileType("C#")
+                    {
+                        Patterns = ["*.cs"]
+                    };
+
+                    var filterList = new List<FilePickerFileType>();
+                    if (CurrentPage is TrainPageViewModel)
+                        filterList?.AddRange([typeWeights, typeLog]);
+                    if (CurrentPage is EditPageViewModel)
+                        filterList?.AddRange([typeDefinition, typeCSharp]);
+
+                    var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
+                    {
+                        AllowMultiple = false,
+                        Title = "Load",
+                        SuggestedStartLocation = provider.TryGetFolderFromPathAsync(folder)?.Result,
+                        FileTypeFilter = filterList
+                    }); 
+
+                    var file = files?.SingleOrDefault();
+
+                    path = file?.TryGetLocalPath();
+                }
+#endif
+                if (path != null)
+                {
+                    if (path.EndsWith(".csv"))
                     {
                         if (CurrentPage is TrainPageViewModel tpvm)
                         {
@@ -190,7 +221,7 @@ namespace Convnet.PageViewModels
                                         Settings.Default.TrainingLog?.Add(record);
                                 }
 
-                                Model?.LoadLog(file.Name);
+                                Model?.LoadLog(path);
                             }
                             catch (Exception ex)
                             {
@@ -204,7 +235,7 @@ namespace Convnet.PageViewModels
                             Dispatcher.UIThread.Post(() => MessageBox.Show(path + " is loaded", "Information", MessageBoxButtons.OK));
                         }
                     }
-                    else if (file.Name.EndsWith(".bin"))
+                    else if (path.EndsWith(".bin"))
                     {
                         if (CurrentPage is TrainPageViewModel tpvm)
                         {
@@ -224,7 +255,7 @@ namespace Convnet.PageViewModels
                             }
                         }
                     }
-                    else if (file.Name.EndsWith(".txt"))
+                    else if (path.EndsWith(".txt"))
                     {
                         if (CurrentPage is EditPageViewModel epvm)
                         {
@@ -239,7 +270,7 @@ namespace Convnet.PageViewModels
                             }
                         }
                     }
-                    else if (file.Name.EndsWith(".cs"))
+                    else if (path.EndsWith(".cs"))
                     {
                         if (CurrentPage is EditPageViewModel epvm)
                         {

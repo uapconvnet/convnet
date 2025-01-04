@@ -3,6 +3,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Convnet.Common;
 using Convnet.Dialogs;
@@ -14,7 +15,9 @@ using OxyPlot.Axes;
 using OxyPlot.Legends;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Runtime;
 using System.Text;
@@ -658,6 +661,8 @@ namespace Convnet.PageViewModels
                             if (Model != null)
                             {
                                 Model.Stop();
+
+                                ProgressText = string.Empty;
 
                                 ToolTip.SetTip(CommandToolBar[0], "Start Training");
                                 CommandToolBar[0].IsVisible = true;
@@ -1624,74 +1629,172 @@ namespace Convnet.PageViewModels
             }
         }
 
-        private void OpenLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
+        private async void OpenLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
         {
-            //OpenFileDialog openFileDialog = new OpenFileDialog
-            //{
-            //    CheckFileExists = true,
-            //    CheckPathExists = true,
-            //    Multiselect = false,
-            //    AddExtension = true,
-            //    ValidateNames = true,
-            //    Filter = "Layer Weights|*.bin",
-            //    Title = "Load layer weights",
-            //    DefaultExt = ".bin",
-            //    FilterIndex = 1,
-            //    InitialDirectory = Path.Combine(DefinitionsDirectory, Model?.Name)
-            //};
+#if Linux
+            if (Model != null && App.MainWindow != null)
+            {
+                var folder = Path.Combine(DefinitionsDirectory, Model.Name);
 
-            //var stop = false;
-            //while (!stop)
-            //{
-            //    if (openFileDialog.ShowDialog(Application.Current.MainWindow) == true)
-            //    {
+                var dialog = new OpenFileDialog
+                {
+                    AllowMultiple = false,
+                    Title = "Load layer weights",
+                    Directory = folder,
+                    Filters = new List<FileDialogFilter> { new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } } }
+                };
 
-            //        string fileName = openFileDialog.FileName;
-            //        if (fileName.Contains(".bin"))
-            //        {
-            //            if (Model?.LoadLayerWeights(fileName, (uint)layersComboBox.SelectedIndex) == 0)
-            //            {
-            //                Dispatcher.UIThread.Post(() => LayersComboBox_SelectionChanged(sender, null), DispatcherPriority.Render);
-            //                Dispatcher.UIThread.Post(() => MessageBox.Show("Layer weights are loaded", "Information", MessageBoxButtons.OK));
-            //                stop = true;
-            //            }
-            //            else
-            //                Dispatcher.UIThread.Post(() => MessageBox.Show("Layer weights are incompatible", "Choose a different file", MessageBoxButtons.OK));
-            //        }
-            //    }
-            //    else
-            //        stop = true;
-            //}
+                var stop = false;
+                while (!stop)
+                {
+                    stop = true;
+
+                    var files = await dialog.ShowAsync(App.MainWindow);
+
+                    if (files != null && files.Length > 0)
+                    {
+                        var path = files[0];
+
+                        if (path.Contains(".bin"))
+                        {
+                            if (Model?.LoadLayerWeights(path, (uint)layersComboBox.SelectedIndex) == 0)
+                            {
+                                Dispatcher.UIThread.Post(() => LayersComboBox_SelectionChanged(sender, null), DispatcherPriority.Render);
+                                await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are loaded", "Information", MessageBoxButtons.OK));
+                                stop = true;
+                            }
+                            else
+                            {
+                                stop = false;
+                                await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are incompatible", "Choose a different file", MessageBoxButtons.OK));
+                            }
+                        }
+                    }
+                }
+            }
+#else
+            var provider = App.MainWindow?.StorageProvider;
+
+            if (Model != null && provider != null && provider.CanOpen)
+            {
+                var folder = Path.Combine(DefinitionsDirectory, Model.Name);
+
+                var typeWeights = new FilePickerFileType("Weights")
+                {
+                    Patterns = ["*.bin"]
+                };
+
+                var filterList = new List<FilePickerFileType>();
+                filterList?.Add(typeWeights);
+
+                var stop = false;
+                while (!stop)
+                {
+                    stop = true;
+
+                    var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
+                    {
+                        AllowMultiple = false,
+                        Title = "Load layer weights",
+                        SuggestedStartLocation = provider.TryGetFolderFromPathAsync(folder)?.Result,
+                        FileTypeFilter = filterList
+                    });
+
+                    if (files != null)
+                    {
+                        var file = files?.SingleOrDefault();
+                        var path = file?.TryGetLocalPath();
+
+                        if (path != null)
+                        {
+                            if (path.EndsWith(".bin"))
+                            {
+                                if (Model?.LoadLayerWeights(path, (uint)layersComboBox.SelectedIndex) == 0)
+                                {
+                                    Dispatcher.UIThread.Post(() => LayersComboBox_SelectionChanged(sender, null), DispatcherPriority.Render);
+                                    await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are loaded", "Information", MessageBoxButtons.OK));
+                                }
+                                else
+                                {
+                                    stop = false;
+                                    await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are incompatible", "Choose a different file", MessageBoxButtons.OK));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+#endif
         }
 
-        private void SaveLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
+        private async void SaveLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
         {
-            var layerIndex = layersComboBox.SelectedIndex;
+            if (Model != null && App.MainWindow != null)
+            {
+                var layerIndex = layersComboBox.SelectedIndex;
+#if Linux
+                var folder = Path.Combine(DefinitionsDirectory, Model.Name);
+                var dialog = new SaveFileDialog
+                {
+                    Title = "Save layer weights",
+                    Directory = folder,
+                    Filters = new List<FileDialogFilter> { new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } } }
+                };
 
-            //SaveFileDialog saveFileDialog = new SaveFileDialog
-            //{
-            //    FileName = Model.Layers[layerIndex].Name,
-            //    AddExtension = true,
-            //    CreatePrompt = false,
-            //    OverwritePrompt = true,
-            //    ValidateNames = true,
-            //    Filter = "Layer Weights|*.bin",
-            //    Title = "Save layer weights",
-            //    DefaultExt = ".bin",
-            //    FilterIndex = 1,
-            //    InitialDirectory = Path.Combine(DefinitionsDirectory, Model.Name)
-            //};
+                var path = await dialog.ShowAsync(App.MainWindow);
+                if (path != null)
+                {
+                    if (path.EndsWith(".bin"))
+                    {
+                        if (Model.SaveLayerWeights(path, (ulong)layerIndex) == 0)
+                            await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are saved", "Information", MessageBoxButtons.OK));
+                        else
+                            await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights not saved!", "Information", MessageBoxButtons.OK));
+                    }
+                }
+#else
+                var provider = App.MainWindow?.StorageProvider;
 
-            //if (saveFileDialog.ShowDialog(Application.Current.MainWindow) == true)
-            //{
-            //    if (saveFileDialog.FileName.Contains(".bin"))
-            //    {
-            //        if (Model.SaveLayerWeights(saveFileDialog.FileName, (ulong)layerIndex) == 0)
-            //           Dispatcher.UIThread.Post(() => MessageBox.Show("Layer weights are saved", "Information", MessageBoxButtons.OK));
-            //        else
-            //            Dispatcher.UIThread.Post(() => MessageBox.Show("Layer weights not saved!", "Information", MessageBoxButtons.OK));
-            //    }
-            //}
+                if (provider != null && provider.CanSave)
+                {
+                    var folder = Path.Combine(DefinitionsDirectory, Model.Name);
+
+                    var typeWeights = new FilePickerFileType("Weights")
+                    {
+                        Patterns = ["*.bin"]
+                    };
+
+                    var filterList = new List<FilePickerFileType>();
+                    filterList?.Add(typeWeights);
+
+                    var files = await provider.SaveFilePickerAsync(new FilePickerSaveOptions
+                    {
+                        SuggestedFileName = Model.Layers[layerIndex].Name,
+                        DefaultExtension = "*.bin",
+                        Title = "Save layer weights",
+                        ShowOverwritePrompt = true,
+                        SuggestedStartLocation = provider.TryGetFolderFromPathAsync(folder)?.Result,
+                        FileTypeChoices = filterList
+                    });
+
+                    if (files != null)
+                    {
+                        var path = files?.TryGetLocalPath();
+
+                        if (path != null)
+                        {
+                            if (path.EndsWith(".bin"))
+                            {
+                                if (Model.SaveLayerWeights(path, (ulong)layerIndex) == 0)
+                                    await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are saved", "Information", MessageBoxButtons.OK));
+                                else
+                                    await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights not saved!", "Information", MessageBoxButtons.OK));
+                            }
+                        }
+                    }
+                }
+            }
+#endif
         }
 
         private async void ForgetLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
