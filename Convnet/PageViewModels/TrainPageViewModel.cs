@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
@@ -1614,10 +1615,13 @@ namespace Convnet.PageViewModels
         {
             if (TrainingLog.Count > 0)
             {
-                //StringBuilder sb = new StringBuilder();
-                //foreach (TrainingResult row in TrainingLog)
-                //    sb.AppendLine(row.Epoch.ToString() + "\t" + row.TrainingRate.ToString() + "\t" + row.Dropout.ToString() + row.Cutout.ToString() + "\t" + row.Distortion.ToString() + "\t" + row.HorizontalFlip.ToString() + "\t" + row.VerticalFlip.ToString() + "\t" + row.TrainErrors.ToString() + "\t" + row.TestErrors.ToString() + "\t" + row.AvgTrainLoss.ToString() + "\t" + row.AvgTestLoss.ToString() + "\t" + row.TrainErrors.ToString() + "\t" + row.TestErrors.ToString() + "\t" + row.TestAccuracy.ToString() + "\t" + row.ElapsedTime.ToString());
-                //Clipboard.SetText(sb.ToString());
+                //var sb = new StringBuilder();
+                //foreach (DNNTrainingResult row in TrainingLog)
+                //    sb.AppendLine(row.Epoch.ToString() + "\t" + row.Rate.ToString() + "\t" + row.Dropout.ToString() + row.Cutout.ToString() + "\t" + row.Distortion.ToString() + "\t" + row.HorizontalFlip.ToString() + "\t" + row.VerticalFlip.ToString() + "\t" + row.TrainErrors.ToString() + "\t" + row.TestErrors.ToString() + "\t" + row.AvgTrainLoss.ToString() + "\t" + row.AvgTestLoss.ToString() + "\t" + row.TrainErrors.ToString() + "\t" + row.TestErrors.ToString() + "\t" + row.TestAccuracy.ToString() + "\t" + row.ElapsedTime.ToString());
+                //var clipboard = App.MainWindow?.Clipboard;
+                //var dataObject = new DataObject();
+                //dataObject.Set(DataFormats.Text, sb.ToString());
+                //await clipboard!.SetDataObjectAsync(dataObject);
 
                 var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to clear the log?", "Clear Log", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
                 if (result == MessageBoxResult.Yes)
