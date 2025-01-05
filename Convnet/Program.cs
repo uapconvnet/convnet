@@ -19,10 +19,6 @@ namespace Convnet
         {
             return AppBuilder.Configure<App>()
                         .UsePlatformDetect()
-//.With(new X11PlatformOptions { UseDBusFilePicker = false }) // to disable FreeDesktop file picker
-//#if Linux
-//                        .UseManagedSystemDialogs()
-//#endif
                         .WithInterFont()
                         .LogToTrace()
                         .UseReactiveUI();
