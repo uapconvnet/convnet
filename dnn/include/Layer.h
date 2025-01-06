@@ -505,6 +505,7 @@ namespace dnn
 		Float B1;
 		Float B2;
 		Float Gamma;
+		Float FwdZeroGradient;
 		Float FwdInferenceWeight;
 		Float FwdTrainingWeight;
 		Float BwdTrainingWeight;
@@ -884,7 +885,7 @@ namespace dnn
 							vecVariance += square(weights);
 						}
 
-						if ((stats.Min < -WEIGHTS_LIMIT) || (stats.Max > WEIGHTS_LIMIT))
+						if ((stats.Min < -WeightsLimit) || (stats.Max > WeightsLimit))
 							goto FAIL;
 
 						mean = horizontal_add(vecMean) / WeightCount;
@@ -908,7 +909,7 @@ namespace dnn
 							variance += Square<Float>(Weights[i]);
 						}
 
-						if ((stats.Min < -WEIGHTS_LIMIT) || (stats.Max > WEIGHTS_LIMIT))
+						if ((stats.Min < -WeightsLimit) || (stats.Max > WeightsLimit))
 							goto FAIL;
 
 						mean /= WeightCount;
@@ -936,7 +937,7 @@ namespace dnn
 							BiasesStats.Min = std::min(BiasesStats.Min, Biases[i]);
 							BiasesStats.Max = std::max(BiasesStats.Max, Biases[i]);
 
-							if ((BiasesStats.Min < -WEIGHTS_LIMIT) || (BiasesStats.Max > WEIGHTS_LIMIT))
+							if ((BiasesStats.Min < -WeightsLimit) || (BiasesStats.Max > WeightsLimit))
 								goto FAIL;
 
 							mean += Biases[i];

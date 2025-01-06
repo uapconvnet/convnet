@@ -27,6 +27,7 @@ namespace dnn
 			if (InputLayer->C % Groups != 0)
 				throw std::invalid_argument("input not splittable in " + std::string(magic_enum::enum_name<LayerTypes>(LayerType)) + " layer " + InputLayer->Name + "  " + std::to_string(InputLayer->C));
 
+            FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(10);
 			FwdTrainingWeight = Float(10);
 			BwdTrainingWeight = Float(10);
@@ -100,7 +101,7 @@ namespace dnn
 //
 //#ifndef DNN_LEAN
 //				/*if (training)
-//					InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW());*/
+//					InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW(), FwdZeroGradient);*/
 //#else
 //				DNN_UNREF_PAR(batchSize);
 //#endif // DNN_LEAN		

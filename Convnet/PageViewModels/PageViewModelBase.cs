@@ -29,8 +29,8 @@ namespace Convnet.PageViewModels
         public static string DefinitionsDirectory { get; } = Path.Combine(StorageDirectory, "definitions");
         public static string ScriptsDirectory { get; } = Path.Combine(StorageDirectory, "scripts");
         public static string ScriptPath { get; } = Path.Combine(ScriptsDirectory, "bin", Mode, Framework);
-        public static IEnumerable<DNNOptimizers> GetOptimizers => Enum.GetValues(typeof(DNNOptimizers)).Cast<DNNOptimizers>();
-        public static IEnumerable<DNNInterpolations> GetInterpolations => Enum.GetValues(typeof(DNNInterpolations)).Cast<DNNInterpolations>();
+        public static IEnumerable<DNNOptimizers> GetOptimizers => Enum.GetValues<DNNOptimizers>().Cast<DNNOptimizers>();
+        public static IEnumerable<DNNInterpolations> GetInterpolations => Enum.GetValues<DNNInterpolations>().Cast<DNNInterpolations>();
 
         public event EventHandler? Modelhanged;
 

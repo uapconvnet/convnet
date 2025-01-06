@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
@@ -243,7 +242,7 @@ namespace Convnet.PageViewModels
             dataProviderComboBox = new ComboBox
             {
                 Name = "ComboBoxDataSet",
-                ItemsSource = Enum.GetValues(typeof(DNNDatasets)).Cast<Enum>().ToList(),
+                ItemsSource = Enum.GetValues<DNNDatasets>().Cast<Enum>().ToList(),
                 SelectedIndex = (int)Dataset,
                 IsEnabled = false
             };
@@ -252,7 +251,7 @@ namespace Convnet.PageViewModels
             optimizerComboBox = new ComboBox
             {
                 Name = "ComboBoxOptimizers",
-                ItemsSource = Enum.GetValues(typeof(DNNOptimizers)).Cast<Enum>().ToList(),
+                ItemsSource = Enum.GetValues<DNNOptimizers>().Cast<Enum>().ToList(),
                 IsEnabled = false
             };
             ToolTip.SetTip(optimizerComboBox, "Optimizer");
@@ -293,7 +292,8 @@ namespace Convnet.PageViewModels
             layersComboBox.DataContext = Model;
             if (Model != null)
                 layersComboBox.ItemsSource = Model.Layers;
-            layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
+            layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
+            //layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay }, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
             //layersComboBox.ItemTemplate = GetLockTemplate();
             //layersComboBox.SourceUpdated += LayersComboBox_SourceUpdated;
             //layersComboBox.IsSynchronizedWithCurrentItem = true;
@@ -513,7 +513,7 @@ namespace Convnet.PageViewModels
             costLayersComboBox.Items.Clear();
             for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
             {
-                ComboBoxItem item = new ComboBoxItem
+                var item = new ComboBoxItem
                 {
                     Name = "CostLayer" + layer.ToString(),
                     Content = Model.CostLayers[layer].Name,
@@ -561,8 +561,7 @@ namespace Convnet.PageViewModels
                     {
                         Model.UpdateCostInfo(c);
                         DNNCostLayer cost = Model.CostLayers[c];
-                        DNNTrainingResult item = new DNNTrainingResult(Cycle, Epoch, cost.GroupIndex, c, cost.Name, N, D, H, W, PadD, PadH, PadW, (DNNOptimizers)Optimizer, Rate, Eps, Momentum, Beta2, Gamma, L2Penalty, Dropout, InputDropout, Cutout, CutMix, AutoAugment, HorizontalFlip, VerticalFlip, ColorCast, ColorAngle, Distortion, (DNNInterpolations)Interpolation, Scaling, Rotation, cost.AvgTrainLoss, cost.TrainErrors, cost.TrainErrorPercentage, cost.TrainAccuracy, cost.AvgTestLoss, cost.TestErrors, cost.TestErrorPercentage, cost.TestAccuracy, (Int64)span.TotalMilliseconds, span);
-                        TrainingLog.Add(item);
+                        TrainingLog.Add(new DNNTrainingResult(Cycle, Epoch, cost.GroupIndex, c, cost.Name, N, D, H, W, PadD, PadH, PadW, (DNNOptimizers)Optimizer, Rate, Eps, Momentum, Beta2, Gamma, L2Penalty, Dropout, InputDropout, Cutout, CutMix, AutoAugment, HorizontalFlip, VerticalFlip, ColorCast, ColorAngle, Distortion, (DNNInterpolations)Interpolation, Scaling, Rotation, cost.AvgTrainLoss, cost.TrainErrors, cost.TrainErrorPercentage, cost.TrainAccuracy, cost.AvgTestLoss, cost.TestErrors, cost.TestErrorPercentage, cost.TestAccuracy, (Int64)span.TotalMilliseconds, span));
                     }
                     SelectedIndex = TrainingLog.Count - 1;
                 }

@@ -25,6 +25,7 @@ namespace dnn
 			P(p),
 			algorithm(dnnl::algorithm::reduction_mean)
 		{
+			FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(5);
 			FwdTrainingWeight = Float(10);
 			BwdTrainingWeight = Float(10);
@@ -114,7 +115,7 @@ namespace dnn
 
 #ifndef DNN_LEAN
 			if (training)
-				InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW());
+				InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW(), FwdZeroGradient);
 #endif
 		}
 

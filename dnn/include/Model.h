@@ -1685,6 +1685,9 @@ namespace dnn
 						break;
 					}
 
+				for (auto i = 0ull; i < Layers.size(); i++)
+					Layers[i]->FwdZeroGradient = 1.5f;
+					
 				while (CurrentEpoch < TotalEpochs)
 				{
 					if (CurrentEpoch - (GotoEpoch - 1) == learningRateEpochs)

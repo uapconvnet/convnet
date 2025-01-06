@@ -31,6 +31,7 @@ namespace dnn
 		{
 			assert(Inputs.size() > 1);
 
+			FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(10);
 			FwdTrainingWeight = Float(10);
 			BwdTrainingWeight = Float(10);
@@ -298,7 +299,7 @@ namespace dnn
 #endif
 					Device.stream.wait();
 #ifndef DNN_LEAN
-					InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW());
+					InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW(), FwdZeroGradient);
 #endif
 				}
 #endif
