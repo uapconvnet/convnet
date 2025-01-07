@@ -634,7 +634,7 @@ namespace
 			const auto part = items / threads;
 			for_i(threads, [=](const std::size_t thread) { ::memset(destination + part * thread, initValue, part * sizeof(T)); });
 			if (items % threads != 0)
-				::memset(destination + part * threads, initValue, (items - part * threads) * sizeof(T));
+				::memset(destination + (part * threads), initValue, (items - (part * threads)) * sizeof(T));
 		}
 	}
 
