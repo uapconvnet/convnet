@@ -144,7 +144,7 @@ namespace dnn
 	{
 #if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
 	#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
-		PRAGMA_OMP_PARALLEL_THREADS(static_cast<int>(omp_get_max_threads()))
+		PRAGMA_OMP_PARALLEL_THREADS(omp_get_max_threads())
 		{
 			PRAGMA_OMP_FOR_SCHEDULE_STATIC(1)
 			for (auto i = 0ll; i < static_cast<long long>(range); i++)

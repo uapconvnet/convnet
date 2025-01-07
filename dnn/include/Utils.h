@@ -624,15 +624,17 @@ namespace
 	template<typename T>
 	static void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const Float weight = Float(1), const int initValue = 0) NOEXCEPT
 	{
-		if ((elements * batchSize) < 1048576ull)
-			::memset(destination, initValue, (elements * batchSize) * sizeof(T));
+		const auto items = elements * batchSize;
+
+		if (items < 1048576ull)
+			::memset(destination, initValue, items * sizeof(T));
 		else
 		{
-			const auto threads = GetThreads(elements * batchSize, weight);
-			const auto part = (elements * batchSize) / threads;
+			const auto threads = GetThreads(items, weight);
+			const auto part = items / threads;
 			for_i(threads, [=](const std::size_t thread) { ::memset(destination + part * thread, initValue, part * sizeof(T)); });
-			if ((elements * batchSize) % threads != 0)
-				::memset(destination + part * threads, initValue, (elements - part * threads) * sizeof(T));
+			if (items % threads != 0)
+				::memset(destination + part * threads, initValue, (items - part * threads) * sizeof(T));
 		}
 	}
 
