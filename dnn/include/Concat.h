@@ -299,7 +299,7 @@ namespace dnn
 #endif
 					Device.stream.wait();
 #ifndef DNN_LEAN
-					InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW(), FwdZeroGradient);
+					InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
 #endif
 				}
 #endif

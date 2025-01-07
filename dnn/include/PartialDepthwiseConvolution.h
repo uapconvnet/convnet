@@ -200,7 +200,7 @@ namespace dnn
 
 #ifndef DNN_LEAN
 			if (training)
-				InitArray<Float>(NeuronsD1.data(), batchSize * PaddedCDHW(), FwdZeroGradient);
+				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
 #else
 			DNN_UNREF_PAR(batchSize);
 #endif // DNN_LEAN

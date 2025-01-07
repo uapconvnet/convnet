@@ -622,17 +622,15 @@ namespace
 	}
 
 	template<typename T>
-	static void InitArray(T* destination, const std::size_t elements, const Float weight = Float(1), const int initValue = 0) NOEXCEPT
+	static void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const Float weight = Float(1), const int initValue = 0) NOEXCEPT
 	{
-		if (elements < 1048576ull)
-			::memset(destination, initValue, elements * sizeof(T));
+		if ((elements * batchSize) < 1048576ull)
+			::memset(destination, initValue, (elements * batchSize) * sizeof(T));
 		else
 		{
-			const auto threads = GetThreads(elements, weight);
-			const auto part = elements / threads;
-			for_i(threads, [=](const std::size_t thread) { ::memset(destination + part * thread, initValue, part * sizeof(T)); });
-			if (elements % threads != 0)
-				::memset(destination + part * threads, initValue, (elements - part * threads) * sizeof(T));
+			const auto threads = GetThreads(elements * batchSize, weight);
+			
+			for_i(batchSize, threads, [=](const std::size_t n) { ::memset(destination + (elements * n), initValue, elements * sizeof(T)); });
 		}
 	}
 
@@ -702,7 +700,7 @@ namespace
 				if constexpr (std::is_floating_point_v<T>)
 				{
 					if (value == T(0))
-						InitArray<T>(dataPtr, nelems, Float(1), 0);
+						InitArray<T>(dataPtr, nelems, 1, Float(1), 0);
 					else
 						PRAGMA_OMP_SIMD()
 						for (auto i = 0ull; i < nelems; i++)
@@ -733,7 +731,7 @@ namespace
 					if constexpr (std::is_floating_point_v<T>)
 					{
 						if (value == T(0))
-							InitArray<T>(dataPtr, nelems, Float(1), 0);
+							InitArray<T>(dataPtr, nelems, 1, Float(1), 0);
 						else
 							PRAGMA_OMP_SIMD()
 							for (auto i = 0ull; i < nelems; i++)
@@ -786,7 +784,7 @@ namespace
 					if constexpr (std::is_floating_point_v<T>)
 					{
 						if (value == T(0))
-							InitArray<T>(dataPtr, nelems, Float(1), 0);
+							InitArray<T>(dataPtr, nelems, 1, Float(1), 0);
 						else
 							PRAGMA_OMP_SIMD()
 							for (auto i = 0ull; i < nelems; i++)
@@ -824,7 +822,7 @@ namespace
 						if constexpr (std::is_floating_point_v<T>)
 						{
 							if (value == T(0))
-								InitArray<T>(dataPtr, nelems, Float(1), 0);
+								InitArray<T>(dataPtr, nelems, 1, Float(1), 0);
 							else
 								PRAGMA_OMP_SIMD()
 								for (auto i = 0ull; i < nelems; i++)
@@ -1187,5 +1185,21 @@ namespace
 		UInt LabelA;
 		UInt LabelB;
 		Float Lambda;
+	};
+
+	struct Performance
+	{
+		Float FwdZeroGradientWeight;
+		Float FwdInferenceWeight;
+		Float FwdTrainingWeight;
+		Float BwdTrainingWeight;
+		bool FwdZeroGradientWeightUsed;
+		bool FwdInferenceWeightUsed;
+		bool FwdTrainingWeightUsed;
+		bool BwdTrainingWeightUsed;
+		UInt FwdZeroGradientWeightThreads;
+		UInt FwdInferenceWeightThreads;
+		UInt FwdTrainingWeightThreads;
+		UInt BwdTrainingWeightThreads;
 	};
 }
