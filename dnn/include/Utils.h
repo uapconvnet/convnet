@@ -629,8 +629,10 @@ namespace
 		else
 		{
 			const auto threads = GetThreads(elements * batchSize, weight);
-			
-			for_i(batchSize, threads, [=](const std::size_t n) { ::memset(destination + (elements * n), initValue, elements * sizeof(T)); });
+			const auto part = (elements * batchSize) / threads;
+			for_i(threads, [=](const std::size_t thread) { ::memset(destination + part * thread, initValue, part * sizeof(T)); });
+			if ((elements * batchSize) % threads != 0)
+				::memset(destination + part * threads, initValue, (elements - part * threads) * sizeof(T));
 		}
 	}
 
@@ -1185,21 +1187,5 @@ namespace
 		UInt LabelA;
 		UInt LabelB;
 		Float Lambda;
-	};
-
-	struct Performance
-	{
-		Float FwdZeroGradientWeight;
-		Float FwdInferenceWeight;
-		Float FwdTrainingWeight;
-		Float BwdTrainingWeight;
-		bool FwdZeroGradientWeightUsed;
-		bool FwdInferenceWeightUsed;
-		bool FwdTrainingWeightUsed;
-		bool BwdTrainingWeightUsed;
-		UInt FwdZeroGradientWeightThreads;
-		UInt FwdInferenceWeightThreads;
-		UInt FwdTrainingWeightThreads;
-		UInt BwdTrainingWeightThreads;
 	};
 }
