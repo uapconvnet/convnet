@@ -1502,31 +1502,16 @@ namespace dnn
 			return list;
 		}
 
-		std::vector<Layer*> GetLayerOutputs(const Layer* parentLayer, const bool inplace = false) const
+		std::vector<Layer*> GetLayerOutputs(const Layer* parentLayer) const
 		{
 			auto outputs = std::vector<Layer*>();
 					
-			if (!inplace)
-			{
-				for (auto& layer : Layers)
-					if (layer->Name != parentLayer->Name)
-					{
-						for (auto input : layer->Inputs)
-							if (input->Name == parentLayer->Name)
-								outputs.push_back(layer.get());
-					}
-			}
-			else
-			{
-				for (auto& layer : Layers)
-					if (layer->Name != parentLayer->Name)
-					{
-						for (auto input : layer->InputsBwd)
-							if (input->Name == parentLayer->Name)
-								outputs.push_back(layer.get());
-					}
-			}			
-			
+			for (auto& layer : Layers)
+				if (layer->Name != parentLayer->Name)
+					for (auto input : layer->Inputs)
+						if (input->Name == parentLayer->Name)
+							outputs.push_back(layer.get());
+					
 			return outputs;
 		}
 
@@ -1546,7 +1531,7 @@ namespace dnn
 
 				auto outputsCount = layer->Outputs.size();
 
-				if (outputsCount > 1)  // layer is used as input more than once
+				if (outputsCount > 0)
 				{
 					for (auto& l : Layers)
 					{
@@ -1557,6 +1542,9 @@ namespace dnn
 						{
 							if (input->Name == layer->Name)
 							{
+								if (input->LayerType != LayerTypes::Input)
+									l->SharesInput = !l->InplaceBwd;
+
 								outputsCount--;
 								break;
 							}
@@ -1570,34 +1558,6 @@ namespace dnn
 				{
 					if (outputsCount == 0 && layer->LayerType != LayerTypes::Cost)
 						unreferencedLayers.push_back(layer.get());
-				}
-			}
-
-			// determine SharesInput
-			for (auto& layer : Layers)
-			{
-				auto outputsCount = GetLayerOutputs(layer.get(), true).size();
-
-				if (outputsCount > 1)  // layer is used as input more than once
-				{
-					for (auto& l : Layers)
-					{
-						if (l->Name == layer->Name)
-							continue;
-
-						for (auto input : l->InputsBwd)
-						{
-							if (input->Name == layer->Name)
-							{
-								l->SharesInput = !l->InplaceBwd;
-								outputsCount--;
-								break;
-							}
-						}
-
-						if (outputsCount == 1)
-							break;
-					}
 				}
 			}
 

@@ -668,7 +668,7 @@ namespace dnn
 					
 					if (print)
 					{
-						description.append(nwl + std::string(" Inputs Bwd: ") + tab);
+						description.append(nwl + std::string(" InputsBwd:  ") + tab);
 						for (auto i = 0ull; i < InputsBwd.size(); i++)
 							description.append((i == 0 ? std::string("") : std::string(",")) + InputsBwd[i]->Name);
 					}
@@ -689,7 +689,7 @@ namespace dnn
 			description.append(nwl + std::string(" SharesInput:") + tab + BoolToString(SharesInput));
 			description.append(nwl + std::string(" InplaceBwd: ") + tab + BoolToString(InplaceBwd));
 #endif
-			
+
 			return description;
 		}
 
