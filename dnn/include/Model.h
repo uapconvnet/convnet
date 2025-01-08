@@ -1550,7 +1550,7 @@ namespace dnn
 							}
 						}
 						
-						if (outputsCount == 1)
+						if (outputsCount <= 1)
 							break;
 					}
 				}
