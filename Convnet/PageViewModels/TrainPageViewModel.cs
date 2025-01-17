@@ -564,6 +564,10 @@ namespace Convnet.PageViewModels
                         TrainingLog.Add(new DNNTrainingResult(Cycle, Epoch, cost.GroupIndex, c, cost.Name, N, D, H, W, PadD, PadH, PadW, (DNNOptimizers)Optimizer, Rate, Eps, Momentum, Beta2, Gamma, L2Penalty, Dropout, InputDropout, Cutout, CutMix, AutoAugment, HorizontalFlip, VerticalFlip, ColorCast, ColorAngle, Distortion, (DNNInterpolations)Interpolation, Scaling, Rotation, cost.AvgTrainLoss, cost.TrainErrors, cost.TrainErrorPercentage, cost.TrainAccuracy, cost.AvgTestLoss, cost.TestErrors, cost.TestErrorPercentage, cost.TestAccuracy, (Int64)span.TotalMilliseconds, span));
                     }
                     SelectedIndex = TrainingLog.Count - 1;
+
+                    var epoch = "(" + Dataset.ToString().ToLower() + ")(" + Optimizer.ToString().ToLower() + ")" + Epoch.ToString() + "-" + Cycle.ToString() + "-" + TrainErrors.ToString() + "-" + TestErrors.ToString();
+                    var path = Path.Combine(DefinitionsDirectory, Model.Name, epoch, "Program.cs");
+                    File.WriteAllText(path, Settings.Default.Script);
                 }
             }, DispatcherPriority.Send);
 
