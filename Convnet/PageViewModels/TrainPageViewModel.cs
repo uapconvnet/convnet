@@ -565,9 +565,9 @@ namespace Convnet.PageViewModels
                     }
                     SelectedIndex = TrainingLog.Count - 1;
 
-                    var epoch = "(" + Dataset.ToString().ToLower() + ")(" + Optimizer.ToString().ToLower() + ")" + Epoch.ToString() + "-" + Cycle.ToString() + "-" + TrainErrors.ToString() + "-" + TestErrors.ToString();
-                    var path = Path.Combine(DefinitionsDirectory, Model.Name, epoch, "Program.cs");
-                    File.WriteAllText(path, Settings.Default.Script);
+                    //var epoch = "(" + Dataset.ToString().ToLower() + ")(" + Optimizer.ToString().ToLower() + ")" + Epoch.ToString() + "-" + Cycle.ToString() + "-" + TrainErrors.ToString() + "-" + TestErrors.ToString();
+                    //var path = Path.Combine(DefinitionsDirectory, Model.Name, epoch, "Program.cs");
+                    //File.WriteAllText(path, Settings.Default.Script);
                 }
             }, DispatcherPriority.Send);
 
