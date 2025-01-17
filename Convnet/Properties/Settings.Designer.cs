@@ -1625,5 +1625,17 @@ namespace Convnet.Properties {
                 this["SGDR"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ScriptActive {
+            get {
+                return ((string)(this["ScriptActive"]));
+            }
+            set {
+                this["ScriptActive"] = value;
+            }
+        }
     }
 }

@@ -316,6 +316,9 @@ namespace Convnet.PageViewModels
                             Settings.Default.ModelNameActive = Model?.Name;
                             Settings.Default.DefinitionEditing = Definition;
                             Settings.Default.DefinitionActive = Definition;
+                            Settings.Default.Script = Script;
+                            Settings.Default.ScriptActive = Script;
+
                             Settings.Default.Save();
 
                             if (App.MainWindow != null)
@@ -377,6 +380,9 @@ namespace Convnet.PageViewModels
                                 Settings.Default.ModelNameActive = Model?.Name;
                                 Settings.Default.DefinitionEditing = Definition;
                                 Settings.Default.DefinitionActive = Definition;
+                                Settings.Default.Script = Script;
+                                Settings.Default.ScriptActive = Script;
+
                                 Settings.Default.Save();
 
                                 if (App.MainWindow != null)

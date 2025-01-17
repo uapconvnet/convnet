@@ -565,9 +565,18 @@ namespace Convnet.PageViewModels
                     }
                     SelectedIndex = TrainingLog.Count - 1;
 
-                    //var epoch = "(" + Dataset.ToString().ToLower() + ")(" + Optimizer.ToString().ToLower() + ")" + Epoch.ToString() + "-" + Cycle.ToString() + "-" + TrainErrors.ToString() + "-" + TestErrors.ToString();
-                    //var path = Path.Combine(DefinitionsDirectory, Model.Name, epoch, "Program.cs");
-                    //File.WriteAllText(path, Settings.Default.Script);
+                    var epoch = "(" + Dataset.ToString().ToLower() + ")(" + ((DNNOptimizers)Optimizer).ToString().ToLower() + ")" + Epoch.ToString() + "-" + Cycle.ToString() + "-" + TrainErrors.ToString() + "-" + TestErrors.ToString();
+                    var path = Path.Combine(DefinitionsDirectory, Settings.Default.ModelNameActive, epoch);
+                    if (Directory.Exists(path))
+                    {
+                        try
+                        {
+                            File.WriteAllText(Path.Combine(path, "Program.cs"), Settings.Default.ScriptActive.Trim() == String.Empty ? Settings.Default.Script : Settings.Default.ScriptActive);
+                        }
+                        catch (Exception)
+                        { 
+                        }
+                    }
                 }
             }, DispatcherPriority.Send);
 
