@@ -31,7 +31,7 @@ namespace Convnet.PageViewModels
         
         public void DocumentationCommand()
         {
-            //if (ApplicationHelper.CheckForInternetConnection())
+            if (ApplicationHelper.CheckForInternetConnection())
                 ApplicationHelper.OpenBrowser("https://github.com/uapconvnet/convnet.git");
         }
 
