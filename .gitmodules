@@ -19,3 +19,6 @@
 [submodule "dnn/deps/CImg"]
 	path = dnn/deps/CImg
 	url = https://github.com/GreycLab/CImg
+[submodule "dnn/deps/oneDNN"]
+	path = dnn/deps/oneDNN
+	url = https://github.com/oneapi-src/oneDNN
