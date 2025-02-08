@@ -16,9 +16,6 @@
 [submodule "dnn/deps/libjpeg-turbo"]
 	path = dnn/deps/libjpeg-turbo
 	url = https://github.com/libjpeg-turbo/libjpeg-turbo
-[submodule "dnn/deps/oneDNN"]
-	path = dnn/deps/oneDNN
-	url = https://github.com/oneapi-src/oneDNN
 [submodule "dnn/deps/CImg"]
 	path = dnn/deps/CImg
 	url = https://github.com/GreycLab/CImg
