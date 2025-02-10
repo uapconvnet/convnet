@@ -293,6 +293,9 @@ namespace dnn
 
 			case Datasets::mnist:
 			{
+				// auto url = std::string("http://yann.lecun.com/exdb/mnist/");  this url is offline at the moment
+				auto url = std::string("https://ossci-datasets.s3.amazonaws.com/mnist/");
+				
 				batch <<
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 					std::string("@echo off") << std::endl <<
@@ -304,10 +307,11 @@ namespace dnn
 					std::string("echo loading ") + std::string(magic_enum::enum_name<Datasets>(dataset)) + std::string(" dataset...") << std::endl <<
 					std::string("cd ") + path.string() << std::endl <<
 #endif
-					std::string("curl -O http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz") << std::endl <<
-					std::string("curl -O http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz") << std::endl <<
-					std::string("curl -O http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz") << std::endl <<
-					std::string("curl -O http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz") << std::endl <<
+					
+					(std::string("curl -O ") + url + std::string("train-images-idx3-ubyte.gz")) << std::endl <<
+					(std::string("curl -O ") + url + std::string("t10k-images-idx3-ubyte.gz")) << std::endl <<
+					(std::string("curl -O ") + url + std::string("train-labels-idx1-ubyte.gz")) << std::endl <<
+					(std::string("curl -O ") + url + std::string("t10k-labels-idx1-ubyte.gz")) << std::endl <<
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 					"powershell -ExecutionPolicy Bypass -command \"& {&./UnZip-File.ps1}\";" << std::endl <<
 					"del *.gz" << std::endl <<
