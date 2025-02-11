@@ -1,7 +1,6 @@
 #pragma once
 #include "Image.h"
 
-
 namespace dnn
 {
 	//using namespace image;
@@ -367,6 +366,7 @@ namespace dnn
 			const std::string command = std::string("cmd /c ") + (DatasetsDirectory / fileName).string();
 			LPSTR cmdLine = _strdup(command.c_str());
 #endif
+
 			STARTUPINFO info;
 			PROCESS_INFORMATION processInfo;
 			ZeroMemory(&info, sizeof(STARTUPINFO));

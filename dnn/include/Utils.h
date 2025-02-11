@@ -113,7 +113,6 @@
 // #include "bitsery/ext/std_atomic.h"
 // #include "bitsery/ext/growable.h"
 
-
 using namespace dnn;
 
 namespace
