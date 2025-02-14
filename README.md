@@ -132,8 +132,6 @@
 * [XAML Math - MIT License](https://github.com/ForNeVeR/xaml-math)
 * [zlib - zlib License](https://github.com/madler/zlib)
 
-### Screenshots
-
 ### Datasets SOTA
 * [cifar-10](https://paperswithcode.com/sota/image-classification-on-cifar-10)
 * [cifar-100](https://paperswithcode.com/sota/image-classification-on-cifar-100)
