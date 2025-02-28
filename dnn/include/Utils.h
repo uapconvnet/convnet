@@ -1,6 +1,10 @@
 ﻿#pragma once
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #include "stdafx.h"
+
+#include "mimalloc.h"
+#include "mimalloc-new-delete.h"
+#include "mimalloc-override.h"
 #else
 #include <sys/sysinfo.h>
 #endif
@@ -42,10 +46,6 @@
 #define MAX_VECTOR_SIZE 512
 #endif //DNN_AVX512BW
 #endif // MAX_VECTOR_SIZE
-
-#include "mimalloc.h"
-#include "mimalloc-new-delete.h"
-#include "mimalloc-override.h"
 
 #include "instrset.h"
 #include "vectorclass.h"
