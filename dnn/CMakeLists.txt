@@ -325,7 +325,7 @@ IF(NOT TARGET mimalloc)
     "${MIMALLOC_SOURCE_DIR}"
     "${DNN_DEPENDENCIES_BINARY_DIR}/mimalloc")
 ENDIF()
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC mimalloc)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC mimalloc-static)
 
 # ---[ Configure Bisery
 IF(NOT TARGET bitsery)
