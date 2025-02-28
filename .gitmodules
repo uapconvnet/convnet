@@ -22,3 +22,6 @@
 [submodule "dnn/deps/oneDNN"]
 	path = dnn/deps/oneDNN
 	url = https://github.com/oneapi-src/oneDNN
+[submodule "dnn/deps/mimalloc"]
+	path = dnn/deps/mimalloc
+	url = https://github.com/microsoft/mimalloc
