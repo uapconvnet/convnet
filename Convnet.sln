@@ -55,6 +55,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simd-objs", "dnn\build\deps
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZERO_CHECK", "dnn\build\ZERO_CHECK.vcxproj", "{916FECB8-76F6-3045-B4E5-B7A441D4389F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mimalloc-lib", "dnn\deps\mimalloc\ide\vs2022\mimalloc-lib.vcxproj", "{ABB5EAE7-B3E6-432E-B636-333449892EA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -223,6 +225,14 @@ Global
 		{916FECB8-76F6-3045-B4E5-B7A441D4389F}.Release|x64.Build.0 = Release|x64
 		{916FECB8-76F6-3045-B4E5-B7A441D4389F}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 		{916FECB8-76F6-3045-B4E5-B7A441D4389F}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Debug|x64.ActiveCfg = Debug|x64
+		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Debug|x64.Build.0 = Debug|x64
+		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.MinSizeRel|x64.ActiveCfg = Release|x64
+		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.MinSizeRel|x64.Build.0 = Release|x64
+		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Release|x64.ActiveCfg = Release|x64
+		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Release|x64.Build.0 = Release|x64
+		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.RelWithDebInfo|x64.ActiveCfg = Debug|x64
+		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.RelWithDebInfo|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

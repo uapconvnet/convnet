@@ -43,6 +43,10 @@
 #endif //DNN_AVX512BW
 #endif // MAX_VECTOR_SIZE
 
+#include "mimalloc.h"
+#include "mimalloc-new-delete.h"
+#include "mimalloc-override.h"
+
 #include "instrset.h"
 #include "vectorclass.h"
 #include "vectormath_common.h"
