@@ -282,7 +282,7 @@ namespace dnn
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
 						for (auto c = 0ull; c < InputLayerBwd->C; c++)
-							PRAGMA_OMP_SIMD()
+							//PRAGMA_OMP_SIMD()
 							for (auto hw = 0ull; hw < HW(); hw++)
 								InputLayerBwd->NeuronsD1[inStart + (c * HW()) + hw] += (InputLayer->Neurons[inStart + (c * HW()) + hw] == Neurons[start + hw]) ? NeuronsD1[start + hw] : Float(0);
 					});
@@ -351,7 +351,7 @@ namespace dnn
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
 						for (auto c = 0ull; c < InputLayerBwd->C; c++)
-							PRAGMA_OMP_SIMD()
+							//PRAGMA_OMP_SIMD()
 							for (auto hw = 0ull; hw < HW(); hw++)
 								InputLayerBwd->NeuronsD1[inStart + (c * HW()) + hw] += (InputLayer->Neurons[inStart + (c * HW()) + hw] == Neurons[start + hw]) ? NeuronsD1[start + hw] : Float(0);
 					});
@@ -401,7 +401,7 @@ namespace dnn
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
 						for (auto c = 0ull; c < InputLayerBwd->C; c++)
-							PRAGMA_OMP_SIMD()
+							//PRAGMA_OMP_SIMD()
 							for (auto hw = 0ull; hw < HW(); hw++)
 								InputLayerBwd->NeuronsD1[inStart + (c * HW()) + hw] += (InputLayer->Neurons[inStart + (c * HW()) + hw] == Neurons[start + hw]) ? NeuronsD1[start + hw] : Float(0);
 					});
@@ -469,7 +469,7 @@ namespace dnn
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
 						for (auto c = 0ull; c < InputLayerBwd->C; c++)
-							PRAGMA_OMP_SIMD()
+							//PRAGMA_OMP_SIMD()
 							for (auto hw = 0ull; hw < HW(); hw++)
 								InputLayerBwd->NeuronsD1[inStart + (c * HW()) + hw] += (InputLayer->Neurons[inStart + (c * HW()) + hw] == Neurons[start + hw]) ? NeuronsD1[start + hw] : Float(0);
 					});
