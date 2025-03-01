@@ -176,16 +176,6 @@ SET(DNN_DEPENDENCIES_SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps
 SET(DNN_DEPENDENCIES_BINARY_DIR ${CMAKE_BINARY_DIR}/deps
   CACHE PATH "Confu-style dependencies binary directory")
 
-#[[IF(NOT DEFINED MIMALLOC_SOURCE_DIR)
-  MESSAGE(STATUS "Downloading mimalloc to ${DNN_DEPENDENCIES_SOURCE_DIR}/mimalloc (define MIMALLOC_SOURCE_DIR to avoid it)")
-  CONFIGURE_FILE(cmake/DownloadMimalloc.cmake "${DNN_DEPENDENCIES_BINARY_DIR}/mimalloc-download/CMakeLists.txt")
-  EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" -DMI_OVERRIDE=ON .
-    WORKING_DIRECTORY "${DNN_DEPENDENCIES_BINARY_DIR}/mimalloc-download")
-  EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" --build .
-    WORKING_DIRECTORY "${DNN_DEPENDENCIES_BINARY_DIR}/mimalloc-download")
-  SET(MIMALLOC_SOURCE_DIR "${DNN_DEPENDENCIES_SOURCE_DIR}/mimalloc" CACHE STRING "mimalloc source directory")
-ENDIF()]]
-
 IF(NOT DEFINED BITSERY_SOURCE_DIR)
   MESSAGE(STATUS "Downloading bitsery to ${DNN_DEPENDENCIES_SOURCE_DIR}/bitsery (define BITSERY_SOURCE_DIR to avoid it)")
   CONFIGURE_FILE(cmake/DownloadBitsery.cmake "${DNN_DEPENDENCIES_BINARY_DIR}/bitsery-download/CMakeLists.txt")
@@ -301,9 +291,7 @@ target_include_directories(test
     PRIVATE
        ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-#[[include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/mimalloc/include)
-include_directories(${DNN_DEPENDENCIES_BINARY_DIR}/mimalloc/include)
-include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/bitsery)]]
+include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/bitsery)
 include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/zlib)
 include_directories(${DNN_DEPENDENCIES_BINARY_DIR}/zlib)
 include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/libpng)
@@ -318,14 +306,6 @@ include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/version2)
 include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/magic_enum/include)
 include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/CImg)
 
-
-#[[# ---[ Configure Mimalloc
-IF(NOT TARGET mimalloc)
-  ADD_SUBDIRECTORY(
-    "${MIMALLOC_SOURCE_DIR}"
-    "${DNN_DEPENDENCIES_BINARY_DIR}/mimalloc")
-ENDIF()
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC mimalloc-static)]]
 
 # ---[ Configure Bisery
 IF(NOT TARGET bitsery)
