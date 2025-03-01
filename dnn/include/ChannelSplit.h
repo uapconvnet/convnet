@@ -19,7 +19,7 @@ namespace dnn
 			Group(group),
 			Groups(groups),
 			ChannelsLeft((group - 1ull) * C),
-			Padded(InputLayer->C % VectorSize == 0 && C % VectorSize == 0)
+			Padded(inputs[0]->C % VectorSize == 0 && C % VectorSize == 0)
 		{
 			assert(Inputs.size() == 1);
 			assert(InputLayer->C % Groups == 0);
