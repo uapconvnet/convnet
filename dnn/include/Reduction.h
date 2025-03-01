@@ -149,7 +149,7 @@ namespace dnn
 				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 
 				if (!plain)
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						for (auto c = 0ull; c < InputLayerBwd->C; c++)
 							for (auto h = 0ull; h < H; h++)
@@ -157,7 +157,7 @@ namespace dnn
 									InputLayerBwd->NeuronsD1[InputLayerBwd->OffsetPaddedMem(n, c, h, w)] += NeuronsD1[OffsetPaddedMem(n, 0, h, w)] / Float(InputLayerBwd->C);
 					});
 				else
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
@@ -201,7 +201,7 @@ namespace dnn
 				const auto factor = Float(1) / Float(InputLayerBwd->C);
 				const bool padded = InputLayerBwd->PaddedC == InputLayerBwd->C;
 				if (!plain)
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						if (padded)
 							for (auto c = 0ull; c < InputLayerBwd->PaddedC; c += VectorSize)
@@ -226,7 +226,7 @@ namespace dnn
 										InputLayerBwd->NeuronsD1[InputLayerBwd->OffsetPaddedMem(n, c, h, w)] += NeuronsD1[OffsetPaddedMem(n, 0, h, w)] * factor;
 					});
 				else
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
@@ -269,7 +269,7 @@ namespace dnn
 				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 
 				if (!plain)
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						for (auto c = 0ull; c < InputLayerBwd->C; c++)
 							for (auto h = 0ull; h < H; h++)
@@ -277,7 +277,7 @@ namespace dnn
 									InputLayerBwd->NeuronsD1[InputLayerBwd->OffsetPaddedMem(n, c, h, w)] += (InputLayer->Neurons[InputLayer->OffsetPaddedMem(n, c, h, w)] == Neurons[OffsetPaddedMem(n, 0, h, w)] ? NeuronsD1[OffsetPaddedMem(n, 0, h, w)] : Float(0));
 					});
 				else
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
@@ -322,7 +322,7 @@ namespace dnn
 				const bool padded = InputLayerBwd->PaddedC == InputLayerBwd->C;
 
 				if (!plain)
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto outputOffset = OffsetPaddedMem(n, 0, 0, 0);
 
@@ -346,7 +346,7 @@ namespace dnn
 										InputLayerBwd->NeuronsD1[InputLayerBwd->OffsetPaddedMem(n, c, h, w)] += (InputLayer->Neurons[InputLayer->OffsetPaddedMem(n, c, h, w)] == Neurons[OffsetPaddedMem(n, 0, h, w)] ? NeuronsD1[OffsetPaddedMem(n, 0, h, w)] : Float(0));
 					});
 				else
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
@@ -388,7 +388,7 @@ namespace dnn
 				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 
 				if (!plain)
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						for (auto c = 0ull; c < InputLayerBwd->C; c++)
 							for (auto h = 0ull; h < H; h++)
@@ -396,7 +396,7 @@ namespace dnn
 									InputLayerBwd->NeuronsD1[InputLayer->OffsetPaddedMem(n, c, h, w)] += (InputLayer->Neurons[InputLayer->OffsetPaddedMem(n, c, h, w)] == Neurons[OffsetPaddedMem(n, 0, h, w)] ? NeuronsD1[OffsetPaddedMem(n, 0, h, w)] : Float(0));
 					});
 				else
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
@@ -440,7 +440,7 @@ namespace dnn
 				const bool padded = InputLayerBwd->PaddedC == InputLayerBwd->C;
 
 				if (!plain)
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto outputOffset = OffsetPaddedMem(n, 0, 0, 0);
 
@@ -464,7 +464,7 @@ namespace dnn
 										InputLayerBwd->NeuronsD1[InputLayer->OffsetPaddedMem(n, c, h, w)] += (InputLayer->Neurons[InputLayer->OffsetPaddedMem(n, c, h, w)] == Neurons[OffsetPaddedMem(n, 0, h, w)] ? NeuronsD1[OffsetPaddedMem(n, 0, h, w)] : Float(0));
 					});
 				else
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
@@ -506,7 +506,7 @@ namespace dnn
 				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 
 				if (!plain)
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						for (auto c = 0ull; c < InputLayerBwd->C; c++)
 							for (auto h = 0ull; h < H; h++)
@@ -514,7 +514,7 @@ namespace dnn
 									InputLayerBwd->NeuronsD1[InputLayerBwd->OffsetPaddedMem(n, c, h, w)] += NeuronsD1[OffsetPaddedMem(n, 0, h, w)];
 					});
 				else
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();
@@ -558,7 +558,7 @@ namespace dnn
 				const bool padded = InputLayerBwd->PaddedC == InputLayerBwd->C;
 
 				if (!plain)
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto outputOffset = OffsetPaddedMem(n, 0, 0, 0);
 
@@ -582,7 +582,7 @@ namespace dnn
 										InputLayerBwd->NeuronsD1[InputLayerBwd->OffsetPaddedMem(n, c, h, w)] += NeuronsD1[OffsetPaddedMem(n, c, h, w)];
 					});
 				else
-					for_i(batchSize, threads, [=](UInt n)
+					for_i_reduction(batchSize, threads, [=](UInt n)
 					{
 						const auto start = n * HW();
 						const auto inStart = n * InputLayerBwd->CDHW();

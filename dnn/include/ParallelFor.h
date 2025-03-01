@@ -343,6 +343,111 @@ namespace dnn
 	}
 
 	template <typename Func>
+	inline void for_i_multiply(const size_t range, const size_t threads, const Func& f)
+	{
+		if (std::min(range, threads) > 1)
+		{
+#if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
+			const auto thrds = static_cast<int>(std::min(range, threads));
+			const auto chunk = static_cast<int>(std::ceil(static_cast<double>(range) / static_cast<double>(thrds)));
+
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+			PRAGMA_OMP_PARALLEL_THREADS(thrds)
+			{
+				PRAGMA_OMP_FOR_SCHEDULE_STATIC(chunk)
+					for (auto i = 0ll; i < static_cast<long long>(range); i++)
+						f(i);
+			}
+#else
+
+#pragma omp parallel for schedule(static,chunk) num_threads(thrds)
+			for (auto i = 0ull; i < range; i++)
+				f(i);
+#endif
+#else
+			for_(0ull, range, [&](const blocked_range& r)
+				{
+					for (auto i = r.begin(); i < r.end(); i++)
+						f(i);
+				});
+#endif
+		}
+		else
+			for (auto i = 0ull; i < range; i++)
+				f(i);
+	}
+
+	template <typename Func>
+	inline void for_i_substract(const size_t range, const size_t threads, const Func& f)
+	{
+		if (std::min(range, threads) > 1)
+		{
+#if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
+			const auto thrds = static_cast<int>(std::min(range, threads));
+			const auto chunk = static_cast<int>(std::ceil(static_cast<double>(range) / static_cast<double>(thrds)));
+
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+			PRAGMA_OMP_PARALLEL_THREADS(thrds)
+			{
+				PRAGMA_OMP_FOR_SCHEDULE_STATIC(chunk)
+					for (auto i = 0ll; i < static_cast<long long>(range); i++)
+						f(i);
+			}
+#else
+
+#pragma omp parallel for schedule(static,chunk) num_threads(thrds)
+			for (auto i = 0ull; i < range; i++)
+				f(i);
+#endif
+#else
+			for_(0ull, range, [&](const blocked_range& r)
+				{
+					for (auto i = r.begin(); i < r.end(); i++)
+						f(i);
+				});
+#endif
+		}
+		else
+			for (auto i = 0ull; i < range; i++)
+				f(i);
+	}
+
+	template <typename Func>
+	inline void for_i_reduction(const size_t range, const size_t threads, const Func& f)
+	{
+		if (std::min(range, threads) > 1)
+		{
+#if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
+			const auto thrds = static_cast<int>(std::min(range, threads));
+			const auto chunk = static_cast<int>(std::ceil(static_cast<double>(range) / static_cast<double>(thrds)));
+
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+			PRAGMA_OMP_PARALLEL_THREADS(thrds)
+			{
+				PRAGMA_OMP_FOR_SCHEDULE_STATIC(chunk)
+					for (auto i = 0ll; i < static_cast<long long>(range); i++)
+						f(i);
+			}
+#else
+
+#pragma omp parallel for schedule(static,chunk) num_threads(thrds)
+			for (auto i = 0ull; i < range; i++)
+				f(i);
+#endif
+#else
+			for_(0ull, range, [&](const blocked_range& r)
+				{
+					for (auto i = r.begin(); i < r.end(); i++)
+						f(i);
+				});
+#endif
+		}
+		else
+			for (auto i = 0ull; i < range; i++)
+				f(i);
+	}
+
+	template <typename Func>
 	inline void for_i(const size_t range, const size_t threads, const Func& f)
 	{
 		if (std::min(range, threads) > 1)
