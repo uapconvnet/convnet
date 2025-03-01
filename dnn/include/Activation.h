@@ -1065,7 +1065,7 @@ namespace dnn
 							const auto threads = batchSize == 1 ? 1ull : GetThreads(batchSize * GetElementsCount(), FwdTrainingWeight);
 
 							if (!plain)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * PaddedC;
 									for (auto c = start; c < start + PaddedC; c += VectorSize)
@@ -1078,7 +1078,7 @@ namespace dnn
 									}
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * C;
 									for (auto c = start; c < start + C; c++)
@@ -1096,14 +1096,14 @@ namespace dnn
 							const auto threads = batchSize == 1 ? 1ull : GetThreads(batchSize * GetElementsCount(), FwdInferenceWeight);
 
 							if (!plain)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * PaddedC;
 									for (auto c = start; c < start + PaddedC; c += VectorSize)
 										Func.fVec(VecFloat().load_a(&InputLayer->Neurons[c]), Alpha, Beta).store_a(&Neurons[c]);
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * C;
 									for (auto c = start; c < start + C; c++)
@@ -1174,7 +1174,7 @@ namespace dnn
 							const auto threads = batchSize == 1 ? 1ull : GetThreads(batchSize * GetElementsCount(), FwdTrainingWeight);
 
 							if (!plain)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
@@ -1190,7 +1190,7 @@ namespace dnn
 									}
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < C; c++)
 									{
@@ -1212,7 +1212,7 @@ namespace dnn
 
 							if (!plain)
 							{
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
@@ -1224,7 +1224,7 @@ namespace dnn
 							}
 							else
 							{
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < C; c++)
 									{
@@ -1324,14 +1324,14 @@ namespace dnn
 						if (InplaceBwd)
 						{
 							if (!plain)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * PaddedC;
 									for (auto c = start; c < start + PaddedC; c += VectorSize)
 										(Func.dfVec(VecFloat().load_a(&InputLayer->Neurons[c]), Alpha, Beta), VecFloat().load_a(&InputLayerBwd->NeuronsD1[c])).store_a(&InputLayerBwd->NeuronsD1[c]);
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * C;
 									for (auto c = start; c < start + C; c++)
@@ -1341,14 +1341,14 @@ namespace dnn
 						else
 						{
 							if (!plain)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * PaddedC;
 									for (auto c = start; c < start + PaddedC; c += VectorSize)
 										mul_add(Func.dfVec(VecFloat().load_a(&InputLayer->Neurons[c]), Alpha, Beta), VecFloat().load_a(&NeuronsD1[c]), VecFloat().load_a(&InputLayerBwd->NeuronsD1[c])).store_a(&InputLayerBwd->NeuronsD1[c]);
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * C;
 									for (auto c = start; c < start + C; c++)
@@ -1409,7 +1409,7 @@ namespace dnn
 						if (InplaceBwd)
 						{
 							if (!plain)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
@@ -1419,7 +1419,7 @@ namespace dnn
 									}
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < C; c++)
 									{
@@ -1432,7 +1432,7 @@ namespace dnn
 						else
 						{
 							if (!plain)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
@@ -1442,7 +1442,7 @@ namespace dnn
 									}
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_activation(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < C; c++)
 									{

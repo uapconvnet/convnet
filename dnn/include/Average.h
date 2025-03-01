@@ -132,7 +132,7 @@ namespace dnn
 						if (EqualDimensions(Inputs))
 						{
 							if (fullDepth)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_average(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * CDHW();
 									const auto end = start + CDHW();
@@ -146,7 +146,7 @@ namespace dnn
 									}
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_average(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * CDHW();
 									const auto end = start + CDHW();
@@ -166,7 +166,7 @@ namespace dnn
 						else
 						{
 							if (fullDepth)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_average(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < C; c++)
 									{
@@ -183,7 +183,7 @@ namespace dnn
 									}
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_average(batchSize, threads, [=](UInt n)
 								{
 									const auto skipFirst = Inputs[first]->Skip;
 									const auto skipSecond = Inputs[second]->Skip;
@@ -210,7 +210,7 @@ namespace dnn
 						if (EqualDimensions(Inputs))
 						{
 							if (fullDepth)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_average(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * size;
 									for (auto cdhw = start; cdhw < start + part; cdhw += VectorSize)
@@ -229,7 +229,7 @@ namespace dnn
 									}
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_average(batchSize, threads, [=](UInt n)
 								{
 									const auto start = n * size;
 									const auto skip0 = Inputs[0]->Skip;
@@ -257,7 +257,7 @@ namespace dnn
 						else
 						{
 							if (fullDepth)
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_average(batchSize, threads, [=](UInt n)
 								{
 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
@@ -273,7 +273,7 @@ namespace dnn
 									}
 								});
 							else
-								for_i(batchSize, threads, [=](UInt n)
+								for_i_average(batchSize, threads, [=](UInt n)
 								{
 									const auto skipFirst = Inputs[first]->Skip;
 									const auto skipSecond = Inputs[second]->Skip;
@@ -405,7 +405,7 @@ namespace dnn
 					if (plain)
 					{
 						if (fullDepth)
-							for_i(batchSize, threads, [=](UInt n)
+							for_i_average(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * size;
 								const auto end = start + size;
@@ -417,7 +417,7 @@ namespace dnn
 								}
 							});
 						else
-							for_i(batchSize, threads, [=](UInt n)
+							for_i_average(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * size;
 								const auto end = start + size;
@@ -434,7 +434,7 @@ namespace dnn
 					else
 					{
 						if (fullDepth)
-							for_i(batchSize, threads, [=](UInt n)
+							for_i_average(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * size;
 
@@ -453,7 +453,7 @@ namespace dnn
 								}
 							});
 						else
-							for_i(batchSize, threads, [=](UInt n)
+							for_i_average(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * size;
 								const auto scale0 = scales[0];
@@ -479,7 +479,7 @@ namespace dnn
 					if (plain)
 					{
 						if (fullDepth)
-							for_i(batchSize, threads, [=](UInt n)
+							for_i_average(batchSize, threads, [=](UInt n)
 							{
 								for (auto c = 0ull; c < C; c++)
 								{
@@ -494,7 +494,7 @@ namespace dnn
 								}
 							});
 						else
-							for_i(batchSize, threads, [=](UInt n)
+							for_i_average(batchSize, threads, [=](UInt n)
 							{
 								const auto scale0 = scales[first];
 								const auto scale1 = scales[second];
@@ -516,7 +516,7 @@ namespace dnn
 						const auto strideHW = HW() * VectorSize;
 
 						if (fullDepth)
-							for_i(batchSize, threads, [=](UInt n)
+							for_i_average(batchSize, threads, [=](UInt n)
 							{
 								VecFloat D1;
 								for (auto c = 0ull; c < PaddedC; c += VectorSize)
@@ -533,7 +533,7 @@ namespace dnn
 								}
 							});
 						else
-							for_i(batchSize, threads, [=](UInt n)
+							for_i_average(batchSize, threads, [=](UInt n)
 							{
 								const auto scale0 = scales[first];
 								const auto scale1 = scales[second];
