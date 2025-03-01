@@ -237,7 +237,7 @@ namespace dnn
 						const auto partialHW = GetVectorPart(HW());
 						const auto threads = std::min<UInt>(maxThreads, C);
 
-						for_i_batchnorm(C, threads, [=](UInt c)
+						for_i(C, threads, [=](UInt c)
 						{
 							const auto invStddev = Float(1) / std::sqrt(RunningVariance[c] + Eps);
 							const auto weightedInvStdDev = Scaling ? (Weights[c] * invStddev) : invStddev;
@@ -258,7 +258,7 @@ namespace dnn
 					{
 						const auto threads = std::min<UInt>(maxThreads, PaddedC / VectorSize);
 
-						for_i_batchnorm(PaddedC / VectorSize, threads, [=](UInt c)
+						for_i(PaddedC / VectorSize, threads, [=](UInt c)
 						{
 							//const auto overflow = ((!padded) && (c >= (part / VectorSize)));
 							//const auto cutoff = overflow ? int(VectorSize - (PaddedC - C)) : int(VectorSize);
@@ -294,7 +294,7 @@ namespace dnn
 						const auto partialHW = GetVectorPart(HW());
 						const auto threads = std::min<UInt>(maxThreads, C);
 
-						for_i_batchnorm(C, threads, [=](UInt c)
+						for_i(C, threads, [=](UInt c)
 						{
 							auto mean = Float(0);
 							auto variance = Float(0);
@@ -468,7 +468,7 @@ namespace dnn
 					{
 						const auto threads = std::min<UInt>(maxThreads, PaddedC / VectorSize);
 
-						for_i_batchnorm(PaddedC / VectorSize, threads, [=](UInt c)
+						for_i(PaddedC / VectorSize, threads, [=](UInt c)
 						{
 							const auto overflow = ((!padded) && (c >= (part / VectorSize)));
 							const auto cutoff = overflow ? int(VectorSize - (PaddedC - C)) : int(VectorSize);
@@ -684,7 +684,7 @@ namespace dnn
 					const auto partialHW = GetVectorPart(HW());
 					const auto threads = std::min<UInt>(maxThreads, C);
 
-					for_i_batchnorm(C, threads, [=](UInt c)
+					for_i(C, threads, [=](UInt c)
 					{
 						const auto weightedInvStdDev = Scaling ? InvStdDev[c] * Weights[c] : InvStdDev[c];
 						const auto biases = Scaling && HasBias ? Biases[c] : Float(0);
@@ -794,7 +794,7 @@ namespace dnn
 				{
 					const auto threads = std::min<UInt>(maxThreads, PaddedC / VectorSize);
 
-					for_i_batchnorm(PaddedC / VectorSize, threads, [=](UInt c)
+					for_i(PaddedC / VectorSize, threads, [=](UInt c)
 					{
 						const auto overflow = ((!padded) && (c >= (part / VectorSize)));
 						const auto cutoff = overflow ? int(VectorSize - (PaddedC - C)) : int(VectorSize);
@@ -1025,7 +1025,7 @@ namespace dnn
 				{
 					if (!InplaceBwd)
 					{
-						for_i_batchnorm(batchSize, threads, [=](UInt n)
+						for_i(batchSize, threads, [=](UInt n)
 						{
 							VecFloat mask;
 							for (auto c = 0ull; c < PaddedC; c += VectorSize)
@@ -1058,7 +1058,7 @@ namespace dnn
 					}
 					else
 					{
-						for_i_batchnorm(batchSize, threads, [=](UInt n)
+						for_i(batchSize, threads, [=](UInt n)
 						{
 							VecFloat mask;
 							if (Enabled)
@@ -1090,7 +1090,7 @@ namespace dnn
 				{
 					if (!InplaceBwd)
 					{
-						for_i_batchnorm(batchSize, threads, [=](UInt n)
+						for_i(batchSize, threads, [=](UInt n)
 						{
 							for (auto c = 0ull; c < C; c++)
 							{
@@ -1108,7 +1108,7 @@ namespace dnn
 					}
 					else
 					{
-						for_i_batchnorm(batchSize, threads, [=](UInt n)
+						for_i(batchSize, threads, [=](UInt n)
 						{
 							for (auto c = 0ull; c < C; c++)
 							{
@@ -1127,7 +1127,7 @@ namespace dnn
 			{
 				if (!plain)
 				{
-					for_i_batchnorm(batchSize, threads, [=](UInt n)
+					for_i(batchSize, threads, [=](UInt n)
 					{
 						for (auto c = 0ull; c < PaddedC; c += VectorSize)
 						{
@@ -1139,7 +1139,7 @@ namespace dnn
 				}
 				else
 				{
-					for_i_batchnorm(batchSize, threads, [=](UInt n)
+					for_i(batchSize, threads, [=](UInt n)
 					{
 						for (auto c = 0ull; c < C; c++)
 						{
@@ -1206,14 +1206,14 @@ namespace dnn
 					if (InplaceBwd)
 					{
 						if (!plain)
-							for_i_batchnorm(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto offset = n * PaddedC;
 								for (auto c = offset; c < offset + PaddedC; c += VectorSize)
 									((enabled ? VecFloat().load_a(&NeuronsActive[c]) : VecFloat(1)) * (Func.dfVec(VecFloat().load_a(&InputNeurons[c]), Alpha, Beta) * VecFloat().load_a(&InputLayerBwd->NeuronsD1[c]))).store_a(&InputLayerBwd->NeuronsD1[c]);
 							});
 						else
-							for_i_batchnorm(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto offset = n * C;
 								for (auto c = offset; c < offset + C; c++)
@@ -1223,14 +1223,14 @@ namespace dnn
 					else
 					{
 						if (!plain)
-							for_i_batchnorm(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto offset = n * PaddedC;
 								for (auto c = offset; c < offset + PaddedC; c += VectorSize)
 									((enabled ? VecFloat().load_a(&NeuronsActive[c]) : VecFloat(1)) * (Func.dfVec(VecFloat().load_a(&InputNeurons[c]), Alpha, Beta) * VecFloat().load_a(&NeuronsD1[c]))).store_a(&NeuronsD1[c]);
 							});
 						else
-							for_i_batchnorm(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto offset = n * C;
 								for (auto c = offset; c < offset + C; c++)
@@ -1291,7 +1291,7 @@ namespace dnn
 					if (InplaceBwd)
 					{
 						if (!plain)
-							for_i_batchnorm(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								for (auto c = 0ull; c < PaddedC; c += VectorSize)
 								{
@@ -1301,7 +1301,7 @@ namespace dnn
 								}
 							});
 						else
-							for_i_batchnorm(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								for (auto c = 0ull; c < C; c++)
 								{
@@ -1314,7 +1314,7 @@ namespace dnn
 					else
 					{
 						if (!plain)
-							for_i_batchnorm(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								for (auto c = 0ull; c < PaddedC; c += VectorSize)
 								{
@@ -1324,7 +1324,7 @@ namespace dnn
 								}
 							});
 						else
-							for_i_batchnorm(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								for (auto c = 0ull; c < C; c++)
 								{

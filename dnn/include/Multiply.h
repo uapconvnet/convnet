@@ -237,7 +237,7 @@ namespace dnn
 							{
 								if (EqualDimensions(Inputs))
 								{
-									for_i_multiply(batchSize, threads, [=](UInt n)
+									for_i(batchSize, threads, [=](UInt n)
 									{
 										for (auto c = 0ull; c < PaddedC; c += VectorSize)
 										{
@@ -255,7 +255,7 @@ namespace dnn
 								}
 								else
 								{
-									for_i_multiply(batchSize, threads, [=](UInt n)
+									for_i(batchSize, threads, [=](UInt n)
 									{
 										for (auto c = 0ull; c < PaddedC; c += VectorSize)
 										{
@@ -276,7 +276,7 @@ namespace dnn
 							{
 								if (EqualDimensions(Inputs))
 								{
-									for_i_multiply(batchSize, threads, [=](UInt n)
+									for_i(batchSize, threads, [=](UInt n)
 									{
 										const auto channelOffset = n * Inputs[second]->PaddedCDHW();
 										for (auto c = 0ull; c < PaddedC; c += VectorSize)
@@ -300,7 +300,7 @@ namespace dnn
 							{
 								if (EqualDimensions(Inputs))
 								{
-									for_i_multiply(batchSize, threads, [=](UInt n)
+									for_i(batchSize, threads, [=](UInt n)
 									{
 										const auto start = n * CDHW();
 										const auto end = start + CDHW();
@@ -316,7 +316,7 @@ namespace dnn
 								}
 								else
 								{
-									for_i_multiply(batchSize, threads, [=](UInt n)
+									for_i(batchSize, threads, [=](UInt n)
 									{
 										for (auto c = 0ull; c < C; c++)
 										{
@@ -338,7 +338,7 @@ namespace dnn
 							{
 								if (EqualDimensions(Inputs))
 								{
-									for_i_multiply(batchSize, threads, [=](UInt n)
+									for_i(batchSize, threads, [=](UInt n)
 									{
 										const auto channelOffset = n * HW();
 										for (auto c = 0ull; c < C; c++)
@@ -461,7 +461,7 @@ namespace dnn
 					{
 #endif
 						if (!plain)
-							for_i_multiply(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								VecFloat neuronsD1;
 								for (auto c = 0ull; c < PaddedC; c += VectorSize)
@@ -476,7 +476,7 @@ namespace dnn
 								}
 							});
 						else
-							for_i_multiply(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * CDHW();
 								PRAGMA_OMP_SIMD()
@@ -527,7 +527,7 @@ namespace dnn
 					{
 #endif
 						if (!plain)
-							for_i_multiply(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								VecFloat neuronsD1;
 								for (auto c = 0ull; c < PaddedC; c += VectorSize)
@@ -543,7 +543,7 @@ namespace dnn
 								}
 							});
 						else
-							for_i_multiply(batchSize, threads, [=](UInt n)
+							for_i(batchSize, threads, [=](UInt n)
 							{
 								for (auto c = 0ull; c < C; c++)
 								{
@@ -567,7 +567,7 @@ namespace dnn
 				if (EqualDimensions(Inputs))
 				{
 					if (!plain)
-						for_i_multiply(batchSize, threads, [=](UInt n)
+						for_i(batchSize, threads, [=](UInt n)
 						{
 							const auto channelOffset = n * Inputs[second]->PaddedCDHW();
 							VecFloat neuronsD1;
@@ -584,7 +584,7 @@ namespace dnn
 							}
 						});
 					else
-						for_i_multiply(batchSize, threads, [=](UInt n)
+						for_i(batchSize, threads, [=](UInt n)
 						{
 							const auto channelOffset = n * Inputs[second]->CDHW();
 							for (auto c = 0ull; c < C; c++)
