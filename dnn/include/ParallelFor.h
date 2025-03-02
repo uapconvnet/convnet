@@ -150,11 +150,11 @@ namespace dnn
 		PRAGMA_OMP_PARALLEL_THREADS(thrds)
 		{
 			PRAGMA_OMP_FOR_SCHEDULE_STATIC(chunk)
-				for (auto i = 0ll; i < static_cast<long long>(range); i++)
-					f(i);
+			for (auto i = 0ll; i < static_cast<long long>(range); i++)
+				f(i);
 		}
 #else
-#pragma omp parallel for schedule(static,chunk) num_threads(thrds)
+		#pragma omp parallel for schedule(static,chunk) num_threads(thrds)
 		for (auto i = 0ull; i < range; i++)
 			f(i);
 #endif
