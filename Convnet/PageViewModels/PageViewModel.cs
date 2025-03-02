@@ -115,7 +115,9 @@ namespace Convnet.PageViewModels
 
             if (Model != null)
             {
-                var folder = Path.Combine(DefinitionsDirectory, Model.Name);
+                var folder = DefinitionsDirectory;
+                if (Directory.Exists(Path.Combine(DefinitionsDirectory, Model.Name)))
+                    folder = Path.Combine(DefinitionsDirectory, Model.Name);
 
 #if Linux
                 var dialog = new OpenFileDialog
