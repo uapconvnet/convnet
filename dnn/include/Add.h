@@ -12,7 +12,9 @@ namespace dnn
 		std::unique_ptr<dnnl::binary> fwd;
 #endif
 		std::vector<Float> scales;
-
+		FloatVector scale0;
+		FloatVector scale1;
+		
 	public:
 		const Byte first, second;
 		FloatVector SurvivalProbability;
@@ -21,7 +23,9 @@ namespace dnn
 			Layer(device, format, name, LayerTypes::Add, 0, 0, inputs[GetFirst(inputs)]->C, inputs[GetFirst(inputs)]->D, inputs[GetFirst(inputs)]->H, inputs[GetFirst(inputs)]->W, 0, 0, 0, inputs),
 			first(GetFirst(inputs)),
 			second(GetSecond(inputs)),
-			SurvivalProbability(FloatVector(2, Float(1)))
+			SurvivalProbability(FloatVector(2, Float(1))),
+			scale0(FloatVector(1, Float(1))),
+			scale1(FloatVector(1, Float(1)))
 		{
 			assert(Inputs.size() == 2);
 			assert(Inputs[0]->C == Inputs[1]->C);
@@ -80,12 +84,18 @@ namespace dnn
 				DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::data_type::f32, ChosenFormat));
 			}
 
-			fwdDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[first]->DstMemDesc, *Inputs[second]->DstMemDesc, *DstMemDesc));
+			dnnl::primitive_attr attr;
+			attr.set_scales_mask(DNNL_ARG_SRC_0, 0);
+			attr.set_scales_mask(DNNL_ARG_SRC_1, 0);
+
+			fwdDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[first]->DstMemDesc, *Inputs[second]->DstMemDesc, *DstMemDesc, attr));
 
 			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 
-			fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) } };
+			auto scaleDesc = dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x);
+			
+			fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(scaleDesc, Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(scaleDesc, Device.engine, scale1.data()) } };
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::binary>(dnnl::binary(*fwdDesc));
@@ -98,6 +108,9 @@ namespace dnn
 			scales[0] = fullDepth ? Float(1) : (Inputs[0]->Skip ? Float(0) : Float(1));
 			scales[1] = fullDepth ? Float(1) : (Inputs[1]->Skip ? Float(0) : Float(1));
 					
+			scale0[0] = (!training || fullDepth) ? Float(1) : (Inputs[first]->Skip ? Float(0) : Float(1));
+			scale1[0] = (!training || fullDepth) ? Float(1) : (Inputs[second]->Skip ? Float(0) : Float(1));
+
 			if (training)
 			{
 				if ((Reference || ReferenceAdd ) && fullDepth)
@@ -108,6 +121,7 @@ namespace dnn
 					dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
 #endif
 					Device.stream.wait();
+
 #ifndef DNN_LEAN
 					InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
 #endif // DNN_LEAN
@@ -298,7 +312,7 @@ namespace dnn
 				Device.stream.wait();
 			}
 		}
-
+		
 		void BackwardProp(const UInt batchSize) final override
 		{
 #ifdef DNN_LEAN
@@ -547,5 +561,42 @@ namespace dnn
 			ReleaseGradient();
 #endif // DNN_LEAN
 		}
+
+/*
+		void ForwardPropDNNL(const UInt batchSize, const bool training)
+		{
+			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
+			scale0[0] = fullDepth ? Float(1) : (Inputs[first]->Skip ? Float(0) : Float(1));
+			scale1[0] = fullDepth ? Float(1) : (Inputs[second]->Skip ? Float(0) : Float(1));
+
+#ifdef DNN_CACHE_PRIMITIVES
+			fwd->execute(Device.stream, fwdArgs);
+#else
+			dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
+#endif
+			Device.stream.wait();
+
+#ifndef DNN_LEAN
+			if (training)
+				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
+#endif // DNN_LEAN
+		}
+
+		void BackwardPropDNNL(const UInt batchSize)
+		{
+#ifdef DNN_LEAN
+			ZeroGradientMulti(batchSize);
+#endif
+
+			const auto fullDepth = SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1);
+			scale0[0] = fullDepth ? Float(1) : (Inputs[first]->Skip ? Float(0) : Float(1));
+			scale1[0] = fullDepth ? Float(1) : (Inputs[second]->Skip ? Float(0) : Float(1));
+
+
+#ifdef DNN_LEAN
+			ReleaseGradient();
+#endif // DNN_LEAN
+		}
+*/
 	};
 }

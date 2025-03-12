@@ -400,5 +400,35 @@ namespace dnn
 			ReleaseGradient();
 #endif // DNN_LEAN
 		}
+
+/*
+		void ForwardPropDNNL(const UInt batchSize, const bool training)
+		{
+#ifdef DNN_CACHE_PRIMITIVES
+			fwd->execute(Device.stream, fwdArgs);
+#else
+			dnnl::concat(*fwdDesc).execute(Device.stream, fwdArgs);
+#endif
+			Device.stream.wait();
+
+#ifndef DNN_LEAN
+			if (training)
+				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
+#endif // DNN_LEAN
+		}
+
+		void BackwardPropDNNL(const UInt batchSize)
+		{
+#ifdef DNN_LEAN
+			ZeroGradientMulti(batchSize);
+#endif
+
+
+
+#ifdef DNN_LEAN
+			ReleaseGradient();
+#endif // DNN_LEAN
+		}
+*/
 	};
 }
