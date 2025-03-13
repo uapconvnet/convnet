@@ -1942,7 +1942,7 @@ namespace Interop
                 OnPropertyChanged(nameof(CostIndex));
             }
         }
-        public string CostName
+        public string? CostName
         {
             get { return costName; }
             set
@@ -2453,7 +2453,7 @@ namespace Interop
         private UInt epoch;
         private UInt groupIndex;
         private UInt costIndex;
-        private string costName;
+        private string? costName;
         private UInt n;
         private UInt d;
         private UInt h;
@@ -3483,10 +3483,10 @@ namespace Interop
 		public DNNCostLayer[] CostLayers;
         public Float[] MeanTrainSet;
         public Float[] StdTrainSet;
-        public UInt[] ConfusionMatrix;
+        public UInt[]? ConfusionMatrix;
         public string[][] LabelsCollection;
         public bool UseTrainingStrategy;
-        public System.Collections.ObjectModel.ObservableCollection<DNNTrainingStrategy>? TrainingStrategies;
+        public System.Collections.ObjectModel.ObservableCollection<DNNTrainingStrategy> TrainingStrategies;
         public DNNTrainingRate[] TrainingRates;
         public DNNTrainingRate TrainingRate;
 		public string Definition;

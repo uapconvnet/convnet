@@ -14,11 +14,11 @@ namespace Convnet.Dialogs
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     public partial class TrainParameters : Window
     {
-        public DNNTrainingRate Rate { get; set; }
-        public DNNModel Model { get; set; }
-        public string Path { get; set; }
+        public DNNTrainingRate? Rate { get; set; }
+        public DNNModel? Model { get; set; }
+        public string? Path { get; set; }
 
-        public TrainPageViewModel tpvm;
+        public TrainPageViewModel? tpvm;
         public bool DialogResult { get; set; }
 
         public TrainParameters()
@@ -39,7 +39,7 @@ namespace Convnet.Dialogs
             {
                 bool color = true;
 
-                switch (Model.Dataset)
+                switch (Model?.Dataset)
                 {
                     case DNNDatasets.cifar10:
                     case DNNDatasets.cifar100:
@@ -70,13 +70,13 @@ namespace Convnet.Dialogs
                 var tbge = this.FindControl<TextBox>("textBoxGotoEpoch");
                 if (tbge != null)
                 {
-                    tbge.Text = tpvm.GotoEpoch.ToString(); ;
+                    tbge.Text = tpvm?.GotoEpoch.ToString(); ;
                 }
 
                 var sgdr = this.FindControl<CheckBox>("CheckBoxSGDR");
                 if (sgdr != null)
                 {
-                    sgdr.IsChecked = tpvm.SGDR;
+                    sgdr.IsChecked = tpvm?.SGDR;
                     ChangeSGDR();
                 }
 
@@ -169,40 +169,43 @@ namespace Convnet.Dialogs
 
         private void ButtonTrain_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            //if (IsValid(this))
+            if (Model != null && Rate != null && tpvm != null)
             {
-                if (Model.BatchNormUsed() && Rate.N == 1)
+                //if (IsValid(this))
                 {
-                    Dispatcher.UIThread.Post(() => MessageBox.Show("Your model uses batch normalization.\r\nThe batch size cannot be equal to 1 in this case.", "Warning", MessageBoxButtons.OK));
-                    return;
-                }
-                var tb = this.FindControl<TextBox>("textBoxGotoEpoch");
-                if (tb != null)
-                {
-                    uint.TryParse(tb.Text, out uint gotoEpoch);
-                    if ((gotoEpoch > (tpvm.SGDR ? Rate.Epochs * Rate.Cycles * Rate.EpochMultiplier : Rate.Epochs)) || (gotoEpoch < 1))
+                    if (Model.BatchNormUsed() && Rate.N == 1)
                     {
-                        Dispatcher.UIThread.Post(() => MessageBox.Show("Goto epoch is to large", "Warning", MessageBoxButtons.OK));
+                        Dispatcher.UIThread.Post(() => MessageBox.Show("Your model uses batch normalization.\r\nThe batch size cannot be equal to 1 in this case.", "Warning", MessageBoxButtons.OK));
                         return;
                     }
-                    tpvm.GotoEpoch = gotoEpoch;
-                    tpvm.GotoCycle = 1;
+                    var tb = this.FindControl<TextBox>("textBoxGotoEpoch");
+                    if (tb != null)
+                    {
+                        uint.TryParse(tb.Text, out uint gotoEpoch);
+                        if ((gotoEpoch > (tpvm.SGDR ? Rate.Epochs * Rate.Cycles * Rate.EpochMultiplier : Rate.Epochs)) || (gotoEpoch < 1))
+                        {
+                            Dispatcher.UIThread.Post(() => MessageBox.Show("Goto epoch is to large", "Warning", MessageBoxButtons.OK));
+                            return;
+                        }
+                        tpvm.GotoEpoch = gotoEpoch;
+                        tpvm.GotoCycle = 1;
+                    }
+
+                    Settings.Default.TraininingRate = Rate;
+                    Settings.Default.Optimizer = (int)Rate.Optimizer;
+                    Settings.Default.Save();
+
+                    if (Settings.Default.TrainingStrategies != null)
+                    {
+                        Model.ClearTrainingStrategies();
+                        foreach (DNNTrainingStrategy strategy in Settings.Default.TrainingStrategies)
+                            Model.AddTrainingStrategy(strategy);
+                        Model.TrainingStrategies = Settings.Default.TrainingStrategies;
+                    }
+
+                    DialogResult = true;
+                    Close();
                 }
-
-                Settings.Default.TraininingRate = Rate;
-                Settings.Default.Optimizer = (int)Rate.Optimizer;
-                Settings.Default.Save();
-
-                if (Settings.Default.TrainingStrategies != null)
-                {
-                    Model.ClearTrainingStrategies();
-                    foreach (DNNTrainingStrategy strategy in Settings.Default.TrainingStrategies)
-                        Model.AddTrainingStrategy(strategy);
-                    Model.TrainingStrategies = Settings.Default.TrainingStrategies;
-                }
-
-                DialogResult = true;
-                Close();
             }
         }
 
@@ -263,8 +266,8 @@ namespace Convnet.Dialogs
             if (cbs != null)
             {
                 var useStrategy = cbs.IsChecked.HasValue && cbs.IsChecked.Value;
-                if (tpvm.Model != null)
-                    tpvm.Model.SetUseTrainingStrategy(useStrategy);
+                if (tpvm?.Model != null)
+                    tpvm?.Model.SetUseTrainingStrategy(useStrategy);
                 Settings.Default.UseTrainingStrategy = useStrategy;
                 Settings.Default.Save();
 
@@ -278,7 +281,7 @@ namespace Convnet.Dialogs
             if (cbs != null)
             {
                 var useStrategy = cbs.IsChecked.HasValue && cbs.IsChecked.Value;
-                if (tpvm.Model != null)
+                if (tpvm?.Model != null)
                     tpvm.Model.SetUseTrainingStrategy(useStrategy);
                 Settings.Default.UseTrainingStrategy = useStrategy;
                 Settings.Default.Save();
@@ -290,24 +293,28 @@ namespace Convnet.Dialogs
         private void ChangeSGDR()
         {
             var sgdr = this.FindControl<CheckBox>("CheckBoxSGDR");
-            if (sgdr != null)
-                tpvm.SGDR = sgdr.IsChecked.HasValue ? sgdr.IsChecked.Value : false;
 
-            var tbc = this.FindControl<TextBox>("textBoxCycles");
-            if (tbc != null)
-                tbc.IsEnabled = tpvm.SGDR;
+            if (tpvm != null)
+            {
+                if (sgdr != null)
+                    tpvm.SGDR = sgdr.IsChecked.HasValue ? sgdr.IsChecked.Value : false;
 
-            var tbem = this.FindControl<TextBox>("textBoxEpochMultiplier");
-            if (tbem != null)
-                tbem.IsEnabled = tpvm.SGDR;
+                var tbc = this.FindControl<TextBox>("textBoxCycles");
+                if (tbc != null)
+                    tbc.IsEnabled = tpvm.SGDR;
 
-            var tbdf = this.FindControl<TextBox>("textBoxDecayFactor");
-            if (tbdf != null)
-                tbdf.IsEnabled = !tpvm.SGDR;
+                var tbem = this.FindControl<TextBox>("textBoxEpochMultiplier");
+                if (tbem != null)
+                    tbem.IsEnabled = tpvm.SGDR;
 
-            var tbae = this.FindControl<TextBox>("textBoxDecayAfterEpochs");
-            if (tbae != null)
-                tbae.IsEnabled = !tpvm.SGDR;
+                var tbdf = this.FindControl<TextBox>("textBoxDecayFactor");
+                if (tbdf != null)
+                    tbdf.IsEnabled = !tpvm.SGDR;
+
+                var tbae = this.FindControl<TextBox>("textBoxDecayAfterEpochs");
+                if (tbae != null)
+                    tbae.IsEnabled = !tpvm.SGDR;
+            }
         }
 
         private void comboBoOptimizer_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -438,13 +445,14 @@ namespace Convnet.Dialogs
         {
             if (Settings.Default.TrainingStrategies == null)
             {
-                var rate = Rate;
+                DNNTrainingRate rate = Rate ?? new DNNTrainingRate();
                 var strategy = new DNNTrainingStrategy(1.0f, rate.N, rate.D, rate.H, rate.W, rate.PadD, rate.PadH, rate.PadW, rate.Momentum, rate.Beta2, rate.Gamma, rate.L2Penalty, rate.Dropout, rate.HorizontalFlip, rate.VerticalFlip, rate.InputDropout, rate.Cutout, rate.CutMix, rate.AutoAugment, rate.ColorCast, rate.ColorAngle, rate.Distortion, rate.Interpolation, rate.Scaling, rate.Rotation);
                 Settings.Default.TrainingStrategies = new ObservableCollection<DNNTrainingStrategy> { strategy };
                 Settings.Default.Save();
             }
 
-            tpvm.TrainingStrategies = Settings.Default.TrainingStrategies;
+            if (tpvm != null)
+                tpvm.TrainingStrategies = Settings.Default.TrainingStrategies;
 
             //TrainingStrategiesEditor dialog = new TrainingStrategiesEditor { Path = TrainPageViewModel.StorageDirectory };
             //dialog.tpvm = tpvm;

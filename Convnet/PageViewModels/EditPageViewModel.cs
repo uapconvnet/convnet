@@ -296,7 +296,7 @@ namespace Convnet.PageViewModels
                             {
                                 BackgroundColor = Settings.Default.BackgroundColor,
                                 BlockSize = (UInt64)Settings.Default.PixelSize,
-                                TrainingStrategies = Settings.Default.TrainingStrategies
+                                TrainingStrategies = Settings.Default.TrainingStrategies != null ? Settings.Default.TrainingStrategies : new System.Collections.ObjectModel.ObservableCollection<DNNTrainingStrategy>()
                             };
                             Model?.ClearTrainingStrategies();
                             if (Settings.Default.TrainingStrategies != null)

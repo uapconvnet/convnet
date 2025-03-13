@@ -111,16 +111,16 @@ namespace Convnet.Common
         /// <param name="priority">The DispatcherPriority to use
         /// as the lowest level of messages to get processed</param>
         //[SecurityPermissionAttribute(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-        public static void DoEvents(DispatcherPriority priority)
-        {
-            Func<object, object>? functionDelegate = new Func<object, object>(ExitFrameOperation);
-            DispatcherFrame frame = new DispatcherFrame();
-            DispatcherOperation dispatcherOperation = Dispatcher.UIThread.InvokeAsync(() => functionDelegate, priority);
-            Dispatcher.UIThread.PushFrame(frame);
+        //public static void DoEvents(DispatcherPriority priority)
+        //{
+        //    Func<object, object>? functionDelegate = new Func<object, object>(ExitFrameOperation);
+        //    DispatcherFrame frame = new DispatcherFrame();
+        //    DispatcherOperation dispatcherOperation = Dispatcher.UIThread.InvokeAsync(() => functionDelegate, priority);
+        //    Dispatcher.UIThread.PushFrame(frame);
 
-            if (dispatcherOperation.Status != DispatcherOperationStatus.Completed)
-                dispatcherOperation.Abort();
-        }
+        //    if (dispatcherOperation.Status != DispatcherOperationStatus.Completed)
+        //        dispatcherOperation.Abort();
+        //}
 
 
         /// <summary>
@@ -128,10 +128,10 @@ namespace Convnet.Common
         /// that are DispatcherPriority.Background or above
         /// </summary>
         //[SecurityPermissionAttribute(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-        public static void DoEvents()
-        {
-            DoEvents(DispatcherPriority.Background);
-        }
+        //public static void DoEvents()
+        //{
+        //    DoEvents(DispatcherPriority.Background);
+        //}
 
 
         /// <summary>

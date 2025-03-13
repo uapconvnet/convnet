@@ -23,11 +23,11 @@ namespace Convnet.Dialogs
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     public partial class TestParameters : Window
     {
-        public DNNTrainingRate Rate { get; set; }
-        public DNNModel Model { get; set; }
-        public string Path { get; set; }
+        public DNNTrainingRate? Rate { get; set; }
+        public DNNModel? Model { get; set; }
+        public string? Path { get; set; }
 
-        public TestPageViewModel tpvm;
+        public TestPageViewModel? tpvm;
         public bool DialogResult { get; set; }
 
         public TestParameters()
@@ -48,7 +48,7 @@ namespace Convnet.Dialogs
             {
                 bool color = true;
 
-                switch (Model.Dataset)
+                switch (Model?.Dataset)
                 {
                     case DNNDatasets.cifar10:
                     case DNNDatasets.cifar100:
@@ -97,6 +97,7 @@ namespace Convnet.Dialogs
         private void ButtonTest_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             //if (IsValid(this))
+            if (Model != null && Rate != null)
             {
                 if (Model.BatchNormUsed() && Rate.N == 1)
                 {

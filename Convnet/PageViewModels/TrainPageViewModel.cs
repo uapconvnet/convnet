@@ -73,30 +73,30 @@ namespace Convnet.PageViewModels
         private readonly string stringMaxPositive       = " Max:     {0:N8}" + nwl;
         private readonly string stringMaxNegative       = " Max:    {0:N8}" + nwl;
 
-        private string progressText = string.Empty;
-        private string layerInfo = string.Empty;
-        private string weightsMinMax = string.Empty;
-        private string label = string.Empty;
+        private string? progressText = string.Empty;
+        private string? layerInfo = string.Empty;
+        private string? weightsMinMax = string.Empty;
+        private string? label = string.Empty;
         private bool showProgress = false;
         private bool showSample = false;
-        private ObservableCollection<DNNTrainingRate> trainRates = new ObservableCollection<DNNTrainingRate>();
-        private ObservableCollection<DNNTrainingStrategy> trainingStrategies = new ObservableCollection<DNNTrainingStrategy>();
+        private ObservableCollection<DNNTrainingRate>? trainRates = new ObservableCollection<DNNTrainingRate>();
+        private ObservableCollection<DNNTrainingStrategy>? trainingStrategies = new ObservableCollection<DNNTrainingStrategy>();
         private int selectedIndex = -1;
         private bool sgdr = false;
         private uint gotoEpoch = 1;
         private uint gotoCycle = 1;
         private int selectedCostIndex = 0;
-        private ComboBox optimizerComboBox;
-        private ComboBox costLayersComboBox;
-        private ComboBox dataProviderComboBox;
-        private ComboBox layersComboBox;
-        private Button refreshButton;
-        private ComboBox plotTypeComboBox;
-        private CheckBox disableLockingCheckBox;
-        private Button unlockAllButton;
-        private Button lockAllButton;
-        private CheckBox trainingPlotCheckBox;
-        private Slider pixelSizeSlider;
+        private ComboBox? optimizerComboBox;
+        private ComboBox? costLayersComboBox;
+        private ComboBox? dataProviderComboBox;
+        private ComboBox? layersComboBox;
+        private Button? refreshButton;
+        private ComboBox? plotTypeComboBox;
+        private CheckBox? disableLockingCheckBox;
+        private Button? unlockAllButton;
+        private Button? lockAllButton;
+        private CheckBox? trainingPlotCheckBox;
+        private Slider? pixelSizeSlider;
         private DNNOptimizers optimizer;
         private int refreshRate = 0;
         private int weightsSnapshotX = 0;
@@ -104,20 +104,20 @@ namespace Convnet.PageViewModels
         private bool showWeights = false;
         private bool showWeightsSnapshot = false;
         private bool showTrainingPlot = false;
-        private ObservableCollection<DataPoint> pointsTrain = new ObservableCollection<DataPoint>();
-        private ObservableCollection<DataPoint> pointsTest = new ObservableCollection<DataPoint>();
-        private string pointsTrainLabel = string.Empty;
-        private string pointsTestLabel = string.Empty;
+        private ObservableCollection<DataPoint>? pointsTrain = new ObservableCollection<DataPoint>();
+        private ObservableCollection<DataPoint>? pointsTest = new ObservableCollection<DataPoint>();
+        private string? pointsTrainLabel = string.Empty;
+        private string? pointsTestLabel = string.Empty;
         private PlotType currentPlotType;
         private LegendPosition currentLegendPosition;
-        private PlotModel plotModel;
-        private Avalonia.Media.Imaging.WriteableBitmap weightsSnapshot;
-        private Avalonia.Media.Imaging.WriteableBitmap inputSnapshot;
+        private PlotModel? plotModel;
+        private Avalonia.Media.Imaging.WriteableBitmap? weightsSnapshot;
+        private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private StringBuilder sb = new StringBuilder();
-        public Timer RefreshTimer;
+        public Timer? RefreshTimer;
         public TimeSpan EpochDuration { get; set; }
-        public event EventHandler Open;
-        public event EventHandler Save;
+        public event EventHandler? Open;
+        public event EventHandler? Save;
         public event EventHandler<int> RefreshRateChanged;
         
         public TrainPageViewModel(DNNModel model) : base(model)
@@ -510,7 +510,7 @@ namespace Convnet.PageViewModels
                 Model.TrainProgress += TrainProgress;
             }
 
-            costLayersComboBox.Items.Clear();
+            costLayersComboBox?.Items.Clear();
             for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
             {
                 var item = new ComboBoxItem
@@ -519,10 +519,10 @@ namespace Convnet.PageViewModels
                     Content = Model.CostLayers[layer].Name,
                     Tag = layer
                 };
-                costLayersComboBox.Items.Add(item);
+                costLayersComboBox?.Items.Add(item);
             }
 
-            if (Model != null)
+            if (Model != null && costLayersComboBox != null && layersComboBox != null)
             { 
                 costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
                 selectedCostIndex = costLayersComboBox.SelectedIndex;
@@ -535,11 +535,12 @@ namespace Convnet.PageViewModels
                        
             Settings.Default.SelectedLayer = 0;
             Settings.Default.Save();
-            dataProviderComboBox.SelectedIndex = (int)Dataset;
+            if (dataProviderComboBox  != null)
+                dataProviderComboBox.SelectedIndex = (int)Dataset;
 
             LayersComboBox_SelectionChanged(sender, null);
            
-            if (TrainingLog.Count > 0)
+            if (TrainingLog?.Count > 0)
             {
                 var clear = await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Do you want to clear the training log?", "Clear log?", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1));
                 if (clear == MessageBoxResult.Yes)
@@ -561,9 +562,10 @@ namespace Convnet.PageViewModels
                     {
                         Model.UpdateCostInfo(c);
                         DNNCostLayer cost = Model.CostLayers[c];
-                        TrainingLog.Add(new DNNTrainingResult(Cycle, Epoch, cost.GroupIndex, c, cost.Name, N, D, H, W, PadD, PadH, PadW, (DNNOptimizers)Optimizer, Rate, Eps, Momentum, Beta2, Gamma, L2Penalty, Dropout, InputDropout, Cutout, CutMix, AutoAugment, HorizontalFlip, VerticalFlip, ColorCast, ColorAngle, Distortion, (DNNInterpolations)Interpolation, Scaling, Rotation, cost.AvgTrainLoss, cost.TrainErrors, cost.TrainErrorPercentage, cost.TrainAccuracy, cost.AvgTestLoss, cost.TestErrors, cost.TestErrorPercentage, cost.TestAccuracy, (Int64)span.TotalMilliseconds, span));
+                        TrainingLog?.Add(new DNNTrainingResult(Cycle, Epoch, cost.GroupIndex, c, cost.Name, N, D, H, W, PadD, PadH, PadW, (DNNOptimizers)Optimizer, Rate, Eps, Momentum, Beta2, Gamma, L2Penalty, Dropout, InputDropout, Cutout, CutMix, AutoAugment, HorizontalFlip, VerticalFlip, ColorCast, ColorAngle, Distortion, (DNNInterpolations)Interpolation, Scaling, Rotation, cost.AvgTrainLoss, cost.TrainErrors, cost.TrainErrorPercentage, cost.TrainAccuracy, cost.AvgTestLoss, cost.TestErrors, cost.TestErrorPercentage, cost.TestAccuracy, (Int64)span.TotalMilliseconds, span));
                     }
-                    SelectedIndex = TrainingLog.Count - 1;
+                    if (TrainingLog != null)
+                        SelectedIndex = TrainingLog.Count - 1;
 
                     var epoch = "(" + Dataset.ToString().ToLower() + ")(" + ((DNNOptimizers)Optimizer).ToString().ToLower() + ")" + Epoch.ToString() + "-" + Cycle.ToString() + "-" + TrainErrors.ToString() + "-" + TestErrors.ToString();
                     var path = Path.Combine(DefinitionsDirectory, Settings.Default.ModelNameActive, epoch);
@@ -667,9 +669,12 @@ namespace Convnet.PageViewModels
 
                     case DNNStates.Completed:
                         {
-                            RefreshTimer.Stop();
-                            RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
-                            RefreshTimer.Dispose();
+                            if (RefreshTimer != null)
+                            {
+                                RefreshTimer.Stop();
+                                RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
+                                RefreshTimer.Dispose();
+                            }
 
                             if (Model != null)
                             {
@@ -686,7 +691,7 @@ namespace Convnet.PageViewModels
                                 CommandToolBar[6].IsVisible = true;
                                 CommandToolBar[7].IsVisible = true;
 
-                                if (Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0 || Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
+                                if (layersComboBox != null && (Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0 || Model.Layers[layersComboBox.SelectedIndex].IsNormLayer))
                                 {
                                     CommandToolBar[16].IsVisible = !Settings.Default.DisableLocking;
                                     CommandToolBar[17].IsVisible = !Settings.Default.DisableLocking;
@@ -710,20 +715,23 @@ namespace Convnet.PageViewModels
 
         public void OnDisableLockingChanged(object? sender, RoutedEventArgs e)
         {
-            disableLockingCheckBox.IsChecked = Settings.Default.DisableLocking;
+            if (disableLockingCheckBox !=  null)
+                disableLockingCheckBox.IsChecked = Settings.Default.DisableLocking;
         }
 
         private void DisableLockingCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
         {
-            if (disableLockingCheckBox.IsChecked.HasValue)
+            if (disableLockingCheckBox != null && disableLockingCheckBox.IsChecked.HasValue)
             {
                 Settings.Default.DisableLocking = disableLockingCheckBox.IsChecked.Value;
                 Settings.Default.Save();
 
                 Model?.SetDisableLocking(Settings.Default.DisableLocking);
 
-                unlockAllButton.IsVisible = !Settings.Default.DisableLocking;
-                lockAllButton.IsVisible = !Settings.Default.DisableLocking;
+                if (unlockAllButton != null)
+                    unlockAllButton.IsVisible = !Settings.Default.DisableLocking;
+                if (lockAllButton != null)
+                    lockAllButton.IsVisible = !Settings.Default.DisableLocking;
 
                 //layersComboBox.ItemTemplate = GetLockTemplate();
 
@@ -824,12 +832,17 @@ namespace Convnet.PageViewModels
        
         private void PixelSizeSlider_ValueChanged(object? sender, Avalonia.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
+
             int temp = (int)Math.Round(e.NewValue);
-            if (temp == 1)
-                ToolTip.SetTip(pixelSizeSlider, "1 Pixel");
-            else
-                ToolTip.SetTip(pixelSizeSlider, temp.ToString() + " Pixels");
             
+            if (pixelSizeSlider != null)
+            {
+                if (temp == 1)
+                    ToolTip.SetTip(pixelSizeSlider, "1 Pixel");
+                else
+                    ToolTip.SetTip(pixelSizeSlider, temp.ToString() + " Pixels");
+            }
+
             Settings.Default.PixelSize = temp;
             Settings.Default.Save();
 
@@ -838,7 +851,7 @@ namespace Convnet.PageViewModels
 
             Dispatcher.UIThread.Invoke(() =>
             {
-                if (Model != null && layersComboBox.SelectedIndex >= 0)
+                if (Model != null && layersComboBox?.SelectedIndex >= 0)
                 {
                     var index = layersComboBox.SelectedIndex;
                     if (index < (int)Model.LayerCount)
@@ -866,22 +879,25 @@ namespace Convnet.PageViewModels
 
         private void TrainingPlotCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
         {
-            Settings.Default.ShowTrainingPlot = trainingPlotCheckBox.IsChecked ?? false;
+            Settings.Default.ShowTrainingPlot = trainingPlotCheckBox?.IsChecked ?? false;
             Settings.Default.Save();
         }
 
         private void PlotTypeComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            CurrentPlotType = (PlotType)plotTypeComboBox.SelectedIndex;
-            Settings.Default.PlotType = (uint)plotTypeComboBox.SelectedIndex;
-            Settings.Default.Save();
-
+            if (plotTypeComboBox != null)
+            {
+                CurrentPlotType = (PlotType)plotTypeComboBox.SelectedIndex;
+                Settings.Default.PlotType = (uint)plotTypeComboBox.SelectedIndex;
+                Settings.Default.Save();
+            }
+            
             RefreshTrainingPlot();
         }
                
         public void CostLayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
-            if (costLayersComboBox.SelectedIndex >= 0)
+            if (costLayersComboBox?.SelectedIndex >= 0)
             {
                 SelectedCostIndex = costLayersComboBox.SelectedIndex;
                 Model?.SetCostIndex((uint)SelectedCostIndex);
@@ -892,49 +908,52 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Invoke(() =>
             {
-                PointsTrain.Clear();
-                PointsTest.Clear();
+                PointsTrain?.Clear();
+                PointsTest?.Clear();
 
-                switch (CurrentPlotType)
+                if (TrainingLog != null)
                 {
-                    case PlotType.Accuracy:
-                        foreach (DNNTrainingResult result in TrainingLog)
-                            if ((int)result.CostIndex == SelectedCostIndex)
-                                PointsTrain.Add(new DataPoint(result.Epoch, result.TrainAccuracy));
+                    switch (CurrentPlotType)
+                    {
+                        case PlotType.Accuracy:
+                            foreach (DNNTrainingResult result in TrainingLog)
+                                if ((int)result.CostIndex == SelectedCostIndex)
+                                    PointsTrain?.Add(new DataPoint(result.Epoch, result.TrainAccuracy));
 
-                        foreach (DNNTrainingResult result in TrainingLog)
-                            if ((int)result.CostIndex == SelectedCostIndex)
-                                PointsTest.Add(new DataPoint(result.Epoch, result.TestAccuracy));
+                            foreach (DNNTrainingResult result in TrainingLog)
+                                if ((int)result.CostIndex == SelectedCostIndex)
+                                    PointsTest?.Add(new DataPoint(result.Epoch, result.TestAccuracy));
 
-                        PointsTrainLabel = "Train Accuracy %";
-                        PointsTestLabel = "Test Accuracy %";
-                        break;
+                            PointsTrainLabel = "Train Accuracy %";
+                            PointsTestLabel = "Test Accuracy %";
+                            break;
 
-                    case PlotType.Error:
-                        foreach (DNNTrainingResult result in TrainingLog)
-                            if ((int)result.CostIndex == SelectedCostIndex)
-                                PointsTrain.Add(new DataPoint(result.Epoch, result.TrainErrorPercentage));
+                        case PlotType.Error:
+                            foreach (DNNTrainingResult result in TrainingLog)
+                                if ((int)result.CostIndex == SelectedCostIndex)
+                                    PointsTrain?.Add(new DataPoint(result.Epoch, result.TrainErrorPercentage));
 
-                        foreach (DNNTrainingResult result in TrainingLog)
-                            if ((int)result.CostIndex == SelectedCostIndex)
-                                PointsTest.Add(new DataPoint(result.Epoch, result.TestErrorPercentage));
+                            foreach (DNNTrainingResult result in TrainingLog)
+                                if ((int)result.CostIndex == SelectedCostIndex)
+                                    PointsTest?.Add(new DataPoint(result.Epoch, result.TestErrorPercentage));
 
-                        PointsTrainLabel = "Train Error %";
-                        PointsTestLabel = "Test Error %";
-                        break;
+                            PointsTrainLabel = "Train Error %";
+                            PointsTestLabel = "Test Error %";
+                            break;
 
-                    case PlotType.Loss:
-                        foreach (DNNTrainingResult result in TrainingLog)
-                            if ((int)result.CostIndex == SelectedCostIndex)
-                                PointsTrain.Add(new DataPoint(result.Epoch, result.AvgTrainLoss));
+                        case PlotType.Loss:
+                            foreach (DNNTrainingResult result in TrainingLog)
+                                if ((int)result.CostIndex == SelectedCostIndex)
+                                    PointsTrain?.Add(new DataPoint(result.Epoch, result.AvgTrainLoss));
 
-                        foreach (DNNTrainingResult result in TrainingLog)
-                            if ((int)result.CostIndex == SelectedCostIndex)
-                                PointsTest.Add(new DataPoint(result.Epoch, result.AvgTestLoss));
+                            foreach (DNNTrainingResult result in TrainingLog)
+                                if ((int)result.CostIndex == SelectedCostIndex)
+                                    PointsTest?.Add(new DataPoint(result.Epoch, result.AvgTestLoss));
 
-                        PointsTrainLabel = "Avg Train Loss";
-                        PointsTestLabel = "Avg Test Loss";
-                        break;
+                            PointsTrainLabel = "Avg Train Loss";
+                            PointsTestLabel = "Avg Test Loss";
+                            break;
+                    }
                 }
 
                 if (plotModel != null)
@@ -1007,7 +1026,7 @@ namespace Convnet.PageViewModels
             }, DispatcherPriority.Render);
         }
 
-        public PlotModel PlotModel
+        public PlotModel? PlotModel
         {
             get => plotModel;
             set => this.RaiseAndSetIfChanged(ref plotModel, value);
@@ -1061,25 +1080,25 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref currentLegendPosition, value);
         }
 
-        public ObservableCollection<DataPoint> PointsTrain
+        public ObservableCollection<DataPoint>? PointsTrain
         {
             get => pointsTrain;
             set => this.RaiseAndSetIfChanged(ref pointsTrain, value);
         }
 
-        public ObservableCollection<DataPoint> PointsTest
+        public ObservableCollection<DataPoint>? PointsTest
         {
             get => pointsTest;
             set => this.RaiseAndSetIfChanged(ref pointsTest, value);
         }
 
-        public string PointsTrainLabel
+        public string? PointsTrainLabel
         {
             get => pointsTrainLabel;
             set => this.RaiseAndSetIfChanged(ref pointsTrainLabel, value);
         }
 
-        public string PointsTestLabel
+        public string? PointsTestLabel
         {
             get => pointsTestLabel;
             set => this.RaiseAndSetIfChanged(ref pointsTestLabel, value);
@@ -1108,7 +1127,7 @@ namespace Convnet.PageViewModels
             }
         }
 
-        public string ProgressText
+        public string? ProgressText
         {
             get => progressText;
             set => this.RaiseAndSetIfChanged(ref progressText, value);
@@ -1120,13 +1139,13 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref showProgress, value);
         }
 
-        public string LayerInfo
+        public string? LayerInfo
         {
             get => layerInfo;
             set => this.RaiseAndSetIfChanged(ref layerInfo, value);
         }
 
-        public string WeightsMinMax
+        public string? WeightsMinMax
         {
             get => weightsMinMax;
             set => this.RaiseAndSetIfChanged(ref weightsMinMax, value);
@@ -1144,7 +1163,7 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref weightsSnapshotY, value);
         }
 
-        public String Label
+        public string? Label
         {
             get => label;
             set => this.RaiseAndSetIfChanged(ref label, value);
@@ -1174,13 +1193,13 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref showTrainingPlot, value);
         }
 
-        public Avalonia.Media.Imaging.WriteableBitmap WeightsSnapshot
+        public Avalonia.Media.Imaging.WriteableBitmap? WeightsSnapshot
         {
             get => weightsSnapshot;
             set => this.RaiseAndSetIfChanged(ref weightsSnapshot, value);
         }
 
-        public Avalonia.Media.Imaging.WriteableBitmap InputSnapshot
+        public Avalonia.Media.Imaging.WriteableBitmap? InputSnapshot
         {
             get => inputSnapshot;
             set => this.RaiseAndSetIfChanged(ref inputSnapshot, value);
@@ -1199,19 +1218,19 @@ namespace Convnet.PageViewModels
             }
         }
 
-        public ObservableCollection<DNNTrainingRate> TrainRates
+        public ObservableCollection<DNNTrainingRate>? TrainRates
         {
             get => trainRates;
             private set => this.RaiseAndSetIfChanged(ref trainRates, value);
         }
 
-        public ObservableCollection<DNNTrainingStrategy> TrainingStrategies
+        public ObservableCollection<DNNTrainingStrategy>? TrainingStrategies
         {
             get => trainingStrategies;
             set => this.RaiseAndSetIfChanged(ref trainingStrategies, value);
         }
 
-        public ObservableCollection<DNNTrainingResult> TrainingLog
+        public ObservableCollection<DNNTrainingResult>? TrainingLog
         {
             get
             {
@@ -1363,7 +1382,7 @@ namespace Convnet.PageViewModels
                             CommandToolBar[20].IsVisible = false;
                             CommandToolBar[21].IsVisible = false;
 
-                            if (Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
+                            if (layersComboBox != null && Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
                             {
                                 if ((Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && Model.Layers[layersComboBox.SelectedIndex].Scaling) || !Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
                                 {
@@ -1401,9 +1420,12 @@ namespace Convnet.PageViewModels
                 var stop = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to stop?", "Stop Training", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
                 if (stop == MessageBoxResult.Yes)
                 {
-                    RefreshTimer.Stop();
-                    RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
-                    RefreshTimer.Dispose();
+                    if (RefreshTimer != null) 
+                    {
+                        RefreshTimer.Stop();
+                        RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
+                        RefreshTimer.Dispose();
+                    }
 
                     Model?.Stop();
 
@@ -1422,7 +1444,7 @@ namespace Convnet.PageViewModels
                     CommandToolBar[20].IsVisible = false;
                     CommandToolBar[21].IsVisible = false;
 
-                    if (Model?.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
+                    if (layersComboBox != null && Model?.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
                     {
                         if ((Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && Model.Layers[layersComboBox.SelectedIndex].Scaling) || !Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
                         {
@@ -1626,7 +1648,7 @@ namespace Convnet.PageViewModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         private async void ClearButtonClick(object? sender, RoutedEventArgs e)
         {
-            if (TrainingLog.Count > 0)
+            if (TrainingLog?.Count > 0)
             {
                 //var sb = new StringBuilder();
                 //foreach (DNNTrainingResult row in TrainingLog)
@@ -1726,7 +1748,7 @@ namespace Convnet.PageViewModels
                         {
                             if (path.EndsWith(".bin"))
                             {
-                                if (Model?.LoadLayerWeights(path, (uint)layersComboBox.SelectedIndex) == 0)
+                                if (layersComboBox != null && Model?.LoadLayerWeights(path, (uint)layersComboBox.SelectedIndex) == 0)
                                 {
                                     Dispatcher.UIThread.Post(() => LayersComboBox_SelectionChanged(sender, null), DispatcherPriority.Render);
                                     await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are loaded", "Information", MessageBoxButtons.OK));
@@ -1746,7 +1768,7 @@ namespace Convnet.PageViewModels
 
         private async void SaveLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
         {
-            if (Model != null && App.MainWindow != null)
+            if (Model != null && App.MainWindow != null && layersComboBox != null)
             {
                 var layerIndex = layersComboBox.SelectedIndex;
 #if Linux
@@ -1820,7 +1842,7 @@ namespace Convnet.PageViewModels
         private async void ForgetLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
         {
             var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to forget layer weights?", "Forget Layer Weights", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
-            if (result == MessageBoxResult.Yes)
+            if (result == MessageBoxResult.Yes && layersComboBox != null)
             {
                 uint index = (uint)layersComboBox.SelectedIndex;
                 Model?.ResetLayerWeights((uint)layersComboBox.SelectedIndex);
@@ -1838,7 +1860,7 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Invoke(() =>
             {
-                if (Model != null && layersComboBox.SelectedIndex >= 0)
+                if (Model != null && layersComboBox != null && layersComboBox?.SelectedIndex >= 0)
                 {
                     var index = layersComboBox.SelectedIndex;
                     if (index < (int)Model.LayerCount)

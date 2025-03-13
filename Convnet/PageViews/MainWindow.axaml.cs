@@ -99,51 +99,53 @@ namespace Convnet.PageViews
                         "ElapsedTime");
 
                 if (Settings.Default.TrainingLog != null)
-                foreach (var row in Settings.Default.TrainingLog)
-                    sb.AppendLine(
-                        row.Cycle.ToString() + delim +
-                        row.Epoch.ToString() + delim +
-                        row.GroupIndex.ToString() + delim +
-                        row.CostIndex.ToString() + delim +
-                        row.CostName.ToString() + delim +
-                        row.N.ToString() + delim +
-                        row.D.ToString() + delim +
-                        row.H.ToString() + delim +
-                        row.W.ToString() + delim +
-                        row.PadD.ToString() + delim +
-                        row.PadH.ToString() + delim +
-                        row.PadW.ToString() + delim +
-                        row.Optimizer.ToString() + delim +
-                        row.Rate.ToString() + delim +
-                        row.Eps.ToString() + delim +
-                        row.Momentum.ToString() + delim +
-                        row.Beta2.ToString() + delim +
-                        row.Gamma.ToString() + delim +
-                        row.L2Penalty.ToString() + delim +
-                        row.Dropout.ToString() + delim +
-                        row.InputDropout.ToString() + delim +
-                        row.Cutout.ToString() + delim +
-                        row.CutMix.ToString() + delim +
-                        row.AutoAugment.ToString() + delim +
-                        row.HorizontalFlip.ToString() + delim +
-                        row.VerticalFlip.ToString() + delim +
-                        row.ColorCast.ToString() + delim +
-                        row.ColorAngle.ToString() + delim +
-                        row.Distortion.ToString() + delim +
-                        row.Interpolation.ToString() + delim +
-                        row.Scaling.ToString() + delim +
-                        row.Rotation.ToString() + delim +
-                        row.AvgTrainLoss.ToString() + delim +
-                        row.TrainErrors.ToString() + delim +
-                        row.TrainErrorPercentage.ToString() + delim +
-                        row.TrainAccuracy.ToString() + delim +
-                        row.AvgTestLoss.ToString() + delim +
-                        row.TestErrors.ToString() + delim +
-                        row.TestErrorPercentage.ToString() + delim +
-                        row.TestAccuracy.ToString() + delim +
-                        row.ElapsedMilliSeconds.ToString() + delim +
-                        row.ElapsedTime.ToString());
-
+                    foreach (var row in Settings.Default.TrainingLog)
+                        if (row != null)
+                        {
+                            sb.AppendLine(
+                            row.Cycle.ToString() + delim +
+                            row.Epoch.ToString() + delim +
+                            row.GroupIndex.ToString() + delim +
+                            row.CostIndex.ToString() + delim +
+                            row.CostName?.ToString() + delim +
+                            row.N.ToString() + delim +
+                            row.D.ToString() + delim +
+                            row.H.ToString() + delim +
+                            row.W.ToString() + delim +
+                            row.PadD.ToString() + delim +
+                            row.PadH.ToString() + delim +
+                            row.PadW.ToString() + delim +
+                            row.Optimizer.ToString() + delim +
+                            row.Rate.ToString() + delim +
+                            row.Eps.ToString() + delim +
+                            row.Momentum.ToString() + delim +
+                            row.Beta2.ToString() + delim +
+                            row.Gamma.ToString() + delim +
+                            row.L2Penalty.ToString() + delim +
+                            row.Dropout.ToString() + delim +
+                            row.InputDropout.ToString() + delim +
+                            row.Cutout.ToString() + delim +
+                            row.CutMix.ToString() + delim +
+                            row.AutoAugment.ToString() + delim +
+                            row.HorizontalFlip.ToString() + delim +
+                            row.VerticalFlip.ToString() + delim +
+                            row.ColorCast.ToString() + delim +
+                            row.ColorAngle.ToString() + delim +
+                            row.Distortion.ToString() + delim +
+                            row.Interpolation.ToString() + delim +
+                            row.Scaling.ToString() + delim +
+                            row.Rotation.ToString() + delim +
+                            row.AvgTrainLoss.ToString() + delim +
+                            row.TrainErrors.ToString() + delim +
+                            row.TrainErrorPercentage.ToString() + delim +
+                            row.TrainAccuracy.ToString() + delim +
+                            row.AvgTestLoss.ToString() + delim +
+                            row.TestErrors.ToString() + delim +
+                            row.TestErrorPercentage.ToString() + delim +
+                            row.TestAccuracy.ToString() + delim +
+                            row.ElapsedMilliSeconds.ToString() + delim +
+                            row.ElapsedTime.ToString());
+                        }
                 File.WriteAllText(path, sb.ToString());
                 
                 if (PageVM != null && PageVM.Model != null)
@@ -264,11 +266,14 @@ namespace Convnet.PageViews
                     {
                         model.BackgroundColor = Settings.Default.BackgroundColor;
                         model.BlockSize = (ulong)Settings.Default.PixelSize;
-                        model.TrainingStrategies = Settings.Default.TrainingStrategies;
-                        model.ClearTrainingStrategies();
                         if (Settings.Default.TrainingStrategies != null)
+                        {
+                            model.TrainingStrategies = Settings.Default.TrainingStrategies;
+                            model.ClearTrainingStrategies();
+
                             foreach (DNNTrainingStrategy strategy in Settings.Default.TrainingStrategies)
                                 model.AddTrainingStrategy(strategy);
+                        }
                         model.SetFormat(Settings.Default.PlainFormat);
                         model.SetOptimizer((DNNOptimizers)Settings.Default.Optimizer);
                         model.SetPersistOptimizer(Settings.Default.PersistOptimizer);
@@ -351,11 +356,14 @@ namespace Convnet.PageViews
                     {
                         model.BackgroundColor = Settings.Default.BackgroundColor;
                         model.BlockSize = (ulong)Settings.Default.PixelSize;
-                        model.TrainingStrategies = Settings.Default.TrainingStrategies;
-                        model.ClearTrainingStrategies();
                         if (Settings.Default.TrainingStrategies != null)
-                            foreach (DNNTrainingStrategy strategy in Settings.Default.TrainingStrategies)
-                                model.AddTrainingStrategy(strategy);
+                        {
+                            model.TrainingStrategies = Settings.Default.TrainingStrategies;
+                            model.ClearTrainingStrategies();
+                            if (Settings.Default.TrainingStrategies != null)
+                                foreach (DNNTrainingStrategy strategy in Settings.Default.TrainingStrategies)
+                                    model.AddTrainingStrategy(strategy);
+                        }
                         model.SetFormat(Settings.Default.PlainFormat);
                         model.SetOptimizer((DNNOptimizers)Settings.Default.Optimizer);
                         model.SetPersistOptimizer(Settings.Default.PersistOptimizer);

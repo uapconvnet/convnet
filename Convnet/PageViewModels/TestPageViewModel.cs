@@ -24,17 +24,17 @@ namespace Convnet.PageViewModels
     {
         private static readonly string nwl = Environment.NewLine;
 
-        private string progressText;
+        private string? progressText;
         private bool showProgress;
-        private string label;
+        private string? label;
         private bool showSample;
         private DataTable? confusionDataTable;
-        private Avalonia.Media.Imaging.WriteableBitmap inputSnapshot;
+        private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private readonly StringBuilder sb;
-        private ComboBox dataProviderComboBox;
-        private ComboBox costLayersComboBox;
-        public Timer RefreshTimer;
-        public event EventHandler Open;
+        private ComboBox? dataProviderComboBox;
+        private ComboBox? costLayersComboBox;
+        public Timer? RefreshTimer;
+        public event EventHandler? Open;
         private int flag = 0;
 
         
@@ -126,7 +126,7 @@ namespace Convnet.PageViewModels
 
         public void CostLayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
-            if (costLayersComboBox.SelectedIndex >= 0)
+            if (costLayersComboBox?.SelectedIndex >= 0)
             {
                 var costIndex = (uint)costLayersComboBox.SelectedIndex;
                 Model?.SetCostIndex(costIndex);
@@ -149,21 +149,24 @@ namespace Convnet.PageViewModels
                 ShowSample = false;
                 ConfusionDataTable = null;
 
-                costLayersComboBox.Items.Clear();
-                for (uint layer = 0u; layer < Model.CostLayerCount; layer++)
-                {
-                    ComboBoxItem item = new ComboBoxItem
+                if (costLayersComboBox != null && dataProviderComboBox != null)
+                { 
+                    costLayersComboBox.Items.Clear();
+                    for (uint layer = 0u; layer < Model.CostLayerCount; layer++)
                     {
-                        Name = "CostLayer" + layer.ToString(),
-                        Content = Model.CostLayers[layer].Name,
-                        Tag = layer
-                    };
-                    costLayersComboBox.Items.Add(item);
-                }
-                costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
-                costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
+                        ComboBoxItem item = new ComboBoxItem
+                        {
+                            Name = "CostLayer" + layer.ToString(),
+                            Content = Model.CostLayers[layer].Name,
+                            Tag = layer
+                        };
+                        costLayersComboBox.Items.Add(item);
+                    }
+                    costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
+                    costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
 
-                dataProviderComboBox.SelectedIndex = (int)Dataset;
+                    dataProviderComboBox.SelectedIndex = (int)Dataset;
+                }
             }
             //Dispatcher.UIThread.Post(() => LayerIndexChanged(this, null), DispatcherPriority.Render);
         }
@@ -191,13 +194,20 @@ namespace Convnet.PageViewModels
                     ProgressText = string.Format("Loss:\t\t{0:N7}" + nwl + "Errors:\t\t{1:G}" + nwl + "Error:\t\t{2:N2} %" + nwl + "Accuracy:\t{3:N2} %", AvgTestLoss, TestErrors, TestErrorPercentage, TestAccuracy);
 
                     flag = 1;
-                    RefreshTimer.Stop();
-                    RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
-                    RefreshTimer.Dispose();
+                    if (RefreshTimer != null)
+                    {
+                        RefreshTimer.Stop();
+                        RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
+                        RefreshTimer.Dispose();
+                    }
 
-                    Model?.Stop();
-                    Model?.SetCostIndex((uint)costLayersComboBox.SelectedIndex);
-                    Model?.GetConfusionMatrix();
+
+                    if (Model != null && costLayersComboBox != null)
+                    {
+                        Model.Stop();
+                        Model.SetCostIndex((UInt)costLayersComboBox.SelectedIndex);
+                        Model.GetConfusionMatrix();
+                    }
                     ConfusionDataTable = GetConfusionDataTable();
 
                     ToolTip.SetTip(CommandToolBar[0], "Start Testing");
@@ -283,19 +293,19 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref showSample, value);
         }
 
-        public Avalonia.Media.Imaging.WriteableBitmap InputSnapshot
+        public Avalonia.Media.Imaging.WriteableBitmap? InputSnapshot
         {
             get => inputSnapshot;
             set => this.RaiseAndSetIfChanged(ref inputSnapshot, value);
         }
 
-        public string Label
+        public string? Label
         {
             get => label;
             set => this.RaiseAndSetIfChanged(ref label, value);
         }
 
-        public string ProgressText
+        public string? ProgressText
         {
             get => progressText;
             set => this.RaiseAndSetIfChanged(ref progressText, value);
@@ -326,7 +336,7 @@ namespace Convnet.PageViewModels
                     return;
                 }
 
-                if (Model?.TaskState == DNNTaskStates.Stopped)
+                if (Model?.TaskState == DNNTaskStates.Stopped && App.MainWindow != null)
                 {
                     TestParameters dialog = new TestParameters
                     {
@@ -348,7 +358,8 @@ namespace Convnet.PageViewModels
 
                         flag = 0;
                         Model.AddTrainingRate(new DNNTrainingRate(dialog.Rate.Optimizer, dialog.Rate.Momentum, dialog.Rate.Beta2, dialog.Rate.L2Penalty, dialog.Rate.Dropout, dialog.Rate.Eps, dialog.Rate.N, dialog.Rate.D, dialog.Rate.H, dialog.Rate.W, dialog.Rate.PadD, dialog.Rate.PadH, dialog.Rate.PadW, 1, 1, dialog.Rate.EpochMultiplier, dialog.Rate.MaximumRate, dialog.Rate.MinimumRate, dialog.Rate.FinalRate, dialog.Rate.Gamma, dialog.Rate.DecayAfterEpochs, dialog.Rate.DecayFactor, dialog.Rate.HorizontalFlip, dialog.Rate.VerticalFlip, dialog.Rate.InputDropout, dialog.Rate.Cutout, dialog.Rate.CutMix, dialog.Rate.AutoAugment, dialog.Rate.ColorCast, dialog.Rate.ColorAngle, dialog.Rate.Distortion, dialog.Rate.Interpolation, dialog.Rate.Scaling, dialog.Rate.Rotation), true, 1, Model.TrainingSamples);
-                        Model.SetCostIndex((uint)costLayersComboBox.SelectedIndex);
+                        if (costLayersComboBox != null)
+                            Model.SetCostIndex((uint)costLayersComboBox.SelectedIndex);
                         Model.Start(false);
                         RefreshTimer = new Timer(1000.0);
                         RefreshTimer.Elapsed += RefreshTimer_Elapsed;
@@ -382,9 +393,12 @@ namespace Convnet.PageViewModels
                 var stop = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to stop?", "Stop Testing", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
                 if (stop == MessageBoxResult.Yes)
                 {
-                    RefreshTimer.Stop();
-                    RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
-                    RefreshTimer.Dispose();
+                    if (RefreshTimer != null)
+                    { 
+                        RefreshTimer.Stop();
+                        RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
+                        RefreshTimer.Dispose();
+                    }
 
                     Model?.Stop();
                     ConfusionDataTable = null;
@@ -432,7 +446,7 @@ namespace Convnet.PageViewModels
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
-                    RefreshTimer.Dispose();
+                    RefreshTimer?.Dispose();
                     confusionDataTable?.Dispose();
                 }
 

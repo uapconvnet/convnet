@@ -80,7 +80,7 @@ namespace Convnet
             /// <summary>
             /// The <see cref="Mutex"/> used to ask for other instances of this application.
             /// </summary>
-            private Mutex singleInstanceMutex = null;
+            private Mutex? singleInstanceMutex = null;
 
             /// <summary>
             /// An indicator whether this object is beeing actively disposed or not.
@@ -124,7 +124,7 @@ namespace Convnet
             public void Close()
             {
                 ThrowIfDisposed();
-                singleInstanceMutex.Close();
+                singleInstanceMutex?.Close();
             }
 
             public void Dispose()

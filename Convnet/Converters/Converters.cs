@@ -14,7 +14,7 @@ namespace Convnet.Converters
             if (parameter is Type)
             {
                 if (value != null)
-                    enumValue = (Enum)Enum.Parse((Type)parameter, value.ToString());
+                    enumValue = (Enum)Enum.Parse((Type)parameter, value.ToString() ?? new string("0"));
             }
             return enumValue;
         }
@@ -24,7 +24,7 @@ namespace Convnet.Converters
             int returnValue = 0;
             if (parameter is Type && value != null)
             {
-                returnValue = (int)Enum.Parse((Type)parameter, value.ToString());
+                returnValue = (int)Enum.Parse((Type)parameter, value.ToString() ?? new string("0"));
             }
             return returnValue;
         }
@@ -39,7 +39,7 @@ namespace Convnet.Converters
                 if (value != null)
                 {
                     var type = value.GetType();
-                    var member = type?.GetMember(value.ToString());
+                    var member = type?.GetMember(value.ToString() ?? new string("0"));
                     var attributes = member?[0].GetCustomAttributes(typeof(DisplayAttribute), true);
                     var attribute = attributes?[0] as DisplayAttribute;
                     var result = attribute?.Name ?? value.ToString();
@@ -109,7 +109,7 @@ namespace Convnet.Converters
             if (targetType != typeof(bool))
                 throw new InvalidOperationException("The target must be a bool");
 
-            return (((bool?)value).HasValue && ((bool?)value).Value) ? true : false;
+            return (value != null && ((bool?)value).HasValue && ((bool?)value).Value);
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -118,21 +118,21 @@ namespace Convnet.Converters
         }
     }
 
-    public class InverseNullableBoolToVisibilityConverter : IValueConverter
-    {
-        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-        {
-            if (targetType != typeof(bool))
-                throw new InvalidOperationException("The target must be a bool");
+    //public class InverseNullableBoolToVisibilityConverter : IValueConverter
+    //{
+    //    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    //    {
+    //        if (targetType != typeof(bool))
+    //            throw new InvalidOperationException("The target must be a bool");
 
-            return (((bool?)value).HasValue && ((bool?)value).Value) ? false : true;
-        }
+    //        return (((bool?)value).HasValue && ((bool?)value).Value) ? false : true;
+    //    }
 
-        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
 
     public sealed class BooleanToVisibilityConverter : IValueConverter
     {
