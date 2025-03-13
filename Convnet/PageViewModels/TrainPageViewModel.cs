@@ -1208,7 +1208,7 @@ namespace Convnet.PageViewModels
         public ObservableCollection<DNNTrainingStrategy> TrainingStrategies
         {
             get => trainingStrategies;
-            private set => this.RaiseAndSetIfChanged(ref trainingStrategies, value);
+            set => this.RaiseAndSetIfChanged(ref trainingStrategies, value);
         }
 
         public ObservableCollection<DNNTrainingResult> TrainingLog
