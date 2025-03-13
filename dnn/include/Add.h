@@ -100,12 +100,15 @@ namespace dnn
 
 			if (!EqualDimensions(Inputs))
 			{
+				
 				dnnl::post_ops ops;
 				//ops.append_eltwise(dnnl::algorithm::eltwise_linear, scale0[0], scale1[0]);
 				ops.append_binary(dnnl::algorithm::binary_add, *Inputs[second]->DiffDstMemDesc);
 				dnnl::primitive_attr binary_attr;
 				binary_attr.set_post_ops(ops);
-				bwdReductionDesc = std::make_unique<dnnl::reduction::primitive_desc>(dnnl::reduction::primitive_desc(Device.engine, dnnl::algorithm::reduction_sum, *DiffDstMemDesc, *Inputs[second]->DiffDstMemDesc, Float(0), Float(0), binary_attr));
+				
+				bwdReductionDesc = std::make_unique<dnnl::reduction::primitive_desc>(dnnl::reduction::primitive_desc(Device.engine, dnnl::algorithm::reduction_sum, *DiffDstMemDesc, *Inputs[second]->DiffDstMemDesc, Float(0), Float(0)));
+				bwd1Desc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[second]->DiffDstMemDesc, *Inputs[second]->DiffDstMemDesc, *Inputs[second]->DiffDstMemDesc, attr));
 			}
 			else
 				bwd1Desc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[second]->DiffDstMemDesc, *DiffDstMemDesc, *Inputs[second]->DiffDstMemDesc, attr));
@@ -118,13 +121,11 @@ namespace dnn
 	
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::binary>(dnnl::binary(*fwdDesc));
-
 			/*
 			bwd0 = std::make_unique<dnnl::binary>(dnnl::binary(*bwd0Desc));
 			if (!EqualDimensions(Inputs))
 				bwdReduction = std::make_unique<dnnl::reduction>(dnnl::reduction(*bwdReductionDesc));
-			else
-				bwd1 = std::make_unique<dnnl::binary>(dnnl::binary(*bwd1Desc));
+			bwd1 = std::make_unique<dnnl::binary>(dnnl::binary(*bwd1Desc));
 			*/
 #endif
 		}
@@ -589,8 +590,10 @@ namespace dnn
 #endif // DNN_LEAN
 		}
 
+
+
 /*
-		void ForwardPropDNNL(const UInt batchSize, const bool training)
+		void ForwardProp(const UInt batchSize, const bool training)
 		{
 			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
 			scale0[0] = fullDepth ? Float(1) : (Inputs[first]->Skip ? Float(0) : Float(1));
@@ -609,7 +612,7 @@ namespace dnn
 #endif // DNN_LEAN
 		}
 
-		void BackwardPropDNNL(const UInt batchSize)
+		void BackwardProp(const UInt batchSize)
 		{
 #ifdef DNN_LEAN
 			ZeroGradientMulti(batchSize);
@@ -645,12 +648,20 @@ namespace dnn
 #endif
 				Device.stream.wait();
 
+				auto reductionMem = dnnl::memory(*Inputs[second]->DiffDstMemDesc, Device.engine);
 
 #ifdef DNN_CACHE_PRIMITIVES
-				bwdReduction->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*Inputs[second]->DiffDstMemDesc, Device.engine, Inputs[second]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_MULTIPLE_POST_OP(0) | DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DiffDstMemDesc, Device.engine, Inputs[second]->NeuronsD1.data()) } });
+				bwdReduction->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, reductionMem } });
 				
 #else
-				dnnl::reduction(*bwdReduction).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*Inputs[second]->DiffDstMemDesc, Device.engine, Inputs[second]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_MULTIPLE_POST_OP(0) | DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DiffDstMemDesc, Device.engine, Inputs[second]->NeuronsD1.data()) } });
+				dnnl::reduction(*bwdReduction).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, reductionMem } });
+#endif
+				Device.stream.wait();
+
+#ifdef DNN_CACHE_PRIMITIVES
+				bwd1->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[second]->DiffDstMemDesc, Device.engine, Inputs[second]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, reductionMem }, { DNNL_ARG_DST, dnnl::memory(*Inputs[second]->DiffDstMemDesc, Device.engine, Inputs[second]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } });
+#else
+				dnnl::binary(*bwd1Desc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[second]->DiffDstMemDesc, Device.engine, Inputs[second]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, reductionMem }, { DNNL_ARG_DST, dnnl::memory(*Inputs[second]->DiffDstMemDesc, Device.engine, Inputs[second]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } });
 #endif
 				Device.stream.wait();
 			}

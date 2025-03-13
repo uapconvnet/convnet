@@ -1208,7 +1208,7 @@ namespace Convnet.PageViewModels
         public ObservableCollection<DNNTrainingStrategy> TrainingStrategies
         {
             get => trainingStrategies;
-            set => this.RaiseAndSetIfChanged(ref trainingStrategies, value);
+            private set => this.RaiseAndSetIfChanged(ref trainingStrategies, value);
         }
 
         public ObservableCollection<DNNTrainingResult> TrainingLog
@@ -1220,6 +1220,7 @@ namespace Convnet.PageViewModels
 
                 return Settings.Default.TrainingLog;
             }
+
             set
             {
                 if (value == Settings.Default.TrainingLog)

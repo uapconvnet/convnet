@@ -221,6 +221,10 @@
     <None Include="PageViewModels\MainWindowViewModel.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\dnn\build\dnn.vcxproj" />
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="xcopy /Y $(SolutionDir)dnn\build\$(ConfigurationName)\dnn.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
     <Exec Command="cp $(SolutionDir)/dnn/build/libdnn.so $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
