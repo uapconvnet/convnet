@@ -1,17 +1,19 @@
 ﻿using Interop;
 using System.Collections.ObjectModel;
 
+
 namespace Convnet.Properties
 {
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
     {
         [global::System.Configuration.UserScopedSetting()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SettingsSerializeAs(global::System.Configuration.SettingsSerializeAs.Xml)]
         public ObservableCollection<DNNTrainingResult>? TrainingLog
         {
             get
             {
-                return this[nameof(TrainingLog)] as ObservableCollection<DNNTrainingResult>;
+                return ((ObservableCollection<DNNTrainingResult>?)this[nameof(TrainingLog)]);
             }
             set
             {
@@ -20,12 +22,13 @@ namespace Convnet.Properties
         }
 
         [global::System.Configuration.UserScopedSetting()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SettingsSerializeAs(global::System.Configuration.SettingsSerializeAs.Xml)]
         public ObservableCollection<DNNTrainingStrategy>? TrainingStrategies
         {
             get
             {
-                return this[nameof(TrainingStrategies)] as ObservableCollection<DNNTrainingStrategy>;
+                return ((ObservableCollection<DNNTrainingStrategy>?)this[nameof(TrainingStrategies)]);
             }
             set
             {
@@ -34,12 +37,13 @@ namespace Convnet.Properties
         }
 
         [global::System.Configuration.UserScopedSetting()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SettingsSerializeAs(global::System.Configuration.SettingsSerializeAs.Xml)]
         public ObservableCollection<DNNTrainingRate>? TrainingRates
         {
             get
             {
-                return this[nameof(TrainingRates)] as ObservableCollection<DNNTrainingRate>;
+                return ((ObservableCollection<DNNTrainingRate>?)this[nameof(TrainingRates)]);
             }
             set
             {
@@ -48,12 +52,13 @@ namespace Convnet.Properties
         }
 
         [global::System.Configuration.UserScopedSetting()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SettingsSerializeAs(global::System.Configuration.SettingsSerializeAs.Xml)]
         public DNNTrainingRate? TraininingRate
         {
             get
             {
-                return this[nameof(TraininingRate)] as DNNTrainingRate;
+                return ((DNNTrainingRate?)this[nameof(TraininingRate)]);
             }
             set
             {
@@ -62,12 +67,13 @@ namespace Convnet.Properties
         }
 
         [global::System.Configuration.UserScopedSetting()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SettingsSerializeAs(global::System.Configuration.SettingsSerializeAs.Xml)]
         public DNNTrainingRate? TestRate
         {
             get
             {
-                return this[nameof(TestRate)] as DNNTrainingRate;
+                return ((DNNTrainingRate?)this[nameof(TestRate)]);
             }
             set
             {
