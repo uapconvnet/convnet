@@ -197,7 +197,7 @@ namespace dnn
 			{
 #endif
 				const auto strideHW = HW() * VectorSize;
-				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
+				const auto threads = GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 				const auto factor = Float(1) / Float(InputLayerBwd->C);
 				const bool padded = InputLayerBwd->PaddedC == InputLayerBwd->C;
 				if (!plain)
@@ -315,7 +315,7 @@ namespace dnn
 			{
 #endif
 				const auto strideHW = HW() * VectorSize;
-				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
+				const auto threads = GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 				const bool padded = InputLayerBwd->PaddedC == InputLayerBwd->C;
 
 				if (!plain)
@@ -429,7 +429,7 @@ namespace dnn
 			{
 #endif
 				const auto strideHW = HW() * VectorSize;
-				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
+				const auto threads = GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 				const bool padded = InputLayerBwd->PaddedC == InputLayerBwd->C;
 
 				if (!plain)
@@ -546,7 +546,7 @@ namespace dnn
 			{
 #endif
 				const auto strideHW = HW() * VectorSize;
-				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
+				const auto threads = GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 				const bool padded = InputLayerBwd->PaddedC == InputLayerBwd->C;
 
 				if (!plain)
