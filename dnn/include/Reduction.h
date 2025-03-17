@@ -200,6 +200,7 @@ namespace dnn
 				const auto threads = GetThreads(batchSize * GetElementsCount(), BwdTrainingWeight);
 				const auto factor = Float(1) / Float(InputLayerBwd->C);
 				const bool padded = InputLayerBwd->PaddedC == InputLayerBwd->C;
+
 				if (!plain)
 					for_i(batchSize, threads, [=](UInt n)
 					{

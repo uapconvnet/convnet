@@ -98,7 +98,7 @@ namespace Convnet.Common
             paste.Click += (s, e) => { if (CanPaste) Dispatcher.UIThread.Post(() => Paste()); };
             copy.Click += (s, e) => { if (CanCopy) Dispatcher.UIThread.Post(() => Copy()); };
             delete.Click += (s, e) => { if (CanDelete) Dispatcher.UIThread.Post(() => Delete()); };
-            selectall.Click += (s, e) => { if (CanSelectAll) Dispatcher.UIThread.Post(() => SelectAll()); };
+            selectall.Click += (s, e) => { Dispatcher.UIThread.Post(() => SelectAll()); };
             undo.Click += (s, e) => { if (CanUndo) Dispatcher.UIThread.Post(() => Undo()); };
             redo.Click += (s, e) => { if (CanRedo) Dispatcher.UIThread.Post(() => Redo()); };
 
