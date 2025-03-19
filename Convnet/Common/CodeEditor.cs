@@ -177,7 +177,7 @@ namespace Convnet.Common
             get { return base.Document.GetLocation(SelectionStart); }
             set
             {
-                if (GetValue<TextLocation>(TextLocationProperty) != value)
+                if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
                 {
                     TextArea.Caret.Line = value.Line;
                     TextArea.Caret.Column = value.Column;

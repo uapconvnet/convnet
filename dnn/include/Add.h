@@ -128,6 +128,26 @@ namespace dnn
 #endif
 		}
 
+		void ForwardProp(const UInt batchSize, const bool training)
+		{
+			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
+			scale0[0] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
+			scale1[0] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
+
+#ifdef DNN_CACHE_PRIMITIVES
+			fwd->execute(Device.stream, fwdArgs);
+#else
+			dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
+#endif
+			Device.stream.wait();
+
+#ifndef DNN_LEAN
+			if (training)
+				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
+#endif // DNN_LEAN
+		}
+
+		/*
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 			const auto fullDepth = SurvivalProbability[0] == Float(1) && SurvivalProbability[1] == Float(1);
@@ -338,7 +358,8 @@ namespace dnn
 				Device.stream.wait();
 			}
 		}
-		
+		*/
+
 		void BackwardProp(const UInt batchSize) final override
 		{
 #ifdef DNN_LEAN
@@ -587,28 +608,8 @@ namespace dnn
 			ReleaseGradient();
 #endif // DNN_LEAN
 		}
-
-
+		
 /*
-		void ForwardProp(const UInt batchSize, const bool training)
-		{
-			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
-			scale0[0] = fullDepth ? Float(1) : (Inputs[first]->Skip ? Float(0) : Float(1));
-			scale1[0] = fullDepth ? Float(1) : (Inputs[second]->Skip ? Float(0) : Float(1));
-
-#ifdef DNN_CACHE_PRIMITIVES
-			fwd->execute(Device.stream, fwdArgs);
-#else
-			dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
-#endif
-			Device.stream.wait();
-
-#ifndef DNN_LEAN
-			if (training)
-				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
-#endif // DNN_LEAN
-		}
-
 		void BackwardProp(const UInt batchSize)
 		{
 #ifdef DNN_LEAN
