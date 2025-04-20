@@ -95,20 +95,20 @@
 
  
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.2.7" />
+    <PackageReference Include="Avalonia" Version="11.2.8" />
     <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.22087.20231008" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.2.0" />
     <PackageReference Include="Avalonia.BuildServices" Version="0.0.31" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.2.7" />
-    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.2.7" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.7" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.7" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.8" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.2.8" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.8" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.8" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.7" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.7" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.8" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.8" />
     <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.2.7" />
     <PackageReference Include="AvaloniaControlsToolBar" Version="0.0.1" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.7" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.8" />
     <PackageReference Include="AvaloniaEdit.TextMate.Grammars" Version="0.10.12" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="CustomMessageBox.Avalonia" Version="11.0.0.2" />
