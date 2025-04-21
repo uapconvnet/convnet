@@ -85,6 +85,7 @@
 * [AdamW](https://arxiv.org/abs/1711.05101)
 * [AmsBound](https://arxiv.org/abs/1902.09843)
 * [AmsBoundW](https://arxiv.org/abs/1902.09843)
+* [DiffGrad](https://arxiv.org/abs/1909.11015)
 * [NAG](https://arxiv.org/abs/1607.01981)
 * [RMSProp](https://arxiv.org/pdf/1609.04747.pdf)
 * [SGD](https://arxiv.org/pdf/1609.04747.pdf)
