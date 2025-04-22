@@ -2230,6 +2230,7 @@ namespace dnn
 			const auto beta1 = rate.Momentum;
 			const auto beta2 = rate.Beta2;
 			const auto lr = rate.MaximumRate * WeightsLRM;
+			const auto weightDecay = rate.L2Penalty * WeightsWDM;
 			const auto eps = rate.Eps;
 			const auto oneMinusBeta1 = (Float(1) - beta1) / rate.N;
 			const auto oneMinusBeta2 = Float(1) - beta2;
@@ -2252,7 +2253,7 @@ namespace dnn
 					(*weights.WeightsPar3)[i] = (*weights.WeightsD1)[i];
 					auto exp_avg1 = ((*weights.WeightsPar1)[i] / oneMinusB1) * dfc;
 
-					(*weights.Weights)[i] -= lr * exp_avg1 / std::sqrt(((*weights.WeightsPar2)[i] / oneMinusB2) + eps);
+					(*weights.Weights)[i] -= lr * exp_avg1 / std::sqrt(((*weights.WeightsPar2)[i] / oneMinusB2) + eps) + (weightDecay * (*weights.Weights)[i]));
 				}
 			}
 			else
@@ -2274,7 +2275,7 @@ namespace dnn
 					par3 = weightD1;
 					auto exp_avg1 = (par1 / oneMinusB1) * dfc;
 					
-					weight -= lr * exp_avg1 / sqrt((par2 / oneMinusB2) + eps);
+					weight -= lr * exp_avg1 / sqrt((par2 / oneMinusB2) + eps) + (weightDecay * weight);
 
 					weight.store_a(&(*weights.Weights)[i]);
 					par1.store_a(&(*weights.WeightsPar1)[i]);
@@ -2286,6 +2287,7 @@ namespace dnn
 			if (HasBias)
 			{
 				const auto lrBias = rate.MaximumRate * BiasesLRM;
+				const auto weightDecayBias = rate.L2Penalty * BiasesWDM;
 				// PRAGMA_OMP_SIMD()
 				for (auto i = 0ull; i < BiasCount; i++)
 				{
@@ -2297,7 +2299,7 @@ namespace dnn
 					BiasesPar3[i] = BiasesD1[i];
 					auto exp_avg1 = (BiasesPar1[i] / oneMinusB1) * dfc;
 										
-					Biases[i] -= lrBias * exp_avg1 / std::sqrt((BiasesPar2[i] / oneMinusB2) + eps);
+					Biases[i] -= lrBias * exp_avg1 / std::sqrt((BiasesPar2[i] / oneMinusB2) + eps) + (weightDecayBias * Biases[i]);
 				}
 			}
 
