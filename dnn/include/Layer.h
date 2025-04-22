@@ -2250,7 +2250,7 @@ namespace dnn
 					auto diff = std::abs((*weights.WeightsPar3)[i] - (*weights.WeightsD1)[i]);
 					auto dfc = Float(1) / (Float(1) + std::exp(-diff));
 					(*weights.WeightsPar3)[i] = (*weights.WeightsD1)[i];
-					auto exp_avg1 = (*weights.WeightsPar1)[i] * dfc;
+					auto exp_avg1 = ((*weights.WeightsPar1)[i] / oneMinusB1) * dfc;
 
 					(*weights.Weights)[i] -= lr * exp_avg1 / std::sqrt(((*weights.WeightsPar2)[i] / oneMinusB2) + eps);
 				}
@@ -2272,7 +2272,7 @@ namespace dnn
 					auto diff = abs(par3 - weightD1);
 					auto dfc = VecFloat(1) / (VecFloat(1) + exp(-diff));
 					par3 = weightD1;
-					auto exp_avg1 = par1 * dfc;
+					auto exp_avg1 = (par1 / oneMinusB1) * dfc;
 					
 					weight -= lr * exp_avg1 / sqrt((par2 / oneMinusB2) + eps);
 
@@ -2295,7 +2295,7 @@ namespace dnn
 					auto diff = std::abs(BiasesPar3[i] - BiasesD1[i]);
 					auto dfc = Float(1) / (Float(1) + std::exp(-diff));
 					BiasesPar3[i] = BiasesD1[i];
-					auto exp_avg1 = BiasesPar1[i] * dfc;
+					auto exp_avg1 = (BiasesPar1[i] / oneMinusB1) * dfc;
 										
 					Biases[i] -= lrBias * exp_avg1 / std::sqrt((BiasesPar2[i] / oneMinusB2) + eps);
 				}
