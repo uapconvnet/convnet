@@ -2253,7 +2253,7 @@ namespace dnn
 					(*weights.WeightsPar3)[i] = (*weights.WeightsD1)[i];
 					auto exp_avg1 = ((*weights.WeightsPar1)[i] / oneMinusB1) * dfc;
 
-					(*weights.Weights)[i] -= lr * exp_avg1 / std::sqrt(((*weights.WeightsPar2)[i] / oneMinusB2) + eps) + (weightDecay * (*weights.Weights)[i]));
+					(*weights.Weights)[i] -= lr * exp_avg1 / std::sqrt(((*weights.WeightsPar2)[i] / oneMinusB2) + eps) + (weightDecay * (*weights.Weights)[i]);
 				}
 			}
 			else
