@@ -5,7 +5,7 @@ PROJECT(zlib-download NONE)
 INCLUDE(ExternalProject)
 ExternalProject_Add(zlib
 	GIT_REPOSITORY https://github.com/madler/zlib.git
-	GIT_TAG master
+	GIT_TAG develop
 	SOURCE_DIR "${DNN_DEPENDENCIES_SOURCE_DIR}/zlib"
 	BINARY_DIR "${DNN_DEPENDENCIES_BINARY_DIR}/zlib"
 	CONFIGURE_COMMAND ""
