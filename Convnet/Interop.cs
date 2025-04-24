@@ -41,15 +41,16 @@ namespace Interop
         AdaGrad = 4,
         Adam = 5,
         Adamax = 6,
-        AdamW = 7,
-        AmsBound = 8,
-        AmsBoundW = 9,
-        DiffGrad = 10,
-        NAG = 11,
-        RMSProp = 12,
-        SGD = 13,
-        SGDMomentum = 14,
-        SGDW = 15
+        AdamS = 7,
+        AdamW = 8,
+        AmsBound = 9,
+        AmsBoundW = 10,
+        DiffGrad = 11,
+        NAG = 12,
+        RMSProp = 13,
+        SGD = 14,
+        SGDMomentum = 15,
+        SGDW = 16
     };
 
     public enum Costs
@@ -678,15 +679,16 @@ namespace Interop
         AdaGrad = 4,
         Adam = 5,
         Adamax = 6,
-        AdamW = 7,
-        AmsBound = 8,
-        AmsBoundW = 9,
-        DiffGrad = 10,
-        NAG = 11,
-        RMSProp = 12,
-        SGD = 13,
-        SGDMomentum = 14,
-        SGDW = 15
+        AdamS = 7,
+        AdamW = 8,
+        AmsBound = 9,
+        AmsBoundW = 10,
+        DiffGrad = 11,
+        NAG = 12,
+        RMSProp = 13,
+        SGD = 14,
+        SGDMomentum = 15,
+        SGDW = 16
     };
 
     [Serializable()]

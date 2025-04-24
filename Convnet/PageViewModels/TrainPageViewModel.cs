@@ -632,6 +632,7 @@ namespace Convnet.PageViewModels
                                 case DNNOptimizers.AdaBoundW:
                                 case DNNOptimizers.AdamW:
                                 case DNNOptimizers.AmsBoundW:
+                                case DNNOptimizers.AdamS:
                                     ProgressText = string.Format(stringTraining + " Momentum: \t\t {7:0.#######}" + nwl + " Beta2:\t\t\t {8:0.#######}" + nwl + " L2 Penalty:\t\t{9:0.#######}" + nwl + " Dropout:\t\t   {10}" + nwl + CutMixToString(CutMix) + "{11}" + nwl + " Auto Augment:\t  {12}" + nwl + " Horizontal Flip:   {13}" + nwl + " Vertical Flip:\t {14}" + nwl + " Color Cast:\t\t{15}" + nwl + " Distortion:\t\t{16}" + nwl + " Loss:\t\t\t  {17:N7}" + nwl + " Errors:\t\t\t{18:G}" + nwl + " Error:\t\t\t {19:N2} %" + nwl + " Accuracy:\t\t  {20:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, Model.BatchSize, Rate, Momentum, Beta2, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 

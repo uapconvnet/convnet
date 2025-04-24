@@ -82,6 +82,7 @@
 * [AdaGrad](https://arxiv.org/pdf/1609.04747.pdf)
 * [Adam](https://arxiv.org/abs/1412.6980)
 * [Adamax](https://arxiv.org/pdf/1609.04747.pdf)
+* [AdamS](https://openreview.net/pdf?id=vnGcubtzR1)
 * [AdamW](https://arxiv.org/abs/1711.05101)
 * [AmsBound](https://arxiv.org/abs/1902.09843)
 * [AmsBoundW](https://arxiv.org/abs/1902.09843)
