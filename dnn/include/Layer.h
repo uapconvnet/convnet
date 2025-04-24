@@ -2230,7 +2230,7 @@ namespace dnn
 					BiasesPar2[i] = (beta2 * BiasesPar2[i]) + (oneMinusBeta2 * Square<Float>(BiasesD1[i] * batchRecip));
 					const auto p1 = BiasesPar1[i] / oneMinusB1;
 					const auto p2 = BiasesPar2[i] / oneMinusB2;
-					const auto p2mean = sqrt(p2 / BiasCount);
+					const auto p2mean = std::sqrt(p2 / BiasCount);
 					Biases[i] -= lrBias * (p1 / std::sqrt(p2 + eps) - ((Float(1) - weightDecayBias / p2mean) * Biases[i]));
 				}
 			}
