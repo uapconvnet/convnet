@@ -2191,7 +2191,7 @@ namespace dnn
 					(*weights.WeightsPar2)[i] = (beta2 * (*weights.WeightsPar2)[i]) + (oneMinusBeta2 * Square<Float>((*weights.WeightsD1)[i] * batchRecip));
 					const auto p1 = (*weights.WeightsPar1)[i] / oneMinusB1;
 					const auto p2 = (*weights.WeightsPar2)[i] / oneMinusB2;
-					const auto p2mean = sqrt(p2 / WeightCount);
+					const auto p2mean = sqrt(p2 / Float(WeightCount));
 					(*weights.Weights)[i] -= lr * p1 / std::sqrt(p2 + eps) - ((Float(1) - weightDecay / p2mean) * (*weights.Weights)[i]);
 				}
 			}
@@ -2209,7 +2209,7 @@ namespace dnn
 					par2 = (beta2 * par2) + (oneMinusBeta2 * square(weightD1 * batchRecip));
 					const auto p1 = par1 / oneMinusB1;
 					const auto p2 = par2 / oneMinusB2;
-					const auto p2mean = sqrt(p2 / WeightCount);
+					const auto p2mean = sqrt(p2 / Float(WeightCount));
 
 					weight -= lr * p1 / sqrt(p2 + eps) - ((Float(1) - weightDecay / p2mean) * weight);
 
@@ -2230,7 +2230,7 @@ namespace dnn
 					BiasesPar2[i] = (beta2 * BiasesPar2[i]) + (oneMinusBeta2 * Square<Float>(BiasesD1[i] * batchRecip));
 					const auto p1 = BiasesPar1[i] / oneMinusB1;
 					const auto p2 = BiasesPar2[i] / oneMinusB2;
-					const auto p2mean = std::sqrt(p2 / BiasCount);
+					const auto p2mean = std::sqrt(p2 / Float(BiasCount));
 					Biases[i] -= lrBias * (p1 / std::sqrt(p2 + eps) - ((Float(1) - weightDecayBias / p2mean) * Biases[i]));
 				}
 			}
