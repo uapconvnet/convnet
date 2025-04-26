@@ -1629,6 +1629,9 @@ namespace dnn
 				case Optimizers::Adamax:
 					Adamax(rate, optWeights);
 					break;
+			    case Optimizers::AdamS:
+					AdamS(rate, optWeights);
+					break;
 				case Optimizers::AdamW:
 					AdamW(rate, optWeights);
 					break;
@@ -2172,7 +2175,7 @@ namespace dnn
 			const auto beta1 = rate.Momentum;
 			const auto beta2 = rate.Beta2;
 			const auto lr = rate.MaximumRate * WeightsLRM;
-			const auto weightDecay = lr * rate.L2Penalty * WeightsWDM;
+			const auto weightDecay = rate.L2Penalty * WeightsWDM;
 			const auto eps = rate.Eps;
 			const auto oneMinusBeta1 = Float(1) - beta1;
 			const auto oneMinusBeta2 = Float(1) - beta2;
@@ -2191,8 +2194,8 @@ namespace dnn
 					(*weights.WeightsPar2)[i] = (beta2 * (*weights.WeightsPar2)[i]) + (oneMinusBeta2 * Square<Float>((*weights.WeightsD1)[i] * batchRecip));
 					const auto p1 = (*weights.WeightsPar1)[i] / oneMinusB1;
 					const auto p2 = (*weights.WeightsPar2)[i] / oneMinusB2;
-					const auto p2mean = sqrt(p2 / Float(WeightCount));
-					(*weights.Weights)[i] -= lr * p1 / std::sqrt(p2 + eps) - ((Float(1) - weightDecay / p2mean) * (*weights.Weights)[i]);
+					const auto p2mean = std::sqrt(p2 / Float(WeightCount));
+					(*weights.Weights)[i] -= (lr / std::sqrt(p2 + eps) * p1) - ((Float(1) - weightDecay * lr / p2mean) * (*weights.Weights)[i]);
 				}
 			}
 			else
@@ -2211,7 +2214,7 @@ namespace dnn
 					const auto p2 = par2 / oneMinusB2;
 					const auto p2mean = sqrt(p2 / Float(WeightCount));
 
-					weight -= lr * p1 / sqrt(p2 + eps) - ((Float(1) - weightDecay / p2mean) * weight);
+					weight -= (lr / sqrt(p2 + eps) * p1) - ((Float(1) - weightDecay * lr / p2mean) * weight);
 
 					weight.store_a(&(*weights.Weights)[i]);
 					par1.store_a(&(*weights.WeightsPar1)[i]);
@@ -2222,7 +2225,7 @@ namespace dnn
 			if (HasBias)
 			{
 				const auto lrBias = rate.MaximumRate * BiasesLRM;
-				const auto weightDecayBias = lrBias * rate.L2Penalty * BiasesWDM;
+				const auto weightDecayBias = rate.L2Penalty * BiasesWDM;
 				// PRAGMA_OMP_SIMD()
 				for (auto i = 0ull; i < BiasCount; i++)
 				{
@@ -2231,7 +2234,8 @@ namespace dnn
 					const auto p1 = BiasesPar1[i] / oneMinusB1;
 					const auto p2 = BiasesPar2[i] / oneMinusB2;
 					const auto p2mean = std::sqrt(p2 / Float(BiasCount));
-					Biases[i] -= lrBias * (p1 / std::sqrt(p2 + eps) - ((Float(1) - weightDecayBias / p2mean) * Biases[i]));
+					
+					Biases[i] -= (lrBias / std::sqrt(p2 + eps) * p1) - ((Float(1) - weightDecayBias * lrBias / p2mean) * Biases[i]);
 				}
 			}
 
