@@ -106,13 +106,13 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.0-rc1" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.0-rc1" />
-    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.3.0-beta2" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.3.0-rc1" />
     <PackageReference Include="AvaloniaControlsToolBar" Version="0.0.1" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.0-rc1" />
     <PackageReference Include="AvaloniaEdit.TextMate.Grammars" Version="0.10.12" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="CustomMessageBox.Avalonia" Version="11.0.0.2" />
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="8.3.0.1" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="8.3.1.1" />
     <PackageReference Include="Microsoft.Build.Locator" Version="1.9.1" />
     <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0" />
     <PackageReference Include="Oxyplot.AvaloniaCore" Version="2.1.2" />
