@@ -2185,7 +2185,6 @@ namespace dnn
 			const auto oneMinusB1 = Float(1) - B1;
 			const auto oneMinusB2 = Float(1) - B2;
 
-
 			if (WeightCount % VectorSize != 0)
 			{
 				for (auto i = 0ull; i < WeightCount; i++)
