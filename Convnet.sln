@@ -54,6 +54,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simd-objs", "dnn\build\deps
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZERO_CHECK", "dnn\build\ZERO_CHECK.vcxproj", "{916FECB8-76F6-3045-B4E5-B7A441D4389F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "dnn\build\deps\zlib\zlib.vcxproj", "{860B0B9E-3FBF-303F-84E9-C05D94274E56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -222,6 +224,14 @@ Global
 		{916FECB8-76F6-3045-B4E5-B7A441D4389F}.Release|x64.Build.0 = Release|x64
 		{916FECB8-76F6-3045-B4E5-B7A441D4389F}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 		{916FECB8-76F6-3045-B4E5-B7A441D4389F}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{860B0B9E-3FBF-303F-84E9-C05D94274E56}.Debug|x64.ActiveCfg = Debug|x64
+		{860B0B9E-3FBF-303F-84E9-C05D94274E56}.Debug|x64.Build.0 = Debug|x64
+		{860B0B9E-3FBF-303F-84E9-C05D94274E56}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{860B0B9E-3FBF-303F-84E9-C05D94274E56}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{860B0B9E-3FBF-303F-84E9-C05D94274E56}.Release|x64.ActiveCfg = Release|x64
+		{860B0B9E-3FBF-303F-84E9-C05D94274E56}.Release|x64.Build.0 = Release|x64
+		{860B0B9E-3FBF-303F-84E9-C05D94274E56}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{860B0B9E-3FBF-303F-84E9-C05D94274E56}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
