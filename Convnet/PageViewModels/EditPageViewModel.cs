@@ -263,7 +263,7 @@ namespace Convnet.PageViewModels
 
                 if (notSameModelName || !sameDefinition)
                 {
-                    bool ok = true;
+                    var ok = true;
                     if (File.Exists(Path.Combine(DefinitionsDirectory, modelname + ".txt")))
                     {
                         var overwrite = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("File already exists! Overwrite?", "File already exists", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2), DispatcherPriority.Render);
@@ -341,7 +341,7 @@ namespace Convnet.PageViewModels
                 {
                     if (notSameModelName)
                     {
-                        bool ok = true;
+                        var ok = true;
                         if (File.Exists(Path.Combine(DefinitionsDirectory, modelname + ".txt")))
                         {
                             var overwrite = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("File already exists! Overwrite?", "File already exists", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
@@ -563,8 +563,8 @@ namespace Convnet.PageViewModels
                     TextLocation = new TextLocation(1, 1);
                     TextLocation = new TextLocation((int)msg.Row, (int)msg.Column);
                     Dispatcher.UIThread.Invoke(() => MessageBox.Show(msg.Message, "Check", MessageBoxButtons.OK, icon: MessageBoxIcon.Information));
-                };
-
+                }
+                
                 return !msg.Error;
             }
 
