@@ -527,6 +527,33 @@ Eps=0.125</Value>
     <Setting Name="DisableLocking" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="PlainFormat" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Dataset" Type="System.String" Scope="User">
+      <Value Profile="(Default)">cifar10</Value>
+    </Setting>
+    <Setting Name="ShuffleSetter" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">96</Value>
+    </Setting>
+    <Setting Name="Shuffle" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">64</Value>
+    </Setting>
+    <Setting Name="GotoCycle" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="BackgroundColor" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">64</Value>
+    </Setting>
+    <Setting Name="UseTrainingStrategy" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SGDR" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ScriptActive" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
     <Setting Name="Script" Type="System.String" Scope="User">
       <Value Profile="(Default)">using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -2506,7 +2533,7 @@ namespace Scripts
                                 C += 3;
                             }
 
-                            for (var i = 1ul; i &lt;  p.Iterations; i++)
+                            for (var i = 1ul; i &lt; p.Iterations; i++)
                             {
                                 var strOutputLayer = (i == 1 &amp;&amp; g &gt; 1) ? In("B", C - 1) : (i == 1 &amp;&amp; g == 1) ? In("B", 4) : In("A", A);
 
@@ -2586,7 +2613,7 @@ namespace Scripts
 
                         for (var g = 0ul; g &lt;  p.Groups; g++)
                         {
-                            if (g gt; 0)
+                            if (g &gt; 0)
                             {
                                 W *= 2;
 
@@ -2623,7 +2650,7 @@ namespace Scripts
                                 C += p.ChannelZeroPad ? 2 + bn : 3 + bn;
                             }
 
-                            for (var i = 1ul; i lt; p.Iterations; i++)
+                            for (var i = 1ul; i &lt; p.Iterations; i++)
                             {
                                 if (p.Bottleneck)
                                 {
@@ -2693,7 +2720,7 @@ namespace Scripts
                                 net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation);
                                 C += 5;
                             }
-                            for (var n = 0ul; n &lt;; rec.Iterations; n++)
+                            for (var n = 0ul; n &lt; rec.Iterations; n++)
                             {
                                 net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);
                                 C += 3;
@@ -2728,13 +2755,54 @@ namespace Scripts
 
         static void Main() 
         {
-            var param = new ScriptParameters(Scripts.shufflenetv2, Datasets.cifar10, 32, 32, 4, 4, false, true, Fillers.HeNormal, FillerModes.In, 1f, 0.05f, 1f, 1f, false, Fillers.Constant, FillerModes.In, 1f, 0f, 1f, 1f, 0.995f, 0.0001f, false, 0f, 0f, 3, 4, 12, 12, false, 0.0f, 0.0f, false, true, Activations.HardSwish, 1, 1, 0.0f, false)
-            {
-                ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] 
-            };
-                        
-            var script = Generate(param);
-            var fileInfo = new FileInfo(Path.Combine(ScriptPath, "script.txt"));
+             var script = Generate(new ScriptParameters()
+	            {
+        	        Script = Scripts.shufflenetv2,
+                    Activation = Activations.HardSwish,
+                    Dataset = Datasets.cifar10,
+                    MeanStdNormalization = true,
+                    H = 32,
+        	        W = 32,
+        	        PadH = 4,
+        	        PadW = 4,
+                    MirrorPad = false,
+                    StrideHFirstConv = 1,
+                    StrideWFirstConv = 1,
+                    WeightsFiller = Fillers.HeNormal,
+        	        WeightsFillerMode = FillerModes.In,
+        	        WeightsGain = 1f,
+        	        WeightsScale = 0.05f,
+        	        WeightsLRM = 1f,
+        	        WeightsWDM = 1f,
+        	        HasBias = false,
+        	        BiasesFiller = Fillers.Constant,
+        	        BiasesFillerMode = FillerModes.In,
+        	        BiasesGain = 1f,
+        	        BiasesScale = 0f,
+        	        BiasesLRM = 1f,
+        	        BiasesWDM = 1f,
+        	        BatchNormMomentum = 0.995f,
+        	        BatchNormEps = 0.0001f,
+        	        BatchNormScaling = false,
+        	        Alpha = 0f,
+        	        Beta = 0f,
+        	        Groups = 3,
+        	        Iterations = 4,
+        	        Width = 12,
+        	        GrowthRate = 12,
+        	        Bottleneck = false,
+        	        Dropout = 0f,
+        	        Compression = 0f,
+        	        SqueezeExcitation = true,
+        	        ChannelZeroPad = false,
+        	        DepthDrop = 0.0f,
+        	        FixedDepthDrop = false,
+        	        EfficientNet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],
+                    ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] 
+                });
+                
+            var fileInfo = new FileInfo(Path.Combine(ScriptPath, @"script.txt"));
+            
             if (fileInfo.Directory != null)
             {
                 if (!fileInfo.Directory.Exists)
@@ -2751,33 +2819,6 @@ namespace Scripts
 }
 
 </Value>
-    </Setting>
-    <Setting Name="PlainFormat" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="Dataset" Type="System.String" Scope="User">
-      <Value Profile="(Default)">cifar10</Value>
-    </Setting>
-    <Setting Name="ShuffleSetter" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">96</Value>
-    </Setting>
-    <Setting Name="Shuffle" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">64</Value>
-    </Setting>
-    <Setting Name="GotoCycle" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="BackgroundColor" Type="System.Byte" Scope="User">
-      <Value Profile="(Default)">64</Value>
-    </Setting>
-    <Setting Name="UseTrainingStrategy" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="SGDR" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="ScriptActive" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

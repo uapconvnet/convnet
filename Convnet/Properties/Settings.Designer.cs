@@ -291,6 +291,114 @@ namespace Convnet.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PlainFormat {
+            get {
+                return ((bool)(this["PlainFormat"]));
+            }
+            set {
+                this["PlainFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("cifar10")]
+        public string Dataset {
+            get {
+                return ((string)(this["Dataset"]));
+            }
+            set {
+                this["Dataset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("96")]
+        public double ShuffleSetter {
+            get {
+                return ((double)(this["ShuffleSetter"]));
+            }
+            set {
+                this["ShuffleSetter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("64")]
+        public double Shuffle {
+            get {
+                return ((double)(this["Shuffle"]));
+            }
+            set {
+                this["Shuffle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public uint GotoCycle {
+            get {
+                return ((uint)(this["GotoCycle"]));
+            }
+            set {
+                this["GotoCycle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("64")]
+        public byte BackgroundColor {
+            get {
+                return ((byte)(this["BackgroundColor"]));
+            }
+            set {
+                this["BackgroundColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseTrainingStrategy {
+            get {
+                return ((bool)(this["UseTrainingStrategy"]));
+            }
+            set {
+                this["UseTrainingStrategy"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SGDR {
+            get {
+                return ((bool)(this["SGDR"]));
+            }
+            set {
+                this["SGDR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ScriptActive {
+            get {
+                return ((string)(this["ScriptActive"]));
+            }
+            set {
+                this["ScriptActive"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("using System.Collections.ObjectModel;\r\nusing System.ComponentModel;\r\nusing System" +
             ".Globalization;\r\nusing System.Runtime.InteropServices;\r\nusing System;\r\n\r\nusing F" +
             "loat = System.Single;\r\nusing UInt = System.UInt64;\r\n\r\n\r\nnamespace Scripts\r\n{\r\n  " +
@@ -1347,294 +1455,204 @@ namespace Convnet.Properties {
             "DC\", C + 1), p.Activation) +\r\n                                    strSE +\r\n     " +
             "                               BatchNorm(C + 2, In(\"C\", C + 2)));\r\n\r\n           " +
             "                     C += 3;\r\n                            }\r\n\r\n                 " +
-            "           for (var i = 1ul; i <  p.Iterations; i++)\r\n                          " +
-            "  {\r\n                                var strOutputLayer = (i == 1 && g > 1) ? In" +
-            "(\"B\", C - 1) : (i == 1 && g == 1) ? In(\"B\", 4) : In(\"A\", A);\r\n\r\n                " +
-            "                var group = In(\"SE\", C + 1);\r\n\r\n                                " +
-            "var strSE =\r\n                                    se ? GlobalAvgPooling(In(\"B\", C" +
-            " + 1), group) +\r\n                                    Convolution(1, group + \"GAP" +
-            "\", DIV8((6 * W) / 4), 1, 1, 1, 1, 0, 0, false, group) +\r\n                       " +
-            "             BatchNormActivation(1, group + \"C1\", (p.Activation == Activations.F" +
-            "Relu ? Activations.HardSwish : p.Activation), group) +\r\n                        " +
-            "            Convolution(2, group + \"B1\", DIV8(6 * W), 1, 1, 1, 1, 0, 0, false, g" +
-            "roup) +\r\n                                    BatchNormActivation(2, group + \"C2\"" +
-            ", Activations.HardSigmoid, group) +\r\n                                    Multipl" +
-            "y(In(\"B\", C + 1) + \",\" + group + \"B2\", group) +\r\n                               " +
-            "     Convolution(C + 2, group + \"CM\", DIV8(W), 1, 1, 1, 1, 0, 0) :\r\n            " +
-            "                        Convolution(C + 2, In(\"B\", C + 1), DIV8(W), 1, 1, 1, 1, " +
-            "0, 0);\r\n\r\n                                blocks.Add(\r\n                         " +
-            "           Convolution(C, strOutputLayer, DIV8(6 * W), 1, 1, 1, 1, 0, 0) +\r\n    " +
-            "                                BatchNormActivation(C, In(\"C\", C), p.Activation)" +
-            " +\r\n                                    DepthwiseMixedConvolution(1ul, C + 1, In" +
-            "(\"B\", C), 1, 1, p.HasBias, channelsplit) +\r\n                                    " +
-            "BatchNormActivation(C + 1, In(\"DC\", C + 1), p.Activation) +\r\n                   " +
-            "                 strSE +\r\n                                    BatchNorm(C + 2, I" +
-            "n(\"C\", C + 2)) +\r\n                                    Add(A + 1, In(\"B\", C + 2) " +
-            "+ \",\" + strOutputLayer));\r\n\r\n                                A++;\r\n             " +
-            "                   C += 3;\r\n                            }\r\n                     " +
-            "   }\r\n\r\n                        foreach (var block in blocks)\r\n                 " +
-            "           net += block;\r\n\r\n                        net +=\r\n                    " +
-            "        BatchNormActivation(C, In(\"A\", A), p.Activation) +\r\n                    " +
-            "        Convolution(C + 1, In(\"B\", C), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n         " +
-            "                   BatchNorm(C + 1, In(\"C\", C + 1)) +\r\n                         " +
-            "   GlobalAvgPooling(In(\"B\", C + 1)) +\r\n                            LogSoftmax(\"G" +
-            "AP\") +\r\n                            Cost(\"LSM\", p.Dataset, p.Classes, \"Categoric" +
-            "alCrossEntropy\", 0.125f);\r\n                    }\r\n                    break;\r\n\r\n" +
-            "                case Scripts.resnet:\r\n                    {\r\n                   " +
-            "     var bn = p.Bottleneck ? 1ul : 0ul;\r\n                        const Float K =" +
-            " 2.0f;\r\n                        var W = p.Width * 16;\r\n                        v" +
-            "ar A = 1ul;\r\n                        var C = 5ul;\r\n\r\n                        net" +
-            " += Convolution(1, \"Input\", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstCon" +
-            "v, 1, 1);\r\n\r\n                        if (p.Bottleneck)\r\n                        " +
-            "{\r\n                            blocks.Add(\r\n                                Batc" +
-            "hNormActivation(1, \"C1\", p.Activation) +\r\n                                Convol" +
-            "ution(2, \"B1\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                Bat" +
-            "chNormActivation(2, \"C2\", p.Activation) +\r\n                                Convo" +
-            "lution(3, \"B2\", DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +\r\n                  " +
-            "              (p.Dropout > 0 ? BatchNormActivationDropout(3, \"C3\", p.Activation)" +
-            " : BatchNormActivation(3, \"C3\", p.Activation)) +\r\n                              " +
-            "  Convolution(4, \"B3\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                           " +
-            "     Convolution(5, \"B1\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                        " +
-            "        Add(1, \"C4,C5\"));\r\n\r\n                            C = 6;\r\n               " +
-            "         }\r\n                        else\r\n                        {\r\n           " +
-            "                 blocks.Add(\r\n                                BatchNormActivatio" +
-            "n(1, \"C1\", p.Activation) +\r\n                                Convolution(2, \"B1\"," +
-            " DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n                                (p.Dropout > 0 ? " +
-            "BatchNormActivationDropout(2, \"C2\", p.Activation) : BatchNormActivation(2, \"C2\"," +
-            " p.Activation)) +\r\n                                Convolution(3, \"B2\", DIV8(W)," +
-            " 3, 3, 1, 1, 1, 1) +\r\n                                Convolution(4, \"B1\", DIV8(" +
-            "W), 1, 1, 1, 1, 0, 0) +\r\n                                Add(1, \"C3,C4\"));\r\n    " +
-            "                    }\r\n\r\n                        for (var g = 0ul; g <  p.Groups" +
-            "; g++)\r\n                        {\r\n                            if (g gt; 0)\r\n   " +
-            "                         {\r\n                                W *= 2;\r\n\r\n         " +
-            "                       var strChannelZeroPad = p.ChannelZeroPad ?\r\n             " +
-            "                       AvgPooling(g, In(\"A\", A)) +\r\n                            " +
-            "        \"[CZP\" + to_string(g) + \"]\" + nwl + \"Type=ChannelZeroPad\" + nwl + \"Input" +
-            "s=\" + In(\"P\", g) + nwl + \"Channels=\" + to_string(W) + nwl + nwl +\r\n             " +
-            "                       Add(A + 1, In(\"C\", C + 1 + bn) + \",\" + In(\"CZP\", g)) :\r\n " +
-            "                                   AvgPooling(g, In(\"B\", C)) +\r\n                " +
-            "                    Convolution(C + 2 + bn, In(\"P\", g), DIV8(W), 1, 1, 1, 1, 0, " +
-            "0) +\r\n                                    Add(A + 1, In(\"C\", C + 1 + bn) + \",\" +" +
-            " In(\"C\", C + 2 + bn));\r\n\r\n                                if (p.Bottleneck)\r\n   " +
-            "                             {\r\n                                    blocks.Add(\r" +
-            "\n                                        BatchNormActivation(C, In(\"A\", A), p.Ac" +
-            "tivation) +\r\n                                        Convolution(C, In(\"B\", C), " +
-            "DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                        BatchNormA" +
-            "ctivation(C + 1, In(\"C\", C), p.Activation) +\r\n                                  " +
-            "      Convolution(C + 1, In(\"B\", C + 1), DIV8(W), 3, 3, 2, 2, 1, 1) +\r\n         " +
-            "                               (p.Dropout > 0 ? BatchNormActivationDropout(C + 2" +
-            ", In(\"C\", C + 1), p.Activation) : BatchNormActivation(C + 2, In(\"C\", C + 1), p.A" +
-            "ctivation)) +\r\n                                        Convolution(C + 2, In(\"B\"" +
-            ", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                        " +
-            "strChannelZeroPad);\r\n                                }\r\n                        " +
-            "        else\r\n                                {\r\n                               " +
-            "     blocks.Add(\r\n                                        BatchNormActivation(C," +
-            " In(\"A\", A), p.Activation) +\r\n                                        Convolutio" +
-            "n(C, In(\"B\", C), DIV8(W), 3, 3, 2, 2, 1, 1) +\r\n                                 " +
-            "       (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In(\"C\", C), p.Activati" +
-            "on) : BatchNormActivation(C + 1, In(\"C\", C), p.Activation)) +\r\n                 " +
-            "                       Convolution(C + 1, In(\"B\", C + 1), DIV8(W), 3, 3, 1, 1, 1" +
-            ", 1) +\r\n                                        strChannelZeroPad);\r\n           " +
-            "                     }\r\n\r\n                                A++;\r\n                " +
-            "                C += p.ChannelZeroPad ? 2 + bn : 3 + bn;\r\n                      " +
-            "      }\r\n\r\n                            for (var i = 1ul; i lt; p.Iterations; i++" +
-            ")\r\n                            {\r\n                                if (p.Bottlene" +
-            "ck)\r\n                                {\r\n                                    bloc" +
-            "ks.Add(\r\n                                        BatchNormActivation(C, In(\"A\", " +
-            "A), p.Activation) +\r\n                                        Convolution(C, In(\"" +
-            "B\", C), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                        Ba" +
-            "tchNormActivation(C + 1, In(\"C\", C), p.Activation) +\r\n                          " +
-            "              Convolution(C + 1, In(\"B\", C + 1), DIV8((UInt)(K * W / 4)), 3, 3, " +
-            "1, 1, 1, 1) +\r\n                                        (p.Dropout > 0 ? BatchNor" +
-            "mActivationDropout(C + 2, In(\"C\", C + 1), p.Activation) : BatchNormActivation(C " +
-            "+ 2, In(\"C\", C + 1), p.Activation)) +\r\n                                        C" +
-            "onvolution(C + 2, In(\"B\", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                " +
-            "                        Add(A + 1, In(\"C\", C + 2) + \",\" + In(\"A\", A)));\r\n\r\n     " +
-            "                               C += 3;\r\n                                }\r\n     " +
-            "                           else\r\n                                {\r\n            " +
-            "                        blocks.Add(\r\n                                        Bat" +
-            "chNormActivation(C, In(\"A\", A), p.Activation) +\r\n                               " +
-            "         Convolution(C, In(\"B\", C), DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n              " +
-            "                          (p.Dropout >  0 ? BatchNormActivationDropout(C + 1, In" +
-            "(\"C\", C), p.Activation) : BatchNormActivation(C + 1, In(\"C\", C), p.Activation)) " +
-            "+\r\n                                        Convolution(C + 1, In(\"B\", C + 1), DI" +
-            "V8(W), 3, 3, 1, 1, 1, 1) +\r\n                                        Add(A + 1, I" +
-            "n(\"C\", C + 1) + \",\" + In(\"A\", A)));\r\n\r\n                                    C += " +
-            "2;\r\n                                }\r\n                                A++;\r\n   " +
-            "                         }\r\n                        }\r\n\r\n                       " +
-            " foreach (var block in blocks)\r\n                            net += block;\r\n\r\n   " +
-            "                     net +=\r\n                            BatchNormActivation(C, " +
-            "In(\"A\", A), p.Activation) +\r\n                            Convolution(C + 1, In(\"" +
-            "B\", C), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm(C " +
-            "+ 1, In(\"C\", C + 1)) +\r\n                            GlobalAvgPooling(In(\"B\", C +" +
-            " 1)) +\r\n                            LogSoftmax(\"GAP\") +\r\n                       " +
-            "     Cost(\"LSM\", p.Dataset, p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n    " +
-            "                }\r\n                    break;\r\n\r\n                case Scripts.sh" +
-            "ufflenetv2:\r\n                    {\r\n                        var channels = DIV8(" +
-            "p.Width * 16);\r\n\r\n                        net +=\r\n                            Co" +
-            "nvolution(1, \"Input\", channels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1," +
-            " 1) +\r\n                            BatchNormActivation(1, \"C1\", p.Activation) +\r" +
-            "\n                            Convolution(2, \"B1\", channels, 1, 1, 1, 1, 0, 0) +\r" +
-            "\n                            BatchNormActivation(2, \"C2\", p.Activation) +\r\n     " +
-            "                       DepthwiseConvolution(3, \"B2\", 1, 3, 3, 1, 1, 1, 1) +\r\n   " +
-            "                         BatchNorm(3, \"DC3\") +\r\n                            Conv" +
-            "olution(4, \"B3\", channels, 1, 1, 1, 1, 0, 0) +\r\n                            Batc" +
-            "hNormActivation(4, \"C4\", p.Activation) +\r\n                            Convolutio" +
-            "n(5, \"B1\", channels, 1, 1, 1, 1, 0, 0) +\r\n                            Concat(1, " +
-            "\"C5,B4\");\r\n\r\n                        var C = 6ul;\r\n                        var A" +
-            " = 1ul;\r\n                        var subsample = false;\r\n                       " +
-            " foreach (var rec in p.ShuffleNet)\r\n                        {\r\n                 " +
-            "           if (subsample)\r\n                            {\r\n                      " +
-            "          channels *= 2;\r\n                                net += InvertedResidua" +
-            "l(A++, C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation" +
-            ");\r\n                                C += 5;\r\n                            }\r\n    " +
-            "                        for (var n = 0ul; n <; rec.Iterations; n++)\r\n           " +
-            "                 {\r\n                                net += InvertedResidual(A++," +
-            " C, channels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);\r\n " +
-            "                               C += 3;\r\n                            }\r\n         " +
-            "                   subsample = true;\r\n                        }\r\n\r\n             " +
-            "           net +=\r\n                            Convolution(C, In(\"CC\", A), p.Cla" +
-            "sses, 1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm(C + 1, In(\"C\", " +
-            "C)) +\r\n                            GlobalAvgPooling(In(\"B\", C + 1)) +\r\n         " +
-            "                   LogSoftmax(\"GAP\") +\r\n                            Cost(\"LSM\", " +
-            "p.Dataset, p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n                    }" +
-            "\r\n                    break;\r\n            }\r\n\r\n            return net;\r\n        " +
-            "}\r\n\r\n\r\n        const string Framework = \"net9.0\";\r\n#if DEBUG\r\n        const stri" +
-            "ng Mode = \"Debug\";\r\n#else\r\n        const string Mode = \"Release\";\r\n#endif\r\n\r\n   " +
-            "     public static string StorageDirectory { get; } = Path.Combine(Environment.G" +
-            "etFolderPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Environment.S" +
-            "pecialFolder.MyDocuments : Environment.SpecialFolder.UserProfile), \"convnet\");\r\n" +
-            "        public static string ScriptsDirectory { get; } = Path.Combine(StorageDir" +
-            "ectory, \"scripts\");\r\n        public static string ScriptPath { get; } = Path.Com" +
-            "bine(ScriptsDirectory, \"bin\", Mode, Framework);\r\n\r\n        static void Main() \r\n" +
-            "        {\r\n            var param = new ScriptParameters(Scripts.shufflenetv2, Da" +
-            "tasets.cifar10, 32, 32, 4, 4, false, true, Fillers.HeNormal, FillerModes.In, 1f," +
-            " 0.05f, 1f, 1f, false, Fillers.Constant, FillerModes.In, 1f, 0f, 1f, 1f, 0.995f," +
-            " 0.0001f, false, 0f, 0f, 3, 4, 12, 12, false, 0.0f, 0.0f, false, true, Activatio" +
-            "ns.HardSwish, 1, 1, 0.0f, false)\r\n            {\r\n                ShuffleNet = [n" +
-            "ew(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] \r\n        " +
-            "    };\r\n                        \r\n            var script = Generate(param);\r\n   " +
-            "         var fileInfo = new FileInfo(Path.Combine(ScriptPath, \"script.txt\"));\r\n " +
-            "           if (fileInfo.Directory != null)\r\n            {\r\n                if (!" +
-            "fileInfo.Directory.Exists)\r\n                    fileInfo.Directory.Create();\r\n\r\n" +
-            "                var streamWriter = fileInfo.CreateText();\r\n                strea" +
-            "mWriter.AutoFlush = true;\r\n                streamWriter.Write(script);\r\n        " +
-            "        streamWriter.Close();\r\n                streamWriter.Dispose();\r\n        " +
-            "    }\r\n        }\r\n    }\r\n}\r\n\r\n")]
+            "           for (var i = 1ul; i < p.Iterations; i++)\r\n                           " +
+            " {\r\n                                var strOutputLayer = (i == 1 && g > 1) ? In(" +
+            "\"B\", C - 1) : (i == 1 && g == 1) ? In(\"B\", 4) : In(\"A\", A);\r\n\r\n                 " +
+            "               var group = In(\"SE\", C + 1);\r\n\r\n                                v" +
+            "ar strSE =\r\n                                    se ? GlobalAvgPooling(In(\"B\", C " +
+            "+ 1), group) +\r\n                                    Convolution(1, group + \"GAP\"" +
+            ", DIV8((6 * W) / 4), 1, 1, 1, 1, 0, 0, false, group) +\r\n                        " +
+            "            BatchNormActivation(1, group + \"C1\", (p.Activation == Activations.FR" +
+            "elu ? Activations.HardSwish : p.Activation), group) +\r\n                         " +
+            "           Convolution(2, group + \"B1\", DIV8(6 * W), 1, 1, 1, 1, 0, 0, false, gr" +
+            "oup) +\r\n                                    BatchNormActivation(2, group + \"C2\"," +
+            " Activations.HardSigmoid, group) +\r\n                                    Multiply" +
+            "(In(\"B\", C + 1) + \",\" + group + \"B2\", group) +\r\n                                " +
+            "    Convolution(C + 2, group + \"CM\", DIV8(W), 1, 1, 1, 1, 0, 0) :\r\n             " +
+            "                       Convolution(C + 2, In(\"B\", C + 1), DIV8(W), 1, 1, 1, 1, 0" +
+            ", 0);\r\n\r\n                                blocks.Add(\r\n                          " +
+            "          Convolution(C, strOutputLayer, DIV8(6 * W), 1, 1, 1, 1, 0, 0) +\r\n     " +
+            "                               BatchNormActivation(C, In(\"C\", C), p.Activation) " +
+            "+\r\n                                    DepthwiseMixedConvolution(1ul, C + 1, In(" +
+            "\"B\", C), 1, 1, p.HasBias, channelsplit) +\r\n                                    B" +
+            "atchNormActivation(C + 1, In(\"DC\", C + 1), p.Activation) +\r\n                    " +
+            "                strSE +\r\n                                    BatchNorm(C + 2, In" +
+            "(\"C\", C + 2)) +\r\n                                    Add(A + 1, In(\"B\", C + 2) +" +
+            " \",\" + strOutputLayer));\r\n\r\n                                A++;\r\n              " +
+            "                  C += 3;\r\n                            }\r\n                      " +
+            "  }\r\n\r\n                        foreach (var block in blocks)\r\n                  " +
+            "          net += block;\r\n\r\n                        net +=\r\n                     " +
+            "       BatchNormActivation(C, In(\"A\", A), p.Activation) +\r\n                     " +
+            "       Convolution(C + 1, In(\"B\", C), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n          " +
+            "                  BatchNorm(C + 1, In(\"C\", C + 1)) +\r\n                          " +
+            "  GlobalAvgPooling(In(\"B\", C + 1)) +\r\n                            LogSoftmax(\"GA" +
+            "P\") +\r\n                            Cost(\"LSM\", p.Dataset, p.Classes, \"Categorica" +
+            "lCrossEntropy\", 0.125f);\r\n                    }\r\n                    break;\r\n\r\n " +
+            "               case Scripts.resnet:\r\n                    {\r\n                    " +
+            "    var bn = p.Bottleneck ? 1ul : 0ul;\r\n                        const Float K = " +
+            "2.0f;\r\n                        var W = p.Width * 16;\r\n                        va" +
+            "r A = 1ul;\r\n                        var C = 5ul;\r\n\r\n                        net " +
+            "+= Convolution(1, \"Input\", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstConv" +
+            ", 1, 1);\r\n\r\n                        if (p.Bottleneck)\r\n                        {" +
+            "\r\n                            blocks.Add(\r\n                                Batch" +
+            "NormActivation(1, \"C1\", p.Activation) +\r\n                                Convolu" +
+            "tion(2, \"B1\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                Batc" +
+            "hNormActivation(2, \"C2\", p.Activation) +\r\n                                Convol" +
+            "ution(3, \"B2\", DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +\r\n                   " +
+            "             (p.Dropout > 0 ? BatchNormActivationDropout(3, \"C3\", p.Activation) " +
+            ": BatchNormActivation(3, \"C3\", p.Activation)) +\r\n                               " +
+            " Convolution(4, \"B3\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                            " +
+            "    Convolution(5, \"B1\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                         " +
+            "       Add(1, \"C4,C5\"));\r\n\r\n                            C = 6;\r\n                " +
+            "        }\r\n                        else\r\n                        {\r\n            " +
+            "                blocks.Add(\r\n                                BatchNormActivation" +
+            "(1, \"C1\", p.Activation) +\r\n                                Convolution(2, \"B1\", " +
+            "DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n                                (p.Dropout > 0 ? B" +
+            "atchNormActivationDropout(2, \"C2\", p.Activation) : BatchNormActivation(2, \"C2\", " +
+            "p.Activation)) +\r\n                                Convolution(3, \"B2\", DIV8(W), " +
+            "3, 3, 1, 1, 1, 1) +\r\n                                Convolution(4, \"B1\", DIV8(W" +
+            "), 1, 1, 1, 1, 0, 0) +\r\n                                Add(1, \"C3,C4\"));\r\n     " +
+            "                   }\r\n\r\n                        for (var g = 0ul; g <  p.Groups;" +
+            " g++)\r\n                        {\r\n                            if (g > 0)\r\n      " +
+            "                      {\r\n                                W *= 2;\r\n\r\n            " +
+            "                    var strChannelZeroPad = p.ChannelZeroPad ?\r\n                " +
+            "                    AvgPooling(g, In(\"A\", A)) +\r\n                               " +
+            "     \"[CZP\" + to_string(g) + \"]\" + nwl + \"Type=ChannelZeroPad\" + nwl + \"Inputs=\"" +
+            " + In(\"P\", g) + nwl + \"Channels=\" + to_string(W) + nwl + nwl +\r\n                " +
+            "                    Add(A + 1, In(\"C\", C + 1 + bn) + \",\" + In(\"CZP\", g)) :\r\n    " +
+            "                                AvgPooling(g, In(\"B\", C)) +\r\n                   " +
+            "                 Convolution(C + 2 + bn, In(\"P\", g), DIV8(W), 1, 1, 1, 1, 0, 0) " +
+            "+\r\n                                    Add(A + 1, In(\"C\", C + 1 + bn) + \",\" + In" +
+            "(\"C\", C + 2 + bn));\r\n\r\n                                if (p.Bottleneck)\r\n      " +
+            "                          {\r\n                                    blocks.Add(\r\n  " +
+            "                                      BatchNormActivation(C, In(\"A\", A), p.Activ" +
+            "ation) +\r\n                                        Convolution(C, In(\"B\", C), DIV" +
+            "8(W), 1, 1, 1, 1, 0, 0) +\r\n                                        BatchNormActi" +
+            "vation(C + 1, In(\"C\", C), p.Activation) +\r\n                                     " +
+            "   Convolution(C + 1, In(\"B\", C + 1), DIV8(W), 3, 3, 2, 2, 1, 1) +\r\n            " +
+            "                            (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, I" +
+            "n(\"C\", C + 1), p.Activation) : BatchNormActivation(C + 2, In(\"C\", C + 1), p.Acti" +
+            "vation)) +\r\n                                        Convolution(C + 2, In(\"B\", C" +
+            " + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                        str" +
+            "ChannelZeroPad);\r\n                                }\r\n                           " +
+            "     else\r\n                                {\r\n                                  " +
+            "  blocks.Add(\r\n                                        BatchNormActivation(C, In" +
+            "(\"A\", A), p.Activation) +\r\n                                        Convolution(C" +
+            ", In(\"B\", C), DIV8(W), 3, 3, 2, 2, 1, 1) +\r\n                                    " +
+            "    (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In(\"C\", C), p.Activation)" +
+            " : BatchNormActivation(C + 1, In(\"C\", C), p.Activation)) +\r\n                    " +
+            "                    Convolution(C + 1, In(\"B\", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1" +
+            ") +\r\n                                        strChannelZeroPad);\r\n              " +
+            "                  }\r\n\r\n                                A++;\r\n                   " +
+            "             C += p.ChannelZeroPad ? 2 + bn : 3 + bn;\r\n                         " +
+            "   }\r\n\r\n                            for (var i = 1ul; i < p.Iterations; i++)\r\n  " +
+            "                          {\r\n                                if (p.Bottleneck)\r\n" +
+            "                                {\r\n                                    blocks.Ad" +
+            "d(\r\n                                        BatchNormActivation(C, In(\"A\", A), p" +
+            ".Activation) +\r\n                                        Convolution(C, In(\"B\", C" +
+            "), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                        BatchNo" +
+            "rmActivation(C + 1, In(\"C\", C), p.Activation) +\r\n                               " +
+            "         Convolution(C + 1, In(\"B\", C + 1), DIV8((UInt)(K * W / 4)), 3, 3, 1, 1," +
+            " 1, 1) +\r\n                                        (p.Dropout > 0 ? BatchNormActi" +
+            "vationDropout(C + 2, In(\"C\", C + 1), p.Activation) : BatchNormActivation(C + 2, " +
+            "In(\"C\", C + 1), p.Activation)) +\r\n                                        Convol" +
+            "ution(C + 2, In(\"B\", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                     " +
+            "                   Add(A + 1, In(\"C\", C + 2) + \",\" + In(\"A\", A)));\r\n\r\n          " +
+            "                          C += 3;\r\n                                }\r\n          " +
+            "                      else\r\n                                {\r\n                 " +
+            "                   blocks.Add(\r\n                                        BatchNor" +
+            "mActivation(C, In(\"A\", A), p.Activation) +\r\n                                    " +
+            "    Convolution(C, In(\"B\", C), DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n                   " +
+            "                     (p.Dropout >  0 ? BatchNormActivationDropout(C + 1, In(\"C\"," +
+            " C), p.Activation) : BatchNormActivation(C + 1, In(\"C\", C), p.Activation)) +\r\n  " +
+            "                                      Convolution(C + 1, In(\"B\", C + 1), DIV8(W)" +
+            ", 3, 3, 1, 1, 1, 1) +\r\n                                        Add(A + 1, In(\"C\"" +
+            ", C + 1) + \",\" + In(\"A\", A)));\r\n\r\n                                    C += 2;\r\n " +
+            "                               }\r\n                                A++;\r\n        " +
+            "                    }\r\n                        }\r\n\r\n                        fore" +
+            "ach (var block in blocks)\r\n                            net += block;\r\n\r\n        " +
+            "                net +=\r\n                            BatchNormActivation(C, In(\"A" +
+            "\", A), p.Activation) +\r\n                            Convolution(C + 1, In(\"B\", C" +
+            "), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm(C + 1, " +
+            "In(\"C\", C + 1)) +\r\n                            GlobalAvgPooling(In(\"B\", C + 1)) " +
+            "+\r\n                            LogSoftmax(\"GAP\") +\r\n                            " +
+            "Cost(\"LSM\", p.Dataset, p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n         " +
+            "           }\r\n                    break;\r\n\r\n                case Scripts.shuffle" +
+            "netv2:\r\n                    {\r\n                        var channels = DIV8(p.Wid" +
+            "th * 16);\r\n\r\n                        net +=\r\n                            Convolu" +
+            "tion(1, \"Input\", channels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +" +
+            "\r\n                            BatchNormActivation(1, \"C1\", p.Activation) +\r\n    " +
+            "                        Convolution(2, \"B1\", channels, 1, 1, 1, 1, 0, 0) +\r\n    " +
+            "                        BatchNormActivation(2, \"C2\", p.Activation) +\r\n          " +
+            "                  DepthwiseConvolution(3, \"B2\", 1, 3, 3, 1, 1, 1, 1) +\r\n        " +
+            "                    BatchNorm(3, \"DC3\") +\r\n                            Convoluti" +
+            "on(4, \"B3\", channels, 1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm" +
+            "Activation(4, \"C4\", p.Activation) +\r\n                            Convolution(5, " +
+            "\"B1\", channels, 1, 1, 1, 1, 0, 0) +\r\n                            Concat(1, \"C5,B" +
+            "4\");\r\n\r\n                        var C = 6ul;\r\n                        var A = 1u" +
+            "l;\r\n                        var subsample = false;\r\n                        fore" +
+            "ach (var rec in p.ShuffleNet)\r\n                        {\r\n                      " +
+            "      if (subsample)\r\n                            {\r\n                           " +
+            "     channels *= 2;\r\n                                net += InvertedResidual(A++" +
+            ", C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation);\r\n " +
+            "                               C += 5;\r\n                            }\r\n         " +
+            "                   for (var n = 0ul; n < rec.Iterations; n++)\r\n                 " +
+            "           {\r\n                                net += InvertedResidual(A++, C, ch" +
+            "annels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);\r\n       " +
+            "                         C += 3;\r\n                            }\r\n               " +
+            "             subsample = true;\r\n                        }\r\n\r\n                   " +
+            "     net +=\r\n                            Convolution(C, In(\"CC\", A), p.Classes, " +
+            "1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm(C + 1, In(\"C\", C)) +\r" +
+            "\n                            GlobalAvgPooling(In(\"B\", C + 1)) +\r\n               " +
+            "             LogSoftmax(\"GAP\") +\r\n                            Cost(\"LSM\", p.Data" +
+            "set, p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n                    }\r\n    " +
+            "                break;\r\n            }\r\n\r\n            return net;\r\n        }\r\n\r\n\r" +
+            "\n        const string Framework = \"net9.0\";\r\n#if DEBUG\r\n        const string Mod" +
+            "e = \"Debug\";\r\n#else\r\n        const string Mode = \"Release\";\r\n#endif\r\n\r\n        p" +
+            "ublic static string StorageDirectory { get; } = Path.Combine(Environment.GetFold" +
+            "erPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Environment.Special" +
+            "Folder.MyDocuments : Environment.SpecialFolder.UserProfile), \"convnet\");\r\n      " +
+            "  public static string ScriptsDirectory { get; } = Path.Combine(StorageDirectory" +
+            ", \"scripts\");\r\n        public static string ScriptPath { get; } = Path.Combine(S" +
+            "criptsDirectory, \"bin\", Mode, Framework);\r\n\r\n        static void Main() \r\n      " +
+            "  {\r\n             var script = Generate(new ScriptParameters()\r\n\t            {\r\n" +
+            "        \t        Script = Scripts.shufflenetv2,\r\n                    Activation " +
+            "= Activations.HardSwish,\r\n                    Dataset = Datasets.cifar10,\r\n     " +
+            "               MeanStdNormalization = true,\r\n                    H = 32,\r\n      " +
+            "  \t        W = 32,\r\n        \t        PadH = 4,\r\n        \t        PadW = 4,\r\n    " +
+            "                MirrorPad = false,\r\n                    StrideHFirstConv = 1,\r\n " +
+            "                   StrideWFirstConv = 1,\r\n                    WeightsFiller = Fi" +
+            "llers.HeNormal,\r\n        \t        WeightsFillerMode = FillerModes.In,\r\n        \t" +
+            "        WeightsGain = 1f,\r\n        \t        WeightsScale = 0.05f,\r\n        \t    " +
+            "    WeightsLRM = 1f,\r\n        \t        WeightsWDM = 1f,\r\n        \t        HasBia" +
+            "s = false,\r\n        \t        BiasesFiller = Fillers.Constant,\r\n        \t        " +
+            "BiasesFillerMode = FillerModes.In,\r\n        \t        BiasesGain = 1f,\r\n        \t" +
+            "        BiasesScale = 0f,\r\n        \t        BiasesLRM = 1f,\r\n        \t        Bi" +
+            "asesWDM = 1f,\r\n        \t        BatchNormMomentum = 0.995f,\r\n        \t        Ba" +
+            "tchNormEps = 0.0001f,\r\n        \t        BatchNormScaling = false,\r\n        \t    " +
+            "    Alpha = 0f,\r\n        \t        Beta = 0f,\r\n        \t        Groups = 3,\r\n    " +
+            "    \t        Iterations = 4,\r\n        \t        Width = 12,\r\n        \t        Gro" +
+            "wthRate = 12,\r\n        \t        Bottleneck = false,\r\n        \t        Dropout = " +
+            "0f,\r\n        \t        Compression = 0f,\r\n        \t        SqueezeExcitation = tr" +
+            "ue,\r\n        \t        ChannelZeroPad = false,\r\n        \t        DepthDrop = 0.0f" +
+            ",\r\n        \t        FixedDepthDrop = false,\r\n        \t        EfficientNet = [ne" +
+            "w(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, " +
+            "128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],\r\n         " +
+            "           ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, " +
+            "3, 1, 2, true)] \r\n                });\r\n                \r\n            var fileInf" +
+            "o = new FileInfo(Path.Combine(ScriptPath, @\"script.txt\"));\r\n            \r\n      " +
+            "      if (fileInfo.Directory != null)\r\n            {\r\n                if (!fileI" +
+            "nfo.Directory.Exists)\r\n                    fileInfo.Directory.Create();\r\n\r\n     " +
+            "           var streamWriter = fileInfo.CreateText();\r\n                streamWrit" +
+            "er.AutoFlush = true;\r\n                streamWriter.Write(script);\r\n             " +
+            "   streamWriter.Close();\r\n                streamWriter.Dispose();\r\n            }" +
+            "\r\n        }\r\n    }\r\n}\r\n\r\n")]
         public string Script {
             get {
                 return ((string)(this["Script"]));
             }
             set {
                 this["Script"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool PlainFormat {
-            get {
-                return ((bool)(this["PlainFormat"]));
-            }
-            set {
-                this["PlainFormat"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("cifar10")]
-        public string Dataset {
-            get {
-                return ((string)(this["Dataset"]));
-            }
-            set {
-                this["Dataset"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("96")]
-        public double ShuffleSetter {
-            get {
-                return ((double)(this["ShuffleSetter"]));
-            }
-            set {
-                this["ShuffleSetter"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("64")]
-        public double Shuffle {
-            get {
-                return ((double)(this["Shuffle"]));
-            }
-            set {
-                this["Shuffle"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public uint GotoCycle {
-            get {
-                return ((uint)(this["GotoCycle"]));
-            }
-            set {
-                this["GotoCycle"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("64")]
-        public byte BackgroundColor {
-            get {
-                return ((byte)(this["BackgroundColor"]));
-            }
-            set {
-                this["BackgroundColor"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool UseTrainingStrategy {
-            get {
-                return ((bool)(this["UseTrainingStrategy"]));
-            }
-            set {
-                this["UseTrainingStrategy"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool SGDR {
-            get {
-                return ((bool)(this["SGDR"]));
-            }
-            set {
-                this["SGDR"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ScriptActive {
-            get {
-                return ((string)(this["ScriptActive"]));
-            }
-            set {
-                this["ScriptActive"] = value;
             }
         }
     }
