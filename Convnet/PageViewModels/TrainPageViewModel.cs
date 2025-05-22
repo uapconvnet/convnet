@@ -523,7 +523,7 @@ namespace Convnet.PageViewModels
             }
 
             if (Model != null && costLayersComboBox != null && layersComboBox != null)
-            { 
+            {
                 costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
                 selectedCostIndex = costLayersComboBox.SelectedIndex;
                 costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
