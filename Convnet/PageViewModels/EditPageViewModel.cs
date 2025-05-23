@@ -51,7 +51,7 @@ namespace Convnet.PageViewModels
         {
             initAction = true;
             clickWaitTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Background, MouseWaitTimer_Tick);
-        
+           
             AddCommandButtons();
         }
       
