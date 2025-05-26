@@ -22,6 +22,55 @@ namespace Convnet.Properties {
                 return defaultInstance;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ColumnDefinition {
+            get {
+                return ((int)(this["ColumnDefinition"]));
+            }
+            set {
+                this["ColumnDefinition"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LineDefinition {
+            get {
+                return ((int)(this["LineDefinition"]));
+            }
+            set {
+                this["LineDefinition"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ColumnScript {
+            get {
+                return ((int)(this["ColumnScript"]));
+            }
+            set {
+                this["ColumnScript"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LineScript {
+            get {
+                return ((int)(this["LineScript"]));
+            }
+            set {
+                this["LineScript"] = value;
+            }
+        }
+
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
