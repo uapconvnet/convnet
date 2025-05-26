@@ -47,9 +47,9 @@ namespace Convnet.PageViews
                 editorDefinition.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".txt");
                 editorDefinition.TextChanged += EditorDefinition_TextChanged;
 
-                var line = editorDefinition.Document.GetLineByNumber(Settings.Default.LineDefinition);
+                /* var line = editorDefinition.Document.GetLineByNumber(Settings.Default.LineDefinition);
                 editorDefinition.CaretOffset = line.Offset + Settings.Default.ColumnDefinition;
-                editorDefinition.TextArea.Caret.BringCaretToView(); // ← Try this call.
+                editorDefinition.TextArea.Caret.BringCaretToView(); // ← Try this call. */
             }
 
             //IHighlightingDefinition CSharpHighlighting;
@@ -82,9 +82,9 @@ namespace Convnet.PageViews
                 var csharpLanguage = registryOptions.GetLanguageByExtension(".cs");
                 textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(csharpLanguage.Id));
 
-                var line = editorScript.Document.GetLineByNumber(Settings.Default.LineScript);
+                /* var line = editorScript.Document.GetLineByNumber(Settings.Default.LineScript);
                 editorScript.CaretOffset = line.Offset + Settings.Default.ColumnScript;
-                editorScript.TextArea.Caret.BringCaretToView(); // ← Try this call.
+                editorScript.TextArea.Caret.BringCaretToView(); // ← Try this call. */
                 
             }
 
