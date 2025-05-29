@@ -47,7 +47,7 @@ namespace Convnet.Common
     public class CodeEditor : TextEditor, INotifyPropertyChanged
     {
         protected override Type StyleKeyOverride => typeof(TextEditor);
-        
+
         public new event PropertyChangedEventHandler? PropertyChanged;
 
         public CodeEditor()
@@ -114,7 +114,7 @@ namespace Convnet.Common
 
             ContextMenu = cm;
 
-            TextChanged += CodeEditor_TextChanged;           
+            TextChanged += CodeEditor_TextChanged;
         }
 
         private void CodeEditor_TextChanged(object? sender, EventArgs e)
@@ -123,7 +123,7 @@ namespace Convnet.Common
             SetValue(CodeProperty, Code);
             OnPropertyChanged(nameof(Code));
         }
-      
+
         public static readonly DirectProperty<CodeEditor, string> CodeProperty = AvaloniaProperty.RegisterDirect<CodeEditor, string>(
             nameof(Code),
             o => o.Code,
@@ -169,7 +169,7 @@ namespace Convnet.Common
                if (!o.TextLocation.Equals(v))
                    o.TextLocation = v;
            },
-           new TextLocation(1,1),
+           new TextLocation(1, 1),
            Avalonia.Data.BindingMode.TwoWay);
 
         public TextLocation TextLocation
@@ -248,12 +248,12 @@ namespace Convnet.Common
         public string FilePath
         {
             get { return GetValue(FilePathProperty); }
-            set 
-            { 
-                SetValue(FilePathProperty, value); 
+            set
+            {
+                SetValue(FilePathProperty, value);
                 OnPropertyChanged(nameof(FilePath));
             }
-        }      
+        }
 
         #region INotifyPropertyChanged Members
 

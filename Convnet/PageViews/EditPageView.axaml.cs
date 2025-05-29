@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using AvaloniaEdit;
 using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
 using AvaloniaEdit.TextMate;
@@ -70,7 +71,25 @@ namespace Convnet.PageViews
             //    editorScript.TextChanged += EditorScript_TextChanged;
             //}
 
-            var editorScript = this.FindControl<CodeEditor>("EditorScript");
+            // var editorScript = this.FindControl<CodeEditor>("EditorScript");
+            // if (editorScript != null)
+            // {
+            //     editorScript.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".cs");
+            //     editorScript.TextChanged += EditorScript_TextChanged;
+            //     editorScript.TextArea.IndentationStrategy = new CSharpIndentationStrategy(editorScript.Options);
+
+            //     var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
+            //     var textMateInstallation = editorScript.InstallTextMate(registryOptions);
+            //     var csharpLanguage = registryOptions.GetLanguageByExtension(".cs");
+            //     textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(csharpLanguage.Id));
+
+            //     /* var line = editorScript.Document.GetLineByNumber(Settings.Default.LineScript);
+            //     editorScript.CaretOffset = line.Offset + Settings.Default.ColumnScript;
+            //     editorScript.TextArea.Caret.BringCaretToView(); // ← Try this call. */
+                
+            // }
+
+            var editorScript = this.FindControl<TextEditor>("EditorScript");
             if (editorScript != null)
             {
                 editorScript.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".cs");
