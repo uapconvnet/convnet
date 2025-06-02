@@ -109,7 +109,7 @@
     <PackageReference Include="AvaloniaControlsToolBar" Version="0.0.1" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.0" />
     <PackageReference Include="AvaloniaEdit.TextMate.Grammars" Version="0.10.12" />
-    <PackageReference Include="CsvHelper" Version="33.0.1" />
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="CustomMessageBox.Avalonia" Version="11.0.0.2" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="8.3.1.1" />
     <PackageReference Include="Microsoft.Build.Locator" Version="1.9.1" />
@@ -121,7 +121,7 @@
     <PackageReference Include="System.IO.Pipelines" Version="9.0.5" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="System.Text.Json" Version="9.0.5" />
-    <PackageReference Include="TextMateSharp.Grammars" Version="1.0.68" />
+    <PackageReference Include="TextMateSharp.Grammars" Version="1.0.69" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Xaml.Behaviors.Interactions" Version="11.3.0.10" />
     <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.0.10" />
