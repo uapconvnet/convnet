@@ -1,15 +1,13 @@
-using System;
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Media;
 using Avalonia.Xaml.Interactivity;
 using AvaloniaEdit;
+using System;
 
 namespace Convnet.Behaviors
 {
     public class DocumentTextBindingBehavior : Behavior<TextEditor>
     {
-        private TextEditor _textEditor = null;
+        private TextEditor? _textEditor = null;
 
         public static readonly StyledProperty<string> TextProperty =
             AvaloniaProperty.Register<DocumentTextBindingBehavior, string>(nameof(Text));
@@ -27,7 +25,8 @@ namespace Convnet.Behaviors
             if (AssociatedObject is TextEditor textEditor)
             {
                 _textEditor = textEditor;
-                _textEditor.TextChanged += TextChanged;
+                if (_textEditor != null)
+                    _textEditor.TextChanged += TextChanged;
                 this.GetObservable(TextProperty).Subscribe(TextPropertyChanged);
             }
         }
@@ -37,12 +36,10 @@ namespace Convnet.Behaviors
             base.OnDetaching();
 
             if (_textEditor != null)
-            {
                 _textEditor.TextChanged -= TextChanged;
-            }
         }
 
-        private void TextChanged(object sender, EventArgs eventArgs)
+        private void TextChanged(object? sender, EventArgs eventArgs)
         {
             if (_textEditor != null && _textEditor.Document != null)
             {
