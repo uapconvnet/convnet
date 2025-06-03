@@ -119,7 +119,7 @@ namespace Convnet.PageViewModels
                     folder = Path.Combine(DefinitionsDirectory, Model.Name);
 
 #if Linux
-                var dialog = new OpenFileDialog
+                var dialog = new Avalonia.Controls.OpenFileDialog
                 {
                     AllowMultiple = false,
                     Title = "Load",
@@ -128,13 +128,13 @@ namespace Convnet.PageViewModels
 
                 if (CurrentPage is TrainPageViewModel)
                 {
-                    dialog.Filters.Add(new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } });
-                    dialog.Filters.Add(new FileDialogFilter() { Name = "Log|*.csv", Extensions = new List<string> { "csv" } });
+                    dialog.Filters.Add(new Avalonia.Controls.FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } });
+                    dialog.Filters.Add(new Avalonia.Controls.FileDialogFilter() { Name = "Log|*.csv", Extensions = new List<string> { "csv" } });
                 }
                 if (CurrentPage is EditPageViewModel)
                 {
-                    dialog.Filters.Add(new FileDialogFilter() { Name = "Definition|*.txt", Extensions = new List<string> { "txt" } });
-                    dialog.Filters.Add(new FileDialogFilter() { Name = "C#|*.cs", Extensions = new List<string> { "cs" } });
+                    dialog.Filters.Add(new Avalonia.Controls.FileDialogFilter() { Name = "Definition|*.txt", Extensions = new List<string> { "txt" } });
+                    dialog.Filters.Add(new Avalonia.Controls.FileDialogFilter() { Name = "C#|*.cs", Extensions = new List<string> { "cs" } });
                 }
 
                 var files = await dialog.ShowAsync(App.MainWindow);
