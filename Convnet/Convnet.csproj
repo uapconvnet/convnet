@@ -96,7 +96,7 @@
  
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.0" />
-    <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.22087.20231008" />
+    <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.25547.20250602" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.3.0" />
     <PackageReference Include="Avalonia.BuildServices" Version="0.0.31" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.0" />
