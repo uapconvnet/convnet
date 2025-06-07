@@ -16,5 +16,5 @@
     </DataTemplate>
   </Window.DataTemplates>
 
-  <view:PageView x:Name="MainView"/>  
+  <view:PageView x:Name="MainView"/>
 </Window>
