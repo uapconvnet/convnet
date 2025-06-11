@@ -116,17 +116,17 @@
     <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0" />
     <PackageReference Include="Oxyplot.AvaloniaCore" Version="2.1.2" />
     <PackageReference Include="Splat" Version="15.3.1" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.5" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.6" />
     <PackageReference Include="AvaloniaEdit.TextMate" Version="11.3.0" />
-    <PackageReference Include="System.IO.Pipelines" Version="9.0.5" />
+    <PackageReference Include="System.IO.Pipelines" Version="9.0.6" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
-    <PackageReference Include="System.Text.Json" Version="9.0.5" />
+    <PackageReference Include="System.Text.Json" Version="9.0.6" />
     <PackageReference Include="TextMateSharp.Grammars" Version="1.0.69" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Xaml.Behaviors.Interactions" Version="11.3.0.10" />
     <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.0.10" />
     <PackageVersion Include="XamlNameReferenceGenerator" Version="1.6.1" />
-    <PackageReference Include="System.Resources.Extensions" Version="9.0.5" />
+    <PackageReference Include="System.Resources.Extensions" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>
