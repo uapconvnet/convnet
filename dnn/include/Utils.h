@@ -639,15 +639,19 @@ namespace
 
 	struct aligned_free
 	{
-		void operator()(void* p)
+		aligned_free() = default;
+		void operator()(void* ptr)
 		{
+			if (ptr)
+			{
 #if defined(_WIN32) || defined(__CYGWIN__)
-			::_aligned_free(p);
+				::_aligned_free(ptr);
 #elif defined(__MINGW32__)
-			::_mm_free(p);
+				::_mm_free(ptr);
 #else
-			::free(p);
+				::free(ptr);
 #endif
+			}
 		}
 	};
 	
