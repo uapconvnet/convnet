@@ -640,6 +640,7 @@ namespace
 	struct aligned_free
 	{
 		aligned_free() = default;
+
 		void operator()(void* ptr)
 		{
 			if (ptr)
