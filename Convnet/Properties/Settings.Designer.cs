@@ -25,53 +25,27 @@ namespace Convnet.Properties {
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int ColumnDefinition {
+        public AvaloniaEdit.Document.TextLocation TextLocationDefinition {
             get {
-                return ((int)(this["ColumnDefinition"]));
+                return ((AvaloniaEdit.Document.TextLocation)(this["TextLocationDefinition"]));
             }
             set {
-                this["ColumnDefinition"] = value;
+                this["TextLocationDefinition"] = value;
             }
         }
+
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int LineDefinition {
+        public AvaloniaEdit.Document.TextLocation TextLocationScript {
             get {
-                return ((int)(this["LineDefinition"]));
+                return ((AvaloniaEdit.Document.TextLocation)(this["TextLocationScript"]));
             }
             set {
-                this["LineDefinition"] = value;
+                this["TextLocationScript"] = value;
             }
         }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int ColumnScript {
-            get {
-                return ((int)(this["ColumnScript"]));
-            }
-            set {
-                this["ColumnScript"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int LineScript {
-            get {
-                return ((int)(this["LineScript"]));
-            }
-            set {
-                this["LineScript"] = value;
-            }
-        }
-
-        
+      
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]

@@ -38,7 +38,8 @@ namespace Convnet.PageViewModels
         private bool canSynchronize = false;
         private int selectionStart = 0;
         private int selectionLength = 0;
-        private TextLocation textLocation = new(1, 1);
+        private TextLocation textLocationDefinition = new(0, 0);
+        private TextLocation textLocationScript = new(0, 0);
         private string filePath = string.Empty;
         private bool wordWrap = false;
         private bool showLineNumbers = true;
@@ -178,10 +179,16 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref selectionLength, value);
         }
 
-        public TextLocation TextLocation
+        public TextLocation TextLocationDefinition
         {
-            get => textLocation;
-            set => this.RaiseAndSetIfChanged(ref textLocation, value);
+            get => textLocationDefinition;
+            set => this.RaiseAndSetIfChanged(ref textLocationDefinition, value);
+        }
+
+        public TextLocation TextLocationScript
+        {
+            get => textLocationScript;
+            set => this.RaiseAndSetIfChanged(ref textLocationScript, value);
         }
 
         public bool DefinitionStatus
@@ -560,8 +567,8 @@ namespace Convnet.PageViewModels
 
                 if (msg.Error)
                 {
-                    TextLocation = new TextLocation(1, 1);
-                    TextLocation = new TextLocation((int)msg.Row, (int)msg.Column);
+                    TextLocationDefinition = new TextLocation(1, 1);
+                    TextLocationDefinition = new TextLocation((int)msg.Row, (int)msg.Column);
                     Dispatcher.UIThread.Invoke(() => MessageBox.Show(msg.Message, "Check", MessageBoxButtons.OK, icon: MessageBoxIcon.Information));
                 }
                 

@@ -39,7 +39,7 @@ namespace Convnet.PageViews
             {
                 editorDefinition.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".txt");
                 editorDefinition.TextChanged += EditorDefinition_TextChanged;
-
+                
                 /* var line = editorDefinition.Document.GetLineByNumber(Settings.Default.LineDefinition);
                 editorDefinition.CaretOffset = line.Offset + Settings.Default.ColumnDefinition;
                 editorDefinition.TextArea.Caret.BringCaretToView(); // ← Try this call. */
