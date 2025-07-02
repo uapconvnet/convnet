@@ -38,8 +38,8 @@ namespace Convnet.PageViewModels
         private bool canSynchronize = false;
         private int selectionStart = 0;
         private int selectionLength = 0;
-        private TextLocation textLocationDefinition = new(0, 0);
-        private TextLocation textLocationScript = new(0, 0);
+        private TextLocation textLocationDefinition = new(1, 1);
+        private TextLocation textLocationScript = new(1, 1);
         private string filePath = string.Empty;
         private bool wordWrap = false;
         private bool showLineNumbers = true;
@@ -182,13 +182,13 @@ namespace Convnet.PageViewModels
         public TextLocation TextLocationDefinition
         {
             get => textLocationDefinition;
-            set => this.RaiseAndSetIfChanged(ref textLocationDefinition, value);
+            set { this.RaiseAndSetIfChanged(ref textLocationDefinition, value);  Settings.Default.TextLocationDefinition = textLocationDefinition; }
         }
 
         public TextLocation TextLocationScript
         {
             get => textLocationScript;
-            set => this.RaiseAndSetIfChanged(ref textLocationScript, value);
+            set { this.RaiseAndSetIfChanged(ref textLocationScript, value); Settings.Default.TextLocationScript = textLocationScript; }
         }
 
         public bool DefinitionStatus
