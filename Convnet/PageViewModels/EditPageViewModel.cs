@@ -182,13 +182,29 @@ namespace Convnet.PageViewModels
         public TextLocation TextLocationDefinition
         {
             get => textLocationDefinition;
-            set { this.RaiseAndSetIfChanged(ref textLocationDefinition, value);  Settings.Default.TextLocationDefinition = textLocationDefinition; }
+            set 
+            {
+                if (value != textLocationDefinition)
+                {
+                    Settings.Default.TextLocationDefinition = value;
+                    Settings.Default.Save();
+                    this.RaiseAndSetIfChanged(ref textLocationDefinition, value);
+                }
+            }
         }
 
         public TextLocation TextLocationScript
         {
             get => textLocationScript;
-            set { this.RaiseAndSetIfChanged(ref textLocationScript, value); Settings.Default.TextLocationScript = textLocationScript; }
+            set
+            {
+                if (value != textLocationScript)
+                {
+                    Settings.Default.TextLocationScript = value;
+                    Settings.Default.Save();
+                    this.RaiseAndSetIfChanged(ref textLocationScript, value);
+                }
+            }
         }
 
         public bool DefinitionStatus
