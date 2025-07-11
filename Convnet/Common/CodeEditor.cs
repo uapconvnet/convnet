@@ -191,16 +191,16 @@ namespace Convnet.Common
             }
         }
 
-        public static readonly DirectProperty<CodeEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
-            nameof(CaretOffset),
-            o => o.CaretOffset,
-            (o, v) =>
-            {
-                if (o.CaretOffset != v)
-                    o.CaretOffset = v;
-            },
-            0,
-            Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly DirectProperty<CodeEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        //    nameof(CaretOffset),
+        //    o => o.CaretOffset,
+        //    (o, v) =>
+        //    {
+        //        if (o.CaretOffset != v)
+        //            o.CaretOffset = v;
+        //    },
+        //    0,
+        //    Avalonia.Data.BindingMode.TwoWay);
 
         //public new int CaretOffset
         //{
