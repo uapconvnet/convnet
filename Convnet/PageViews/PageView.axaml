@@ -57,7 +57,7 @@
     <Grid RowDefinitions="Auto,*,24" DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1">
       <controls:ToolBarTray Name="toolBarTray" Grid.Row="0" HorizontalAlignment="Stretch" Orientation="Horizontal">
         <controls:ToolBar Background="{DynamicResource ToolBarBackgroundBrush}" Foreground="{DynamicResource TextBrush}" >
-          <ComboBox Name="PageViews" Margin="2" MinWidth="60" ItemsSource="{Binding Pages}" SelectedItem="{Binding CurrentPage}" IsEnabled="{Binding CurrentPage.IsValid, Mode=TwoWay}" IsVisible="{Binding Pages, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <ComboBox Name="PageViews" Margin="2" MinWidth="78" ItemsSource="{Binding Pages}" SelectedItem="{Binding CurrentPage}" IsEnabled="{Binding CurrentPage.IsValid, Mode=TwoWay}" IsVisible="{Binding Pages, Converter={x:Static ObjectConverters.IsNotNull}}">
             <ComboBox.ItemTemplate>
               <DataTemplate>
                 <TextBlock Text="{Binding Path=DisplayName}"/>

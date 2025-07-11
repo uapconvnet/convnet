@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:behaviors="clr-namespace:Convnet.Common;assembly=Convnet"
              xmlns:c="clr-namespace:Convnet.Common"
              xmlns:props="clr-namespace:Convnet.Properties"
              xmlns:vm="clr-namespace:Convnet.PageViewModels"
@@ -21,8 +23,16 @@
     <Image x:Name="ImageStatusDefinition" Grid.Column="0" Grid.Row="0" />
     <TextBlock Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" FontSize="17" FontWeight="DemiBold" Text="Definition" TextAlignment="Center" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2,2,4,2" Padding="4"/>
     <TextBlock Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" FontSize="17" FontWeight="DemiBold" Text="Scripts" TextAlignment="Center" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,2,2,2" Padding="4"/>
-    <c:CodeEditor x:Name="EditorDefinition" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Code="{Binding Definition, Mode=TwoWay}" WordWrap="{Binding WordWrap, Mode=TwoWay}" ShowLineNumbers="{Binding ShowLineNumbers, Mode=TwoWay}" SelectionLength="{Binding SelectionLength, Mode=TwoWay}" SelectionStart="{Binding SelectionStart, Mode=TwoWay}" TextLocation="{Binding TextLocationDefinition, Mode=TwoWay}" FilePath="{Binding FilePath, Mode=TwoWay}" Padding="2" Margin="0,0,4,0" />
+    <c:CodeEditor x:Name="EditorDefinition" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowLineNumbers="True" Padding="2" Margin="0,0,4,0" >
+      <i:Interaction.Behaviors>
+        <behaviors:DocumentTextBindingBehavior Text="{Binding Definition, Mode=TwoWay}"/>
+      </i:Interaction.Behaviors>
+    </c:CodeEditor>
     <GridSplitter DragCompleted="GridSplitter_DragCompleted" Grid.Column="0" HorizontalAlignment="Right" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Stretch" Width="4" Background="{DynamicResource BackgroundBrush}" ResizeDirection="Columns"/>
-    <c:CodeEditor x:Name="EditorScript" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowLineNumbers="True" Code="{Binding Script, Mode=TwoWay}" Padding="2" Margin="0,0,4,0"/>
+    <c:CodeEditor x:Name="EditorScript" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowLineNumbers="True" Padding="2" Margin="0,0,4,0">
+      <i:Interaction.Behaviors>
+        <behaviors:DocumentTextBindingBehavior Text="{Binding Script, Mode=TwoWay}"/>
+      </i:Interaction.Behaviors>
+      </c:CodeEditor>
   </Grid>
 </UserControl>

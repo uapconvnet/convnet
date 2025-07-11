@@ -114,146 +114,146 @@ namespace Convnet.Common
 
             ContextMenu = cm;
 
-            TextChanged += CodeEditor_TextChanged;
+            //TextChanged += CodeEditor_TextChanged;
         }
 
-        private void CodeEditor_TextChanged(object? sender, EventArgs e)
-        {
-            Code = base.Text;
-            SetValue(CodeProperty, Code);
-            OnPropertyChanged(nameof(Code));
-        }
+        //private void CodeEditor_TextChanged(object? sender, EventArgs e)
+        //{
+        //    Code = base.Text;
+        //    SetValue(CodeProperty, Code);
+        //    OnPropertyChanged(nameof(Code));
+        //}
 
-        public static readonly DirectProperty<CodeEditor, string> CodeProperty = AvaloniaProperty.RegisterDirect<CodeEditor, string>(
-            nameof(Code),
-            o => o.Code,
-            (o, v) =>
-            {
-                if (string.Compare(o.Code, v) != 0)
-                    o.Code = v;
-            },
-            "",
-            Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly DirectProperty<CodeEditor, string> CodeProperty = AvaloniaProperty.RegisterDirect<CodeEditor, string>(
+        //    nameof(Code),
+        //    o => o.Code,
+        //    (o, v) =>
+        //    {
+        //        if (string.Compare(o.Code, v) != 0)
+        //            o.Code = v;
+        //    },
+        //    "",
+        //    Avalonia.Data.BindingMode.TwoWay);
 
-        public string Code
-        {
-            get { return base.Text; }
-            set
-            {
-                if (value != base.Text)
-                {
-                    base.Text = value;
-                    SetValue(CodeProperty, value);
-                    OnPropertyChanged(nameof(Code));
-                }
-            }
-        }
+        //public string Code
+        //{
+        //    get { return base.Text; }
+        //    set
+        //    {
+        //        if (value != base.Text)
+        //        {
+        //            base.Text = value;
+        //            SetValue(CodeProperty, value);
+        //            OnPropertyChanged(nameof(Code));
+        //        }
+        //    }
+        //}
 
-        protected override void OnTextChanged(EventArgs e)
-        {
-            SetCurrentValue(CodeProperty, base.Text);
-            OnPropertyChanged(nameof(Length));
-            base.OnTextChanged(e);
-        }
+        //protected override void OnTextChanged(EventArgs e)
+        //{
+        //    SetCurrentValue(CodeProperty, base.Text);
+        //    OnPropertyChanged(nameof(Length));
+        //    base.OnTextChanged(e);
+        //}
 
-        public int Length
-        {
-            get { return base.Text.Length; }
-        }
+        //public int Length
+        //{
+        //    get { return base.Text.Length; }
+        //}
 
-        public static readonly DirectProperty<CodeEditor, TextLocation> TextLocationProperty = AvaloniaProperty.RegisterDirect<CodeEditor, TextLocation>(
-           nameof(TextLocation),
-           o => o.TextLocation,
-           (o, v) =>
-           {
-               if (!o.TextLocation.Equals(v))
-                   o.TextLocation = v;
-           },
-           new TextLocation(1, 1),
-           Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly DirectProperty<CodeEditor, TextLocation> TextLocationProperty = AvaloniaProperty.RegisterDirect<CodeEditor, TextLocation>(
+        //   nameof(TextLocation),
+        //   o => o.TextLocation,
+        //   (o, v) =>
+        //   {
+        //       if (!o.TextLocation.Equals(v))
+        //           o.TextLocation = v;
+        //   },
+        //   new TextLocation(1, 1),
+        //   Avalonia.Data.BindingMode.TwoWay);
 
-        public TextLocation TextLocation
-        {
-            get { return base.Document.GetLocation(SelectionStart); }
-            set
-            {
-                if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
-                {
-                    TextArea.Caret.Line = value.Line;
-                    TextArea.Caret.Column = value.Column;
-                    TextArea.Caret.BringCaretToView();
-                    TextArea.Caret.Show();
-                    ScrollTo(value.Line, value.Column);
-                    SetValue(TextLocationProperty, value);
-                    OnPropertyChanged(nameof(TextLocation));
-                }
-            }
-        }
+        //public TextLocation TextLocation
+        //{
+        //    get { return base.Document.GetLocation(SelectionStart); }
+        //    set
+        //    {
+        //        if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
+        //        {
+        //            TextArea.Caret.Line = value.Line;
+        //            TextArea.Caret.Column = value.Column;
+        //            TextArea.Caret.BringCaretToView();
+        //            TextArea.Caret.Show();
+        //            ScrollTo(value.Line, value.Column);
+        //            SetValue(TextLocationProperty, value);
+        //            OnPropertyChanged(nameof(TextLocation));
+        //        }
+        //    }
+        //}
 
-        public static readonly DirectProperty<CodeEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
-            nameof(CaretOffset),
-            o => o.CaretOffset,
-            (o, v) =>
-            {
-                if (o.CaretOffset != v)
-                    o.CaretOffset = v;
-            },
-            0,
-            Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly DirectProperty<CodeEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        //    nameof(CaretOffset),
+        //    o => o.CaretOffset,
+        //    (o, v) =>
+        //    {
+        //        if (o.CaretOffset != v)
+        //            o.CaretOffset = v;
+        //    },
+        //    0,
+        //    Avalonia.Data.BindingMode.TwoWay);
 
-        public new int CaretOffset
-        {
-            get { return base.CaretOffset; }
-            set { SetValue<int>(CaretOffsetProperty, value); OnPropertyChanged(nameof(CaretOffset)); }
-        }
+        //public new int CaretOffset
+        //{
+        //    get { return base.CaretOffset; }
+        //    set { SetValue<int>(CaretOffsetProperty, value); OnPropertyChanged(nameof(CaretOffset)); }
+        //}
 
-        public static readonly DirectProperty<CodeEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
-            nameof(SelectionLength),
-            o => o.SelectionLength,
-            (o, v) =>
-            {
-                if (o.SelectionLength != v)
-                    o.SelectionLength = v;
-            },
-            0,
-            Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly DirectProperty<CodeEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        //    nameof(SelectionLength),
+        //    o => o.SelectionLength,
+        //    (o, v) =>
+        //    {
+        //        if (o.SelectionLength != v)
+        //            o.SelectionLength = v;
+        //    },
+        //    0,
+        //    Avalonia.Data.BindingMode.TwoWay);
 
-        public new int SelectionLength
-        {
-            get { return base.SelectionLength; }
-            set { SetValue<int>(SelectionLengthProperty, value); OnPropertyChanged(nameof(SelectionLength)); }
-        }
+        //public new int SelectionLength
+        //{
+        //    get { return base.SelectionLength; }
+        //    set { SetValue<int>(SelectionLengthProperty, value); OnPropertyChanged(nameof(SelectionLength)); }
+        //}
 
-        public static readonly DirectProperty<CodeEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
-            nameof(SelectionStart),
-            o => o.SelectionStart,
-            (o, v) =>
-            {
-                if (o.SelectionStart != v)
-                    o.SelectionStart = v;
-            },
-            0,
-            Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly DirectProperty<CodeEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        //    nameof(SelectionStart),
+        //    o => o.SelectionStart,
+        //    (o, v) =>
+        //    {
+        //        if (o.SelectionStart != v)
+        //            o.SelectionStart = v;
+        //    },
+        //    0,
+        //    Avalonia.Data.BindingMode.TwoWay);
 
-        public new int SelectionStart
-        {
-            get { return base.SelectionStart; }
-            set { SetValue<int>(SelectionStartProperty, value); OnPropertyChanged(nameof(SelectionStart)); }
-        }
+        //public new int SelectionStart
+        //{
+        //    get { return base.SelectionStart; }
+        //    set { SetValue<int>(SelectionStartProperty, value); OnPropertyChanged(nameof(SelectionStart)); }
+        //}
 
-        public static object? VisualLine { get; private set; }
+        //public static object? VisualLine { get; private set; }
 
-        public static readonly StyledProperty<string> FilePathProperty = AvaloniaProperty.Register<CodeEditor, string>(nameof(FilePath), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly StyledProperty<string> FilePathProperty = AvaloniaProperty.Register<CodeEditor, string>(nameof(FilePath), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
 
-        public string FilePath
-        {
-            get { return GetValue(FilePathProperty); }
-            set
-            {
-                SetValue(FilePathProperty, value);
-                OnPropertyChanged(nameof(FilePath));
-            }
-        }
+        //public string FilePath
+        //{
+        //    get { return GetValue(FilePathProperty); }
+        //    set
+        //    {
+        //        SetValue(FilePathProperty, value);
+        //        OnPropertyChanged(nameof(FilePath));
+        //    }
+        //}
 
         #region INotifyPropertyChanged Members
 
