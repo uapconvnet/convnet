@@ -23,7 +23,7 @@
     <Image x:Name="ImageStatusDefinition" Grid.Column="0" Grid.Row="0" />
     <TextBlock Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" FontSize="17" FontWeight="DemiBold" Text="Definition" TextAlignment="Center" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2,2,4,2" Padding="4"/>
     <TextBlock Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" FontSize="17" FontWeight="DemiBold" Text="Scripts" TextAlignment="Center" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,2,2,2" Padding="4"/>
-    <c:CodeEditor x:Name="EditorDefinition" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" WordWrap="{Binding WordWrap, Mode=TwoWay}" ShowLineNumbers="{Binding ShowLineNumbers, Mode=TwoWay}" TextLocation="{Binding TextLocationDefinition, Mode=TwoWay}" FilePath="{Binding FilePath, Mode=TwoWay}" Padding="2" Margin="0,0,4,0" >
+    <c:CodeEditor x:Name="EditorDefinition" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" WordWrap="{Binding WordWrap, Mode=TwoWay}" ShowLineNumbers="{Binding ShowLineNumbers, Mode=TwoWay}" TextLocation="{Binding TextLocationDefinition, Mode=TwoWay}" Padding="2" Margin="0,0,4,0" >
       <i:Interaction.Behaviors>
         <behaviors:DocumentTextBindingBehavior Text="{Binding Definition, Mode=TwoWay}"/>
       </i:Interaction.Behaviors>

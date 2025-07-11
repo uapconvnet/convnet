@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 using AvaloniaEdit;
 using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
-using AvaloniaEdit.TextMate;
+//using AvaloniaEdit.TextMate;
 using Convnet.Common;
 using Convnet.PageViewModels;
 using Convnet.Properties;

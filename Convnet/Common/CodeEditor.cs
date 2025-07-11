@@ -152,8 +152,8 @@ namespace Convnet.Common
         protected override void OnTextChanged(EventArgs e)
         {
             //SetCurrentValue(CodeProperty, base.Text);
-            OnPropertyChanged(nameof(Length));
             base.OnTextChanged(e);
+            OnPropertyChanged(nameof(Length));
         }
 
         public int Length
@@ -249,19 +249,19 @@ namespace Convnet.Common
         //    set { SetValue<int>(SelectionStartProperty, value); OnPropertyChanged(nameof(SelectionStart)); }
         //}
 
-        public static object? VisualLine { get; private set; }
+        //public static object? VisualLine { get; private set; }
 
-        public static readonly StyledProperty<string> FilePathProperty = AvaloniaProperty.Register<CodeEditor, string>(nameof(FilePath), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly StyledProperty<string> FilePathProperty = AvaloniaProperty.Register<CodeEditor, string>(nameof(FilePath), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
 
-        public string FilePath
-        {
-            get { return GetValue(FilePathProperty); }
-            set
-            {
-                SetValue(FilePathProperty, value);
-                OnPropertyChanged(nameof(FilePath));
-            }
-        }
+        //public string FilePath
+        //{
+        //    get { return GetValue(FilePathProperty); }
+        //    set
+        //    {
+        //        SetValue(FilePathProperty, value);
+        //        OnPropertyChanged(nameof(FilePath));
+        //    }
+        //}
 
         #region INotifyPropertyChanged Members
 
