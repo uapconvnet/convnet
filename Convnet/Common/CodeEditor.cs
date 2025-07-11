@@ -216,39 +216,39 @@ namespace Convnet.Common
         //    }
         //}
 
-        public static readonly DirectProperty<CodeEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
-            nameof(SelectionLength),
-            o => o.SelectionLength,
-            (o, v) =>
-            {
-                if (o.SelectionLength != v)
-                    o.SelectionLength = v;
-            },
-            0,
-            Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly DirectProperty<CodeEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        //    nameof(SelectionLength),
+        //    o => o.SelectionLength,
+        //    (o, v) =>
+        //    {
+        //        if (o.SelectionLength != v)
+        //            o.SelectionLength = v;
+        //    },
+        //    0,
+        //    Avalonia.Data.BindingMode.TwoWay);
 
-        public new int SelectionLength
-        {
-            get { return base.SelectionLength; }
-            set { SetValue<int>(SelectionLengthProperty, value); OnPropertyChanged(nameof(SelectionLength)); }
-        }
+        //public new int SelectionLength
+        //{
+        //    get { return base.SelectionLength; }
+        //    set { SetValue<int>(SelectionLengthProperty, value); OnPropertyChanged(nameof(SelectionLength)); }
+        //}
 
-        public static readonly DirectProperty<CodeEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
-            nameof(SelectionStart),
-            o => o.SelectionStart,
-            (o, v) =>
-            {
-                if (o.SelectionStart != v)
-                    o.SelectionStart = v;
-            },
-            0,
-            Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly DirectProperty<CodeEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        //    nameof(SelectionStart),
+        //    o => o.SelectionStart,
+        //    (o, v) =>
+        //    {
+        //        if (o.SelectionStart != v)
+        //            o.SelectionStart = v;
+        //    },
+        //    0,
+        //    Avalonia.Data.BindingMode.TwoWay);
 
-        public new int SelectionStart
-        {
-            get { return base.SelectionStart; }
-            set { SetValue<int>(SelectionStartProperty, value); OnPropertyChanged(nameof(SelectionStart)); }
-        }
+        //public new int SelectionStart
+        //{
+        //    get { return base.SelectionStart; }
+        //    set { SetValue<int>(SelectionStartProperty, value); OnPropertyChanged(nameof(SelectionStart)); }
+        //}
 
         public static object? VisualLine { get; private set; }
 
