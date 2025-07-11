@@ -9,7 +9,6 @@ using AvaloniaEdit.Editing;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Convnet.Common
 {
