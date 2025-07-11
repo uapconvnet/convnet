@@ -1,7 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Xaml.Interactivity;
-
-using AvaloniaEdit;
 using System;
 
 namespace Convnet.Common

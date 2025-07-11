@@ -9,6 +9,7 @@ using AvaloniaEdit.Editing;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Convnet.Common
 {
@@ -201,11 +202,19 @@ namespace Convnet.Common
             0,
             Avalonia.Data.BindingMode.TwoWay);
 
-        public new int CaretOffset
-        {
-            get { return base.CaretOffset; }
-            set { SetValue<int>(CaretOffsetProperty, value); OnPropertyChanged(nameof(CaretOffset)); }
-        }
+        //public new int CaretOffset
+        //{
+        //    get => base.CaretOffset;
+        //    set 
+        //    {
+        //        if (value != base.CaretOffset)
+        //        {
+        //            SetValue<int>(CaretOffsetProperty, value);
+        //            //base.CaretOffset = value;
+        //            OnPropertyChanged(nameof(CaretOffset));
+        //        }
+        //    }
+        //}
 
         public static readonly DirectProperty<CodeEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
             nameof(SelectionLength),
