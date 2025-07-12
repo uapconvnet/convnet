@@ -174,7 +174,7 @@ namespace Convnet.Common
 
         public TextLocation TextLocation
         {
-            get { return base.Document.GetLocation(SelectionStart); }
+            get { return base.Document.GetLocation(base.SelectionStart); }
             set
             {
                 if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)

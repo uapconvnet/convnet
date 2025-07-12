@@ -279,7 +279,7 @@ namespace Convnet.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("420")]
-        public double EditSplitPositionA {
+        public double EditSplitPosition {
             get {
                 return ((double)(this["EditSplitPositionA"]));
             }

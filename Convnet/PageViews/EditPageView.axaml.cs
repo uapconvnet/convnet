@@ -3,6 +3,8 @@ using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
+using AvaloniaEdit.Indentation.CSharp;
+using AvaloniaEdit.TextMate;
 using Convnet.Common;
 using Convnet.PageViewModels;
 using Convnet.Properties;
@@ -10,6 +12,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using TextMateSharp.Grammars;
 
 namespace Convnet.PageViews
 {
@@ -35,7 +38,7 @@ namespace Convnet.PageViews
             if (editorDefinition != null)
             {
                 editorDefinition.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".txt");
-                editorDefinition.TextChanged += EditorDefinition_TextChanged;                
+                //editorDefinition.TextChanged += EditorDefinition_TextChanged;                
             }
 
             IHighlightingDefinition CSharpHighlighting;
@@ -53,14 +56,14 @@ namespace Convnet.PageViews
             if (editorScript != null)
             {
                 editorScript.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".cs");
-                editorScript.TextChanged += EditorScript_TextChanged;
+                //editorScript.TextChanged += EditorScript_TextChanged;
             }
 
             //var editorScript = this.FindControl<CodeEditor>("EditorScript");
             //if (editorScript != null)
             //{
             //    editorScript.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".cs");
-            //    editorScript.TextChanged += EditorScript_TextChanged;
+            //    //editorScript.TextChanged += EditorScript_TextChanged;
             //    editorScript.TextArea.IndentationStrategy = new CSharpIndentationStrategy(editorScript.Options);
 
             //    var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
@@ -68,15 +71,14 @@ namespace Convnet.PageViews
             //    var csharpLanguage = registryOptions.GetLanguageByExtension(".cs");
             //    textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(csharpLanguage.Id));
 
-            //    /* var line = editorScript.Document.GetLineByNumber(Settings.Default.LineScript);
-            //    editorScript.CaretOffset = line.Offset + Settings.Default.ColumnScript;
-            //    editorScript.TextArea.Caret.BringCaretToView(); // ← Try this call. */
-
+            //    //var line = editorScript.Document.GetLineByNumber(Settings.Default.LineScript);
+            //    //editorScript.CaretOffset = line.Offset + Settings.Default.ColumnScript;
+            //    //editorScript.TextArea.Caret.BringCaretToView(); // ← Try this call. 
             //}
 
             var gr = this.FindControl<Grid>("grid");
             if (gr != null)
-                gr.ColumnDefinitions.First().Width = new GridLength(Settings.Default.EditSplitPositionA, GridUnitType.Pixel);
+                gr.ColumnDefinitions.First().Width = new GridLength(Settings.Default.EditSplitPosition, GridUnitType.Pixel);
         }
 
         private void InitializeComponent()
@@ -84,25 +86,25 @@ namespace Convnet.PageViews
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void EditorDefinition_TextChanged(object? sender, EventArgs e)
-        {
-            if (DataContext != null && sender != null)
-            {
-                var epvm = DataContext as EditPageViewModel;
-                if (epvm != null)
-                    epvm.Definition = ((CodeEditor)sender).Text;
-            }
-        }
+        //private void EditorDefinition_TextChanged(object? sender, EventArgs e)
+        //{
+        //    if (DataContext != null && sender != null)
+        //    {
+        //        var epvm = DataContext as EditPageViewModel;
+        //        if (epvm != null)
+        //            epvm.Definition = ((CodeEditor)sender).Text;
+        //    }
+        //}
 
-        private void EditorScript_TextChanged(object? sender, EventArgs e)
-        {
-            if (DataContext != null && sender != null)
-            {
-                var epvm = DataContext as EditPageViewModel;
-                if (epvm != null)
-                    epvm.Script = ((CodeEditor)sender).Text;
-            }
-        }
+        //private void EditorScript_TextChanged(object? sender, EventArgs e)
+        //{
+        //    if (DataContext != null && sender != null)
+        //    {
+        //        var epvm = DataContext as EditPageViewModel;
+        //        if (epvm != null)
+        //            epvm.Script = ((CodeEditor)sender).Text;
+        //    }
+        //}
 
         public void GridSplitter_DragCompleted(object? sender, VectorEventArgs e)
         {
@@ -111,7 +113,7 @@ namespace Convnet.PageViews
                 var gr = this.FindControl<Grid>("grid");
                 if (gr != null)
                 { 
-                    Settings.Default.EditSplitPositionA = gr.ColumnDefinitions.First().ActualWidth;
+                    Settings.Default.EditSplitPosition = gr.ColumnDefinitions.First().ActualWidth;
                     Settings.Default.Save();
                     e.Handled = true;
                 }
