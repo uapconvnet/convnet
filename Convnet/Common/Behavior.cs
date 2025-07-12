@@ -3,9 +3,9 @@ using System;
 
 namespace Convnet.Common
 {
-    public class DocumentTextBindingBehavior : Avalonia.Xaml.Interactivity.Behavior<CodeEditor>
+    public class DocumentTextBindingBehavior : Avalonia.Xaml.Interactivity.Behavior<AvaloniaEdit.TextEditor>
     {
-        private CodeEditor? _textEditor = null;
+        private AvaloniaEdit.TextEditor? _textEditor = null;
 
         public static readonly StyledProperty<string> TextProperty =
             AvaloniaProperty.Register<DocumentTextBindingBehavior, string>(nameof(Text));
@@ -20,7 +20,7 @@ namespace Convnet.Common
         {
             base.OnAttached();
 
-            if (AssociatedObject is CodeEditor textEditor)
+            if (AssociatedObject is AvaloniaEdit.TextEditor textEditor)
             {
                 _textEditor = textEditor;
                 _textEditor.TextChanged += TextChanged;

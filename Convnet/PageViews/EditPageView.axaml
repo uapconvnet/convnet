@@ -33,6 +33,6 @@
       <i:Interaction.Behaviors>
         <behaviors:DocumentTextBindingBehavior Text="{Binding Script, Mode=TwoWay}"/>
       </i:Interaction.Behaviors>
-      </c:CodeEditor>
+    </c:CodeEditor>
   </Grid>
 </UserControl>

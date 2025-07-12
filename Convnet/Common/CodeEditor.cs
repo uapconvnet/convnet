@@ -174,18 +174,17 @@ namespace Convnet.Common
 
         public TextLocation TextLocation
         {
-            get { return base.Document.GetLocation(base.SelectionStart); }
+            get { return base.Document.GetLocation(SelectionStart); }
             set
             {
                 if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
                 {
-                    SetValue(TextLocationProperty, value);
-
                     TextArea.Caret.Line = value.Line;
                     TextArea.Caret.Column = value.Column;
                     TextArea.Caret.BringCaretToView();
                     TextArea.Caret.Show();
                     ScrollTo(value.Line, value.Column);
+                    SetValue(TextLocationProperty, value);
                     OnPropertyChanged(nameof(TextLocation));
                 }
             }
