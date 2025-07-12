@@ -149,17 +149,17 @@ namespace Convnet.Common
         //    }
         //}
 
-        protected override void OnTextChanged(EventArgs e)
-        {
-            //SetCurrentValue(CodeProperty, base.Text);
-            base.OnTextChanged(e);
-            OnPropertyChanged(nameof(Length));
-        }
+        //protected override void OnTextChanged(EventArgs e)
+        //{
+        //    //SetCurrentValue(CodeProperty, base.Text);
+        //    base.OnTextChanged(e);
+        //    OnPropertyChanged(nameof(Length));
+        //}
 
-        public int Length
-        {
-            get { return base.Text.Length; }
-        }
+        //public int Length
+        //{
+        //    get { return base.Text.Length; }
+        //}
 
         public static readonly DirectProperty<CodeEditor, TextLocation> TextLocationProperty = AvaloniaProperty.RegisterDirect<CodeEditor, TextLocation>(
            nameof(TextLocation),
@@ -179,12 +179,13 @@ namespace Convnet.Common
             {
                 if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
                 {
+                    SetValue(TextLocationProperty, value);
+
                     TextArea.Caret.Line = value.Line;
                     TextArea.Caret.Column = value.Column;
                     TextArea.Caret.BringCaretToView();
                     TextArea.Caret.Show();
                     ScrollTo(value.Line, value.Column);
-                    SetValue(TextLocationProperty, value);
                     OnPropertyChanged(nameof(TextLocation));
                 }
             }

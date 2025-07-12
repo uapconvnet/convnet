@@ -281,10 +281,10 @@ namespace Convnet.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute("420")]
         public double EditSplitPosition {
             get {
-                return ((double)(this["EditSplitPositionA"]));
+                return ((double)(this["EditSplitPosition"]));
             }
             set {
-                this["EditSplitPositionA"] = value;
+                this["EditSplitPosition"] = value;
             }
         }
         
