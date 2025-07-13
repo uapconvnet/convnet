@@ -13,7 +13,7 @@ namespace Convnet.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+    public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
         
@@ -22,30 +22,55 @@ namespace Convnet.Properties {
                 return defaultInstance;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public AvaloniaEdit.Document.TextLocation TextLocationDefinition {
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int LineDefinition {
             get {
-                return ((AvaloniaEdit.Document.TextLocation)(this["TextLocationDefinition"]));
+                return ((int)(this["LineDefinition"]));
             }
             set {
-                this["TextLocationDefinition"] = value;
+                this["LineDefinition"] = value;
             }
         }
-
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public AvaloniaEdit.Document.TextLocation TextLocationScript {
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ColumnDefinition {
             get {
-                return ((AvaloniaEdit.Document.TextLocation)(this["TextLocationScript"]));
+                return ((int)(this["ColumnDefinition"]));
             }
             set {
-                this["TextLocationScript"] = value;
+                this["ColumnDefinition"] = value;
             }
         }
-      
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int LineScript {
+            get {
+                return ((int)(this["LineScript"]));
+            }
+            set {
+                this["LineScript"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ColumnScript {
+            get {
+                return ((int)(this["ColumnScript"]));
+            }
+            set {
+                this["ColumnScript"] = value;
+            }
+        }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]

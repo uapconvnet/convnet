@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Convnet.Properties
 {
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
     {
         [global::System.Configuration.UserScopedSetting()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

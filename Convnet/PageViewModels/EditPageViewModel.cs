@@ -9,6 +9,7 @@ using Interop;
 using Newtonsoft.Json.Linq;
 using ReactiveUI;
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -39,8 +40,8 @@ namespace Convnet.PageViewModels
         private bool canSynchronize = false;
         private int selectionStart = 0;
         private int selectionLength = 0;
-        private TextLocation textLocationDefinition;
-        private TextLocation textLocationScript;
+        private TextLocation textLocationDefinition = new TextLocation(Settings.Default.LineDefinition, Settings.Default.ColumnDefinition);
+        private TextLocation textLocationScript = new TextLocation(Settings.Default.LineScript, Settings.Default.ColumnScript);
         private string filePath = string.Empty;
         private bool wordWrap = false;
         private bool showLineNumbers = true;
@@ -53,8 +54,9 @@ namespace Convnet.PageViewModels
         {
             initAction = true;
             clickWaitTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Background, MouseWaitTimer_Tick);
-            textLocationDefinition = new TextLocation(1, 1);
-            textLocationScript = new TextLocation(1, 1);
+
+            //var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+            //config.Save(ConfigurationSaveMode.Full);
 
             AddCommandButtons();
         }
@@ -189,7 +191,8 @@ namespace Convnet.PageViewModels
             {
                 if (value != textLocationDefinition)
                 {
-                    Settings.Default.TextLocationDefinition = value;
+                    Settings.Default.ColumnDefinition = value.Column;
+                    Settings.Default.LineDefinition = value.Line;
                     Settings.Default.Save();
                     this.RaiseAndSetIfChanged(ref textLocationDefinition, value);
                 }
@@ -203,7 +206,8 @@ namespace Convnet.PageViewModels
             {
                 if (value != textLocationScript)
                 {
-                    Settings.Default.TextLocationScript = value;
+                    Settings.Default.ColumnScript = value.Column;
+                    Settings.Default.LineScript = value.Line;
                     Settings.Default.Save();
                     this.RaiseAndSetIfChanged(ref textLocationScript, value);
                 }
