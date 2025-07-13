@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Convnet.Common
 {
-    public class ScriptEditor : TextEditor //, INotifyPropertyChanged
+    public class ScriptEditor : TextEditor, INotifyPropertyChanged
     {
         protected override Type StyleKeyOverride => typeof(TextEditor);
 
@@ -140,34 +140,34 @@ namespace Convnet.Common
             get { return base.Text.Length; }
         }
 
-        //public static readonly DirectProperty<ScriptEditor, TextLocation> TextLocationProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, TextLocation>(
-        //   nameof(TextLocation),
-        //   o => o.TextLocation,
-        //   (o, v) =>
-        //   {
-        //       if (!o.TextLocation.Equals(v))
-        //           o.TextLocation = v;
-        //   },
-        //   new TextLocation(1, 1),
-        //   Avalonia.Data.BindingMode.TwoWay);
+        public static readonly DirectProperty<ScriptEditor, TextLocation> TextLocationProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, TextLocation>(
+           nameof(TextLocation),
+           o => o.TextLocation,
+           (o, v) =>
+           {
+               if (!o.TextLocation.Equals(v))
+                   o.TextLocation = v;
+           },
+           new TextLocation(1, 1),
+           Avalonia.Data.BindingMode.TwoWay);
 
-        //public TextLocation TextLocation
-        //{
-        //    get { return base.Document.GetLocation(SelectionStart); }
-        //    set
-        //    {
-        //        if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
-        //        {
-        //            TextArea.Caret.Line = value.Line;
-        //            TextArea.Caret.Column = value.Column;
-        //            TextArea.Caret.BringCaretToView();
-        //            TextArea.Caret.Show();
-        //            ScrollTo(value.Line, value.Column);
-        //            SetValue(TextLocationProperty, value);
-        //            OnPropertyChanged(nameof(TextLocation));
-        //        }
-        //    }
-        //}
+        public TextLocation TextLocation
+        {
+            get { return base.Document.GetLocation(SelectionStart); }
+            set
+            {
+                if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
+                {
+                    TextArea.Caret.Line = value.Line;
+                    TextArea.Caret.Column = value.Column;
+                    TextArea.Caret.BringCaretToView();
+                    TextArea.Caret.Show();
+                    ScrollTo(value.Line, value.Column);
+                    SetValue(TextLocationProperty, value);
+                    OnPropertyChanged(nameof(TextLocation));
+                }
+            }
+        }
 
         //public static readonly DirectProperty<ScriptEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, int>(
         //    nameof(CaretOffset),

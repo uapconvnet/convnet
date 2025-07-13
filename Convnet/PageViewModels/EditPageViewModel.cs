@@ -6,6 +6,7 @@ using Convnet.Common;
 using Convnet.Properties;
 using CustomMessageBox.Avalonia;
 using Interop;
+using Newtonsoft.Json.Linq;
 using ReactiveUI;
 using System;
 using System.Diagnostics;
@@ -38,8 +39,8 @@ namespace Convnet.PageViewModels
         private bool canSynchronize = false;
         private int selectionStart = 0;
         private int selectionLength = 0;
-        private TextLocation textLocationDefinition = new(1, 1);
-        private TextLocation textLocationScript = new(1, 1);
+        private TextLocation textLocationDefinition;
+        private TextLocation textLocationScript;
         private string filePath = string.Empty;
         private bool wordWrap = false;
         private bool showLineNumbers = true;
@@ -52,7 +53,9 @@ namespace Convnet.PageViewModels
         {
             initAction = true;
             clickWaitTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Background, MouseWaitTimer_Tick);
-           
+            textLocationDefinition = new TextLocation(1, 1);
+            textLocationScript = new TextLocation(1, 1);
+
             AddCommandButtons();
         }
       

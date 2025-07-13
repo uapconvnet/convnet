@@ -39,7 +39,12 @@ namespace Convnet.PageViews
             if (editorDefinition != null)
             {
                 editorDefinition.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".txt");
-                //editorDefinition.TextChanged += EditorDefinition_TextChanged;                
+                //editorDefinition.TextChanged += EditorDefinition_TextChanged;
+                
+                //var line = editorDefinition.Document.GetLineByNumber(Settings.Default.TextLocationDefinition.Line);
+                //editorDefinition.CaretOffset = line.Offset + Settings.Default.TextLocationDefinition.Column;
+                //editorDefinition.TextArea.Caret.BringCaretToView(); // ← Try this call. 
+                //editorDefinition.ScrollToLine(Settings.Default.TextLocationDefinition.Line);
             }
 
             //IHighlightingDefinition CSharpHighlighting;
