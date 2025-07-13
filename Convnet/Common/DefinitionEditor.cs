@@ -12,45 +12,13 @@ using System.Diagnostics;
 
 namespace Convnet.Common
 {
-    //public class HighlightCurrentLineBackgroundRenderer : IBackgroundRenderer
-    //{
-    //    private readonly TextEditor editor;
-
-    //    public HighlightCurrentLineBackgroundRenderer(TextEditor editor)
-    //    {
-    //        this.editor = editor;
-    //    }
-
-    //    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-    //    public KnownLayer Layer
-    //    {
-    //        get { return KnownLayer.Background; }
-    //    }
-
-    //    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-    //    public void Draw(TextView textView, DrawingContext drawingContext)
-    //    {
-    //        if (editor.Document == null)
-    //            return;
-
-    //        textView.EnsureVisualLines();
-    //        var currentLine = editor.Document.GetLineByOffset(editor.CaretOffset);
-    //        foreach (var rect in BackgroundGeometryBuilder.GetRectsForSegment(textView, currentLine))
-    //        {
-    //            if (textView.Bounds.Width >= 32)
-    //                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(0xA0, 0xAF, 0xAF, 0xCF)), null, new Rect(rect.Position, new Size(textView.Bounds.Width - 32, rect.Height)));
-    //        }
-    //    }
-    //}
-
-
-    public class CodeEditor : TextEditor, INotifyPropertyChanged
+    public class DefinitionEditor : TextEditor, INotifyPropertyChanged
     {
         protected override Type StyleKeyOverride => typeof(TextEditor);
 
         public new event PropertyChangedEventHandler? PropertyChanged;
 
-        public CodeEditor()
+        public DefinitionEditor()
         {
             FontSize = 14;
             FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo,Monospace");
@@ -63,9 +31,7 @@ namespace Convnet.Common
             };
             TextArea.RightClickMovesCaret = true;
             TextArea.IndentationStrategy = new AvaloniaEdit.Indentation.CSharp.CSharpIndentationStrategy(Options);
-            //TextArea.TextView.BackgroundRenderers.Add(new HighlightCurrentLineBackgroundRenderer(this));
-            //TextArea.Caret.PositionChanged += (sender, e) => TextArea.TextView.InvalidateLayer(KnownLayer.Background);
-
+          
             var cmdKey = ApplicationHelper.GetPlatformCommandKey();
 
             var cm = new ContextMenu();
@@ -114,54 +80,62 @@ namespace Convnet.Common
 
             ContextMenu = cm;
 
-            //TextChanged += CodeEditor_TextChanged;
+            //TextChanged += DefinitionEditor_TextChanged;
+            //LostFocus += DefinitionEditor_LostFocus;
         }
 
-        //private void CodeEditor_TextChanged(object? sender, EventArgs e)
+        //private void DefinitionEditor_LostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         //{
         //    Code = base.Text;
         //    SetValue(CodeProperty, Code);
         //    OnPropertyChanged(nameof(Code));
         //}
 
-        //public static readonly DirectProperty<CodeEditor, string> CodeProperty = AvaloniaProperty.RegisterDirect<CodeEditor, string>(
-        //    nameof(Code),
-        //    o => o.Code,
-        //    (o, v) =>
-        //    {
-        //        if (string.Compare(o.Code, v) != 0)
-        //            o.Code = v;
-        //    },
-        //    "",
-        //    Avalonia.Data.BindingMode.TwoWay);
-
-        //public string Code
+        //private void DefinitionEditor_TextChanged(object? sender, EventArgs e)
         //{
-        //    get { return base.Text; }
-        //    set
-        //    {
-        //        if (value != base.Text)
-        //        {
-        //            base.Text = value;
-        //            SetValue(CodeProperty, value);
-        //            OnPropertyChanged(nameof(Code));
-        //        }
-        //    }
+        //    Code = base.Text;
+        //    SetValue(CodeProperty, Code);
+        //    OnPropertyChanged(nameof(Code));
         //}
 
-        //protected override void OnTextChanged(EventArgs e)
-        //{
-        //    //SetCurrentValue(CodeProperty, base.Text);
-        //    base.OnTextChanged(e);
-        //    OnPropertyChanged(nameof(Length));
-        //}
+        public static readonly DirectProperty<DefinitionEditor, string> CodeProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, string>(
+            nameof(Code),
+            o => o.Code,
+            (o, v) =>
+            {
+                if (string.Compare(o.Code, v) != 0)
+                    o.Code = v;
+            },
+            "",
+            Avalonia.Data.BindingMode.TwoWay);
 
-        //public int Length
-        //{
-        //    get { return base.Text.Length; }
-        //}
+        public string Code
+        {
+            get { return base.Text; }
+            set
+            {
+                if (value != base.Text)
+                {
+                    base.Text = value;
+                   SetValue(CodeProperty, value);
+                    OnPropertyChanged(nameof(Code));
+                }
+            }
+        }
 
-        public static readonly DirectProperty<CodeEditor, TextLocation> TextLocationProperty = AvaloniaProperty.RegisterDirect<CodeEditor, TextLocation>(
+        protected override void OnTextChanged(EventArgs e)
+        {
+            //SetCurrentValue(CodeProperty, base.Text);
+            OnPropertyChanged(nameof(Length));
+            base.OnTextChanged(e);
+        }
+
+        public int Length
+        {
+            get { return base.Text.Length; }
+        }
+
+        public static readonly DirectProperty<DefinitionEditor, TextLocation> TextLocationProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, TextLocation>(
            nameof(TextLocation),
            o => o.TextLocation,
            (o, v) =>
@@ -190,7 +164,7 @@ namespace Convnet.Common
             }
         }
 
-        //public static readonly DirectProperty<CodeEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        //public static readonly DirectProperty<DefinitionEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
         //    nameof(CaretOffset),
         //    o => o.CaretOffset,
         //    (o, v) =>
@@ -203,19 +177,11 @@ namespace Convnet.Common
 
         //public new int CaretOffset
         //{
-        //    get => base.CaretOffset;
-        //    set 
-        //    {
-        //        if (value != base.CaretOffset)
-        //        {
-        //            SetValue<int>(CaretOffsetProperty, value);
-        //            //base.CaretOffset = value;
-        //            OnPropertyChanged(nameof(CaretOffset));
-        //        }
-        //    }
+        //    get { return base.CaretOffset; }
+        //    set { SetValue<int>(CaretOffsetProperty, value); OnPropertyChanged(nameof(CaretOffset)); }
         //}
 
-        //public static readonly DirectProperty<CodeEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        //public static readonly DirectProperty<DefinitionEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
         //    nameof(SelectionLength),
         //    o => o.SelectionLength,
         //    (o, v) =>
@@ -226,13 +192,13 @@ namespace Convnet.Common
         //    0,
         //    Avalonia.Data.BindingMode.TwoWay);
 
-        //public new int SelectionLength
+        //public int SelectionLength
         //{
         //    get { return base.SelectionLength; }
         //    set { SetValue<int>(SelectionLengthProperty, value); OnPropertyChanged(nameof(SelectionLength)); }
         //}
 
-        //public static readonly DirectProperty<CodeEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        //public static readonly DirectProperty<DefinitionEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
         //    nameof(SelectionStart),
         //    o => o.SelectionStart,
         //    (o, v) =>
@@ -243,15 +209,15 @@ namespace Convnet.Common
         //    0,
         //    Avalonia.Data.BindingMode.TwoWay);
 
-        //public new int SelectionStart
+        //public int SelectionStart
         //{
         //    get { return base.SelectionStart; }
         //    set { SetValue<int>(SelectionStartProperty, value); OnPropertyChanged(nameof(SelectionStart)); }
         //}
 
-        //public static object? VisualLine { get; private set; }
+        public static object? VisualLine { get; private set; }
 
-        //public static readonly StyledProperty<string> FilePathProperty = AvaloniaProperty.Register<CodeEditor, string>(nameof(FilePath), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly StyledProperty<string> FilePathProperty = AvaloniaProperty.Register<DefinitionEditor, string>(nameof(FilePath), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
 
         //public string FilePath
         //{
