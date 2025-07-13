@@ -530,7 +530,7 @@ Eps=0.125</Value>
     <Setting Name="ModelNameActive" Type="System.String" Scope="User">
       <Value Profile="(Default)">resnet-3-2-6-channelzeropad-relu</Value>
     </Setting>
-    <Setting Name="EditSplitPositionA" Type="System.Double" Scope="User">
+    <Setting Name="EditSplitPosition" Type="System.Double" Scope="User">
       <Value Profile="(Default)">420</Value>
     </Setting>
     <Setting Name="SelectedLayer" Type="System.Int32" Scope="User">

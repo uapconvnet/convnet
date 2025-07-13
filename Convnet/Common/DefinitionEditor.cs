@@ -8,7 +8,9 @@ using AvaloniaEdit.Document;
 using AvaloniaEdit.Editing;
 using System;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 
 namespace Convnet.Common
 {
@@ -117,7 +119,7 @@ namespace Convnet.Common
                 if (value != base.Text)
                 {
                     base.Text = value;
-                   SetValue(CodeProperty, value);
+                    SetValue(CodeProperty, value);
                     OnPropertyChanged(nameof(Code));
                 }
             }
@@ -154,7 +156,7 @@ namespace Convnet.Common
                 if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
                 {
                     TextArea.Caret.Line = value.Line;
-                    TextArea.Caret.Column = value.Column;
+                    TextArea.Caret.Column = value.Column;                    
                     TextArea.Caret.BringCaretToView();
                     TextArea.Caret.Show();
                     ScrollTo(value.Line, value.Column);
