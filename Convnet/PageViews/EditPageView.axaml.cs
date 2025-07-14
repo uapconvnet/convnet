@@ -1,6 +1,7 @@
-﻿using Avalonia.Controls;
-using Avalonia.Input;
+﻿using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Controls;
+using Avalonia.ReactiveUI;
 using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
 using AvaloniaEdit.Indentation.CSharp;
@@ -17,7 +18,7 @@ using TextMateSharp.Grammars;
 
 namespace Convnet.PageViews
 {
-    public partial class EditPageView : UserControl
+    public partial class EditPageView : ReactiveUserControl<EditPageViewModel>
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public EditPageView()

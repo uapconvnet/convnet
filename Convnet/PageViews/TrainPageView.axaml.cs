@@ -2,10 +2,13 @@
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+
+using Convnet.PageViewModels;
 
 namespace Convnet.PageViews
 {
-    public partial class TrainPageView : UserControl
+    public partial class TrainPageView : ReactiveUserControl<TrainPageViewModel>
     {
         private bool zoomout = false;
 
@@ -14,7 +17,7 @@ namespace Convnet.PageViews
         {
             InitializeComponent();
         }
-      
+
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
@@ -81,6 +84,6 @@ namespace Convnet.PageViews
                     e.Handled = true;
                 }
             }
-        }           
+        }
     }
 }

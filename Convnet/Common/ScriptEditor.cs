@@ -153,20 +153,28 @@ namespace Convnet.Common
 
         public TextLocation TextLocation
         {
-            get { return base.Document.GetLocation(SelectionStart); }
+            get => base.Document.GetLocation(SelectionStart);
             set
             {
                 if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
                 {
-                    TextArea.Caret.Line = value.Line;
-                    TextArea.Caret.Column = value.Column;
-                    TextArea.Caret.BringCaretToView();
-                    TextArea.Caret.Show();
-                    ScrollTo(value.Line, value.Column);
-                    SetValue(TextLocationProperty, value);
+                   
+                    Dispatcher.UIThread.Post(() => { TextArea.Caret.Line = value.Line; TextArea.Caret.Column = value.Column; TextArea.Caret.BringCaretToView(); TextArea.Caret.Show(); ScrollTo(value.Line, value.Column); });                        
+                   
+                    //SetValue(TextLocationProperty, value);
                     OnPropertyChanged(nameof(TextLocation));
                 }
             }
+        }
+
+        public static readonly DirectProperty<DefinitionEditor, double> VerticalOffsetProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, double>(
+                nameof(VerticalOffset),
+                o => o.VerticalOffset);
+
+        public new double VerticalOffset
+        {
+            get { return base.VerticalOffset; }
+           // set { SetValue<double>(VerticalOffsetProperty, value); OnPropertyChanged(nameof(VerticalOffset)); }
         }
 
         //public static readonly DirectProperty<ScriptEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, int>(

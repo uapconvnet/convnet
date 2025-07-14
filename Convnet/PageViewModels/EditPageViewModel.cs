@@ -42,6 +42,8 @@ namespace Convnet.PageViewModels
         private int selectionLength = 0;
         private TextLocation textLocationDefinition = new TextLocation(Settings.Default.LineDefinition, Settings.Default.ColumnDefinition);
         private TextLocation textLocationScript = new TextLocation(Settings.Default.LineScript, Settings.Default.ColumnScript);
+        private double verticalOffsetDefinition = Settings.Default.DefinitionOffset;
+        private double verticalOffsetScript = Settings.Default.ScriptOffset;
         private string filePath = string.Empty;
         private bool wordWrap = false;
         private bool showLineNumbers = true;
@@ -184,6 +186,34 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref selectionLength, value);
         }
 
+        public double VerticalOffsetDefinition
+        {
+            get => verticalOffsetDefinition;
+            set 
+            {
+                if (value != verticalOffsetDefinition)
+                {
+                    this.RaiseAndSetIfChanged(ref verticalOffsetDefinition, value);
+                    Settings.Default.DefinitionOffset = value;
+                    Settings.Default.Save();
+                }
+            }
+        }
+
+        public double VerticalOffsetScript
+        {
+            get => verticalOffsetScript;
+            set
+            {
+                if (value != verticalOffsetScript)
+                {
+                    this.RaiseAndSetIfChanged(ref verticalOffsetScript, value);
+                    Settings.Default.ScriptOffset = value;
+                    Settings.Default.Save();
+                }
+            }
+        }
+
         public TextLocation TextLocationDefinition
         {
             get => textLocationDefinition;
@@ -191,10 +221,10 @@ namespace Convnet.PageViewModels
             {
                 if (value != textLocationDefinition)
                 {
+                    this.RaiseAndSetIfChanged(ref textLocationDefinition, value);
                     Settings.Default.ColumnDefinition = value.Column;
                     Settings.Default.LineDefinition = value.Line;
                     Settings.Default.Save();
-                    this.RaiseAndSetIfChanged(ref textLocationDefinition, value);
                 }
             }
         }
@@ -206,10 +236,10 @@ namespace Convnet.PageViewModels
             {
                 if (value != textLocationScript)
                 {
+                    this.RaiseAndSetIfChanged(ref textLocationScript, value);
                     Settings.Default.ColumnScript = value.Column;
                     Settings.Default.LineScript = value.Line;
                     Settings.Default.Save();
-                    this.RaiseAndSetIfChanged(ref textLocationScript, value);
                 }
             }
         }

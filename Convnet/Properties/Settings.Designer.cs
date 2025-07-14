@@ -1703,5 +1703,41 @@ namespace Convnet.Properties {
                 this["Script"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double DefinitionOffset {
+            get {
+                return ((double)(this["DefinitionOffset"]));
+            }
+            set {
+                this["DefinitionOffset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double ScriptOffset {
+            get {
+                return ((double)(this["ScriptOffset"]));
+            }
+            set {
+                this["ScriptOffset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double LogOffset {
+            get {
+                return ((double)(this["LogOffset"]));
+            }
+            set {
+                this["LogOffset"] = value;
+            }
+        }
     }
 }

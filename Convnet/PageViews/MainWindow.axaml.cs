@@ -167,6 +167,7 @@ namespace Convnet.PageViews
         {
             InitializeComponent();
 
+            
             CutCommand = ReactiveCommand.Create(Cut, this.WhenAnyValue(x => x.CanCut));
             //var cmdKey = GetPlatformCommandKey();
 
