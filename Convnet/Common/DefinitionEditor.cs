@@ -8,9 +8,7 @@ using AvaloniaEdit.Document;
 using AvaloniaEdit.Editing;
 using System;
 using System.ComponentModel;
-using System.Data.Common;
 using System.Diagnostics;
-using System.Reflection.Metadata;
 
 namespace Convnet.Common
 {
@@ -128,8 +126,8 @@ namespace Convnet.Common
         protected override void OnTextChanged(EventArgs e)
         {
             //SetCurrentValue(CodeProperty, base.Text);
-            OnPropertyChanged(nameof(Length));
             base.OnTextChanged(e);
+            OnPropertyChanged(nameof(Length));
         }
 
         public int Length
@@ -156,75 +154,107 @@ namespace Convnet.Common
             {
                 if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
                 {
-                   
                     Dispatcher.UIThread.Post(() => { TextArea.Caret.Line = value.Line; TextArea.Caret.Column = value.Column; TextArea.Caret.BringCaretToView(); TextArea.Caret.Show(); ScrollTo(value.Line, value.Column); });
-                   
-                    // SetValue(TextLocationProperty, value);
                     OnPropertyChanged(nameof(TextLocation));
                 }
             }
         }
 
         public static readonly DirectProperty<DefinitionEditor, double> VerticalOffsetProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, double>(
-            nameof(VerticalOffset),
-            o => o.VerticalOffset);
+                 nameof(VerticalOffset),
+                 o => o.VerticalOffset,
+                 (o, v) =>
+                 {
+                     if (!o.VerticalOffset.Equals(v))
+                         o.VerticalOffset = v;
+                 },
+                 0,
+                 Avalonia.Data.BindingMode.TwoWay);
 
         public new double VerticalOffset
         {
-            get { return base.VerticalOffset; }
-            //set { SetValue<double>(VerticalOffsetProperty, value); OnPropertyChanged(nameof(VerticalOffset)); }
+            get => base.VerticalOffset;
+            set
+            {
+                if (base.VerticalOffset != value)
+                {
+                    Dispatcher.UIThread.Post(() => { this.ScrollToVerticalOffset(value); });
+                    OnPropertyChanged(nameof(VerticalOffset));
+                }
+            }
         }
 
-        //public static readonly DirectProperty<DefinitionEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
-        //    nameof(CaretOffset),
-        //    o => o.CaretOffset,
-        //    (o, v) =>
-        //    {
-        //        if (o.CaretOffset != v)
-        //            o.CaretOffset = v;
-        //    },
-        //    0,
-        //    Avalonia.Data.BindingMode.TwoWay);
+        public static readonly DirectProperty<DefinitionEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
+            nameof(CaretOffset),
+            o => o.CaretOffset,
+            (o, v) =>
+            {
+                if (o.CaretOffset != v)
+                    o.CaretOffset = v;
+            },
+            0,
+            Avalonia.Data.BindingMode.TwoWay);
 
-        //public new int CaretOffset
-        //{
-        //    get { return base.CaretOffset; }
-        //    set { SetValue<int>(CaretOffsetProperty, value); OnPropertyChanged(nameof(CaretOffset)); }
-        //}
+        public new int CaretOffset
+        {
+            get => base.CaretOffset;
+            set 
+            {
+                if (base.CaretOffset != value)
+                {
+                    base.CaretOffset = value;
+                    OnPropertyChanged(nameof(CaretOffset));
+                }
+            }
+        }
 
-        //public static readonly DirectProperty<DefinitionEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
-        //    nameof(SelectionLength),
-        //    o => o.SelectionLength,
-        //    (o, v) =>
-        //    {
-        //        if (o.SelectionLength != v)
-        //            o.SelectionLength = v;
-        //    },
-        //    0,
-        //    Avalonia.Data.BindingMode.TwoWay);
+        public static readonly DirectProperty<DefinitionEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
+            nameof(SelectionLength),
+            o => o.SelectionLength,
+            (o, v) =>
+            {
+                if (o.SelectionLength != v)
+                    o.SelectionLength = v;
+            },
+            0,
+            Avalonia.Data.BindingMode.TwoWay);
 
-        //public int SelectionLength
-        //{
-        //    get { return base.SelectionLength; }
-        //    set { SetValue<int>(SelectionLengthProperty, value); OnPropertyChanged(nameof(SelectionLength)); }
-        //}
+        public new int SelectionLength
+        {
+            get { return base.SelectionLength; }
+            set 
+            {
+                if (base.SelectionLength != value)
+                {
+                    base.SelectionLength = value;
+                    OnPropertyChanged(nameof(SelectionLength));
+                }
+            }
+        }
 
-        //public static readonly DirectProperty<DefinitionEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
-        //    nameof(SelectionStart),
-        //    o => o.SelectionStart,
-        //    (o, v) =>
-        //    {
-        //        if (o.SelectionStart != v)
-        //            o.SelectionStart = v;
-        //    },
-        //    0,
-        //    Avalonia.Data.BindingMode.TwoWay);
+        public static readonly DirectProperty<DefinitionEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
+            nameof(SelectionStart),
+            o => o.SelectionStart,
+            (o, v) =>
+            {
+                if (o.SelectionStart != v)
+                    o.SelectionStart = v;
+            },
+            0,
+            Avalonia.Data.BindingMode.TwoWay);
 
-        //public int SelectionStart
-        //{
-        //    get { return base.SelectionStart; }
-        //    set { SetValue<int>(SelectionStartProperty, value); OnPropertyChanged(nameof(SelectionStart)); }
-        //}
+        public new int SelectionStart
+        {
+            get => base.SelectionStart;
+            set
+            {
+                if (base.SelectionStart != value)
+                {
+                    base.SelectionStart = value;
+                    OnPropertyChanged(nameof(SelectionStart));
+                }
+            }
+        }
 
         public static object? VisualLine { get; private set; }
 

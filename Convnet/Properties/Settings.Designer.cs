@@ -1739,5 +1739,77 @@ namespace Convnet.Properties {
                 this["LogOffset"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CaretOffsetScript {
+            get {
+                return ((int)(this["CaretOffsetScript"]));
+            }
+            set {
+                this["CaretOffsetScript"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CaretOffsetDefinition {
+            get {
+                return ((int)(this["CaretOffsetDefinition"]));
+            }
+            set {
+                this["CaretOffsetDefinition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectionStartScript {
+            get {
+                return ((int)(this["SelectionStartScript"]));
+            }
+            set {
+                this["SelectionStartScript"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectionLengthScript {
+            get {
+                return ((int)(this["SelectionLengthScript"]));
+            }
+            set {
+                this["SelectionLengthScript"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectionStartDefinition {
+            get {
+                return ((int)(this["SelectionStartDefinition"]));
+            }
+            set {
+                this["SelectionStartDefinition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectionLengthDefinition {
+            get {
+                return ((int)(this["SelectionLengthDefinition"]));
+            }
+            set {
+                this["SelectionLengthDefinition"] = value;
+            }
+        }
     }
 }

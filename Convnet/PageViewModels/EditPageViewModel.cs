@@ -41,7 +41,13 @@ namespace Convnet.PageViewModels
         private int selectionStart = 0;
         private int selectionLength = 0;
         private TextLocation textLocationDefinition = new TextLocation(Settings.Default.LineDefinition, Settings.Default.ColumnDefinition);
+        private int caretOffsetDefinition = Settings.Default.CaretOffsetDefinition;
+        private int selectionStartDefinition = Settings.Default.SelectionStartDefinition;
+        private int selectionLengthDefinition = Settings.Default.SelectionLengthDefinition;
         private TextLocation textLocationScript = new TextLocation(Settings.Default.LineScript, Settings.Default.ColumnScript);
+        private int selectionStartScript = Settings.Default.SelectionStartScript;
+        private int selectionLengthScript = Settings.Default.SelectionLengthScript;
+        private int caretOffsetScript = Settings.Default.CaretOffsetScript;
         private double verticalOffsetDefinition = Settings.Default.DefinitionOffset;
         private double verticalOffsetScript = Settings.Default.ScriptOffset;
         private string filePath = string.Empty;
@@ -162,6 +168,27 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref filePath, value);
         }
 
+        public int CaretOffsetScript
+        {
+            get => caretOffsetScript;
+            set 
+            {   this.RaiseAndSetIfChanged(ref caretOffsetScript, value);
+                Settings.Default.CaretOffsetScript = value;
+                Settings.Default.Save();
+            }
+        }
+
+        public int CaretOffsetDefinition
+        {
+            get => caretOffsetScript;
+            set 
+            { 
+                this.RaiseAndSetIfChanged(ref caretOffsetDefinition, value);
+                Settings.Default.CaretOffsetDefinition = value;
+                Settings.Default.Save();
+            }
+        }
+
         public bool WordWrap
         {
             get => wordWrap;
@@ -174,16 +201,60 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref showLineNumbers, value);
         }
 
-        public int SelectionStart
+        public int SelectionStartDefinition
         {
-            get => selectionStart;
-            set => this.RaiseAndSetIfChanged(ref selectionStart, value);
+            get => selectionStartDefinition;
+            set 
+            {
+                if (selectionStartDefinition != value)
+                {
+                    this.RaiseAndSetIfChanged(ref selectionStartDefinition, value);
+                    Settings.Default.SelectionStartDefinition = value;
+                    Settings.Default.Save();
+                }
+            }
         }
 
-        public int SelectionLength
+        public int SelectionLengthDefinition
         {
-            get => selectionLength;
-            set => this.RaiseAndSetIfChanged(ref selectionLength, value);
+            get => selectionLengthDefinition;
+            set
+            {
+                if (selectionLengthDefinition != value)
+                {
+                    this.RaiseAndSetIfChanged(ref selectionLengthDefinition, value);
+                    Settings.Default.SelectionLengthDefinition = value;
+                    Settings.Default.Save();
+                }
+            }
+        }
+
+        public int SelectionStartScript
+        {
+            get => selectionStartScript;
+            set
+            {
+                if (selectionStartScript != value)
+                {
+                    this.RaiseAndSetIfChanged(ref selectionStartScript, value);
+                    Settings.Default.SelectionStartScript = value;
+                    Settings.Default.Save();
+                }
+            }
+        }
+
+        public int SelectionLengthScript
+        {
+            get => selectionLengthScript;
+            set
+            {
+                if (selectionLengthScript != value)
+                {
+                    this.RaiseAndSetIfChanged(ref selectionLengthScript, value);
+                    Settings.Default.SelectionLengthScript = value;
+                    Settings.Default.Save();
+                }
+            }
         }
 
         public double VerticalOffsetDefinition
