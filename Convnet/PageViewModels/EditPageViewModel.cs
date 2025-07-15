@@ -559,33 +559,58 @@ namespace Convnet.PageViewModels
 
         private void VisualStudioButtonClick(object? sender, RoutedEventArgs e)
         {
-            var vspath = @"C:\Program Files\Microsoft Visual Studio\2022\";
-            var version = @"Community";
-            const string common = @"\Common7\IDE\";
-
-            if (!Directory.Exists(vspath))
-                vspath = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\";
-            if (Directory.Exists(vspath + @"Community" + common))
-                version = "Community";
-            else if (Directory.Exists(vspath + @"Professional" + common))
-                version = "Professional";
-            else if (Directory.Exists(vspath + @"Enterprise" + common))
-                version = "Enterprise";
-
-            if (version.Length > 1)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                var vspath = @"C:\Program Files\Microsoft Visual Studio\2022\";
+                var version = @"Community";
+                const string common = @"\Common7\IDE\";
+
+                if (!Directory.Exists(vspath))
+                    vspath = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\";
+                if (Directory.Exists(vspath + @"Community" + common))
+                    version = "Community";
+                else if (Directory.Exists(vspath + @"Professional" + common))
+                    version = "Professional";
+                else if (Directory.Exists(vspath + @"Enterprise" + common))
+                    version = "Enterprise";
+
+                if (version.Length > 1)
+                {
+                    try
+                    {
+                        var ProcStartInfo = new ProcessStartInfo(vspath + version + common + "devenv.exe", ScriptsDirectory + Path.DirectorySeparatorChar + "Scripts.csproj")
+                        {
+                            WorkingDirectory = ScriptsDirectory,
+                            Verb = "runas",
+                            UseShellExecute = true,
+                            CreateNoWindow = true,
+                            RedirectStandardError = false,
+                            RedirectStandardOutput = false
+                        };
+
+                        Process.Start(ProcStartInfo);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+               
                 try
                 {
-                    var ProcStartInfo = new ProcessStartInfo(vspath + version + common + "devenv.exe", ScriptsDirectory + Path.DirectorySeparatorChar + "Scripts.csproj")
+                    var ProcStartInfo = new ProcessStartInfo("code", ScriptsDirectory + Path.DirectorySeparatorChar + "Program.cs")
                     {
                         WorkingDirectory = ScriptsDirectory,
                         Verb = "runas",
-                        UseShellExecute = true,
-                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = false,
                         RedirectStandardError = false,
                         RedirectStandardOutput = false
                     };
-                    
+
                     Process.Start(ProcStartInfo);
                 }
                 catch (Exception)
