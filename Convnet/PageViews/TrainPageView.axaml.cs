@@ -21,6 +21,12 @@ namespace Convnet.PageViews
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+            
+            var datagrid = this.FindControl<DataGrid>("listViewTrainingResult");
+            if (datagrid != null)
+            {
+                //datagrid.ScrollIntoView();
+            }
         }
 
         private void ZoomOut_PointerPressed(object sender, PointerPressedEventArgs e)
