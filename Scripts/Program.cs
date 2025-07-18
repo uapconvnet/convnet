@@ -67,248 +67,106 @@ namespace Scripts
         Gelu = 28
     }
 
-    [Serializable()]
-    public class EfficientNetRecord : INotifyPropertyChanged
+     [Serializable()]
+    public class EfficientNetRecord(UInt expandRatio = 4, UInt channels = 24, UInt iterations = 2, UInt stride = 1, bool se = false)
     {
-        private UInt expandRatio;
-        private UInt channels;
-        private UInt iterations;
-        private UInt stride;
-        private bool se;
-
-        [field: NonSerializedAttribute()]
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public EfficientNetRecord()
-        {
-            ExpandRatio = 4;
-            Channels = 24;
-            Iterations = 2;
-            Stride = 1;
-            SE = false;
-        }
-
-        public EfficientNetRecord(UInt expandRatio = 4, UInt channels = 24, UInt iterations = 2, UInt stride = 1, bool se = false)
-        {
-            this.expandRatio = expandRatio;
-            this.channels = channels;
-            this.iterations = iterations;
-            this.stride = stride;
-            this.se = se;
-        }
-
+        public UInt ExpandRatio { get; set; } = expandRatio;
+        public UInt Channels { get; set; } = channels;
+        public UInt Iterations { get; set; } = iterations;
+        public UInt Stride { get; set; } = stride;
+        public bool SE { get; set; } = se;
+        
         public override string ToString()
         {
             return "(" + ExpandRatio.ToString() + "-" + Channels.ToString() + "-" + Iterations.ToString() + "-" + Stride.ToString() + (SE ? "-se" : "") + ")";
         }
-
-        public UInt ExpandRatio
-        {
-            get { return expandRatio; }
-            set { expandRatio = value; OnPropertyChanged(nameof(ExpandRatio)); }
-        }
-
-        public UInt Channels
-        {
-            get { return channels; }
-            set { channels = value; OnPropertyChanged(nameof(Channels)); }
-        }
-
-        public UInt Iterations
-        {
-            get { return iterations; }
-            set { iterations = value; OnPropertyChanged(nameof(Iterations)); }
-        }
-
-        public UInt Stride
-        {
-            get { return stride; }
-            set { stride = value; OnPropertyChanged(nameof(Stride)); }
-        }
-
-        public bool SE
-        {
-            get { return se; }
-            set { se = value; OnPropertyChanged(nameof(SE)); }
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
     [Serializable()]
-    public class ShuffleNetRecord : INotifyPropertyChanged
+    public class ShuffleNetRecord(UInt iterations = 6u, UInt kernel = 3u, UInt pad = 1u, UInt shuffle = 2u, bool se = false)
     {
-        private UInt iterations;
-        private UInt kernel;
-        private UInt pad;
-        private UInt shuffle;
-        private bool se;
-
-        [field: NonSerializedAttribute()]
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public ShuffleNetRecord()
-        {
-            Iterations = 6ul;
-            Kernel = 3ul;
-            Pad = 1ul;
-            Shuffle = 2ul;
-            SE = false;
-        }
-
-        public ShuffleNetRecord(UInt iterations = 6ul, UInt kernel = 3ul, UInt pad = 1ul, UInt shuffle = 2ul, bool se = false)
-        {
-            this.iterations = iterations;
-            this.kernel = kernel;
-            this.pad = pad;
-            this.shuffle = shuffle;
-            this.se = se;
-        }
-
+	public UInt Iterations { get; set; } = iterations;
+        public UInt Kernel { get; set; } = kernel;
+        public UInt Pad { get; set; } = pad;
+        public UInt Shuffle { get; set; } = shuffle;
+        public bool SE { get; set; } = se;
+        
         public override string ToString()
         {
             return "(" + Iterations.ToString() + "-" + Kernel.ToString() + "-" + Pad.ToString() + "-" + Shuffle.ToString() + (SE ? "-se" : "") + ")";
         }
-
-        public UInt Iterations
-        {
-            get { return iterations; }
-            set { iterations = value; OnPropertyChanged(nameof(Iterations)); }
-        }
-
-        public UInt Kernel
-        {
-            get { return kernel; }
-            set { kernel = value; OnPropertyChanged(nameof(Kernel)); }
-        }
-
-        public UInt Pad
-        {
-            get { return pad; }
-            set { pad = value; OnPropertyChanged(nameof(Pad)); }
-        }
-
-        public UInt Shuffle
-        {
-            get { return shuffle; }
-            set { shuffle = value; OnPropertyChanged(nameof(Shuffle)); }
-        }
-
-        public bool SE
-        {
-            get { return se; }
-            set { se = value; OnPropertyChanged(nameof(SE)); }
-        }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
     [Serializable()]
-    public class ScriptParameters : INotifyPropertyChanged
+    public class ScriptParameters(Scripts script = Scripts.shufflenetv2, Datasets dataset = Datasets.cifar10, UInt h = 32, UInt w = 32, UInt padH = 4, UInt padW = 4, bool mirrorPad = false, bool meanStdNorm = true, Fillers weightsFiller = Fillers.HeNormal, FillerModes weightsFillerMode = FillerModes.In, Float weightsGain = (Float)1.0, Float weightsScale = (Float)0.05, Float weightsLRM = 1, Float weightsWDM = 1, bool hasBias = false, Fillers biasesFiller = Fillers.Constant, FillerModes biasesFillerMode = FillerModes.In, Float biasesGain = (Float)1.0, Float biasesScale = 0, Float biasesLRM = 1, Float biasesWDM = 1, Float batchNormMomentum = (Float)0.995, Float batchNormEps = (Float)1E-04, bool batchNormScaling = false, Float alpha = (Float)0, Float beta = (Float)0, UInt groups = 3, UInt iterations = 4, UInt width = 8, UInt growthRate = 12, bool bottleneck = false, Float dropout = 0, Float compression = 0, bool squeezeExcitation = false, bool channelZeroPad = true, Activations activation = Activations.Relu, UInt strideHFirstConv = 2, UInt strideWFirstConv = 2, Float depthDrop = (Float)0.2, bool fixedDepthDrop = false)
     {
-        [field: NonSerializedAttribute()]
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private Scripts script = Scripts.shufflenetv2;
-        private Datasets dataset = Datasets.cifar10;
-        private UInt c = 3;
-        private UInt h = 32;
-        private UInt w = 32;
-        private UInt padH = 0;
-        private UInt padW = 0;
-        private bool mirrorPad = false;
-        private bool meanStdNormalization = true;
-        private Fillers weightsFiller = Fillers.HeNormal;
-        private FillerModes weightsFillerMode = FillerModes.In;
-        private Float weightsGain = 1;
-        private Float weightsScale = (Float)0.05;
-        private Float weightsLRM = 1;
-        private Float weightsWDM = 1;
-        private bool hasBias = false;
-        private Fillers biasesFiller = Fillers.Constant;
-        private FillerModes biasesFillerMode = FillerModes.In;
-        private Float biasesGain = 1;
-        private Float biasesScale = 0;
-        private Float biasesLRM = 1;
-        private Float biasesWDM = 1;
-        private Float batchNormMomentum = (Float)0.995;
-        private Float batchNormEps = (Float)1E-04;
-        private bool batchNormScaling = false;
-        private Float alpha = 0;
-        private Float beta = 0;
-        private UInt groups = 3;
-        private UInt iterations = 4;
-        private UInt width = 8;
-        private UInt growthRate = 12;
-        private bool bottleneck = false;
-        private Float dropout = 0;
-        private Float compression = 0;
-        private bool squeezeExcitation = false;
-        private bool channelZeroPad = true;
-        private Activations activation = Activations.Relu;
-        private ObservableCollection<EfficientNetRecord> efficientnet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)];
-        private ObservableCollection<ShuffleNetRecord> shufflenet = [new(5, 3, 1, 2, false), new(6, 3, 1, 2, false), new(7, 3, 1, 2, true), new(8, 3, 1, 2, true)];
-        private UInt strideHFirstConv = 2;
-        private UInt strideWFirstConv = 2;
-        private Float depthDrop = (Float)0.2;
-        private bool fixedDepthDrop = false;
-
-        public ScriptParameters()
+        public Scripts Script { get; set; } = script;
+        public Datasets Dataset { get; set; } = dataset;
+        public UInt C { get; set; } = 3u;
+        public UInt D { get; set; } = 1u;
+        public UInt H { get; set; } = h;
+        public UInt W { get; set; } = w;
+        public UInt PadD { get; set; } = 0u;
+        public UInt PadH { get; set; } = padH;
+        public UInt PadW  { get; set; } = padW;
+        public bool MirrorPad { get; set; } = mirrorPad;
+        public bool MeanStdNormalization { get; set; } = meanStdNorm;
+        public Fillers WeightsFiller { get; set; } = weightsFiller;
+        public FillerModes WeightsFillerMode { get; set; } = weightsFillerMode;
+        public Float WeightsGain { get; set; } = weightsGain;
+        public Float WeightsScale { get; set; } = weightsScale;
+        public Float WeightsLRM { get; set; } = weightsLRM;
+        public Float WeightsWDM { get; set; } = weightsWDM;
+        public bool HasBias { get; set; } = hasBias;
+        public Fillers BiasesFiller { get; set; } = biasesFiller;
+        public FillerModes BiasesFillerMode { get; set; } = biasesFillerMode;
+        public Float BiasesGain { get; set; } = biasesGain;
+        public Float BiasesScale { get; set; } = biasesScale;
+        public Float BiasesLRM { get; set; } = biasesLRM;
+        public Float BiasesWDM { get; set; } = biasesWDM;
+        public bool FixedDepthDrop { get; set; } = fixedDepthDrop;
+        public Float DepthDrop { get; set; } = depthDrop;
+        public Float BatchNormMomentum { get; set; } = batchNormMomentum;
+        public Float BatchNormEps { get; set; } = batchNormEps;
+        public bool BatchNormScaling { get; set; } = batchNormScaling;
+        public Float Alpha { get; set; } = alpha;
+        public Float Beta { get; set; } = beta;
+        public UInt Groups { get; set; } = groups;
+        public UInt Iterations { get; set; } = iterations;
+        public UInt Depth
         {
+            get
+            {
+                switch (Script)
+                {
+                    case Scripts.densenet:
+                        return (Groups * Iterations * (Bottleneck ? 2u : 1u)) + ((Groups - 1) * 2);
+                    case Scripts.mobilenetv3:
+                        return (Groups * Iterations * 3) + ((Groups - 1) * 2);
+                    case Scripts.resnet:
+                        return (Groups * Iterations * (Bottleneck ? 3u : 2u)) + ((Groups - 1) * 2);
+                    default:
+                        return 0;
+                }
+            }
         }
+        public UInt Width { get; set; } = width;
+        public UInt GrowthRate { get; set; } = growthRate;
+        public bool Bottleneck { get; set; } = bottleneck;
+        public Float Dropout { get; set; } = dropout;
+        public Float Compression { get; set; } = compression;
+        public bool SqueezeExcitation { get; set; } = squeezeExcitation;
+        public bool ChannelZeroPad { get; set; } = channelZeroPad;
+        public Activations Activation { get; set; } = activation;
+        public UInt StrideHFirstConv { get; set; } = strideHFirstConv;
+        public UInt StrideWFirstConv { get; set; } = strideWFirstConv;
+        public ObservableCollection<EfficientNetRecord> EfficientNet { get; set; } =  [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)];
+        public ObservableCollection<ShuffleNetRecord> ShuffleNet { get; set; } =  [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] ;
 
-        public ScriptParameters(Scripts script = Scripts.shufflenetv2, Datasets dataset = Datasets.cifar10, UInt h = 32, UInt w = 32, UInt padH = 4, UInt padW = 4, bool mirrorPad = false, bool meanStdNorm = true, Fillers weightsFiller = Fillers.HeNormal, FillerModes weightsFillerMode = FillerModes.In, Float weightsGain = (Float)1.0, Float weightsScale = (Float)0.05, Float weightsLRM = 1, Float weightsWDM = 1, bool hasBias = false, Fillers biasesFiller = Fillers.Constant, FillerModes biasesFillerMode = FillerModes.In, Float biasesGain = (Float)1.0, Float biasesScale = 0, Float biasesLRM = 1, Float biasesWDM = 1, Float batchNormMomentum = (Float)0.995, Float batchNormEps = (Float)1E-04, bool batchNormScaling = false, Float alpha = (Float)0, Float beta = (Float)0, UInt groups = 3, UInt iterations = 4, UInt width = 8, UInt growthRate = 12, bool bottleneck = false, Float dropout = 0, Float compression = 0, bool squeezeExcitation = false, bool channelZeroPad = true, Activations activation = Activations.Relu, UInt strideHFirstConv = 2, UInt strideWFirstConv = 2, Float depthDrop = (Float)0.2, bool fixedDepthDrop = false)
+        public bool RandomCrop
         {
-            Script = script;
-            Dataset = dataset;
-            H = h;
-            W = w;
-            PadH = padH;
-            PadW = padW;
-            MirrorPad = mirrorPad;
-            MeanStdNormalization = meanStdNorm;
-            WeightsFiller = weightsFiller;
-            WeightsFillerMode = weightsFillerMode;
-            WeightsGain = weightsGain;
-            WeightsScale = weightsScale;
-            WeightsLRM = weightsLRM;
-            WeightsWDM = weightsWDM;
-            HasBias = hasBias;
-            BiasesFiller = biasesFiller;
-            BiasesFillerMode = biasesFillerMode;
-            BiasesGain = biasesGain;
-            BiasesScale = biasesScale;
-            BiasesLRM = biasesLRM;
-            BiasesWDM = biasesWDM;
-            BatchNormMomentum = batchNormMomentum;
-            BatchNormEps = batchNormEps;
-            BatchNormScaling = batchNormScaling;
-            Alpha = alpha;
-            Beta = beta;
-            Groups = groups;
-            Iterations = iterations;
-            Width = width;
-            GrowthRate = growthRate;
-            Bottleneck = bottleneck;
-            Dropout = dropout;
-            Compression = compression;
-            SqueezeExcitation = squeezeExcitation;
-            ChannelZeroPad = channelZeroPad;
-            Activation = activation;
-            StrideHFirstConv = strideHFirstConv;
-            StrideWFirstConv = strideWFirstConv;
-            DepthDrop = depthDrop;
-            FixedDepthDrop = fixedDepthDrop;
-            EfficientNet = efficientnet;
-            ShuffleNet = shufflenet;
+            get { return PadH > 0 || PadW > 0; }
         }
-
         public IEnumerable<Scripts> ScriptsList { get { return Enum.GetValues(typeof(Scripts)).Cast<Scripts>(); } }
 
         public IEnumerable<Datasets> DatasetsList { get { return Enum.GetValues(typeof(Datasets)).Cast<Datasets>(); } }
@@ -350,34 +208,7 @@ namespace Scripts
                         return Script.ToString() + "-" + Groups.ToString() + "-" + Iterations.ToString();
                 }
             }
-        }
-
-        public Scripts Script
-        {
-            get { return script; }
-            set
-            {
-                if (value != script)
-                {
-                    script = value;
-                    OnPropertyChanged(nameof(Script));
-                    OnPropertyChanged(nameof(Classes));
-                    OnPropertyChanged(nameof(Depth));
-                    OnPropertyChanged(nameof(WidthVisible));
-                    OnPropertyChanged(nameof(GrowthRateVisible));
-                    OnPropertyChanged(nameof(DropoutVisible));
-                    OnPropertyChanged(nameof(CompressionVisible));
-                    OnPropertyChanged(nameof(BottleneckVisible));
-                    OnPropertyChanged(nameof(ChannelZeroPadVisible));
-                    OnPropertyChanged(nameof(SqueezeExcitationVisible));
-                    OnPropertyChanged(nameof(BottleneckVisible));
-                    OnPropertyChanged(nameof(EfficientNetVisible));
-                    OnPropertyChanged(nameof(ShuffleNetVisible));
-                    OnPropertyChanged(nameof(DepthDropVisible));
-                }
-            }
-        }
-
+        }       
         public UInt Classes
         {
             get
@@ -393,211 +224,6 @@ namespace Scripts
                 }
             }
         }
-
-        public Datasets Dataset
-        {
-            get { return dataset; }
-            set
-            {
-                if (value != dataset)
-                {
-                    dataset = value;
-                    OnPropertyChanged(nameof(Dataset));
-                    OnPropertyChanged(nameof(C));
-                }
-            }
-        }
-
-        public UInt C
-        {
-            get
-            {
-                switch (dataset)
-                {
-                    case Datasets.cifar10:
-                    case Datasets.cifar100:
-                    case Datasets.tinyimagenet:
-                        return 3;
-                    case Datasets.fashionmnist:
-                    case Datasets.mnist:
-                        return 1;
-                    default:
-                        return 1;
-                }
-            }
-            set
-            {
-                if (value != c)
-                {
-                    c = value;
-                    OnPropertyChanged(nameof(C));
-                }
-            }
-        }
-
-        public UInt D
-        {
-            get { return 1; }
-        }
-
-        public UInt H
-        {
-            get { return h; }
-            set
-            {
-                if (value >= 14 && value <= 4096 && value != h)
-                {
-                    h = value;
-                    OnPropertyChanged(nameof(H));
-                }
-            }
-        }
-
-        public UInt W
-        {
-            get { return w; }
-            set
-            {
-                if (value >= 14 && value <= 4096 && value != w)
-                {
-                    w = value;
-                    OnPropertyChanged(nameof(W));
-                }
-            }
-        }
-
-        public UInt PadD
-        {
-            get { return 0; }
-        }
-
-        public UInt PadH
-        {
-            get { return padH; }
-            set
-            {
-                if (value >= 0 && value <= H && value != padH)
-                {
-                    padH = value;
-                    OnPropertyChanged(nameof(PadH));
-                    OnPropertyChanged(nameof(RandomCrop));
-                }
-            }
-        }
-
-        public UInt PadW
-        {
-            get { return padW; }
-            set
-            {
-                if (value >= 0 && value <= W && value != padW)
-                {
-                    padW = value;
-                    OnPropertyChanged(nameof(PadW));
-                    OnPropertyChanged(nameof(RandomCrop));
-                }
-            }
-        }
-
-        public bool MirrorPad
-        {
-            get { return mirrorPad; }
-            set
-            {
-                if (value != mirrorPad)
-                {
-                    mirrorPad = value;
-                    OnPropertyChanged(nameof(MirrorPad));
-                }
-            }
-        }
-
-        public bool RandomCrop
-        {
-            get { return padH > 0 || padW > 0; }
-        }
-
-        public bool MeanStdNormalization
-        {
-            get { return meanStdNormalization; }
-            set
-            {
-                if (value != meanStdNormalization)
-                {
-                    meanStdNormalization = value;
-                    OnPropertyChanged(nameof(MeanStdNormalization));
-                }
-            }
-        }
-
-        public bool FixedDepthDrop
-        {
-            get { return fixedDepthDrop; }
-            set
-            {
-                if (value != fixedDepthDrop)
-                {
-                    fixedDepthDrop = value;
-                    OnPropertyChanged(nameof(FixedDepthDrop));
-                }
-            }
-        }
-
-        public Float DepthDrop
-        {
-            get { return depthDrop; }
-            set
-            {
-                if (value >= 0 && value <= 1 && value != depthDrop)
-                {
-                    depthDrop = value;
-                    OnPropertyChanged(nameof(DepthDrop));
-                }
-            }
-        }
-
-        public Fillers WeightsFiller
-        {
-            get { return weightsFiller; }
-            set
-            {
-                if (value != weightsFiller)
-                {
-                    weightsFiller = value;
-                    OnPropertyChanged(nameof(WeightsFiller));
-                    OnPropertyChanged(nameof(WeightsFillerModeVisible));
-                    OnPropertyChanged(nameof(WeightsGainVisible));
-                    OnPropertyChanged(nameof(WeightsScaleVisible));
-                }
-            }
-        }
-
-        public FillerModes WeightsFillerMode
-        {
-            get { return weightsFillerMode; }
-            set
-            {
-                if (value != weightsFillerMode)
-                {
-                    weightsFillerMode = value;
-                    OnPropertyChanged(nameof(WeightsFillerMode));
-                }
-            }
-        }
-
-        public Float WeightsGain
-        {
-            get { return weightsGain; }
-            set
-            {
-                if (value != weightsGain)
-                {
-                    weightsGain = value;
-                    OnPropertyChanged(nameof(WeightsGain));
-                }
-            }
-        }
-
         public bool WeightsFillerModeVisible
         {
             get
@@ -619,113 +245,6 @@ namespace Scripts
             get
             {
                 return WeightsFiller == Fillers.Constant || WeightsFiller == Fillers.Normal || WeightsFiller == Fillers.TruncatedNormal || WeightsFiller == Fillers.Uniform;
-            }
-        }
-
-        public Float WeightsScale
-        {
-            get { return weightsScale; }
-            set
-            {
-                if (value != weightsScale)
-                {
-                    weightsScale = value;
-                    OnPropertyChanged(nameof(WeightsScale));
-                }
-            }
-        }
-
-        public Float WeightsLRM
-        {
-            get { return weightsLRM; }
-            set
-            {
-                if (value != weightsLRM)
-                {
-                    weightsLRM = value;
-                    OnPropertyChanged(nameof(WeightsLRM));
-                }
-            }
-        }
-
-        public Float WeightsWDM
-        {
-            get { return weightsWDM; }
-            set
-            {
-                if (value != weightsWDM)
-                {
-                    weightsWDM = value;
-                    OnPropertyChanged(nameof(WeightsWDM));
-                }
-            }
-        }
-
-        public bool HasBias
-        {
-            get { return hasBias; }
-            set
-            {
-                if (value != hasBias)
-                {
-                    hasBias = value;
-                    OnPropertyChanged(nameof(HasBias));
-                }
-            }
-        }
-
-        public Fillers BiasesFiller
-        {
-            get { return biasesFiller; }
-            set
-            {
-                if (value != biasesFiller)
-                {
-                    biasesFiller = value;
-                    OnPropertyChanged(nameof(BiasesFiller));
-                    OnPropertyChanged(nameof(BiasesFillerModeVisible));
-                    OnPropertyChanged(nameof(BiasesGainVisible));
-                    OnPropertyChanged(nameof(BiasesScaleVisible));
-                }
-            }
-        }
-
-        public FillerModes BiasesFillerMode
-        {
-            get { return biasesFillerMode; }
-            set
-            {
-                if (value != biasesFillerMode)
-                {
-                    biasesFillerMode = value;
-                    OnPropertyChanged(nameof(BiasesFillerMode));
-                }
-            }
-        }
-
-        public Float BiasesGain
-        {
-            get { return biasesGain; }
-            set
-            {
-                if (value != biasesGain)
-                {
-                    biasesGain = value;
-                    OnPropertyChanged(nameof(BiasesGain));
-                }
-            }
-        }
-
-        public Float BiasesScale
-        {
-            get { return biasesScale; }
-            set
-            {
-                if (value != biasesScale)
-                {
-                    biasesScale = value;
-                    OnPropertyChanged(nameof(BiasesScale));
-                }
             }
         }
 
@@ -752,315 +271,10 @@ namespace Scripts
                 return BiasesFiller == Fillers.Constant || BiasesFiller == Fillers.Normal || BiasesFiller == Fillers.TruncatedNormal || BiasesFiller == Fillers.Uniform;
             }
         }
-
-        public Float BiasesLRM
-        {
-            get { return biasesLRM; }
-            set
-            {
-                if (value != biasesLRM)
-                {
-                    biasesLRM = value;
-                    OnPropertyChanged(nameof(BiasesLRM));
-                }
-            }
-        }
-
-        public Float BiasesWDM
-        {
-            get { return biasesWDM; }
-            set
-            {
-                if (value != biasesWDM)
-                {
-                    biasesWDM = value;
-                    OnPropertyChanged(nameof(BiasesWDM));
-                }
-            }
-        }
-
-        public Float BatchNormMomentum
-        {
-            get { return batchNormMomentum; }
-            set
-            {
-                if (value != batchNormMomentum)
-                {
-                    batchNormMomentum = value;
-                    OnPropertyChanged(nameof(BatchNormMomentum));
-                }
-            }
-        }
-
-        public Float BatchNormEps
-        {
-            get { return batchNormEps; }
-            set
-            {
-                if (value != batchNormEps)
-                {
-                    batchNormEps = value;
-                    OnPropertyChanged(nameof(BatchNormEps));
-                }
-            }
-        }
-
-        public bool BatchNormScaling
-        {
-            get { return batchNormScaling; }
-            set
-            {
-                if (value != batchNormScaling)
-                {
-                    batchNormScaling = value;
-                    OnPropertyChanged(nameof(BatchNormScaling));
-                }
-            }
-        }
-
-        public Float Alpha
-        {
-            get { return alpha; }
-            set
-            {
-                if (value != alpha)
-                {
-                    if (value >= 0 && value <= 1)
-                    {
-                        alpha = value;
-                        OnPropertyChanged(nameof(Alpha));
-                    }
-                }
-            }
-        }
-
-        public Float Beta
-        {
-            get { return beta; }
-            set
-            {
-                if (value != beta)
-                {
-                    if (value >= 0 && value <= 1)
-                    {
-                        beta = value;
-                        OnPropertyChanged(nameof(Beta));
-                    }
-                }
-            }
-        }
-
-        public UInt Groups
-        {
-            get { return groups; }
-            set
-            {
-                if (value >= 1 && value <= 6 && value != groups)
-                {
-                    groups = value;
-                    OnPropertyChanged(nameof(Groups));
-                    OnPropertyChanged(nameof(Depth));
-                }
-            }
-        }
-        public UInt Iterations
-        {
-            get { return iterations; }
-            set
-            {
-                if (value >= 2 && value <= 100 && value != iterations)
-                {
-                    iterations = value;
-                    OnPropertyChanged(nameof(Iterations));
-                    OnPropertyChanged(nameof(Depth));
-                }
-            }
-        }
-
-        public UInt Depth
-        {
-            get
-            {
-                switch (Script)
-                {
-                    case Scripts.densenet:
-                        return (Groups * Iterations * (Bottleneck ? 2u : 1u)) + ((Groups - 1) * 2);
-                    case Scripts.mobilenetv3:
-                        return (Groups * Iterations * 3) + ((Groups - 1) * 2);
-                    case Scripts.resnet:
-                        return (Groups * Iterations * (Bottleneck ? 3u : 2u)) + ((Groups - 1) * 2);
-                    default:
-                        return 0;
-                }
-            }
-        }
-
-        public UInt Width
-        {
-            get { return width; }
-            set
-            {
-                if (value != width)
-                {
-                    width = value;
-                    OnPropertyChanged(nameof(Width));
-                }
-            }
-        }
-
-        public UInt GrowthRate
-        {
-            get { return growthRate; }
-            set
-            {
-                if (value != growthRate)
-                {
-                    growthRate = value;
-                    OnPropertyChanged(nameof(GrowthRate));
-                }
-            }
-        }
-
-        public bool Bottleneck
-        {
-            get { return bottleneck; }
-            set
-            {
-                if (value != bottleneck)
-                {
-                    bottleneck = value;
-                    OnPropertyChanged(nameof(Bottleneck));
-                    OnPropertyChanged(nameof(Depth));
-                }
-            }
-        }
-
-        public Float Dropout
-        {
-            get { return dropout; }
-            set
-            {
-                if (value != dropout)
-                {
-                    if (value >= 0 && value < 1)
-                    {
-                        dropout = value;
-                        OnPropertyChanged(nameof(Dropout));
-                    }
-                }
-            }
-        }
-
-        public Float Compression
-        {
-            get { return compression; }
-            set
-            {
-                if (value != compression)
-                {
-                    if (value >= 0 && value <= 1)
-                    {
-                        compression = value;
-                        OnPropertyChanged(nameof(Compression));
-                    }
-                }
-            }
-        }
-
-        public ObservableCollection<EfficientNetRecord> EfficientNet
-        {
-            get { return efficientnet; }
-            set
-            {
-                if (value != efficientnet)
-                {
-                    efficientnet = value;
-                    OnPropertyChanged(nameof(EfficientNet));
-                }
-            }
-        }
-
-        public ObservableCollection<ShuffleNetRecord> ShuffleNet
-        {
-            get { return shufflenet; }
-            set
-            {
-                if (value != shufflenet)
-                {
-                    shufflenet = value;
-                    OnPropertyChanged(nameof(ShuffleNet));
-                }
-            }
-        }
-
+      
         public bool DropoutUsed
         {
-            get { return (dropout > 0 && dropout < 1); }
-        }
-
-        public bool SqueezeExcitation
-        {
-            get { return squeezeExcitation; }
-            set
-            {
-                if (value != squeezeExcitation)
-                {
-                    squeezeExcitation = value;
-                    OnPropertyChanged(nameof(SqueezeExcitation));
-                }
-            }
-        }
-
-        public bool ChannelZeroPad
-        {
-            get { return channelZeroPad; }
-            set
-            {
-                if (value != channelZeroPad)
-                {
-                    channelZeroPad = value;
-                    OnPropertyChanged(nameof(ChannelZeroPad));
-                }
-            }
-        }
-
-        public Activations Activation
-        {
-            get { return activation; }
-            set
-            {
-                if (value != activation)
-                {
-                    activation = value;
-                    OnPropertyChanged(nameof(Activation));
-                }
-            }
-        }
-
-        public UInt StrideHFirstConv
-        {
-            get { return strideHFirstConv; }
-            set
-            {
-                if (value != strideHFirstConv && value > 0)
-                {
-                    strideHFirstConv = value;
-                    OnPropertyChanged(nameof(StrideHFirstConv));
-                }
-            }
-        }
-
-        public UInt StrideWFirstConv
-        {
-            get { return strideWFirstConv; }
-            set
-            {
-                if (value != strideWFirstConv && value > 0)
-                {
-                    strideWFirstConv = value;
-                    OnPropertyChanged(nameof(StrideWFirstConv));
-                }
-            }
+            get { return (Dropout > 0 && Dropout < 1); }
         }
 
         public bool GroupsVisible { get { return Script != Scripts.efficientnetv2 && Script != Scripts.shufflenetv2 && Script != Scripts.augshufflenet; } }
@@ -1075,11 +289,6 @@ namespace Scripts
         public bool ChannelZeroPadVisible { get { return Script == Scripts.resnet; } }
         public bool EfficientNetVisible { get { return Script == Scripts.efficientnetv2; } }
         public bool ShuffleNetVisible { get { return Script == Scripts.shufflenetv2 || Script == Scripts.augshufflenet; } }
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
     public class ScriptCatalog
@@ -2195,50 +1404,50 @@ namespace Scripts
         static void Main()
         {
             var script = Generate(new ScriptParameters()
-	            {
-        	        Script = Scripts.shufflenetv2,
-                    Activation = Activations.HardSwish,
-                    Dataset = Datasets.cifar10,
-                    MeanStdNormalization = true,
-                    H = 32,
-        	        W = 32,
-        	        PadH = 4,
-        	        PadW = 4,
-                    MirrorPad = false,
-                    StrideHFirstConv = 1,
-                    StrideWFirstConv = 1,
-                    WeightsFiller = Fillers.HeNormal,
-        	        WeightsFillerMode = FillerModes.In,
-        	        WeightsGain = 1f,
-        	        WeightsScale = 0.05f,
-        	        WeightsLRM = 1f,
-        	        WeightsWDM = 1f,
-        	        HasBias = false,
-        	        BiasesFiller = Fillers.Constant,
-        	        BiasesFillerMode = FillerModes.In,
-        	        BiasesGain = 1f,
-        	        BiasesScale = 0f,
-        	        BiasesLRM = 1f,
-        	        BiasesWDM = 1f,
-        	        BatchNormMomentum = 0.995f,
-        	        BatchNormEps = 0.0001f,
-        	        BatchNormScaling = false,
-        	        Alpha = 0f,
-        	        Beta = 0f,
-        	        Groups = 3,
-        	        Iterations = 4,
-        	        Width = 12,
-        	        GrowthRate = 12,
-        	        Bottleneck = false,
-        	        Dropout = 0f,
-        	        Compression = 0f,
-        	        SqueezeExcitation = true,
-        	        ChannelZeroPad = false,
-        	        DepthDrop = 0.0f,
-        	        FixedDepthDrop = false,
-        	        EfficientNet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],
-                    ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] 
-                });
+		    {
+        	    Script = Scripts.augshufflenet,
+                Activation = Activations.HardSwish,
+                Dataset = Datasets.cifar10,
+                MeanStdNormalization = true,
+                H = 32,
+        	    W = 32,
+        	    PadH = 4,
+        	    PadW = 4,
+                MirrorPad = false,
+                StrideHFirstConv = 1,
+                StrideWFirstConv = 1,
+                WeightsFiller = Fillers.HeNormal,
+        	    WeightsFillerMode = FillerModes.In,
+        	    WeightsGain = 1f,
+        	    WeightsScale = 0.05f,
+        	    WeightsLRM = 1f,
+        	    WeightsWDM = 1f,
+        	    HasBias = false,
+        	    BiasesFiller = Fillers.Constant,
+        	    BiasesFillerMode = FillerModes.In,
+        	    BiasesGain = 1f,
+        	    BiasesScale = 0f,
+        	    BiasesLRM = 1f,
+        	    BiasesWDM = 1f,
+        	    BatchNormMomentum = 0.995f,
+        	    BatchNormEps = 0.0001f,
+        	    BatchNormScaling = false,
+        	    Alpha = 0f,
+        	    Beta = 0f,
+        	    Groups = 3,
+        	    Iterations = 4,
+        	    Width = 16,
+        	    GrowthRate = 12,
+        	    Bottleneck = false,
+        	    Dropout = 0f,
+        	    Compression = 0f,
+        	    SqueezeExcitation = true,
+        	    ChannelZeroPad = false,
+        	    DepthDrop = 0.0f,
+        	    FixedDepthDrop = false,
+        	    EfficientNet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],
+                ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] 
+            });
 
             var fileInfo = new FileInfo(Path.Combine(ScriptPath, @"script.txt"));
             
