@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 
 using Convnet.PageViewModels;
+using Convnet.Properties;
 
 namespace Convnet.PageViews
 {
@@ -22,10 +23,11 @@ namespace Convnet.PageViews
         {
             AvaloniaXamlLoader.Load(this);
             
-            var datagrid = this.FindControl<DataGrid>("listViewTrainingResult");
+            var datagrid = this.FindControl<DataGrid>("ListViewTrainingResult");
             if (datagrid != null)
             {
-                //datagrid.ScrollIntoView();
+                datagrid.SelectedIndex = Settings.Default.SelectedIndex;
+                datagrid.ScrollIntoView(datagrid.SelectedItem, null);
             }
         }
 

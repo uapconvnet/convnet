@@ -17,6 +17,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime;
@@ -81,7 +82,7 @@ namespace Convnet.PageViewModels
         private bool showSample = false;
         private ObservableCollection<DNNTrainingRate>? trainRates = new ObservableCollection<DNNTrainingRate>();
         private ObservableCollection<DNNTrainingStrategy>? trainingStrategies = new ObservableCollection<DNNTrainingStrategy>();
-        private int selectedIndex = -1;
+        private int selectedIndex = Settings.Default.SelectedIndex;
         private bool sgdr = false;
         private uint gotoEpoch = 1;
         private uint gotoCycle = 1;
@@ -1268,7 +1269,14 @@ namespace Convnet.PageViewModels
         public int SelectedIndex
         {
             get => selectedIndex;
-            set => this.RaiseAndSetIfChanged(ref selectedIndex, value);
+            set 
+            {
+                if (selectedIndex != value)
+                {
+                    Settings.Default.SelectedIndex = value;
+                    this.RaiseAndSetIfChanged(ref selectedIndex, value);
+                }
+            }
         }
 
         public DNNOptimizers Optimizer
