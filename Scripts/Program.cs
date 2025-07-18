@@ -67,7 +67,7 @@ namespace Scripts
         Gelu = 28
     }
 
-     [Serializable()]
+    [Serializable()]
     public class EfficientNetRecord(UInt expandRatio = 4, UInt channels = 24, UInt iterations = 2, UInt stride = 1, bool se = false)
     {
         public UInt ExpandRatio { get; set; } = expandRatio;
@@ -101,97 +101,97 @@ namespace Scripts
     public class ScriptParameters(Scripts script = Scripts.shufflenetv2, Datasets dataset = Datasets.cifar10, UInt h = 32, UInt w = 32, UInt padH = 4, UInt padW = 4, bool mirrorPad = false, bool meanStdNorm = true, Fillers weightsFiller = Fillers.HeNormal, FillerModes weightsFillerMode = FillerModes.In, Float weightsGain = (Float)1.0, Float weightsScale = (Float)0.05, Float weightsLRM = 1, Float weightsWDM = 1, bool hasBias = false, Fillers biasesFiller = Fillers.Constant, FillerModes biasesFillerMode = FillerModes.In, Float biasesGain = (Float)1.0, Float biasesScale = 0, Float biasesLRM = 1, Float biasesWDM = 1, Float batchNormMomentum = (Float)0.995, Float batchNormEps = (Float)1E-04, bool batchNormScaling = false, Float alpha = (Float)0, Float beta = (Float)0, UInt groups = 3, UInt iterations = 4, UInt width = 8, UInt growthRate = 12, bool bottleneck = false, Float dropout = 0, Float compression = 0, bool squeezeExcitation = false, bool channelZeroPad = true, Activations activation = Activations.Relu, UInt strideHFirstConv = 2, UInt strideWFirstConv = 2, Float depthDrop = (Float)0.2, bool fixedDepthDrop = false)
     {
         public Scripts Script { get; set; } = script;
-        
-        public Datasets Dataset { get; set; } = dataset;
-        
-        public UInt C { get; set; } = 3u;
-        
-        public UInt D { get; set; } = 1u;
-        
-        public UInt H { get; set; } = h;
-        
-        public UInt W { get; set; } = w;
-        
-        public UInt PadD { get; set; } = 0u;
-        
-        public UInt PadH { get; set; } = padH;
-        
-        public UInt PadW  { get; set; } = padW;
-        
-        public bool MirrorPad { get; set; } = mirrorPad;
-        
-        public bool MeanStdNormalization { get; set; } = meanStdNorm;
-        
-        public Fillers WeightsFiller { get; set; } = weightsFiller;
-        
-        public FillerModes WeightsFillerMode { get; set; } = weightsFillerMode;
-        
-        public Float WeightsGain { get; set; } = weightsGain;
-        
-        public Float WeightsScale { get; set; } = weightsScale;
-        
-        public Float WeightsLRM { get; set; } = weightsLRM;
-        
-        public Float WeightsWDM { get; set; } = weightsWDM;
-        
-        public bool HasBias { get; set; } = hasBias;
-        
-        public Fillers BiasesFiller { get; set; } = biasesFiller;
-        
-        public FillerModes BiasesFillerMode { get; set; } = biasesFillerMode;
-        
-        public Float BiasesGain { get; set; } = biasesGain;
-        
-        public Float BiasesScale { get; set; } = biasesScale;
-        
-        public Float BiasesLRM { get; set; } = biasesLRM;
-        
-        public Float BiasesWDM { get; set; } = biasesWDM;
-        
-        public bool FixedDepthDrop { get; set; } = fixedDepthDrop;
-        
-        public Float DepthDrop { get; set; } = depthDrop;
-        
-        public Float BatchNormMomentum { get; set; } = batchNormMomentum;
-        
-        public Float BatchNormEps { get; set; } = batchNormEps;
-        
-        public bool BatchNormScaling { get; set; } = batchNormScaling;
-        
-        public Float Alpha { get; set; } = alpha;
-        
-        public Float Beta { get; set; } = beta;
-        
-        public UInt Groups { get; set; } = groups;
-        
-        public UInt Iterations { get; set; } = iterations;
-        
-        public UInt Width { get; set; } = width;
-        
-        public UInt GrowthRate { get; set; } = growthRate;
-        
-        public bool Bottleneck { get; set; } = bottleneck;
-        
-        public Float Dropout { get; set; } = dropout;
-        
-        public Float Compression { get; set; } = compression;
-        
-        public bool SqueezeExcitation { get; set; } = squeezeExcitation;
-        
-        public bool ChannelZeroPad { get; set; } = channelZeroPad;
-        
-        public Activations Activation { get; set; } = activation;
-        
-        public UInt StrideHFirstConv { get; set; } = strideHFirstConv;
-        
-        public UInt StrideWFirstConv { get; set; } = strideWFirstConv;
-        
-        public ObservableCollection<EfficientNetRecord> EfficientNet { get; set; } =  [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)];
-        
-        public ObservableCollection<ShuffleNetRecord> ShuffleNet { get; set; } =  [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] ;
 
-        public bool RandomCrop  { get { return PadH > 0 || PadW > 0; } }
-        
+        public Datasets Dataset { get; set; } = dataset;
+
+        public UInt C { get; set; } = 3u;
+
+        public UInt D { get; set; } = 1u;
+
+        public UInt H { get; set; } = h;
+
+        public UInt W { get; set; } = w;
+
+        public UInt PadD { get; set; } = 0u;
+
+        public UInt PadH { get; set; } = padH;
+
+        public UInt PadW { get; set; } = padW;
+
+        public bool MirrorPad { get; set; } = mirrorPad;
+
+        public bool MeanStdNormalization { get; set; } = meanStdNorm;
+
+        public Fillers WeightsFiller { get; set; } = weightsFiller;
+
+        public FillerModes WeightsFillerMode { get; set; } = weightsFillerMode;
+
+        public Float WeightsGain { get; set; } = weightsGain;
+
+        public Float WeightsScale { get; set; } = weightsScale;
+
+        public Float WeightsLRM { get; set; } = weightsLRM;
+
+        public Float WeightsWDM { get; set; } = weightsWDM;
+
+        public bool HasBias { get; set; } = hasBias;
+
+        public Fillers BiasesFiller { get; set; } = biasesFiller;
+
+        public FillerModes BiasesFillerMode { get; set; } = biasesFillerMode;
+
+        public Float BiasesGain { get; set; } = biasesGain;
+
+        public Float BiasesScale { get; set; } = biasesScale;
+
+        public Float BiasesLRM { get; set; } = biasesLRM;
+
+        public Float BiasesWDM { get; set; } = biasesWDM;
+
+        public bool FixedDepthDrop { get; set; } = fixedDepthDrop;
+
+        public Float DepthDrop { get; set; } = depthDrop;
+
+        public Float BatchNormMomentum { get; set; } = batchNormMomentum;
+
+        public Float BatchNormEps { get; set; } = batchNormEps;
+
+        public bool BatchNormScaling { get; set; } = batchNormScaling;
+
+        public Float Alpha { get; set; } = alpha;
+
+        public Float Beta { get; set; } = beta;
+
+        public UInt Groups { get; set; } = groups;
+
+        public UInt Iterations { get; set; } = iterations;
+
+        public UInt Width { get; set; } = width;
+
+        public UInt GrowthRate { get; set; } = growthRate;
+
+        public bool Bottleneck { get; set; } = bottleneck;
+
+        public Float Dropout { get; set; } = dropout;
+
+        public Float Compression { get; set; } = compression;
+
+        public bool SqueezeExcitation { get; set; } = squeezeExcitation;
+
+        public bool ChannelZeroPad { get; set; } = channelZeroPad;
+
+        public Activations Activation { get; set; } = activation;
+
+        public UInt StrideHFirstConv { get; set; } = strideHFirstConv;
+
+        public UInt StrideWFirstConv { get; set; } = strideWFirstConv;
+
+        public ObservableCollection<EfficientNetRecord> EfficientNet { get; set; } = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)];
+
+        public ObservableCollection<ShuffleNetRecord> ShuffleNet { get; set; } = [new(7, 3, 1, 2, false), new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)];
+
+        public bool RandomCrop { get { return PadH > 0 || PadW > 0; } }
+
         public IEnumerable<Scripts> ScriptsList { get { return Enum.GetValues(typeof(Scripts)).Cast<Scripts>(); } }
 
         public IEnumerable<Datasets> DatasetsList { get { return Enum.GetValues(typeof(Datasets)).Cast<Datasets>(); } }
@@ -202,6 +202,44 @@ namespace Scripts
 
         public IEnumerable<FillerModes> FillerModesList { get { return Enum.GetValues(typeof(FillerModes)).Cast<FillerModes>(); } }
 
+        public bool WeightsFillerModeVisible { get { return WeightsFiller == Fillers.HeNormal || WeightsFiller == Fillers.HeUniform || WeightsFiller == Fillers.LeCunNormal || WeightsFiller == Fillers.LeCunUniform; } }
+
+        public bool WeightsGainVisible { get { return WeightsFiller == Fillers.HeNormal || WeightsFiller == Fillers.HeUniform || WeightsFiller == Fillers.LeCunNormal || WeightsFiller == Fillers.LeCunUniform || WeightsFiller == Fillers.XavierNormal || WeightsFiller == Fillers.XavierUniform; } }
+
+        public bool WeightsScaleVisible { get { return WeightsFiller == Fillers.Constant || WeightsFiller == Fillers.Normal || WeightsFiller == Fillers.TruncatedNormal || WeightsFiller == Fillers.Uniform; } }
+
+        public bool BiasesFillerModeVisible { get { return BiasesFiller == Fillers.HeNormal || BiasesFiller == Fillers.HeUniform || BiasesFiller == Fillers.LeCunNormal || BiasesFiller == Fillers.LeCunUniform; } }
+
+        public bool BiasesGainVisible { get { return BiasesFiller == Fillers.HeNormal || BiasesFiller == Fillers.HeUniform || BiasesFiller == Fillers.LeCunNormal || BiasesFiller == Fillers.LeCunUniform || BiasesFiller == Fillers.XavierNormal || BiasesFiller == Fillers.XavierUniform; } }
+
+        public bool BiasesScaleVisible { get { return BiasesFiller == Fillers.Constant || BiasesFiller == Fillers.Normal || BiasesFiller == Fillers.TruncatedNormal || BiasesFiller == Fillers.Uniform; } }
+
+        public bool DropoutUsed { get { return (Dropout > 0 && Dropout < 1); } }
+
+        public bool GroupsVisible { get { return Script != Scripts.efficientnetv2 && Script != Scripts.shufflenetv2 && Script != Scripts.augshufflenet; } }
+
+        public bool IterationsVisible { get { return Script != Scripts.efficientnetv2 && Script != Scripts.shufflenetv2 && Script != Scripts.augshufflenet; } }
+
+        public bool WidthVisible { get { return Script == Scripts.mobilenetv3 || Script == Scripts.resnet || Script == Scripts.shufflenetv2 || Script == Scripts.augshufflenet; } }
+
+        public bool GrowthRateVisible { get { return Script == Scripts.densenet; } }
+
+        public bool DropoutVisible { get { return Script == Scripts.densenet || Script == Scripts.resnet || Script == Scripts.efficientnetv2; } }
+
+        public bool DepthDropVisible { get { return Script == Scripts.efficientnetv2 || Script == Scripts.mobilenetv3 || Script == Scripts.resnet || Script == Scripts.densenet; } }
+
+        public bool CompressionVisible { get { return Script == Scripts.densenet; } }
+
+        public bool BottleneckVisible { get { return Script == Scripts.densenet || Script == Scripts.resnet; } }
+
+        public bool SqueezeExcitationVisible { get { return Script == Scripts.mobilenetv3; } }
+
+        public bool ChannelZeroPadVisible { get { return Script == Scripts.resnet; } }
+
+        public bool EfficientNetVisible { get { return Script == Scripts.efficientnetv2; } }
+
+        public bool ShuffleNetVisible { get { return Script == Scripts.shufflenetv2 || Script == Scripts.augshufflenet; } }
+        
         public UInt Depth
         {
             get
@@ -268,44 +306,6 @@ namespace Scripts
                 }
             }
         }
-        
-        public bool WeightsFillerModeVisible { get { return WeightsFiller == Fillers.HeNormal || WeightsFiller == Fillers.HeUniform || WeightsFiller == Fillers.LeCunNormal || WeightsFiller == Fillers.LeCunUniform; } }
-
-        public bool WeightsGainVisible { get { return WeightsFiller == Fillers.HeNormal || WeightsFiller == Fillers.HeUniform || WeightsFiller == Fillers.LeCunNormal || WeightsFiller == Fillers.LeCunUniform || WeightsFiller == Fillers.XavierNormal || WeightsFiller == Fillers.XavierUniform; } }
-
-        public bool WeightsScaleVisible { get { return WeightsFiller == Fillers.Constant || WeightsFiller == Fillers.Normal || WeightsFiller == Fillers.TruncatedNormal || WeightsFiller == Fillers.Uniform;  }  }
-
-        public bool BiasesFillerModeVisible { get { return BiasesFiller == Fillers.HeNormal || BiasesFiller == Fillers.HeUniform || BiasesFiller == Fillers.LeCunNormal || BiasesFiller == Fillers.LeCunUniform; } }
-
-        public bool BiasesGainVisible { get { return BiasesFiller == Fillers.HeNormal || BiasesFiller == Fillers.HeUniform || BiasesFiller == Fillers.LeCunNormal || BiasesFiller == Fillers.LeCunUniform || BiasesFiller == Fillers.XavierNormal || BiasesFiller == Fillers.XavierUniform; } }
-
-        public bool BiasesScaleVisible { get { return BiasesFiller == Fillers.Constant || BiasesFiller == Fillers.Normal || BiasesFiller == Fillers.TruncatedNormal || BiasesFiller == Fillers.Uniform; } }
-      
-        public bool DropoutUsed { get { return (Dropout > 0 && Dropout < 1); } }
-
-        public bool GroupsVisible { get { return Script != Scripts.efficientnetv2 && Script != Scripts.shufflenetv2 && Script != Scripts.augshufflenet; } }
-        
-        public bool IterationsVisible { get { return Script != Scripts.efficientnetv2 && Script != Scripts.shufflenetv2 && Script != Scripts.augshufflenet; } }
-        
-        public bool WidthVisible { get { return Script == Scripts.mobilenetv3 || Script == Scripts.resnet || Script == Scripts.shufflenetv2 || Script == Scripts.augshufflenet; } }
-        
-        public bool GrowthRateVisible { get { return Script == Scripts.densenet; } }
-        
-        public bool DropoutVisible { get { return Script == Scripts.densenet || Script == Scripts.resnet || Script == Scripts.efficientnetv2; } }
-        
-        public bool DepthDropVisible { get { return Script == Scripts.efficientnetv2 || Script == Scripts.mobilenetv3 || Script == Scripts.resnet || Script == Scripts.densenet; } }
-        
-        public bool CompressionVisible { get { return Script == Scripts.densenet; } }
-        
-        public bool BottleneckVisible { get { return Script == Scripts.densenet || Script == Scripts.resnet; } }
-        
-        public bool SqueezeExcitationVisible { get { return Script == Scripts.mobilenetv3; } }
-        
-        public bool ChannelZeroPadVisible { get { return Script == Scripts.resnet; } }
-        
-        public bool EfficientNetVisible { get { return Script == Scripts.efficientnetv2; } }
-        
-        public bool ShuffleNetVisible { get { return Script == Scripts.shufflenetv2 || Script == Scripts.augshufflenet; } }
     }
 
     public class ScriptCatalog
@@ -367,16 +367,16 @@ namespace Scripts
         public static string BatchNorm(UInt id, string inputs, string group = "", string prefix = "B")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=BatchNorm" + nwl +
-               "Inputs=" + inputs + nwl + nwl;
+                "Type=BatchNorm" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
         }
 
         public static string LayerNorm(UInt id, string inputs, string group = "", string prefix = "LN")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=LayerNorm" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Eps=1e-6" + nwl + nwl;
+                "Type=LayerNorm" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Eps=1e-6" + nwl + nwl;
         }
 
         // public static string BatchNormActivation(UInt id, string inputs, string activation = "Relu", string group = "", string prefix = "B")
@@ -467,26 +467,26 @@ namespace Scripts
         public static string Resampling(UInt id, string inputs, string group = "", string prefix = "R")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Resampling" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Factor=0.5,0.5" + nwl +
-               "Algorithm=Linear" + nwl + nwl;
+                "Type=Resampling" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Factor=0.5,0.5" + nwl +
+                "Algorithm=Linear" + nwl + nwl;
         }
 
         public static string ReductionAvg(UInt id, string inputs, string group = "", string prefix = "RAVG")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Reduction" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Operation=Avg" + nwl + nwl;
+                "Type=Reduction" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Operation=Avg" + nwl + nwl;
         }
 
         public static string ReductionMax(UInt id, string inputs, string group = "", string prefix = "RMAX")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Reduction" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Operation=Max" + nwl + nwl;
+                "Type=Reduction" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Operation=Max" + nwl + nwl;
         }
 
         public static string Convolution(UInt id, string inputs, UInt channels, UInt kernelX = 3, UInt kernelY = 3, UInt strideX = 1, UInt strideY = 1, UInt padX = 1, UInt padY = 1, bool biases = false, string group = "", string prefix = "C", string weightsFiller = "")
@@ -566,41 +566,41 @@ namespace Scripts
         public static string ChannelSplitRatioLeft(UInt id, string inputs, Float ratio = 0.375f, string group = "", string prefix = "CSRL")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=ChannelSplitRatioLeft" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Ratio=" + to_string(ratio) + nwl + nwl;
+                "Type=ChannelSplitRatioLeft" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Ratio=" + to_string(ratio) + nwl + nwl;
         }
 
         public static string ChannelSplitRatioRight(UInt id, string inputs, Float ratio = 0.375f, string group = "", string prefix = "CSRR")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=ChannelSplitRatioRight" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Ratio=" + to_string(ratio) + nwl + nwl;
+                "Type=ChannelSplitRatioRight" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Ratio=" + to_string(ratio) + nwl + nwl;
         }
 
         public static string ChannelSplit(UInt id, string inputs, UInt groups, UInt part, string group = "", string prefix = "CS")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=ChannelSplit" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Groups=" + to_string(groups) + nwl +
-               "Group=" + to_string(part) + nwl + nwl;
+                "Type=ChannelSplit" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Groups=" + to_string(groups) + nwl +
+                "Group=" + to_string(part) + nwl + nwl;
         }
 
         public static string Shuffle(UInt id, string inputs, UInt groups = 2, string group = "", string prefix = "SH")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Shuffle" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Groups=" + to_string(groups) + nwl + nwl;
+                "Type=Shuffle" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Groups=" + to_string(groups) + nwl + nwl;
         }
 
         public static string Concat(UInt id, string inputs, string group = "", string prefix = "CC")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Concat" + nwl +
-               "Inputs=" + inputs + nwl + nwl;
+                "Type=Concat" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
         }
 
         public static string AvgPooling(UInt id, string input, string kernel = "3,3", string stride = "2,2", string pad = "1,1", string group = "", string prefix = "P")
@@ -630,87 +630,87 @@ namespace Scripts
         public static string Dense(UInt id, string inputs, UInt channels, bool biases = false, string group = "", string prefix = "DS", string weightsFiller = "")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Dense" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Channels=" + to_string(channels) + nwl +
-               (biases ? "Biases=Yes" + nwl : "") +
-               (weightsFiller != "" ? "WeightsFiller=" + weightsFiller + nwl + nwl : nwl);
+                "Type=Dense" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Channels=" + to_string(channels) + nwl +
+                (biases ? "Biases=Yes" + nwl : "") +
+                (weightsFiller != "" ? "WeightsFiller=" + weightsFiller + nwl + nwl : nwl);
         }
 
         public static string Add(UInt id, string inputs, string group = "", string prefix = "A")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Add" + nwl +
-               "Inputs=" + inputs + nwl + nwl;
+                "Type=Add" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
         }
 
         public static string Multiply(string inputs, string group = "", string prefix = "CM")
         {
             return "[" + group + prefix + "]" + nwl +
-               "Type=Multiply" + nwl +
-               "Inputs=" + inputs + nwl + nwl;
+                "Type=Multiply" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
         }
 
         public static string Dropout(UInt id, string inputs, string group = "", string prefix = "D")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Dropout" + nwl +
-               "Inputs=" + inputs + nwl + nwl;
+                "Type=Dropout" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
         }
 
         public static string Softmax(UInt id, string inputs, string group = "", string prefix = "SM")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Softmax" + nwl +
-               "Inputs=" + inputs + nwl + nwl;
+                "Type=Softmax" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
         }
 
         public static string Softmax(string inputs, string group = "", string prefix = "SM")
         {
             return "[" + group + prefix + "]" + nwl +
-               "Type=Softmax" + nwl +
-               "Inputs=" + inputs + nwl + nwl;
+                "Type=Softmax" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
         }
 
         public static string LogSoftmax(UInt id, string inputs, string group = "", string prefix = "LSM")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=LogSoftmax" + nwl +
-               "Inputs=" + inputs + nwl + nwl;
+                "Type=LogSoftmax" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
         }
 
         public static string LogSoftmax(string inputs, string group = "", string prefix = "LSM")
         {
             return "[" + group + prefix + "]" + nwl +
-               "Type=LogSoftmax" + nwl +
-               "Inputs=" + inputs + nwl + nwl;
+                "Type=LogSoftmax" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
         }
 
         public static string Activation(UInt id, string inputs, string activation = "Relu", string group = "", string prefix = "ACT")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Activation" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Activation=" + activation + nwl + nwl;
+                "Type=Activation" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Activation=" + activation + nwl + nwl;
         }
 
         public static string Activation(UInt id, string inputs, Activations activation = Activations.Relu, string group = "", string prefix = "ACT")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
-               "Type=Activation" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Activation=" + activation.ToString() + nwl + nwl;
+                "Type=Activation" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Activation=" + activation.ToString() + nwl + nwl;
         }
 
         public static string Cost(string inputs, Datasets dataset, UInt channels, string cost = "CategoricalCrossEntropy", Float eps = 0.0f, string group = "", string prefix = "Cost")
         {
             return "[" + group + prefix + "]" + nwl +
-               "Type=Cost" + nwl +
-               "Inputs=" + inputs + nwl +
-               "Cost=" + cost + nwl +
-               "LabelIndex=" + ((dataset == Datasets.cifar100 && channels == 100) ? "1" : "0") + nwl +
-               "Channels=" + to_string(channels) + nwl +
-               "Eps=" + to_string(eps);
+                "Type=Cost" + nwl +
+                "Inputs=" + inputs + nwl +
+                "Cost=" + cost + nwl +
+                "LabelIndex=" + ((dataset == Datasets.cifar100 && channels == 100) ? "1" : "0") + nwl +
+                "Channels=" + to_string(channels) + nwl +
+                "Eps=" + to_string(eps);
         }
 
         public static List<string> FusedMBConv(UInt A, UInt C, string inputs, UInt inputChannels, UInt outputChannels, UInt stride = 1, UInt expandRatio = 4, bool se = false, Activations activation = Activations.HardSwish)
@@ -1106,8 +1106,8 @@ namespace Scripts
                         var C = 1ul;
 
                         net +=
-                           Convolution(C, "Input", inputChannels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +
-                           BatchNormActivation(C, In("C", C), p.Activation);
+                            Convolution(C, "Input", inputChannels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +
+                            BatchNormActivation(C, In("C", C), p.Activation);
 
                         var stage = 0ul;
                         var input = In("B", C++);
@@ -1120,8 +1120,10 @@ namespace Scripts
                                 var stride = n == 0ul ? rec.Stride : 1ul;
                                 var identity = stride == 1ul && inputChannels == outputChannels;
 
-                                var subblocks = beginStage ? FusedMBConv(A, C, input, inputChannels, outputChannels, stride, rec.ExpandRatio, rec.SE, p.Activation) :
-                                                                   MBConv(A, C, input, inputChannels, outputChannels, stride, rec.ExpandRatio, rec.SE, p.Activation);
+                                var subblocks = beginStage ?
+                                    FusedMBConv(A, C, input, inputChannels, outputChannels, stride, rec.ExpandRatio, rec.SE, p.Activation) :
+                                    MBConv(A, C, input, inputChannels, outputChannels, stride, rec.ExpandRatio, rec.SE, p.Activation);
+
                                 foreach (var blk in subblocks)
                                     net += blk;
 
