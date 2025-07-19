@@ -6,10 +6,12 @@ using Avalonia.ReactiveUI;
 
 using Convnet.PageViewModels;
 using Convnet.Properties;
+using Interop;
+using System.Collections.ObjectModel;
 
 namespace Convnet.PageViews
 {
-    public partial class TrainPageView : ReactiveUserControl<TrainPageViewModel>
+    public partial class TrainPageView : UserControl
     {
         private bool zoomout = false;
 
@@ -22,13 +24,20 @@ namespace Convnet.PageViews
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-            
-            var datagrid = this.FindControl<DataGrid>("ListViewTrainingResult");
-            if (datagrid != null)
-            {
-                datagrid.SelectedIndex = Settings.Default.SelectedIndex;
-                datagrid.ScrollIntoView(datagrid.SelectedItem, null);
-            }
+
+            //var tpvm = DataContext as TrainPageViewModel;
+            //var datagrid = this.FindControl<DataGrid>("ListViewTrainingResult");
+           
+            //if (datagrid != null)
+            //{
+            //    datagrid.SelectedIndex = Settings.Default.SelectedIndex;
+            //    if (datagrid.ItemsSource != null)
+            //    {
+            //        ObservableCollection<DNNTrainingResult>? list = datagrid.ItemsSource as ObservableCollection<DNNTrainingResult>;
+            //        if (list != null)
+            //            datagrid.ScrollIntoView(list[Settings.Default.SelectedIndex], null);
+            //    }
+            //}
         }
 
         private void ZoomOut_PointerPressed(object sender, PointerPressedEventArgs e)
