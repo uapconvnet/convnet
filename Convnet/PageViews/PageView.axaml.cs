@@ -6,7 +6,7 @@ using Convnet.PageViewModels;
 
 namespace Convnet.PageViews
 {
-    public partial class PageView : UserControl
+    public partial class PageView : ReactiveUserControl<PageViewModel>
     {
         public PageView()
         {

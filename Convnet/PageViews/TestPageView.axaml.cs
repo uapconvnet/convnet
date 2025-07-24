@@ -6,7 +6,7 @@ using Convnet.PageViewModels;
 
 namespace Convnet.PageViews
 {
-    public partial class TestPageView : UserControl
+    public partial class TestPageView : ReactiveUserControl<TestPageViewModel>
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public TestPageView()

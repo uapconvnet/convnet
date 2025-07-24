@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using AvaloniaEdit;
 using Convnet.Common;
@@ -19,7 +20,7 @@ using System.Threading;
 
 namespace Convnet.PageViews
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : ReactiveWindow<PageViewModel>
     {
         const string Framework = "net9.0";
 #if DEBUG
