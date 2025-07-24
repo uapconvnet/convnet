@@ -6,8 +6,6 @@ using Avalonia.ReactiveUI;
 
 using Convnet.PageViewModels;
 using Convnet.Properties;
-using Interop;
-using System.Collections.ObjectModel;
 
 namespace Convnet.PageViews
 {
@@ -21,14 +19,23 @@ namespace Convnet.PageViews
             InitializeComponent();
 
             var datagrid = this.FindControl<DataGrid>("ListViewTrainingResult");
+            if (datagrid != null)
+                datagrid.DataContextChanged += Datagrid_DataContextChanged;
+        }
 
+        private void Datagrid_DataContextChanged(object? sender, System.EventArgs e)
+        {
+            var datagrid = sender as DataGrid;
             if (datagrid != null)
             {
-                datagrid.SelectedIndex = Settings.Default.SelectedIndex;
-               
-                ObservableCollection<DNNTrainingResult>? list = datagrid.ItemsSource as ObservableCollection<DNNTrainingResult>;
-                if (list != null)
-                    datagrid.ScrollIntoView(list[Settings.Default.SelectedIndex], null);                    
+                var tpvm = datagrid.DataContext as TrainPageViewModel;
+                if (tpvm != null && tpvm.TrainingLog != null)
+                {
+                    Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                       datagrid.ScrollIntoView(tpvm.TrainingLog[Settings.Default.SelectedIndex], null);
+                    });
+                }
             }
         }
 
