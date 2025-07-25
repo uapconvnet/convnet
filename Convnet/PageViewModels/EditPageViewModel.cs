@@ -38,8 +38,6 @@ namespace Convnet.PageViewModels
         private string definition = Settings.Default.DefinitionEditing;
         private bool definitionStatus = false;
         private bool canSynchronize = false;
-        private int selectionStart = 0;
-        private int selectionLength = 0;
         private TextLocation textLocationDefinition = new TextLocation(Settings.Default.LineDefinition, Settings.Default.ColumnDefinition);
         private int caretOffsetDefinition = Settings.Default.CaretOffsetDefinition;
         private int selectionStartDefinition = Settings.Default.SelectionStartDefinition;
@@ -62,9 +60,6 @@ namespace Convnet.PageViewModels
         {
             initAction = true;
             clickWaitTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Background, MouseWaitTimer_Tick);
-
-            //var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-            //config.Save(ConfigurationSaveMode.Full);
 
             AddCommandButtons();
         }
@@ -174,7 +169,6 @@ namespace Convnet.PageViewModels
             set 
             {   this.RaiseAndSetIfChanged(ref caretOffsetScript, value);
                 Settings.Default.CaretOffsetScript = value;
-                Settings.Default.Save();
             }
         }
 
@@ -185,7 +179,6 @@ namespace Convnet.PageViewModels
             { 
                 this.RaiseAndSetIfChanged(ref caretOffsetDefinition, value);
                 Settings.Default.CaretOffsetDefinition = value;
-                Settings.Default.Save();
             }
         }
 
@@ -210,7 +203,6 @@ namespace Convnet.PageViewModels
                 {
                     this.RaiseAndSetIfChanged(ref selectionStartDefinition, value);
                     Settings.Default.SelectionStartDefinition = value;
-                    Settings.Default.Save();
                 }
             }
         }
@@ -224,7 +216,6 @@ namespace Convnet.PageViewModels
                 {
                     this.RaiseAndSetIfChanged(ref selectionLengthDefinition, value);
                     Settings.Default.SelectionLengthDefinition = value;
-                    Settings.Default.Save();
                 }
             }
         }
@@ -238,7 +229,6 @@ namespace Convnet.PageViewModels
                 {
                     this.RaiseAndSetIfChanged(ref selectionStartScript, value);
                     Settings.Default.SelectionStartScript = value;
-                    Settings.Default.Save();
                 }
             }
         }
@@ -252,7 +242,6 @@ namespace Convnet.PageViewModels
                 {
                     this.RaiseAndSetIfChanged(ref selectionLengthScript, value);
                     Settings.Default.SelectionLengthScript = value;
-                    Settings.Default.Save();
                 }
             }
         }
@@ -266,7 +255,6 @@ namespace Convnet.PageViewModels
                 {
                     this.RaiseAndSetIfChanged(ref verticalOffsetDefinition, value);
                     Settings.Default.DefinitionOffset = value;
-                    Settings.Default.Save();
                 }
             }
         }
@@ -280,7 +268,6 @@ namespace Convnet.PageViewModels
                 {
                     this.RaiseAndSetIfChanged(ref verticalOffsetScript, value);
                     Settings.Default.ScriptOffset = value;
-                    Settings.Default.Save();
                 }
             }
         }
@@ -295,7 +282,6 @@ namespace Convnet.PageViewModels
                     this.RaiseAndSetIfChanged(ref textLocationDefinition, value);
                     Settings.Default.ColumnDefinition = value.Column;
                     Settings.Default.LineDefinition = value.Line;
-                    Settings.Default.Save();
                 }
             }
         }
@@ -310,7 +296,6 @@ namespace Convnet.PageViewModels
                     this.RaiseAndSetIfChanged(ref textLocationScript, value);
                     Settings.Default.ColumnScript = value.Column;
                     Settings.Default.LineScript = value.Line;
-                    Settings.Default.Save();
                 }
             }
         }

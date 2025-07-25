@@ -152,11 +152,7 @@ namespace Convnet.Common
             set
             {
                 if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
-                {
-                   
-                    Dispatcher.UIThread.Post(() => { TextArea.Caret.Line = value.Line; TextArea.Caret.Column = value.Column; TextArea.Caret.BringCaretToView(); TextArea.Caret.Show(); ScrollTo(value.Line, value.Column); });                        
-                    OnPropertyChanged(nameof(TextLocation));
-                }
+                    Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => { TextArea.Caret.Line = value.Line; TextArea.Caret.Column = value.Column; TextArea.Caret.BringCaretToView(); TextArea.Caret.Show(); ScrollTo(value.Line, value.Column); OnPropertyChanged(nameof(TextLocation)); }, DispatcherPriority.ContextIdle);
             }
         }
 
@@ -177,10 +173,7 @@ namespace Convnet.Common
             set
             {
                 if (base.VerticalOffset != value)
-                {
-                    Dispatcher.UIThread.Post(() => { this.ScrollToVerticalOffset(value); });
-                    OnPropertyChanged(nameof(VerticalOffset));
-                }
+                    Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => { this.ScrollToVerticalOffset(value); OnPropertyChanged(nameof(VerticalOffset));}, DispatcherPriority.ContextIdle);
             }
         }
 
