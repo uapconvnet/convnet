@@ -3,9 +3,8 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-
+using Avalonia.Threading;
 using Convnet.PageViewModels;
-using Convnet.Properties;
 
 namespace Convnet.PageViews
 {
@@ -33,8 +32,11 @@ namespace Convnet.PageViews
                 {
                     Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
                     {
-                       datagrid.ScrollIntoView(tpvm.TrainingLog[Settings.Default.SelectedIndex], null);
-                    });
+                        if (tpvm.SelectedIndex >= 0 && tpvm.SelectedIndex < tpvm.TrainingLog.Count)
+                            datagrid.ScrollIntoView(tpvm.TrainingLog[tpvm.SelectedIndex], null);
+                        else
+                            datagrid.ScrollIntoView(tpvm.TrainingLog[0], null);
+                    }, DispatcherPriority.ContextIdle);
                 }
             }
         }
