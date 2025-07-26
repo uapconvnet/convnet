@@ -270,15 +270,18 @@ namespace Convnet.PageViewModels
                 Name = "ComboBoxCostLayers"
             };
             costLayersComboBox.Items.Clear();
-            for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
+            if (Model?.CostLayers != null)
             {
-                var item = new ComboBoxItem
+                for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
                 {
-                    Name = "CostLayer" + layer.ToString(),
-                    Content = Model.CostLayers[layer].Name,
-                    Tag = layer
-                };
-                costLayersComboBox.Items.Add(item);
+                    var item = new ComboBoxItem
+                    {
+                        Name = "CostLayer" + layer.ToString(),
+                        Content = Model.CostLayers[layer].Name,
+                        Tag = layer
+                    };
+                    costLayersComboBox.Items.Add(item);
+                }
             }
             ToolTip.SetTip(costLayersComboBox, "Cost Layer");
             if (Model != null) 
@@ -317,7 +320,7 @@ namespace Convnet.PageViewModels
                 Name = "UnlockAllButton",
                 Content = ApplicationHelper.LoadFromResource("Unlock.png"),
                 ClickMode = ClickMode.Release,
-                IsVisible = !Settings.Default.DisableLocking && Model != null && Model.Layers[Settings.Default.SelectedLayer].Lockable
+                IsVisible = !Settings.Default.DisableLocking && Model != null && Model.Layers != null && Model.Layers[Settings.Default.SelectedLayer].Lockable
             };
             ToolTip.SetTip(unlockAllButton, "Unlock All");
             unlockAllButton.Click += UnlockAll_Click;
@@ -327,7 +330,7 @@ namespace Convnet.PageViewModels
                 Name = "LockAllButton",
                 Content = ApplicationHelper.LoadFromResource("Lock.png"),
                 ClickMode = ClickMode.Release,
-                IsVisible = !Settings.Default.DisableLocking && Model != null && Model.Layers[Settings.Default.SelectedLayer].Lockable
+                IsVisible = !Settings.Default.DisableLocking && Model != null && Model.Layers != null && Model.Layers[Settings.Default.SelectedLayer].Lockable
             };
             ToolTip.SetTip(lockAllButton, "Lock All");
             lockAllButton.Click += LockAll_Click;
@@ -486,10 +489,34 @@ namespace Convnet.PageViewModels
             CommandToolBar.Add(refreshRateIntegerUpDown);           // 28
         }
 
+        public void SelectionChanged(SelectionChangedEventArgs e)
+        {
+            if (e.RemovedItems.Count > 0)
+            {
+                foreach (var item in e.RemovedItems)
+                {
+                    if (item is DNNTrainingResult yourOBJ)
+                    {
+                        TrainingLog?.Remove(yourOBJ);
+                    }
+                }
+            }
+            if (e.AddedItems.Count > 0)
+            {
+                foreach (var item in e.RemovedItems)
+                {
+                     if (item is DNNTrainingResult yourOBJ)
+                    {
+                        TrainingLog?.Add(yourOBJ);
+                    }
+                }
+            }
+        }
+
         private void TrainPageViewModel_RefreshRateChanged(object? sender, int e)
         {
             if (RefreshTimer != null)
-               RefreshTimer.Interval = 1000 * e;
+                RefreshTimer.Interval = 1000 * e;
         }
 
         private async void TrainPageViewModel_ModelChanged(object? sender, EventArgs e)
@@ -504,24 +531,24 @@ namespace Convnet.PageViewModels
             currentPlotType = (PlotType)Settings.Default.PlotType;
             currentLegendPosition = currentPlotType == PlotType.Accuracy ? LegendPosition.BottomRight : LegendPosition.TopRight;
 
-            if (Model != null)
+            if (Model != null && Model.CostLayers != null)
             {
                 Model.NewEpoch += NewEpoch;
                 Model.TrainProgress += TrainProgress;
-            }
+            
 
-            costLayersComboBox?.Items.Clear();
-            for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
-            {
-                var item = new ComboBoxItem
+                costLayersComboBox?.Items.Clear();
+                for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
                 {
-                    Name = "CostLayer" + layer.ToString(),
-                    Content = Model.CostLayers[layer].Name,
-                    Tag = layer
-                };
-                costLayersComboBox?.Items.Add(item);
+                    var item = new ComboBoxItem
+                    {
+                        Name = "CostLayer" + layer.ToString(),
+                        Content = Model.CostLayers[layer].Name,
+                        Tag = layer
+                    };
+                    costLayersComboBox?.Items.Add(item);
+                }
             }
-
             if (Model != null && costLayersComboBox != null && layersComboBox != null)
             {
                 costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
@@ -554,7 +581,7 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Invoke(() =>
             {
-                if (Model != null)
+                if (Model != null && Model.CostLayers != null)
                 {
                     var span = Model.Duration.Elapsed.Subtract(EpochDuration);
                     EpochDuration = Model.Duration.Elapsed;
@@ -693,7 +720,7 @@ namespace Convnet.PageViewModels
                                 CommandToolBar[6].IsVisible = true;
                                 CommandToolBar[7].IsVisible = true;
 
-                                if (layersComboBox != null && (Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0 || Model.Layers[layersComboBox.SelectedIndex].IsNormLayer))
+                                if (layersComboBox != null && Model.Layers != null && (Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0 || Model.Layers[layersComboBox.SelectedIndex].IsNormLayer))
                                 {
                                     CommandToolBar[16].IsVisible = !Settings.Default.DisableLocking;
                                     CommandToolBar[17].IsVisible = !Settings.Default.DisableLocking;
@@ -853,7 +880,7 @@ namespace Convnet.PageViewModels
 
             Dispatcher.UIThread.Invoke(() =>
             {
-                if (Model != null && layersComboBox?.SelectedIndex >= 0)
+                if (Model != null && Model.Layers != null && layersComboBox?.SelectedIndex >= 0)
                 {
                     var index = layersComboBox.SelectedIndex;
                     if (index < (int)Model.LayerCount)
@@ -1391,7 +1418,7 @@ namespace Convnet.PageViewModels
                             CommandToolBar[20].IsVisible = false;
                             CommandToolBar[21].IsVisible = false;
 
-                            if (layersComboBox != null && Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
+                            if (layersComboBox != null && Model.Layers != null && Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
                             {
                                 if ((Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && Model.Layers[layersComboBox.SelectedIndex].Scaling) || !Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
                                 {
@@ -1424,7 +1451,7 @@ namespace Convnet.PageViewModels
 
         private async void StopButtonClick(object? sender, RoutedEventArgs e)
         {
-            if (Model?.TaskState != DNNTaskStates.Stopped)
+            if (Model != null && Model?.TaskState != DNNTaskStates.Stopped)
             {
                 var stop = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to stop?", "Stop Training", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
                 if (stop == MessageBoxResult.Yes)
@@ -1453,7 +1480,7 @@ namespace Convnet.PageViewModels
                     CommandToolBar[20].IsVisible = false;
                     CommandToolBar[21].IsVisible = false;
 
-                    if (layersComboBox != null && Model?.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
+                    if (layersComboBox != null && Model?.Layers != null && Model?.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
                     {
                         if ((Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && Model.Layers[layersComboBox.SelectedIndex].Scaling) || !Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
                         {
@@ -1703,7 +1730,7 @@ namespace Convnet.PageViewModels
                     {
                         var path = files[0];
 
-                        if (path.Contains(".bin"))
+                        if (path.Contains(".bin") && layersComboBox != null)
                         {
                             if (Model?.LoadLayerWeights(path, (uint)layersComboBox.SelectedIndex) == 0)
                             {
@@ -1777,7 +1804,7 @@ namespace Convnet.PageViewModels
 
         private async void SaveLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
         {
-            if (Model != null && App.MainWindow != null && layersComboBox != null)
+            if (Model != null && Model.Layers != null && App.MainWindow != null && layersComboBox != null)
             {
                 var layerIndex = layersComboBox.SelectedIndex;
 #if Linux
@@ -1869,7 +1896,7 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Invoke(() =>
             {
-                if (Model != null && layersComboBox != null && layersComboBox?.SelectedIndex >= 0)
+                if (Model != null && Model.Layers != null && layersComboBox != null && layersComboBox?.SelectedIndex >= 0)
                 {
                     var index = layersComboBox.SelectedIndex;
                     if (index < (int)Model.LayerCount)

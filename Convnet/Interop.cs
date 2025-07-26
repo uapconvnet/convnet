@@ -3475,30 +3475,30 @@ namespace Interop
 		private readonly StringBuilder sb;
 		// private string oldWeightSaveFileName;
 
-        public TrainProgressEventDelegate TrainProgress;
-	    public TestProgressEventDelegate TestProgress;
-		public NewEpochEventDelegate NewEpoch;
+        public TrainProgressEventDelegate? TrainProgress = null;
+	    public TestProgressEventDelegate? TestProgress = null;
+		public NewEpochEventDelegate? NewEpoch = null;
 
 		public Byte BackgroundColor;
 		public int SelectedIndex;
-        public System.Collections.ObjectModel.ObservableCollection<DNNLayerInfo> Layers;
-        public Avalonia.Media.Imaging.WriteableBitmap InputSnapshot;
-        public string Label;
-		public DNNCostLayer[] CostLayers;
+        public System.Collections.ObjectModel.ObservableCollection<DNNLayerInfo>? Layers = null;
+        public Avalonia.Media.Imaging.WriteableBitmap? InputSnapshot = null;
+        public string Label = string.Empty;
+		public DNNCostLayer[]? CostLayers = null;
         public Float[] MeanTrainSet;
         public Float[] StdTrainSet;
         public UInt[]? ConfusionMatrix;
-        public string[][] LabelsCollection;
+        public string[][]? LabelsCollection = null;
         public bool UseTrainingStrategy;
-        public System.Collections.ObjectModel.ObservableCollection<DNNTrainingStrategy> TrainingStrategies;
-        public DNNTrainingRate[] TrainingRates;
-        public DNNTrainingRate TrainingRate;
+        public System.Collections.ObjectModel.ObservableCollection<DNNTrainingStrategy>? TrainingStrategies = null;
+        public DNNTrainingRate[]? TrainingRates = null;
+        public DNNTrainingRate? TrainingRate = null;
 		public string Definition;
 		public string StorageDirectory;
 		public string DatasetsDirectory;
 		public string DefinitionsDirectory;
-		public string Name;
-		public string DurationString;
+		public string Name = string.Empty;
+		public string DurationString = string.Empty;
 		public DNNDatasets Dataset;
 		public DNNOptimizers Optimizer;
 		public DNNCosts CostFunction;
@@ -3632,7 +3632,8 @@ namespace Interop
                 AdjustedTrainSamplesCount = TrainingSamples % BatchSize == 0 ? TrainingSamples : ((TrainingSamples / BatchSize) + 1) * BatchSize;
                 AdjustedTestSamplesCount = TestingSamples % BatchSize == 0 ? TestingSamples : ((TestingSamples / BatchSize) + 1) * BatchSize;
 
-                TrainProgress(Optimizer, BatchSize, Cycle, TotalCycles, Epoch, TotalEpochs, HorizontalFlip, VerticalFlip, InputDropout, Cutout, CutMix, AutoAugment, ColorCast, ColorAngle, Distortion, Interpolation, Scaling, Rotation, SampleIndex, Rate, Momentum, Beta2, Gamma, L2Penalty, Dropout, AvgTrainLoss, TrainErrorPercentage, (Float)100 - TrainErrorPercentage, TrainErrors, AvgTestLoss, TestErrorPercentage, (Float)100 - TestErrorPercentage, TestErrors, State, TaskState);
+                if (TrainProgress != null)
+                    TrainProgress(Optimizer, BatchSize, Cycle, TotalCycles, Epoch, TotalEpochs, HorizontalFlip, VerticalFlip, InputDropout, Cutout, CutMix, AutoAugment, ColorCast, ColorAngle, Distortion, Interpolation, Scaling, Rotation, SampleIndex, Rate, Momentum, Beta2, Gamma, L2Penalty, Dropout, AvgTrainLoss, TrainErrorPercentage, (Float)100 - TrainErrorPercentage, TrainErrors, AvgTestLoss, TestErrorPercentage, (Float)100 - TestErrorPercentage, TestErrors, State, TaskState);
 
                 if (State != OldState)
                 {
@@ -3661,7 +3662,8 @@ namespace Interop
 
                 AdjustedTestSamplesCount = TestingSamples % BatchSize == 0 ? TestingSamples : ((TestingSamples / BatchSize) + 1) * BatchSize;
 
-                TestProgress(BatchSize, SampleIndex, AvgTestLoss, TestErrorPercentage, (Float)100 - TestErrorPercentage, TestErrors, State, TaskState);
+                if (TestProgress != null)
+                    TestProgress(BatchSize, SampleIndex, AvgTestLoss, TestErrorPercentage, (Float)100 - TestErrorPercentage, TestErrors, State, TaskState);
 
                 if (State != OldState)
                 {
@@ -3950,9 +3952,12 @@ namespace Interop
 
         public void GetConfusionMatrix()
         {
-            var classCount = CostLayers[CostIndex].ClassCount;
-            ConfusionMatrix = new UInt[classCount * classCount];
-            DNNGetConfusionMatrix(CostIndex, ConfusionMatrix);
+            if (CostLayers != null)
+            {
+                var classCount = CostLayers[CostIndex].ClassCount;
+                ConfusionMatrix = new UInt[classCount * classCount];
+                DNNGetConfusionMatrix(CostIndex, ConfusionMatrix);
+            }
         }
 
         public bool SetShuffleCount(UInt count)
@@ -4011,7 +4016,7 @@ namespace Interop
                                 {
                                     var pictureLoaded = DNNGetInputSnapShot(snapshot, labelVector);
 
-                                    if (pictureLoaded)
+                                    if (pictureLoaded && LabelsCollection != null)
                                     {
                                         var img = new Byte[nativeTotalSize];
                                         if (MeanStdNormalization)
@@ -4203,12 +4208,15 @@ namespace Interop
 
         public void UpdateLayerInfo(UInt layerIndex, bool updateUI)
         {
-           var layer = Layers[(int)layerIndex];
+            if (Layers != null)
+            {
+                var layer = Layers[(int)layerIndex];
 
-            if (layerIndex == 0)
-                GetLayerInfo(ref layer, layerIndex);
+                if (layerIndex == 0)
+                    GetLayerInfo(ref layer, layerIndex);
 
-            UpdateLayerStatistics(ref layer, layerIndex, updateUI);
+                UpdateLayerStatistics(ref layer, layerIndex, updateUI);
+            }
         }
 
         public bool SetFormat(bool plain)
@@ -4246,9 +4254,13 @@ namespace Interop
             DNNSetCostIndex(index);
 
             CostIndex = index;
-            GroupIndex = CostLayers[CostIndex].GroupIndex;
-            LabelIndex = CostLayers[CostIndex].LabelIndex;
-            ClassCount = CostLayers[CostIndex].ClassCount;
+
+            if (CostLayers != null)
+            {
+                GroupIndex = CostLayers[CostIndex].GroupIndex;
+                LabelIndex = CostLayers[CostIndex].LabelIndex;
+                ClassCount = CostLayers[CostIndex].ClassCount;
+            }
         }
 
         public void UpdateCostInfo(UInt index)
@@ -4256,17 +4268,20 @@ namespace Interop
             var info = new CostInfo();
             DNNGetCostInfo(index, ref info);
 
-            CostLayers[index].TrainErrors = info.TrainErrors;
-            CostLayers[index].TrainLoss = info.TrainLoss;
-            CostLayers[index].AvgTrainLoss = info.AvgTrainLoss;
-            CostLayers[index].TrainErrorPercentage = info.TrainErrorPercentage;
-            CostLayers[index].TrainAccuracy = (Float)100 - info.TrainErrorPercentage;
+            if (CostLayers != null)
+            {
+                CostLayers[index].TrainErrors = info.TrainErrors;
+                CostLayers[index].TrainLoss = info.TrainLoss;
+                CostLayers[index].AvgTrainLoss = info.AvgTrainLoss;
+                CostLayers[index].TrainErrorPercentage = info.TrainErrorPercentage;
+                CostLayers[index].TrainAccuracy = (Float)100 - info.TrainErrorPercentage;
 
-            CostLayers[index].TestErrors = info.TestErrors;
-            CostLayers[index].TestLoss = info.TestLoss;
-            CostLayers[index].AvgTestLoss = info.AvgTestLoss;
-            CostLayers[index].TestErrorPercentage = info.TestErrorPercentage;
-            CostLayers[index].TestAccuracy = (Float)100 - info.TestErrorPercentage;
+                CostLayers[index].TestErrors = info.TestErrors;
+                CostLayers[index].TestLoss = info.TestLoss;
+                CostLayers[index].AvgTestLoss = info.AvgTestLoss;
+                CostLayers[index].TestErrorPercentage = info.TestErrorPercentage;
+                CostLayers[index].TestAccuracy = (Float)100 - info.TestErrorPercentage;
+            }
         }
 
         public void AddTrainingRate(DNNTrainingRate rate, bool clear, UInt gotoEpoch, UInt trainSamples)
@@ -4345,9 +4360,12 @@ namespace Interop
         public void SetLocked(bool locked)
         {
             DNNSetLocked(locked);
-            for (var i = (UInt)0; i < LayerCount; i++)
-                if (Layers[(int)i].Lockable)
-                    Layers[(int)i].LockUpdate = locked;
+            if (Layers != null)
+            {
+                for (var i = (UInt)0; i < LayerCount; i++)
+                    if (Layers[(int)i].Lockable)
+                        Layers[(int)i].LockUpdate = locked;
+            }
         }
 
         public void SetLayerLocked(UInt layerIndex, bool locked)
@@ -4428,7 +4446,7 @@ namespace Interop
 
             Optimizer = (DNNOptimizers)GetOptimizer();
 
-            if (ret == 0 && SelectedIndex > 0)
+            if (ret == 0 && SelectedIndex > 0 && Layers != null)
             {
                 var layerInfo = Layers[SelectedIndex];
                 UpdateLayerStatistics(ref layerInfo, (UInt)SelectedIndex, true);
@@ -4451,7 +4469,7 @@ namespace Interop
         {
             var ret = DNNLoadLayerWeights(fileName, layerIndex, false);
 
-            if (ret == 0 && SelectedIndex > 0)
+            if (ret == 0 && SelectedIndex > 0 && Layers != null)
             {
                 var layerInfo = Layers[(int)layerIndex];
                 UpdateLayerStatistics(ref layerInfo, layerIndex, layerIndex == (UInt)SelectedIndex);

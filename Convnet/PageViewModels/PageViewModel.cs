@@ -33,8 +33,8 @@ namespace Convnet.PageViewModels
             ApplicationHelper.OpenBrowser("https://github.com/uapconvnet/convnet.git");
         }
 
-        public void Cut()
-        {
+        //public void Cut()
+        //{
            
             //if (PageVM != null && PageVM.Pages != null)
             //{
@@ -51,10 +51,10 @@ namespace Convnet.PageViewModels
             //        }
             //    }
             //}
-        }
+        //}
 
-        public bool CanCut()
-        {
+        //public bool CanCut()
+        //{
             //if (PageVM != null && PageVM.Pages != null)
             //{
             //    //var epvm = MainView.PageViews.Items[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
@@ -71,8 +71,8 @@ namespace Convnet.PageViewModels
             //    }
             //}
 
-            return true;
-        }
+          //  return true;
+        //}
 
         public PageViewModel(DNNModel model) : base(model)
         {
@@ -369,11 +369,12 @@ namespace Convnet.PageViewModels
             {
                 Model = Pages[(int)ViewModels.Edit]?.Model;
                 if (Model != null)
-                {
-                    Model.TrainProgress += TrainProgress;
+                {                    
                     Model.TestProgress += TestProgress;
-                    Pages[(int)ViewModels.Train].Model = Model;
+                    Model.TrainProgress += TrainProgress;
                     Pages[(int)ViewModels.Test].Model = Model;
+                    Pages[(int)ViewModels.Train].Model = Model;
+                    
                 }
             }
         }

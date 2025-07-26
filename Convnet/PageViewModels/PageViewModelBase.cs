@@ -112,11 +112,11 @@ namespace Convnet.PageViewModels
 
         protected PageViewModelBase(DNNModel? model)
         {
-            if (model != null)
+            if (model != null && model.CostLayers != null)
             {
                 Model = model;
                 dataset = Model.Dataset;
-                costLayers = new ObservableCollection<DNNCostLayer>(Model.CostLayers);
+                costLayers = new ObservableCollection<DNNCostLayer>(model.CostLayers);
                 costIndex = (int)Model.CostIndex;
             }
 

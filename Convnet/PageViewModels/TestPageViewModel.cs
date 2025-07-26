@@ -93,40 +93,44 @@ namespace Convnet.PageViewModels
             };
             ToolTip.SetTip(dataProviderComboBox, "Dataset");
 
-            costLayersComboBox = new ComboBox
-            {
-                Name = "ComboBoxCostLayers"
-            };
-            costLayersComboBox.Items.Clear();
-            for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
-            {
-                ComboBoxItem item = new ComboBoxItem
-                {
-                    Name = "CostLayer" + layer.ToString(),
-                    Content = Model.CostLayers[layer].Name,
-                    Tag = layer
-                };
-                costLayersComboBox.Items.Add(item);
-            }
-            ToolTip.SetTip(costLayersComboBox, "Cost Layer");
-            if (Model != null)
-            {
-                costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
-                costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
-            }
-            costLayersComboBox.SelectionChanged += CostLayersComboBox_SelectionChanged;
-            
             CommandToolBar.Add(startButton);
             CommandToolBar.Add(stopButton);
             CommandToolBar.Add(pauseButton);
             CommandToolBar.Add(new Separator());
             CommandToolBar.Add(dataProviderComboBox);
-            CommandToolBar.Add(costLayersComboBox);
+
+            if (Model != null && Model.CostLayers != null)
+            {
+                costLayersComboBox = new ComboBox
+                {
+                    Name = "ComboBoxCostLayers"
+                };
+                costLayersComboBox.Items.Clear();
+                for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
+                {
+                    ComboBoxItem item = new ComboBoxItem
+                    {
+                        Name = "CostLayer" + layer.ToString(),
+                        Content = Model.CostLayers[layer].Name,
+                        Tag = layer
+                    };
+                    costLayersComboBox.Items.Add(item);
+                }
+                ToolTip.SetTip(costLayersComboBox, "Cost Layer");
+                if (Model != null)
+                {
+                    costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
+                    costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
+                }
+                costLayersComboBox.SelectionChanged += CostLayersComboBox_SelectionChanged;
+
+                CommandToolBar.Add(costLayersComboBox);
+            }
         }
 
         public void CostLayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
-            if (costLayersComboBox?.SelectedIndex >= 0)
+            if (Model != null && Model.CostLayers != null && costLayersComboBox?.SelectedIndex >= 0)
             {
                 var costIndex = (uint)costLayersComboBox.SelectedIndex;
                 Model?.SetCostIndex(costIndex);
@@ -142,7 +146,7 @@ namespace Convnet.PageViewModels
 
         private void TestPageViewModel_ModelChanged(object? sender, EventArgs e)
         {
-            if (Model != null)
+            if (Model != null && Model.CostLayers != null)
             {
                 Model.TestProgress += TestProgress;
                 ShowProgress = false;
@@ -245,7 +249,7 @@ namespace Convnet.PageViewModels
         {
             DataTable? table = null;
 
-            if (Model?.ConfusionMatrix != null)
+            if (Model != null && Model?.ConfusionMatrix != null && Model.LabelsCollection != null)
             {
                 table = new DataTable("ConfusionTable");
                 uint classCount = (uint)Model.ClassCount;
