@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Runtime;
 using System.Text;
 using System.Timers;
@@ -119,9 +120,38 @@ namespace Convnet.PageViewModels
         public event EventHandler? Open;
         public event EventHandler? Save;
         public event EventHandler<int> RefreshRateChanged;
-        
+
+        public ReactiveCommand<SelectionChangedEventArgs, Unit> SelectionChangedCommand { get; }
+
+        public void SelectionChanged(SelectionChangedEventArgs e)
+        {
+            if (e.RemovedItems.Count > 0)
+            {
+                foreach (var item in e.RemovedItems)
+                {
+                    if (item is DNNTrainingResult row)
+                    {
+                        TrainingLog?.Remove(row);
+                    }
+                }
+            }
+            if (e.AddedItems.Count > 0)
+            {
+                foreach (var item in e.RemovedItems)
+                {
+                    if (item is DNNTrainingResult row)
+                    {
+                        TrainingLog?.Add(row);
+                    }
+                }
+            }
+            e.Handled = true;
+        }
+
         public TrainPageViewModel(DNNModel model) : base(model)
         {
+            // SelectionChangedCommand = ReactiveCommand.Create<SelectionChangedEventArgs>(SelectionChanged);
+
             refreshRate = Settings.Default.RefreshInterval;
 
             InitializeTrainingPlot();
@@ -154,6 +184,7 @@ namespace Convnet.PageViewModels
             RefreshTrainingPlot();
         }
 
+     
         private void AddCommandButtons()
         {
             Button startButton = new Button
@@ -489,29 +520,7 @@ namespace Convnet.PageViewModels
             CommandToolBar.Add(refreshRateIntegerUpDown);           // 28
         }
 
-        public void SelectionChanged(SelectionChangedEventArgs e)
-        {
-            if (e.RemovedItems.Count > 0)
-            {
-                foreach (var item in e.RemovedItems)
-                {
-                    if (item is DNNTrainingResult yourOBJ)
-                    {
-                        TrainingLog?.Remove(yourOBJ);
-                    }
-                }
-            }
-            if (e.AddedItems.Count > 0)
-            {
-                foreach (var item in e.RemovedItems)
-                {
-                     if (item is DNNTrainingResult yourOBJ)
-                    {
-                        TrainingLog?.Add(yourOBJ);
-                    }
-                }
-            }
-        }
+        
 
         private void TrainPageViewModel_RefreshRateChanged(object? sender, int e)
         {
