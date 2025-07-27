@@ -45,6 +45,7 @@
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style Selector="DataGridColumnHeader">
+      <Setter Property="UseLayoutRounding" Value="False"/>
       <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
       <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
       <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -54,7 +55,7 @@
       <Setter Property="SeparatorBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
       <Setter Property="Margin" Value="0" />
       <Setter Property="Padding" Value="0,5,0,0" />
-      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontSize" Value="13" />
       <Setter Property="FontWeight" Value="Bold" />
       <Setter Property="MinHeight" Value="24" />
       <Setter Property="Template">
