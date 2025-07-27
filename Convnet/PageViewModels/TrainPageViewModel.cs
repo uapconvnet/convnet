@@ -121,32 +121,32 @@ namespace Convnet.PageViewModels
         public event EventHandler? Save;
         public event EventHandler<int> RefreshRateChanged;
 
-        public ReactiveCommand<SelectionChangedEventArgs, Unit> SelectionChangedCommand { get; }
+        //public ReactiveCommand<SelectionChangedEventArgs, Unit> SelectionChangedCommand { get; }
 
-        public void SelectionChanged(SelectionChangedEventArgs e)
-        {
-            if (e.RemovedItems.Count > 0)
-            {
-                foreach (var item in e.RemovedItems)
-                {
-                    if (item is DNNTrainingResult row)
-                    {
-                        TrainingLog?.Remove(row);
-                    }
-                }
-            }
-            if (e.AddedItems.Count > 0)
-            {
-                foreach (var item in e.RemovedItems)
-                {
-                    if (item is DNNTrainingResult row)
-                    {
-                        TrainingLog?.Add(row);
-                    }
-                }
-            }
-            e.Handled = true;
-        }
+        //public void SelectionChanged(SelectionChangedEventArgs e)
+        //{
+        //    if (e.RemovedItems.Count > 0)
+        //    {
+        //        foreach (var item in e.RemovedItems)
+        //        {
+        //            if (item is DNNTrainingResult row)
+        //            {
+        //                TrainingLog?.Remove(row);
+        //            }
+        //        }
+        //    }
+        //    if (e.AddedItems.Count > 0)
+        //    {
+        //        foreach (var item in e.RemovedItems)
+        //        {
+        //            if (item is DNNTrainingResult row)
+        //            {
+        //                TrainingLog?.Add(row);
+        //            }
+        //        }
+        //    }
+        //    e.Handled = true;
+        //}
 
         public TrainPageViewModel(DNNModel model) : base(model)
         {

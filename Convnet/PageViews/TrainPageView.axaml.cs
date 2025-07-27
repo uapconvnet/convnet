@@ -5,6 +5,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Convnet.PageViewModels;
+using Interop;
+using System.Collections.Generic;
 
 namespace Convnet.PageViews
 {
@@ -105,6 +107,33 @@ namespace Convnet.PageViews
                     }
 
                     e.Handled = true;
+                }
+            }
+        }
+
+        private void DataGrid_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                var datagrid = this.FindControl<DataGrid>("ListViewTrainingResult");
+                if (datagrid != null)
+                {
+                    var tpvm = datagrid.DataContext as TrainPageViewModel;
+                    
+                    if (tpvm != null && tpvm.TrainingLog != null && datagrid.SelectedItems.Count > 0)
+                    {
+                        List<DNNTrainingResult> items = new List<DNNTrainingResult>();
+
+                        foreach (var item in datagrid.SelectedItems)
+                            if (item is DNNTrainingResult row)
+                                if (row != null)
+                                    items.Add(row);
+                     
+                        foreach (var item in items)
+                            tpvm.TrainingLog?.Remove(item);
+
+                        datagrid.SelectedItems.Clear();
+                    }
                 }
             }
         }

@@ -6,10 +6,8 @@ using Convnet.Common;
 using Convnet.Properties;
 using CustomMessageBox.Avalonia;
 using Interop;
-using Newtonsoft.Json.Linq;
 using ReactiveUI;
 using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -174,7 +172,7 @@ namespace Convnet.PageViewModels
 
         public int CaretOffsetDefinition
         {
-            get => caretOffsetScript;
+            get => caretOffsetDefinition;
             set 
             { 
                 this.RaiseAndSetIfChanged(ref caretOffsetDefinition, value);
