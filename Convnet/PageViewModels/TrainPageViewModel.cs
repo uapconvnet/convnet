@@ -121,36 +121,28 @@ namespace Convnet.PageViewModels
         public event EventHandler? Save;
         public event EventHandler<int> RefreshRateChanged;
 
-        //public ReactiveCommand<SelectionChangedEventArgs, Unit> SelectionChangedCommand { get; }
+        public ReactiveCommand<SelectionChangedEventArgs, Unit> SelectionChangedCommand { get; }
 
-        //public void SelectionChanged(SelectionChangedEventArgs e)
-        //{
-        //    if (e.RemovedItems.Count > 0)
-        //    {
-        //        foreach (var item in e.RemovedItems)
-        //        {
-        //            if (item is DNNTrainingResult row)
-        //            {
-        //                TrainingLog?.Remove(row);
-        //            }
-        //        }
-        //    }
-        //    if (e.AddedItems.Count > 0)
-        //    {
-        //        foreach (var item in e.RemovedItems)
-        //        {
-        //            if (item is DNNTrainingResult row)
-        //            {
-        //                TrainingLog?.Add(row);
-        //            }
-        //        }
-        //    }
-        //    e.Handled = true;
-        //}
+        public void SelectionChanged(SelectionChangedEventArgs e)
+        {
+           if (e.RemovedItems.Count > 0)
+           {
+               foreach (var item in e.RemovedItems)
+                   if (item is DNNTrainingResult row)
+                       SelectedItems?.Remove(row);
+           }
+           if (e.AddedItems.Count > 0)
+           {
+               foreach (var item in e.AddedItems)
+                   if (item is DNNTrainingResult row)
+                       SelectedItems?.Add(row);
+           }
+           //e.Handled = true;
+        }
 
         public TrainPageViewModel(DNNModel model) : base(model)
         {
-            // SelectionChangedCommand = ReactiveCommand.Create<SelectionChangedEventArgs>(SelectionChanged);
+            SelectionChangedCommand = ReactiveCommand.Create<SelectionChangedEventArgs>(SelectionChanged);
 
             refreshRate = Settings.Default.RefreshInterval;
 
@@ -1266,6 +1258,26 @@ namespace Convnet.PageViewModels
         {
             get => trainingStrategies;
             set => this.RaiseAndSetIfChanged(ref trainingStrategies, value);
+        }
+
+        public ObservableCollection<DNNTrainingResult>? SelectedItems
+        {
+            get
+            {
+                if (Settings.Default.SelectedItems == null)
+                    Settings.Default.SelectedItems = new ObservableCollection<DNNTrainingResult>();
+
+                return Settings.Default.SelectedItems;
+            }
+
+            set
+            {
+                if (value == Settings.Default.SelectedItems)
+                    return;
+
+                Settings.Default.SelectedItems = value;
+                this.RaisePropertyChanged(nameof(SelectedItems));
+            }
         }
 
         public ObservableCollection<DNNTrainingResult>? TrainingLog

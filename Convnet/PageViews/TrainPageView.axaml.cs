@@ -34,6 +34,18 @@ namespace Convnet.PageViews
                 {
                     Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
                     {
+                        /*
+                        if (tpvm.SelectedItems != null)
+                        {
+                            datagrid.SelectedItems.Clear();
+                            foreach (var item in tpvm.SelectedItems)
+                                if (tpvm.TrainingLog.Contains(item))
+                                    datagrid.SelectedItems.Add(item);
+                            //else
+                            //    tpvm.SelectedItems.Remove(item);
+                        }
+                        */
+
                         if (tpvm.SelectedIndex >= 0 && tpvm.SelectedIndex < tpvm.TrainingLog.Count)
                             datagrid.ScrollIntoView(tpvm.TrainingLog[tpvm.SelectedIndex], null);
                         else

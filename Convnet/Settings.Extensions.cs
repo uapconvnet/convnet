@@ -9,6 +9,21 @@ namespace Convnet.Properties
         [global::System.Configuration.UserScopedSetting()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SettingsSerializeAs(global::System.Configuration.SettingsSerializeAs.Xml)]
+        public ObservableCollection<DNNTrainingResult>? SelectedItems
+        {
+            get
+            {
+                return ((ObservableCollection<DNNTrainingResult>?)this[nameof(SelectedItems)]);
+            }
+            set
+            {
+                this[nameof(SelectedItems)] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSetting()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SettingsSerializeAs(global::System.Configuration.SettingsSerializeAs.Xml)]
         public ObservableCollection<DNNTrainingResult>? TrainingLog
         {
             get
