@@ -447,1254 +447,981 @@ namespace Convnet.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("using System.Collections.ObjectModel;\r\nusing System.ComponentModel;\r\nusing System" +
-            ".Globalization;\r\nusing System.Runtime.InteropServices;\r\nusing System;\r\n\r\nusing F" +
-            "loat = System.Single;\r\nusing UInt = System.UInt64;\r\n\r\n\r\nnamespace Scripts\r\n{\r\n  " +
-            "  [Serializable()]\r\n    public enum Scripts\r\n    {\r\n        augshufflenet = 0,\r\n" +
-            "        densenet = 1,\r\n        efficientnetv2 = 2,\r\n        mobilenetv3 = 3,\r\n  " +
-            "      resnet = 4,\r\n        shufflenetv2 = 5\r\n    }\r\n\r\n    [Serializable()]\r\n    " +
-            "public enum Datasets\r\n    {\r\n        cifar10 = 0,\r\n        cifar100 = 1,\r\n      " +
-            "  fashionmnist = 2,\r\n        mnist = 3,\r\n        tinyimagenet = 4\r\n    }\r\n\r\n    " +
-            "[Serializable()]\r\n    public enum Fillers\r\n    {\r\n        Constant = 0,\r\n       " +
-            " HeNormal = 1,\r\n        HeUniform = 2,\r\n        LeCunNormal = 3,\r\n        LeCunU" +
-            "niform = 4,\r\n        Normal = 5,\r\n        TruncatedNormal = 6,\r\n        Uniform " +
-            "= 7,\r\n        XavierNormal = 8,\r\n        XavierUniform = 9\r\n    }\r\n\r\n    [Serial" +
-            "izable()]\r\n    public enum FillerModes\r\n    {\r\n        Avg = 0,\r\n        In = 1," +
-            "\r\n        Out = 2\r\n    }\r\n\r\n    [Serializable()]\r\n    public enum Activations\r\n " +
-            "   {\r\n        FRelu = 1,\r\n        HardSwish = 10,\r\n        HardSigmoid = 11,\r\n  " +
-            "      Sigmoid = 12,\r\n        Mish = 16,\r\n        Relu = 19,\r\n        Swish = 25," +
-            "\r\n        TanhExp = 27,\r\n        Gelu = 28\r\n    }\r\n\r\n    [Serializable()]\r\n    p" +
-            "ublic class EfficientNetRecord : INotifyPropertyChanged\r\n    {\r\n        private " +
-            "UInt expandRatio;\r\n        private UInt channels;\r\n        private UInt iteratio" +
-            "ns;\r\n        private UInt stride;\r\n        private bool se;\r\n\r\n        [field: N" +
-            "onSerializedAttribute()]\r\n        public event PropertyChangedEventHandler? Prop" +
-            "ertyChanged;\r\n\r\n        public EfficientNetRecord()\r\n        {\r\n            Expa" +
-            "ndRatio = 4;\r\n            Channels = 24;\r\n            Iterations = 2;\r\n         " +
-            "   Stride = 1;\r\n            SE = false;\r\n        }\r\n\r\n        public EfficientNe" +
-            "tRecord(UInt expandRatio = 4, UInt channels = 24, UInt iterations = 2, UInt stri" +
-            "de = 1, bool se = false)\r\n        {\r\n            this.expandRatio = expandRatio;" +
-            "\r\n            this.channels = channels;\r\n            this.iterations = iteration" +
-            "s;\r\n            this.stride = stride;\r\n            this.se = se;\r\n        }\r\n\r\n " +
-            "       public override string ToString()\r\n        {\r\n            return \"(\" + Ex" +
-            "pandRatio.ToString() + \"-\" + Channels.ToString() + \"-\" + Iterations.ToString() +" +
-            " \"-\" + Stride.ToString() + (SE ? \"-se\" : \"\") + \")\";\r\n        }\r\n\r\n        public" +
-            " UInt ExpandRatio\r\n        {\r\n            get { return expandRatio; }\r\n         " +
-            "   set { expandRatio = value; OnPropertyChanged(\"ExpandRatio\"); }\r\n        }\r\n\r\n" +
-            "        public UInt Channels\r\n        {\r\n            get { return channels; }\r\n " +
-            "           set { channels = value; OnPropertyChanged(\"Channels\"); }\r\n        }\r\n" +
-            "\r\n        public UInt Iterations\r\n        {\r\n            get { return iterations" +
-            "; }\r\n            set { iterations = value; OnPropertyChanged(\"Iterations\"); }\r\n " +
-            "       }\r\n\r\n        public UInt Stride\r\n        {\r\n            get { return stri" +
-            "de; }\r\n            set { stride = value; OnPropertyChanged(\"Stride\"); }\r\n       " +
-            " }\r\n\r\n        public bool SE\r\n        {\r\n            get { return se; }\r\n       " +
-            "     set { se = value; OnPropertyChanged(\"SE\"); }\r\n        }\r\n\r\n        protecte" +
-            "d virtual void OnPropertyChanged(string propertyName)\r\n        {\r\n            if" +
-            " (PropertyChanged != null)\r\n                PropertyChanged.Invoke(this, new Pro" +
-            "pertyChangedEventArgs(propertyName));\r\n        }\r\n    }\r\n\r\n    [Serializable()]\r" +
-            "\n    public class ShuffleNetRecord : INotifyPropertyChanged\r\n    {\r\n        priv" +
-            "ate UInt iterations;\r\n        private UInt kernel;\r\n        private UInt pad;\r\n " +
-            "       private UInt shuffle;\r\n        private bool se;\r\n\r\n        [field: NonSer" +
-            "ializedAttribute()]\r\n        public event PropertyChangedEventHandler? PropertyC" +
-            "hanged;\r\n\r\n        public ShuffleNetRecord()\r\n        {\r\n            Iterations " +
-            "= 6ul;\r\n            Kernel = 3ul;\r\n            Pad = 1ul;\r\n            Shuffle =" +
-            " 2ul;\r\n            SE = false;\r\n        }\r\n\r\n        public ShuffleNetRecord(UIn" +
-            "t iterations = 6ul, UInt kernel = 3ul, UInt pad = 1ul, UInt shuffle = 2ul, bool " +
-            "se = false)\r\n        {\r\n            this.iterations = iterations;\r\n            t" +
-            "his.kernel = kernel;\r\n            this.pad = pad;\r\n            this.shuffle = sh" +
-            "uffle;\r\n            this.se = se;\r\n        }\r\n\r\n        public override string T" +
-            "oString()\r\n        {\r\n            return \"(\" + Iterations.ToString() + \"-\" + Ker" +
-            "nel.ToString() + \"-\" + Pad.ToString() + \"-\" + Shuffle.ToString() + (SE ? \"-se\" :" +
-            " \"\") + \")\";\r\n        }\r\n\r\n        public UInt Iterations\r\n        {\r\n           " +
-            " get { return iterations; }\r\n            set { iterations = value; OnPropertyCha" +
-            "nged(\"Iterations\"); }\r\n        }\r\n\r\n        public UInt Kernel\r\n        {\r\n     " +
-            "       get { return kernel; }\r\n            set { kernel = value; OnPropertyChang" +
-            "ed(\"Kernel\"); }\r\n        }\r\n\r\n        public UInt Pad\r\n        {\r\n            ge" +
-            "t { return pad; }\r\n            set { pad = value; OnPropertyChanged(\"Pad\"); }\r\n " +
-            "       }\r\n\r\n        public UInt Shuffle\r\n        {\r\n            get { return shu" +
-            "ffle; }\r\n            set { shuffle = value; OnPropertyChanged(\"Shuffle\"); }\r\n   " +
-            "     }\r\n\r\n        public bool SE\r\n        {\r\n            get { return se; }\r\n   " +
-            "         set { se = value; OnPropertyChanged(\"SE\"); }\r\n        }\r\n\r\n        prot" +
-            "ected virtual void OnPropertyChanged(string propertyName)\r\n        {\r\n          " +
-            "  if (PropertyChanged != null)\r\n                PropertyChanged.Invoke(this, new" +
-            " PropertyChangedEventArgs(propertyName));\r\n        }\r\n    }\r\n\r\n    [Serializable" +
-            "()]\r\n    public class ScriptParameters : INotifyPropertyChanged\r\n    {\r\n        " +
-            "[field: NonSerializedAttribute()]\r\n        public event PropertyChangedEventHand" +
-            "ler? PropertyChanged;\r\n\r\n        private Scripts script = Scripts.shufflenetv2;\r" +
-            "\n        private Datasets dataset = Datasets.cifar10;\r\n        private UInt c = " +
-            "3;\r\n        private UInt h = 32;\r\n        private UInt w = 32;\r\n        private " +
-            "UInt padH = 0;\r\n        private UInt padW = 0;\r\n        private bool mirrorPad =" +
-            " false;\r\n        private bool meanStdNormalization = true;\r\n        private Fill" +
-            "ers weightsFiller = Fillers.HeNormal;\r\n        private FillerModes weightsFiller" +
-            "Mode = FillerModes.In;\r\n        private Float weightsGain = 1;\r\n        private " +
-            "Float weightsScale = (Float)0.05;\r\n        private Float weightsLRM = 1;\r\n      " +
-            "  private Float weightsWDM = 1;\r\n        private bool hasBias = false;\r\n        " +
-            "private Fillers biasesFiller = Fillers.Constant;\r\n        private FillerModes bi" +
-            "asesFillerMode = FillerModes.In;\r\n        private Float biasesGain = 1;\r\n       " +
-            " private Float biasesScale = 0;\r\n        private Float biasesLRM = 1;\r\n        p" +
-            "rivate Float biasesWDM = 1;\r\n        private Float batchNormMomentum = (Float)0." +
-            "995;\r\n        private Float batchNormEps = (Float)1E-04;\r\n        private bool b" +
-            "atchNormScaling = false;\r\n        private Float alpha = 0;\r\n        private Floa" +
-            "t beta = 0;\r\n        private UInt groups = 3;\r\n        private UInt iterations =" +
-            " 4;\r\n        private UInt width = 8;\r\n        private UInt growthRate = 12;\r\n   " +
-            "     private bool bottleneck = false;\r\n        private Float dropout = 0;\r\n     " +
-            "   private Float compression = 0;\r\n        private bool squeezeExcitation = fals" +
-            "e;\r\n        private bool channelZeroPad = true;\r\n        private Activations act" +
-            "ivation = Activations.Relu;\r\n        private ObservableCollection<EfficientNetRe" +
-            "cord> efficientnet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 6" +
-            "4, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 1" +
-            "5, 2, true)];\r\n        private ObservableCollection<ShuffleNetRecord> shufflenet" +
-            " = [new(5, 3, 1, 2, false) , new(6, 3, 1, 2, false), new(7, 3, 1, 2, true), new(" +
-            "8, 3, 1, 2, true)];\r\n        private UInt strideHFirstConv = 2;\r\n        private" +
-            " UInt strideWFirstConv = 2;\r\n        private Float depthDrop = (Float)0.2;\r\n    " +
-            "    private bool fixedDepthDrop = false;\r\n\r\n        public ScriptParameters()\r\n " +
-            "       {\r\n        }\r\n\r\n        public ScriptParameters(Scripts script = Scripts." +
-            "shufflenetv2, Datasets dataset = Datasets.cifar10, UInt h = 32, UInt w = 32, UIn" +
-            "t padH = 4, UInt padW = 4, bool mirrorPad = false, bool meanStdNorm = true, Fill" +
-            "ers weightsFiller = Fillers.HeNormal, FillerModes weightsFillerMode = FillerMode" +
-            "s.In, Float weightsGain = (Float)1.0, Float weightsScale = (Float)0.05, Float we" +
-            "ightsLRM = 1, Float weightsWDM = 1, bool hasBias = false, Fillers biasesFiller =" +
-            " Fillers.Constant, FillerModes biasesFillerMode = FillerModes.In, Float biasesGa" +
-            "in = (Float)1.0, Float biasesScale = 0, Float biasesLRM = 1, Float biasesWDM = 1" +
-            ", Float batchNormMomentum = (Float)0.995, Float batchNormEps = (Float)1E-04, boo" +
-            "l batchNormScaling = false, Float alpha = (Float)0, Float beta = (Float)0, UInt " +
-            "groups = 3, UInt iterations = 4, UInt width = 8, UInt growthRate = 12, bool bott" +
-            "leneck = false, Float dropout = 0, Float compression = 0, bool squeezeExcitation" +
-            " = false, bool channelZeroPad = true, Activations activation = Activations.Relu," +
-            " UInt strideHFirstConv = 2, UInt strideWFirstConv = 2, Float depthDrop = (Float)" +
-            "0.2, bool fixedDepthDrop = false)\r\n        {\r\n            Script = script;\r\n    " +
-            "        Dataset = dataset;\r\n            H = h;\r\n            W = w;\r\n            " +
-            "PadH = padH;\r\n            PadW = padW;\r\n            MirrorPad = mirrorPad;\r\n    " +
-            "        MeanStdNormalization = meanStdNorm;\r\n            WeightsFiller = weights" +
-            "Filler;\r\n            WeightsFillerMode = weightsFillerMode;\r\n            Weights" +
-            "Gain = weightsGain;\r\n            WeightsScale = weightsScale;\r\n            Weigh" +
-            "tsLRM = weightsLRM;\r\n            WeightsWDM = weightsWDM;\r\n            HasBias =" +
-            " hasBias;\r\n            BiasesFiller = biasesFiller;\r\n            BiasesFillerMod" +
-            "e = biasesFillerMode;\r\n            BiasesGain = biasesGain;\r\n            BiasesS" +
-            "cale = biasesScale;\r\n            BiasesLRM = biasesLRM;\r\n            BiasesWDM =" +
-            " biasesWDM;\r\n            BatchNormMomentum = batchNormMomentum;\r\n            Bat" +
-            "chNormEps = batchNormEps;\r\n            BatchNormScaling = batchNormScaling;\r\n   " +
-            "         Alpha = alpha;\r\n            Beta = beta;\r\n            Groups = groups;\r" +
-            "\n            Iterations = iterations;\r\n            Width = width;\r\n            G" +
-            "rowthRate = growthRate;\r\n            Bottleneck = bottleneck;\r\n            Dropo" +
-            "ut = dropout;\r\n            Compression = compression;\r\n            SqueezeExcita" +
-            "tion = squeezeExcitation;\r\n            ChannelZeroPad = channelZeroPad;\r\n       " +
-            "     Activation = activation;\r\n            StrideHFirstConv = strideHFirstConv;\r" +
-            "\n            StrideWFirstConv = strideWFirstConv;\r\n            DepthDrop = depth" +
-            "Drop;\r\n            FixedDepthDrop = fixedDepthDrop;\r\n            EfficientNet = " +
-            "efficientnet;\r\n\t\t\tShuffleNet = shufflenet;\r\n        }\r\n\r\n        public IEnumera" +
-            "ble<Scripts> ScriptsList { get { return Enum.GetValues(typeof(Scripts)).Cast<Scr" +
-            "ipts>(); } }\r\n\r\n        public IEnumerable<Datasets> DatasetsList { get { return" +
-            " Enum.GetValues(typeof(Datasets)).Cast<Datasets>(); } }\r\n\r\n        public IEnume" +
-            "rable<Activations> ActivationsList { get { return Enum.GetValues(typeof(Activati" +
-            "ons)).Cast<Activations>(); } }\r\n\r\n        public IEnumerable<Fillers> FillersLis" +
-            "t { get { return Enum.GetValues(typeof(Fillers)).Cast<Fillers>(); } }\r\n\r\n       " +
-            " public IEnumerable<FillerModes> FillerModesList { get { return Enum.GetValues(t" +
-            "ypeof(FillerModes)).Cast<FillerModes>(); } }\r\n\r\n        public string ModelName\r" +
-            "\n        {\r\n            get\r\n            {\r\n                switch (Script)\r\n   " +
-            "             {\r\n                    case Scripts.densenet:\r\n                    " +
-            "    return Script.ToString() + \"-\" + Groups.ToString() + \"-\" + Iterations.ToStri" +
-            "ng() + \"-\" + GrowthRate.ToString() + (Dropout >  0 ? \"-dropout\" : \"\") + (DepthDr" +
-            "op > 0 ? (FixedDepthDrop ? \"-fixeddepthdrop\" : \"-depthdrop\") : \"\") + (Compressio" +
-            "n > 0 ? \"-compression\" : \"\") + (Bottleneck ? \"-bottleneck\" : \"\") + \"-\" + Activat" +
-            "ion.ToString().ToLower();\r\n                    case Scripts.efficientnetv2:\r\n   " +
-            "                     {\r\n                            string name = \"\";\r\n         " +
-            "                   foreach (var rec in EfficientNet)\r\n                          " +
-            "      name += rec.ToString();\r\n                            return Script.ToStrin" +
-            "g() + (DepthDrop > 0 ? (FixedDepthDrop ? \"-fixeddepthdrop-\" : \"-depthdrop-\") : \"" +
-            "\") + name;\r\n                        }\r\n                    case Scripts.mobilene" +
-            "tv3:\r\n                        return Script.ToString() + \"-\" + Groups.ToString()" +
-            " + \"-\" + Iterations.ToString() + \"-\" + Width.ToString() + \"-\" + Activation.ToStr" +
-            "ing().ToLower() + (SqueezeExcitation ? \" -se\" : \"\") + (DepthDrop > 0 ? (FixedDep" +
-            "thDrop ? \"-fixeddepthdrop\" : \"-depthdrop\") : \"\");\r\n                    case Scri" +
-            "pts.resnet:\r\n                        return Script.ToString() + \"-\" + Groups.ToS" +
-            "tring() + \"-\" + Iterations.ToString() + \"-\" + Width.ToString() + (Dropout > 0 ? " +
-            "\"-dropout\" : \"\") + (DepthDrop > 0 ? (FixedDepthDrop ? \"-fixeddepthdrop\" : \"-dept" +
-            "hdrop\") : \"\") + (Bottleneck ? \"-bottleneck\" : \"\") + (ChannelZeroPad ? \"-channelz" +
-            "eropad\" : \"\") + \"-\" + Activation.ToString().ToLower();\r\n                    case" +
-            " Scripts.augshufflenet:\r\n                    case Scripts.shufflenetv2:\r\n       " +
-            "                 {\r\n                            string name = \"\";\r\n             " +
-            "               foreach (var rec in ShuffleNet)\r\n                                " +
-            "name += rec.ToString();\r\n                            return Script.ToString() + " +
-            "\"-\" + Width.ToString() + name;\r\n                        }\r\n                    d" +
-            "efault:\r\n                        return Script.ToString() + \"-\" + Groups.ToStrin" +
-            "g() + \"-\" + Iterations.ToString();\r\n                }\r\n            }\r\n        }\r" +
-            "\n\r\n        public Scripts Script\r\n        {\r\n            get { return script; }\r" +
-            "\n            set\r\n            {\r\n                if (value != script)\r\n         " +
-            "       {\r\n                    script = value;\r\n                    OnPropertyCha" +
-            "nged(\"Script\");\r\n                    OnPropertyChanged(\"Classes\");\r\n            " +
-            "        OnPropertyChanged(\"Depth\");\r\n                    OnPropertyChanged(\"Widt" +
-            "hVisible\");\r\n                    OnPropertyChanged(\"GrowthRateVisible\");\r\n      " +
-            "              OnPropertyChanged(\"DropoutVisible\");\r\n                    OnProper" +
-            "tyChanged(\"CompressionVisible\");\r\n                    OnPropertyChanged(\"Bottlen" +
-            "eckVisible\");\r\n                    OnPropertyChanged(\"ChannelZeroPadVisible\");\r\n" +
-            "                    OnPropertyChanged(\"SqueezeExcitationVisible\");\r\n            " +
-            "        OnPropertyChanged(\"BottleneckVisible\");\r\n                    OnPropertyC" +
-            "hanged(\"EfficientNetVisible\");\r\n                    OnPropertyChanged(\"ShuffleNe" +
-            "tVisible\");\r\n                    OnPropertyChanged(\"DepthDropVisible\");\r\n       " +
-            "         }\r\n            }\r\n        }\r\n\r\n        public UInt Classes\r\n        {\r\n" +
-            "            get\r\n            {\r\n                switch (Dataset)\r\n              " +
-            "  {\r\n                    case Datasets.cifar100:\r\n                        return" +
-            " 100;\r\n                    case Datasets.tinyimagenet:\r\n                        " +
-            "return 200;\r\n                    default:\r\n                        return 10;\r\n " +
-            "               }\r\n            }\r\n        }\r\n\r\n        public Datasets Dataset\r\n " +
-            "       {\r\n            get { return dataset; }\r\n            set\r\n            {\r\n " +
-            "               if (value != dataset)\r\n                {\r\n                    dat" +
-            "aset = value;\r\n                    OnPropertyChanged(\"Dataset\");\r\n              " +
-            "      OnPropertyChanged(\"C\");\r\n                }\r\n            }\r\n        }\r\n\r\n  " +
-            "      public UInt C\r\n        {\r\n            get\r\n            {\r\n                " +
-            "switch (dataset)\r\n                {\r\n                    case Datasets.cifar10:\r" +
-            "\n                    case Datasets.cifar100:\r\n                    case Datasets." +
-            "tinyimagenet:\r\n                        return 3;\r\n                    case Datas" +
-            "ets.fashionmnist:\r\n                    case Datasets.mnist:\r\n                   " +
-            "     return 1;\r\n                    default:\r\n                        return 1;\r" +
-            "\n                }\r\n            }\r\n            set\r\n            {\r\n             " +
-            "   if (value != c)\r\n                {\r\n                    c = value;\r\n         " +
-            "           OnPropertyChanged(\"C\");\r\n                }\r\n            }\r\n        }\r" +
-            "\n\r\n        public UInt D\r\n        {\r\n            get { return 1; }\r\n        }\r\n\r" +
-            "\n        public UInt H\r\n        {\r\n            get { return h; }\r\n            se" +
-            "t\r\n            {\r\n                if (value >= 14 && value <= 4096 && value != h" +
-            ")\r\n                {\r\n                    h = value;\r\n                    OnProp" +
-            "ertyChanged(\"H\");\r\n                }\r\n            }\r\n        }\r\n\r\n        public" +
-            " UInt W\r\n        {\r\n            get { return w; }\r\n            set\r\n            " +
-            "{\r\n                if (value >= 14 && value <= 4096 && value != w)\r\n            " +
-            "    {\r\n                    w = value;\r\n                    OnPropertyChanged(\"W\"" +
-            ");\r\n                }\r\n            }\r\n        }\r\n\r\n        public UInt PadD\r\n   " +
-            "     {\r\n            get { return 0; }\r\n        }\r\n\r\n        public UInt PadH\r\n  " +
-            "      {\r\n            get { return padH; }\r\n            set\r\n            {\r\n     " +
-            "           if (value >= 0 && value <= H && value != padH)\r\n                {\r\n  " +
-            "                  padH = value;\r\n                    OnPropertyChanged(\"PadH\");\r" +
-            "\n                    OnPropertyChanged(\"RandomCrop\");\r\n                }\r\n      " +
-            "      }\r\n        }\r\n\r\n        public UInt PadW\r\n        {\r\n            get { ret" +
-            "urn padW; }\r\n            set\r\n            {\r\n                if (value >= 0 && v" +
-            "alue <= W && value != padW)\r\n                {\r\n                    padW = value" +
-            ";\r\n                    OnPropertyChanged(\"PadW\");\r\n                    OnPropert" +
-            "yChanged(\"RandomCrop\");\r\n                }\r\n            }\r\n        }\r\n\r\n        " +
-            "public bool MirrorPad\r\n        {\r\n            get { return mirrorPad; }\r\n       " +
-            "     set\r\n            {\r\n                if (value != mirrorPad)\r\n              " +
-            "  {\r\n                    mirrorPad = value;\r\n                    OnPropertyChang" +
-            "ed(\"MirrorPad\");\r\n                }\r\n            }\r\n        }\r\n\r\n        public " +
-            "bool RandomCrop\r\n        {\r\n             get { return padH > 0 || padW > 0; }\r\n " +
-            "       }\r\n\r\n        public bool MeanStdNormalization\r\n        {\r\n            get" +
-            " { return meanStdNormalization; }\r\n            set\r\n            {\r\n             " +
-            "   if (value != meanStdNormalization)\r\n                {\r\n                    me" +
-            "anStdNormalization = value;\r\n                    OnPropertyChanged(\"MeanStdNorma" +
-            "lization\");\r\n                }\r\n            }\r\n        }\r\n\r\n        public bool " +
-            "FixedDepthDrop\r\n        {\r\n            get { return fixedDepthDrop; }\r\n         " +
-            "   set\r\n            {\r\n                if (value != fixedDepthDrop)\r\n           " +
-            "     {\r\n                    fixedDepthDrop = value;\r\n                    OnPrope" +
-            "rtyChanged(\"FixedDepthDrop\");\r\n                }\r\n            }\r\n        }\r\n\r\n  " +
-            "      public Float DepthDrop\r\n        {\r\n            get { return depthDrop; }\r\n" +
-            "            set\r\n            {\r\n                if (value >= 0 && value <= 1 && " +
-            "value != depthDrop)\r\n                {\r\n                    depthDrop = value;\r\n" +
-            "                    OnPropertyChanged(\"DepthDrop\");\r\n                }\r\n        " +
-            "    }\r\n        }\r\n\r\n        public Fillers WeightsFiller\r\n        {\r\n           " +
-            " get { return weightsFiller; }\r\n            set\r\n            {\r\n                " +
-            "if (value != weightsFiller)\r\n                {\r\n                    weightsFille" +
-            "r = value;\r\n                    OnPropertyChanged(\"WeightsFiller\");\r\n           " +
-            "         OnPropertyChanged(\"WeightsFillerModeVisible\");\r\n                    OnP" +
-            "ropertyChanged(\"WeightsGainVisible\");\r\n                    OnPropertyChanged(\"We" +
-            "ightsScaleVisible\");\r\n                }\r\n            }\r\n        }\r\n\r\n        pub" +
-            "lic FillerModes WeightsFillerMode\r\n        {\r\n            get { return weightsFi" +
-            "llerMode; }\r\n            set\r\n            {\r\n                if (value != weight" +
-            "sFillerMode)\r\n                {\r\n                    weightsFillerMode = value;\r" +
-            "\n                    OnPropertyChanged(\"WeightsFillerMode\");\r\n                }\r" +
-            "\n            }\r\n        }\r\n\r\n        public Float WeightsGain\r\n        {\r\n      " +
-            "      get { return weightsGain; }\r\n            set\r\n            {\r\n             " +
-            "   if (value != weightsGain)\r\n                {\r\n                    weightsGain" +
-            " = value;\r\n                    OnPropertyChanged(\"WeightsGain\");\r\n              " +
-            "  }\r\n            }\r\n        }\r\n\r\n        public bool WeightsFillerModeVisible\r\n " +
-            "       {\r\n            get\r\n            {\r\n                return WeightsFiller =" +
-            "= Fillers.HeNormal || WeightsFiller == Fillers.HeUniform || WeightsFiller == Fil" +
-            "lers.LeCunNormal || WeightsFiller == Fillers.LeCunUniform;\r\n            }\r\n     " +
-            "   }\r\n\r\n        public bool WeightsGainVisible\r\n        {\r\n            get\r\n    " +
-            "        {\r\n                return WeightsFiller == Fillers.HeNormal || WeightsFi" +
-            "ller == Fillers.HeUniform || WeightsFiller == Fillers.LeCunNormal || WeightsFill" +
-            "er == Fillers.LeCunUniform || WeightsFiller == Fillers.XavierNormal || WeightsFi" +
-            "ller == Fillers.XavierUniform;\r\n            }\r\n        }\r\n\r\n        public bool " +
-            "WeightsScaleVisible\r\n        {\r\n            get\r\n            {\r\n                " +
-            "return WeightsFiller == Fillers.Constant || WeightsFiller == Fillers.Normal || W" +
-            "eightsFiller == Fillers.TruncatedNormal || WeightsFiller == Fillers.Uniform;\r\n  " +
-            "          }\r\n        }\r\n\r\n        public Float WeightsScale\r\n        {\r\n        " +
-            "    get { return weightsScale; }\r\n            set\r\n            {\r\n              " +
-            "  if (value != weightsScale)\r\n                {\r\n                    weightsScal" +
-            "e = value;\r\n                    OnPropertyChanged(\"WeightsScale\");\r\n            " +
-            "    }\r\n            }\r\n        }\r\n\r\n        public Float WeightsLRM\r\n        {\r\n " +
-            "           get { return weightsLRM; }\r\n            set\r\n            {\r\n         " +
-            "       if (value != weightsLRM)\r\n                {\r\n                    weightsL" +
-            "RM = value;\r\n                    OnPropertyChanged(\"WeightsLRM\");\r\n             " +
-            "   }\r\n            }\r\n        }\r\n\r\n        public Float WeightsWDM\r\n        {\r\n  " +
-            "          get { return weightsWDM; }\r\n            set\r\n            {\r\n          " +
-            "      if (value != weightsWDM)\r\n                {\r\n                    weightsWD" +
-            "M = value;\r\n                    OnPropertyChanged(\"WeightsWDM\");\r\n              " +
-            "  }\r\n            }\r\n        }\r\n\r\n        public bool HasBias\r\n        {\r\n       " +
-            "     get { return hasBias; }\r\n            set\r\n            {\r\n                if" +
-            " (value != hasBias)\r\n                {\r\n                    hasBias = value;\r\n  " +
-            "                  OnPropertyChanged(\"HasBias\");\r\n                }\r\n            " +
-            "}\r\n        }\r\n\r\n        public Fillers BiasesFiller\r\n        {\r\n            get " +
-            "{ return biasesFiller; }\r\n            set\r\n            {\r\n                if (va" +
-            "lue != biasesFiller)\r\n                {\r\n                    biasesFiller = valu" +
-            "e;\r\n                    OnPropertyChanged(\"BiasesFiller\");\r\n                    " +
-            "OnPropertyChanged(\"BiasesFillerModeVisible\");\r\n                    OnPropertyCha" +
-            "nged(\"BiasesGainVisible\");\r\n                    OnPropertyChanged(\"BiasesScaleVi" +
-            "sible\");\r\n                }\r\n            }\r\n        }\r\n\r\n        public FillerMo" +
-            "des BiasesFillerMode\r\n        {\r\n            get { return biasesFillerMode; }\r\n " +
-            "           set\r\n            {\r\n                if (value != biasesFillerMode)\r\n " +
-            "               {\r\n                    biasesFillerMode = value;\r\n               " +
-            "     OnPropertyChanged(\"BiasesFillerMode\");\r\n                }\r\n            }\r\n " +
-            "       }\r\n\r\n        public Float BiasesGain\r\n        {\r\n            get { return" +
-            " biasesGain; }\r\n            set\r\n            {\r\n                if (value != bia" +
-            "sesGain)\r\n                {\r\n                    biasesGain = value;\r\n          " +
-            "          OnPropertyChanged(\"BiasesGain\");\r\n                }\r\n            }\r\n  " +
-            "      }\r\n\r\n        public Float BiasesScale\r\n        {\r\n            get { return" +
-            " biasesScale; }\r\n            set\r\n            {\r\n                if (value != bi" +
-            "asesScale)\r\n                {\r\n                    biasesScale = value;\r\n       " +
-            "             OnPropertyChanged(\"BiasesScale\");\r\n                }\r\n            }" +
-            "\r\n        }\r\n\r\n        public bool BiasesFillerModeVisible\r\n        {\r\n         " +
-            "   get\r\n            {\r\n                return BiasesFiller == Fillers.HeNormal |" +
-            "| BiasesFiller == Fillers.HeUniform || BiasesFiller == Fillers.LeCunNormal || Bi" +
-            "asesFiller == Fillers.LeCunUniform;\r\n            }\r\n        }\r\n\r\n        public " +
-            "bool BiasesGainVisible\r\n        {\r\n            get\r\n            {\r\n             " +
-            "   return BiasesFiller == Fillers.HeNormal || BiasesFiller == Fillers.HeUniform " +
-            "|| BiasesFiller == Fillers.LeCunNormal || BiasesFiller == Fillers.LeCunUniform |" +
-            "| BiasesFiller == Fillers.XavierNormal || BiasesFiller == Fillers.XavierUniform;" +
-            "\r\n            }\r\n        }\r\n\r\n        public bool BiasesScaleVisible\r\n        {\r" +
-            "\n            get\r\n            {\r\n                return BiasesFiller == Fillers." +
-            "Constant || BiasesFiller == Fillers.Normal || BiasesFiller == Fillers.TruncatedN" +
-            "ormal || BiasesFiller == Fillers.Uniform;\r\n            }\r\n        }\r\n\r\n        p" +
-            "ublic Float BiasesLRM\r\n        {\r\n            get { return biasesLRM; }\r\n       " +
-            "     set\r\n            {\r\n                if (value != biasesLRM)\r\n              " +
-            "  {\r\n                    biasesLRM = value;\r\n                    OnPropertyChang" +
-            "ed(\"BiasesLRM\");\r\n                }\r\n            }\r\n        }\r\n\r\n        public " +
-            "Float BiasesWDM\r\n        {\r\n            get { return biasesWDM; }\r\n            s" +
-            "et\r\n            {\r\n                if (value != biasesWDM)\r\n                {\r\n " +
-            "                   biasesWDM = value;\r\n                    OnPropertyChanged(\"Bi" +
-            "asesWDM\");\r\n                }\r\n            }\r\n        }\r\n\r\n        public Float " +
-            "BatchNormMomentum\r\n        {\r\n            get { return batchNormMomentum; }\r\n   " +
-            "         set\r\n            {\r\n                if (value != batchNormMomentum)\r\n  " +
-            "              {\r\n                    batchNormMomentum = value;\r\n               " +
-            "     OnPropertyChanged(\"BatchNormMomentum\");\r\n                }\r\n            }\r\n" +
-            "        }\r\n\r\n        public Float BatchNormEps\r\n        {\r\n            get { ret" +
-            "urn batchNormEps; }\r\n            set\r\n            {\r\n                if (value !" +
-            "= batchNormEps)\r\n                {\r\n                    batchNormEps = value;\r\n " +
-            "                   OnPropertyChanged(\"BatchNormEps\");\r\n                }\r\n      " +
-            "      }\r\n        }\r\n\r\n        public bool BatchNormScaling\r\n        {\r\n         " +
-            "   get { return batchNormScaling; }\r\n            set\r\n            {\r\n           " +
-            "     if (value != batchNormScaling)\r\n                {\r\n                    batc" +
-            "hNormScaling = value;\r\n                    OnPropertyChanged(\"BatchNormScaling\")" +
-            ";\r\n                }\r\n            }\r\n        }\r\n\r\n        public Float Alpha\r\n  " +
-            "      {\r\n            get { return alpha; }\r\n            set\r\n            {\r\n    " +
-            "            if (value != alpha)\r\n                {\r\n                    if (valu" +
-            "e >= 0 && value <= 1)\r\n                    {\r\n                        alpha = va" +
-            "lue;\r\n                        OnPropertyChanged(\"Alpha\");\r\n                    }" +
-            "\r\n                }\r\n            }\r\n        }\r\n\r\n        public Float Beta\r\n    " +
-            "    {\r\n            get { return beta; }\r\n            set\r\n            {\r\n       " +
-            "         if (value != beta)\r\n                {\r\n                    if (value >=" +
-            " 0 && value <= 1)\r\n                    {\r\n                        beta = value;\r" +
-            "\n                        OnPropertyChanged(\"Beta\");\r\n                    }\r\n    " +
-            "            }\r\n            }\r\n        }\r\n\r\n        public UInt Groups\r\n        {" +
-            "\r\n            get { return groups; }\r\n            set\r\n            {\r\n          " +
-            "      if (value >= 1 && value <= 6 && value != groups)\r\n                {\r\n     " +
-            "               groups = value;\r\n                    OnPropertyChanged(\"Groups\");" +
-            "\r\n                    OnPropertyChanged(\"Depth\");\r\n                }\r\n          " +
-            "  }\r\n        }\r\n        public UInt Iterations\r\n        {\r\n            get { ret" +
-            "urn iterations; }\r\n            set\r\n            {\r\n                if (value >= " +
-            "2 && value <= 100 && value != iterations)\r\n                {\r\n                  " +
-            "  iterations = value;\r\n                    OnPropertyChanged(\"Iterations\");\r\n   " +
-            "                 OnPropertyChanged(\"Depth\");\r\n                }\r\n            }\r\n" +
-            "        }\r\n\r\n        public UInt Depth\r\n        {\r\n            get\r\n            " +
-            "{\r\n                switch (Script)\r\n                {\r\n                    case " +
-            "Scripts.densenet:\r\n                        return (Groups * Iterations * (Bottle" +
-            "neck ? 2u : 1u)) + ((Groups - 1) * 2);\r\n                    case Scripts.mobilen" +
-            "etv3:\r\n                        return (Groups * Iterations * 3) + ((Groups - 1) " +
-            "* 2);\r\n                    case Scripts.resnet:\r\n                        return " +
-            "(Groups * Iterations * (Bottleneck ? 3u : 2u)) + ((Groups - 1) * 2);\r\n          " +
-            "          default:\r\n                        return 0;\r\n                }\r\n      " +
-            "      }\r\n        }\r\n\r\n        public UInt Width\r\n        {\r\n            get { re" +
-            "turn width; }\r\n            set\r\n            {\r\n                if (value != widt" +
-            "h)\r\n                {\r\n                    width = value;\r\n                    O" +
-            "nPropertyChanged(\"Width\");\r\n                }\r\n            }\r\n        }\r\n\r\n     " +
-            "   public UInt GrowthRate\r\n        {\r\n            get { return growthRate; }\r\n  " +
-            "          set\r\n            {\r\n                if (value != growthRate)\r\n        " +
-            "        {\r\n                    growthRate = value;\r\n                    OnProper" +
-            "tyChanged(\"GrowthRate\");\r\n                }\r\n            }\r\n        }\r\n\r\n       " +
-            " public bool Bottleneck\r\n        {\r\n            get { return bottleneck; }\r\n    " +
-            "        set\r\n            {\r\n                if (value != bottleneck)\r\n          " +
-            "      {\r\n                    bottleneck = value;\r\n                    OnProperty" +
-            "Changed(\"Bottleneck\");\r\n                    OnPropertyChanged(\"Depth\");\r\n       " +
-            "         }\r\n            }\r\n        }\r\n\r\n        public Float Dropout\r\n        {\r" +
-            "\n            get { return dropout; }\r\n            set\r\n            {\r\n          " +
-            "      if (value != dropout)\r\n                {\r\n                    if (value >=" +
-            " 0 && value < 1)\r\n                    {\r\n                        dropout = value" +
-            ";\r\n                        OnPropertyChanged(\"Dropout\");\r\n                    }\r" +
-            "\n                }\r\n            }\r\n        }\r\n\r\n        public Float Compression" +
-            "\r\n        {\r\n            get { return compression; }\r\n            set\r\n         " +
-            "   {\r\n                if (value != compression)\r\n                {\r\n            " +
-            "        if (value >= 0 && value <= 1)\r\n                    {\r\n                  " +
-            "      compression = value;\r\n                        OnPropertyChanged(\"Compressi" +
-            "on\");\r\n                    }\r\n                }\r\n            }\r\n        }\r\n\r\n   " +
-            "     public ObservableCollection<EfficientNetRecord> EfficientNet\r\n        {\r\n  " +
-            "          get { return efficientnet; }\r\n            set\r\n            {\r\n        " +
-            "        if (value != efficientnet)\r\n                {\r\n                    effic" +
-            "ientnet = value;\r\n                    OnPropertyChanged(\"EfficientNet\");\r\n      " +
-            "          }\r\n            }\r\n        }\r\n\r\n        public ObservableCollection<Shu" +
-            "ffleNetRecord> ShuffleNet\r\n        {\r\n            get { return shufflenet; }\r\n  " +
-            "          set\r\n            {\r\n                if (value != shufflenet)\r\n        " +
-            "        {\r\n                    shufflenet = value;\r\n                    OnProper" +
-            "tyChanged(\"ShuffleNet\");\r\n                }\r\n            }\r\n        }\r\n\r\n       " +
-            " public bool DropoutUsed\r\n        {\r\n            get { return (dropout > 0 && dr" +
-            "opout < 1); }\r\n        }\r\n\r\n        public bool SqueezeExcitation\r\n        {\r\n  " +
-            "          get { return squeezeExcitation; }\r\n            set\r\n            {\r\n   " +
-            "             if (value != squeezeExcitation)\r\n                {\r\n               " +
-            "     squeezeExcitation = value;\r\n                    OnPropertyChanged(\"SqueezeE" +
-            "xcitation\");\r\n                }\r\n            }\r\n        }\r\n\r\n        public bool" +
-            " ChannelZeroPad\r\n        {\r\n            get { return channelZeroPad; }\r\n        " +
-            "    set\r\n            {\r\n                if (value != channelZeroPad)\r\n          " +
-            "      {\r\n                    channelZeroPad = value;\r\n                    OnProp" +
-            "ertyChanged(\"ChannelZeroPad\");\r\n                }\r\n            }\r\n        }\r\n\r\n " +
-            "       public Activations Activation\r\n        {\r\n            get { return activa" +
-            "tion; }\r\n            set\r\n            {\r\n                if (value != activation" +
-            ")\r\n                {\r\n                    activation = value;\r\n                 " +
-            "   OnPropertyChanged(\"Activation\");\r\n                }\r\n            }\r\n        }" +
-            "\r\n\r\n        public UInt StrideHFirstConv\r\n        {\r\n            get { return st" +
-            "rideHFirstConv; }\r\n            set\r\n            {\r\n                if (value != " +
-            "strideHFirstConv && value > 0)\r\n                {\r\n                    strideHFi" +
-            "rstConv = value;\r\n                    OnPropertyChanged(\"StrideHFirstConv\");\r\n  " +
-            "              }\r\n            }\r\n        }\r\n\r\n        public UInt StrideWFirstCon" +
-            "v\r\n        {\r\n            get { return strideWFirstConv; }\r\n            set\r\n   " +
-            "         {\r\n                if (value != strideWFirstConv && value > 0)\r\n       " +
-            "         {\r\n                    strideWFirstConv = value;\r\n                    O" +
-            "nPropertyChanged(\"StrideWFirstConv\");\r\n                }\r\n            }\r\n       " +
-            " }\r\n\r\n        public bool GroupsVisible { get { return Script != Scripts.efficie" +
-            "ntnetv2 && Script != Scripts.shufflenetv2 && Script != Scripts.augshufflenet; } " +
-            "}\r\n        public bool IterationsVisible { get { return Script != Scripts.effici" +
-            "entnetv2 && Script != Scripts.shufflenetv2 && Script != Scripts.augshufflenet; }" +
-            " }\r\n        public bool WidthVisible { get { return Script == Scripts.mobilenetv" +
-            "3 || Script == Scripts.resnet || Script == Scripts.shufflenetv2 || Script == Scr" +
-            "ipts.augshufflenet; } }\r\n        public bool GrowthRateVisible { get { return Sc" +
-            "ript == Scripts.densenet; } }\r\n        public bool DropoutVisible { get { return" +
-            " Script == Scripts.densenet || Script == Scripts.resnet || Script == Scripts.eff" +
-            "icientnetv2; } }\r\n        public bool DepthDropVisible { get { return Script == " +
-            "Scripts.efficientnetv2 || Script == Scripts.mobilenetv3 || Script == Scripts.res" +
-            "net || Script == Scripts.densenet; } }\r\n        public bool CompressionVisible {" +
-            " get { return Script == Scripts.densenet; } }\r\n        public bool BottleneckVis" +
-            "ible { get { return Script == Scripts.densenet || Script == Scripts.resnet; } }\r" +
-            "\n        public bool SqueezeExcitationVisible { get { return Script == Scripts.m" +
-            "obilenetv3; } }\r\n        public bool ChannelZeroPadVisible { get { return Script" +
-            " == Scripts.resnet; } }\r\n        public bool EfficientNetVisible { get { return " +
-            "Script == Scripts.efficientnetv2; } }\r\n        public bool ShuffleNetVisible { g" +
-            "et { return Script == Scripts.shufflenetv2 || Script == Scripts.augshufflenet; }" +
-            " }\r\n\r\n        protected virtual void OnPropertyChanged(string propertyName)\r\n   " +
-            "     {\r\n            if (PropertyChanged != null)\r\n                PropertyChange" +
-            "d.Invoke(this, new PropertyChangedEventArgs(propertyName));\r\n        }\r\n    }\r\n\r" +
-            "\n    public class ScriptCatalog\r\n    {\r\n       public static string nwl { get; }" +
-            " = Environment.NewLine;\r\n\r\n\r\n        public static string to_string(bool variabl" +
-            "e)\r\n        {\r\n            return variable ? \"Yes\" : \"No\";\r\n        }\r\n\r\n       " +
-            " public static string to_string(UInt number)\r\n        {\r\n            return numb" +
-            "er.ToString();\r\n        }\r\n\r\n        public static string to_string(Float number" +
-            ")\r\n        {\r\n            return number.ToString(new CultureInfo(\"en-US\"));\r\n   " +
-            "     }\r\n\r\n        public static string to_string(Datasets dataset)\r\n        {\r\n " +
-            "           return dataset.ToString();\r\n        }\r\n\r\n        public static string" +
-            " to_string(Fillers filler)\r\n        {\r\n            return filler.ToString();\r\n  " +
-            "      }\r\n\r\n        public static string to_string(FillerModes fillerMode)\r\n     " +
-            "   {\r\n            return fillerMode.ToString();\r\n        }\r\n\r\n        public sta" +
-            "tic UInt DIV8(UInt channels)\r\n        {\r\n            if (channels % 8ul == 0ul)\r" +
-            "\n                return channels;\r\n\r\n            return ((channels / 8ul) + 1ul)" +
-            " * 8ul;\r\n        }\r\n\r\n        public static UInt DIV16(UInt channels)\r\n        {" +
-            "\r\n            if (channels % 16ul == 0ul)\r\n                return channels;\r\n\r\n " +
-            "           return ((channels / 16ul) + 1ul) * 16ul;\r\n        }\r\n\r\n        public" +
-            " static string In(string prefix, UInt id)\r\n        {\r\n            return prefix " +
-            "+ to_string(id);\r\n        }\r\n\r\n        public static string BatchNorm(UInt id, s" +
-            "tring inputs, string group = \"\", string prefix = \"B\")\r\n        {\r\n            re" +
-            "turn \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n               \"Type=Ba" +
-            "tchNorm\" + nwl +\r\n               \"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n " +
-            "       public static string LayerNorm(UInt id, string inputs, string group = \"\"," +
-            " string prefix = \"LN\")\r\n        {\r\n            return \"[\" + group + prefix + to_" +
-            "string(id) + \"]\" + nwl +\r\n               \"Type=LayerNorm\" + nwl +\r\n             " +
-            "  \"Inputs=\" + inputs + nwl +\r\n               \"Eps=1e-6\" + nwl + nwl;\r\n        }\r" +
-            "\n\r\n        // public static string BatchNormActivation(UInt id, string inputs, s" +
-            "tring activation = \"Relu\", string group = \"\", string prefix = \"B\")\r\n        // {" +
-            "\r\n        //    if (activation == \"Relu\")\r\n        //        return \r\n        //" +
-            "            \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n        //      " +
-            "      \"Type=BatchNormRelu\" + nwl +\r\n        //            \"Inputs=\" + inputs + n" +
-            "wl + nwl;\r\n        //    else\r\n        //        return \r\n        //            " +
-            "\"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n        //            \"Type=" +
-            "BatchNormActivation\" + nwl +\r\n        //            \"Inputs=\" + inputs + nwl + \r" +
-            "\n        //            \"Activation=\" + activation + nwl + nwl;\r\n        // }\r\n\r\n" +
-            "        public static string BatchNormActivation(UInt id, string inputs, Activat" +
-            "ions activation = Activations.Relu, string group = \"\", string prefix = \"B\")\r\n   " +
-            "     {\r\n            if (activation != Activations.FRelu)\r\n            {\r\n       " +
-            "         if (activation == Activations.Relu)\r\n                {\r\n               " +
-            "     return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n                " +
-            "        \"Type=BatchNormRelu\" + nwl +\r\n                        \"Inputs=\" + inputs" +
-            " + nwl + nwl;\r\n                }\r\n                else\r\n                {\r\n     " +
-            "               return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n      " +
-            "                  \"Type=BatchNormActivation\" + nwl +\r\n                        \"I" +
-            "nputs=\" + inputs + nwl +\r\n                        \"Activation=\" + activation.ToS" +
-            "tring() + nwl + nwl;\r\n\r\n                    //return \"[\" + group + \"BN\" + to_str" +
-            "ing(id) + \"]\" + nwl +\r\n                    //   \"Type=BatchNorm\" + nwl +\r\n      " +
-            "              //\t\"Inputs=\" + inputs + nwl + nwl +\r\n                    //\t\"[\" + " +
-            "group + prefix + to_string(id) + \"]\" + nwl +\r\n                    //\t\"Type=Activ" +
-            "ation\" + nwl +\r\n                    //\t\"Inputs=\" + group + \"BN\" + to_string(id) " +
-            "+ nwl +\r\n                    //\t\"Activation=\" + activation.ToString() + nwl + nw" +
-            "l;\r\n                }\r\n            }\r\n            else\r\n            {\r\n         " +
-            "       return \"[\" + group + \"B\" + to_string(id) + \"B1]\" + nwl +\r\n               " +
-            "     \"Type=BatchNorm\" + nwl +\r\n                    \"Inputs=\" + inputs + nwl + nw" +
-            "l +\r\n\r\n                    \"[\" + group + \"DC\" + to_string(id) + \"DC]\" + nwl +\r\n " +
-            "                   \"Type=DepthwiseConvolution\" + nwl +\r\n                    \"Inp" +
-            "uts=\" + group + \"B\" + to_string(id) + \"B1\" + nwl +\r\n                    \"Kernel=" +
-            "3,3\" + nwl +\r\n                    \"Pad=1,1\" + nwl + nwl +\r\n\r\n                   " +
-            " \"[\" + group + \"B\" + to_string(id) + \"B2]\" + nwl +\r\n                    \"Type=Ba" +
-            "tchNorm\" + nwl +\r\n                    \"Inputs=\" + group + \"DC\" + to_string(id) +" +
-            " \"DC\" + nwl + nwl +\r\n\r\n                    \"[\" + group + prefix + to_string(id) " +
-            "+ \"]\" + nwl +\r\n                    \"Type=Max\" + nwl +\r\n                    \"Inpu" +
-            "ts=\" + group + \"B\" + to_string(id) + \"B2,\" + group + \"B\" + to_string(id) + \"B1\" " +
-            "+ nwl + nwl;\r\n            }\r\n        }\r\n\r\n        public static string BatchNorm" +
-            "ActivationDropout(UInt id, string inputs, Activations activation = Activations.R" +
-            "elu, Float dropout = 0.0f, string group = \"\", string prefix = \"B\")\r\n        {\r\n " +
-            "           if (activation != Activations.FRelu)\r\n            {\r\n                " +
-            "return\r\n                    \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n" +
-            "                    \"Type=BatchNormActivationDropout\" + nwl +\r\n                 " +
-            "   \"Inputs=\" + inputs + nwl +\r\n                    \"Activation=\" + activation.To" +
-            "String() + nwl +\r\n                    (dropout > 0f ? \"Dropout=\" + to_string(dro" +
-            "pout) + nwl + nwl : nwl);\r\n            }\r\n            else\r\n            {\r\n     " +
-            "           return\r\n                    \"[\" + group + prefix + to_string(id) + \"]" +
-            "\" + nwl +\r\n                    \"Type=BatchNormActivationDropout\" + nwl +\r\n      " +
-            "              \"Inputs=\" + inputs + nwl +\r\n                    \"Activation=HardSw" +
-            "ish\" + nwl +\r\n                    (dropout > 0f ? \"Dropout=\" + to_string(dropout" +
-            ") + nwl + nwl : nwl);\r\n            }\r\n        }\r\n\r\n        public static string " +
-            "Resampling(UInt id, string inputs, string group = \"\", string prefix = \"R\")\r\n    " +
-            "    {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n  " +
-            "             \"Type=Resampling\" + nwl +\r\n               \"Inputs=\" + inputs + nwl " +
-            "+\r\n               \"Factor=0.5,0.5\" + nwl +\r\n               \"Algorithm=Linear\" + " +
-            "nwl + nwl;\r\n        }\r\n\r\n        public static string ReductionAvg(UInt id, stri" +
-            "ng inputs, string group = \"\", string prefix = \"RAVG\")\r\n        {\r\n            re" +
-            "turn \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n               \"Type=Re" +
-            "duction\" + nwl +\r\n               \"Inputs=\" + inputs + nwl +\r\n               \"Ope" +
-            "ration=Avg\" + nwl + nwl;\r\n        }\r\n\r\n        public static string ReductionMax" +
-            "(UInt id, string inputs, string group = \"\", string prefix = \"RMAX\")\r\n        {\r\n" +
-            "            return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n         " +
-            "      \"Type=Reduction\" + nwl +\r\n               \"Inputs=\" + inputs + nwl +\r\n     " +
-            "          \"Operation=Max\" + nwl + nwl;\r\n        }\r\n\r\n        public static strin" +
-            "g Convolution(UInt id, string inputs, UInt channels, UInt kernelX = 3, UInt kern" +
-            "elY = 3, UInt strideX = 1, UInt strideY = 1, UInt padX = 1, UInt padY = 1, bool " +
-            "biases = false, string group = \"\", string prefix = \"C\", string weightsFiller = \"" +
-            "\")\r\n        {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + n" +
-            "wl +\r\n                \"Type=Convolution\" + nwl +\r\n                \"Inputs=\" + in" +
-            "puts + nwl +\r\n                \"Channels=\" + to_string(channels) + nwl +\r\n       " +
-            "         \"Kernel=\" + to_string(kernelX) + \",\" + to_string(kernelY) + nwl +\r\n    " +
-            "            (strideX != 1 || strideY != 1 ? \"Stride=\" + to_string(strideX) + \",\"" +
-            " + to_string(strideY) + nwl : \"\") +\r\n                (padX != 0 || padY != 0 ? \"" +
-            "Pad=\" + to_string(padX) + \",\" + to_string(padY) + nwl : \"\") +\r\n                (" +
-            "biases ? \"Biases=Yes\" + nwl : \"\") +\r\n                (weightsFiller != \"\" ? \"Wei" +
-            "ghtsFiller=\" + weightsFiller + nwl + nwl : nwl);\r\n        }\r\n\r\n        public st" +
-            "atic string DepthwiseConvolution(UInt id, string inputs, UInt multiplier = 1, UI" +
-            "nt kernelX = 3, UInt kernelY = 3, UInt strideX = 1, UInt strideY = 1, UInt padX " +
-            "= 1, UInt padY = 1, bool biases = false, string group = \"\", string prefix = \"DC\"" +
-            ", string weightsFiller = \"\")\r\n        {\r\n            return \"[\" + group + prefix" +
-            " + to_string(id) + \"]\" + nwl +\r\n                \"Type=DepthwiseConvolution\" + nw" +
-            "l +\r\n                \"Inputs=\" + inputs + nwl +\r\n                (multiplier > 1" +
-            " ? \"Multiplier=\" + to_string(multiplier) + nwl : \"\") +\r\n                \"Kernel=" +
-            "\" + to_string(kernelX) + \",\" + to_string(kernelY) + nwl +\r\n                (stri" +
-            "deX != 1 || strideY != 1 ? \"Stride=\" + to_string(strideX) + \",\" + to_string(stri" +
-            "deY) + nwl : \"\") +\r\n                (padX != 0 || padY != 0 ? \"Pad=\" + to_string" +
-            "(padX) + \",\" + to_string(padY) + nwl : \"\") +\r\n                (biases ? \"Biases=" +
-            "Yes\" + nwl : \"\") +\r\n                (weightsFiller != \"\" ? \"WeightsFiller=\" + we" +
-            "ightsFiller + nwl + nwl : nwl);\r\n        }\r\n\r\n        public static string Parti" +
-            "alDepthwiseConvolution(UInt id, string inputs, UInt part = 1, UInt groups = 1, U" +
-            "Int kernelX = 3, UInt kernelY = 3, UInt strideX = 1, UInt strideY = 1, UInt padX" +
-            " = 1, UInt padY = 1, bool biases = false, string group = \"\", string prefix = \"DC" +
-            "\", string weightsFiller = \"\")\r\n        {\r\n            return \"[\" + group + prefi" +
-            "x + to_string(id) + \"]\" + nwl +\r\n                \"Type=PartialDepthwiseConvoluti" +
-            "on\" + nwl +\r\n                \"Inputs=\" + inputs + nwl +\r\n                \"Group=" +
-            "\" + to_string(part) + nwl +\r\n                \"Groups=\" + to_string(groups) + nwl" +
-            " +\r\n                \"Kernel=\" + to_string(kernelX) + \",\" + to_string(kernelY) + " +
-            "nwl +\r\n                (strideX != 1 || strideY != 1 ? \"Stride=\" + to_string(str" +
-            "ideX) + \",\" + to_string(strideY) + nwl : \"\") +\r\n                (padX != 0 || pa" +
-            "dY != 0 ? \"Pad=\" + to_string(padX) + \",\" + to_string(padY) + nwl : \"\") +\r\n      " +
-            "          (biases ? \"Biases=Yes\" + nwl : \"\") +\r\n                (weightsFiller !" +
-            "= \"\" ? \"WeightsFiller=\" + weightsFiller + nwl + nwl : nwl);\r\n        }\r\n\r\n      " +
-            "  public static string DepthwiseMixedConvolution(UInt g, UInt id, string inputs," +
-            " UInt strideX = 1, UInt strideY = 1, bool biases = false, bool useChannelSplit =" +
-            " true, string group = \"\", string prefix = \"DC\")\r\n        {\r\n            switch (" +
-            "g)\r\n            {\r\n                case 0:\r\n                    return Depthwise" +
-            "Convolution(id, inputs, 1, 3, 3, strideX, strideY, 1, 1, biases, group, prefix);" +
-            "\r\n\r\n                case 1:\r\n                    return useChannelSplit ? Channe" +
-            "lSplit(id, inputs, 2, 1, \"Q1\") + ChannelSplit(id, inputs, 2, 2, \"Q2\") +\r\n       " +
-            "                 DepthwiseConvolution(id, In(\"Q1CS\", id), 1, 3, 3, strideX, stri" +
-            "deY, 1, 1, biases, \"A\") + DepthwiseConvolution(id, In(\"Q2CS\", id), 1, 5, 5, stri" +
-            "deX, strideY, 2, 2, biases, \"B\") +\r\n                        Concat(id, In(\"ADC\"," +
-            " id) + \",\" + In(\"BDC\", id), group, prefix) :\r\n                        PartialDep" +
-            "thwiseConvolution(id, inputs, 1, 2, 3, 3, strideX, strideY, 1, 1, biases, \"A\") +" +
-            " PartialDepthwiseConvolution(id, inputs, 2, 2, 5, 5, strideX, strideY, 2, 2, bia" +
-            "ses, \"B\") +\r\n                        Concat(id, In(\"ADC\", id) + \",\" + In(\"BDC\", " +
-            "id), group, prefix);\r\n                /*\r\n                case 2:\r\n             " +
-            "       return useChannelSplit ? ChannelSplit(id, inputs, 3, 1, \"Q1\") + ChannelSp" +
-            "lit(id, inputs, 3, 2, \"Q2\") + ChannelSplit(id, inputs, 3, 3, \"Q3\") +\r\n          " +
-            "              DepthwiseConvolution(id, In(\"Q1CS\", id), 1, 3, 3, strideX, strideY" +
-            ", 1, 1, biases, \"A\") + DepthwiseConvolution(id, In(\"Q2CS\", id), 1, 5, 5, strideX" +
-            ", strideY, 2, 2, biases, \"B\") + DepthwiseConvolution(id, In(\"Q3CS\", id), 1, 7, 7" +
-            ", strideX, strideY, 3, 3, biases, \"C\") +\r\n                        Concat(id, In(" +
-            "\"ADC\", id) + \",\" + In(\"BDC\", id) + \",\" + In(\"CDC\", id), group, prefix) :\r\n      " +
-            "                  PartialDepthwiseConvolution(id, inputs, 1, 3, 3, 3, strideX, s" +
-            "trideY, 1, 1, biases, \"A\") + PartialDepthwiseConvolution(id, inputs, 2, 3, 5, 5," +
-            " strideX, strideY, 2, 2, biases, \"B\") +\r\n                        PartialDepthwis" +
-            "eConvolution(id, inputs, 3, 3, 7, 7, strideX, strideY, 3, 3, biases, \"C\") +\r\n   " +
-            "                     Concat(id, In(\"ADC\", id) + \",\" + In(\"BDC\", id) + \",\" + In(\"" +
-            "CDC\", id), group, prefix);\r\n                */\r\n\r\n                default:\r\n    " +
-            "                return useChannelSplit ? ChannelSplit(id, inputs, 4, 1, \"Q1\") + " +
-            "ChannelSplit(id, inputs, 4, 2, \"Q2\") + ChannelSplit(id, inputs, 4, 3, \"Q3\") + Ch" +
-            "annelSplit(id, inputs, 4, 4, \"Q4\") +\r\n                        DepthwiseConvoluti" +
-            "on(id, In(\"Q1CS\", id), 1, 3, 3, strideX, strideY, 1, 1, biases, \"A\") + Depthwise" +
-            "Convolution(id, In(\"Q2CS\", id), 1, 5, 5, strideX, strideY, 2, 2, biases, \"B\") +\r" +
-            "\n                        DepthwiseConvolution(id, In(\"Q3CS\", id), 1, 7, 7, strid" +
-            "eX, strideY, 3, 3, biases, \"C\") + DepthwiseConvolution(id, In(\"Q4CS\", id), 1, 9," +
-            " 9, strideX, strideY, 4, 4, biases, \"D\") +\r\n                        Concat(id, I" +
-            "n(\"ADC\", id) + \",\" + In(\"BDC\", id) + \",\" + In(\"CDC\", id) + \",\" + In(\"DDC\", id), " +
-            "group, prefix) :\r\n                        PartialDepthwiseConvolution(id, inputs" +
-            ", 1, 4, 3, 3, strideX, strideY, 1, 1, biases, \"A\") + PartialDepthwiseConvolution" +
-            "(id, inputs, 2, 4, 5, 5, strideX, strideY, 2, 2, biases, \"B\") +\r\n               " +
-            "         PartialDepthwiseConvolution(id, inputs, 3, 4, 7, 7, strideX, strideY, 3" +
-            ", 3, biases, \"C\") + PartialDepthwiseConvolution(id, inputs, 4, 4, 9, 9, strideX," +
-            " strideY, 4, 4, biases, \"D\") +\r\n                        Concat(id, In(\"ADC\", id)" +
-            " + \",\" + In(\"BDC\", id) + \",\" + In(\"CDC\", id) + \",\" + In(\"DDC\", id), group, prefi" +
-            "x);\r\n            }\r\n        }\r\n\r\n        public static string ChannelSplitRatioL" +
-            "eft(UInt id, string inputs, Float ratio = 0.375f, string group = \"\", string pref" +
-            "ix = \"CSRL\")\r\n        {\r\n            return \"[\" + group + prefix + to_string(id)" +
-            " + \"]\" + nwl +\r\n               \"Type=ChannelSplitRatioLeft\" + nwl +\r\n           " +
-            "    \"Inputs=\" + inputs + nwl +\r\n               \"Ratio=\" + to_string(ratio) + nwl" +
-            " + nwl;\r\n        }\r\n\r\n        public static string ChannelSplitRatioRight(UInt i" +
-            "d, string inputs, Float ratio = 0.375f, string group = \"\", string prefix = \"CSRR" +
-            "\")\r\n        {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + n" +
-            "wl +\r\n               \"Type=ChannelSplitRatioRight\" + nwl +\r\n               \"Inpu" +
-            "ts=\" + inputs + nwl +\r\n               \"Ratio=\" + to_string(ratio) + nwl + nwl;\r\n" +
-            "        }\r\n\r\n        public static string ChannelSplit(UInt id, string inputs, U" +
-            "Int groups, UInt part, string group = \"\", string prefix = \"CS\")\r\n        {\r\n    " +
-            "        return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n             " +
-            "  \"Type=ChannelSplit\" + nwl +\r\n               \"Inputs=\" + inputs + nwl +\r\n      " +
-            "         \"Groups=\" + to_string(groups) + nwl +\r\n               \"Group=\" + to_str" +
-            "ing(part) + nwl + nwl;\r\n        }\r\n\r\n        public static string Shuffle(UInt i" +
-            "d, string inputs, UInt groups = 2, string group = \"\", string prefix = \"SH\")\r\n   " +
-            "     {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n " +
-            "              \"Type=Shuffle\" + nwl +\r\n               \"Inputs=\" + inputs + nwl +\r" +
-            "\n               \"Groups=\" + to_string(groups) + nwl + nwl;\r\n        }\r\n\r\n       " +
-            " public static string Concat(UInt id, string inputs, string group = \"\", string p" +
-            "refix = \"CC\")\r\n        {\r\n            return \"[\" + group + prefix + to_string(id" +
-            ") + \"]\" + nwl +\r\n               \"Type=Concat\" + nwl +\r\n               \"Inputs=\" " +
-            "+ inputs + nwl + nwl;\r\n        }\r\n\r\n        public static string AvgPooling(UInt" +
-            " id, string input, string kernel = \"3,3\", string stride = \"2,2\", string pad = \"1" +
-            ",1\", string group = \"\", string prefix = \"P\")\r\n        {\r\n            return \"[\" " +
-            "+ group + prefix + to_string(id) + \"]\" + nwl +\r\n                \"Type=AvgPooling" +
-            "\" + nwl +\r\n                \"Inputs=\" + input + nwl +\r\n                \"Kernel=\" " +
-            "+ kernel + nwl +\r\n                \"Stride=\" + stride + nwl +\r\n                \"P" +
-            "ad=\" + pad + nwl + nwl;\r\n        }\r\n\r\n        public static string GlobalAvgPool" +
-            "ing(string input, string group = \"\", string prefix = \"GAP\")\r\n        {\r\n        " +
-            "    return \"[\" + group + prefix + \"]\" + nwl +\r\n                \"Type=GlobalAvgPo" +
-            "oling\" + nwl +\r\n                \"Inputs=\" + input + nwl + nwl;\r\n        }\r\n\r\n   " +
-            "     public static string GlobalMaxPooling(string input, string group = \"\", stri" +
-            "ng prefix = \"GMP\")\r\n        {\r\n            return \"[\" + group + prefix + \"]\" + n" +
-            "wl +\r\n                \"Type=GlobalMaxPooling\" + nwl +\r\n                \"Inputs=\"" +
-            " + input + nwl + nwl;\r\n        }\r\n\r\n        public static string Dense(UInt id, " +
-            "string inputs, UInt channels, bool biases = false, string group = \"\", string pre" +
-            "fix = \"DS\", string weightsFiller = \"\")\r\n        {\r\n            return \"[\" + grou" +
-            "p + prefix + to_string(id) + \"]\" + nwl +\r\n               \"Type=Dense\" + nwl +\r\n " +
-            "              \"Inputs=\" + inputs + nwl +\r\n               \"Channels=\" + to_string" +
-            "(channels) + nwl +\r\n               (biases ? \"Biases=Yes\" + nwl : \"\") +\r\n       " +
-            "        (weightsFiller != \"\" ? \"WeightsFiller=\" + weightsFiller + nwl + nwl : nw" +
-            "l);\r\n        }\r\n\r\n        public static string Add(UInt id, string inputs, strin" +
-            "g group = \"\", string prefix = \"A\")\r\n        {\r\n            return \"[\" + group + " +
-            "prefix + to_string(id) + \"]\" + nwl +\r\n               \"Type=Add\" + nwl +\r\n       " +
-            "        \"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n        public static stri" +
-            "ng Multiply(string inputs, string group = \"\", string prefix = \"CM\")\r\n        {\r\n" +
-            "            return \"[\" + group + prefix + \"]\" + nwl +\r\n               \"Type=Mult" +
-            "iply\" + nwl +\r\n               \"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n    " +
-            "    public static string Dropout(UInt id, string inputs, string group = \"\", stri" +
-            "ng prefix = \"D\")\r\n        {\r\n            return \"[\" + group + prefix + to_string" +
-            "(id) + \"]\" + nwl +\r\n               \"Type=Dropout\" + nwl +\r\n               \"Input" +
-            "s=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n        public static string Softmax(UIn" +
-            "t id, string inputs, string group = \"\", string prefix = \"SM\")\r\n        {\r\n      " +
-            "      return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n               " +
-            "\"Type=Softmax\" + nwl +\r\n               \"Inputs=\" + inputs + nwl + nwl;\r\n        " +
-            "}\r\n\r\n        public static string Softmax(string inputs, string group = \"\", stri" +
-            "ng prefix = \"SM\")\r\n        {\r\n            return \"[\" + group + prefix + \"]\" + nw" +
-            "l +\r\n               \"Type=Softmax\" + nwl +\r\n               \"Inputs=\" + inputs + " +
-            "nwl + nwl;\r\n        }\r\n\r\n        public static string LogSoftmax(UInt id, string" +
-            " inputs, string group = \"\", string prefix = \"LSM\")\r\n        {\r\n            retur" +
-            "n \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n               \"Type=LogSo" +
-            "ftmax\" + nwl +\r\n               \"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n   " +
-            "     public static string LogSoftmax(string inputs, string group = \"\", string pr" +
-            "efix = \"LSM\")\r\n        {\r\n            return \"[\" + group + prefix + \"]\" + nwl +\r" +
-            "\n               \"Type=LogSoftmax\" + nwl +\r\n               \"Inputs=\" + inputs + n" +
-            "wl + nwl;\r\n        }\r\n\r\n        public static string Activation(UInt id, string " +
-            "inputs, string activation = \"Relu\", string group = \"\", string prefix = \"ACT\")\r\n " +
+        [global::System.Configuration.DefaultSettingValueAttribute("using System.Collections.ObjectModel;\r\nusing System.Globalization;\r\nusing System." +
+            "Runtime.InteropServices;\r\n\r\nusing Float = System.Single;\r\nusing UInt = System.UI" +
+            "nt64;\r\n\r\n\r\nnamespace Scripts\r\n{\r\n    [Serializable()]\r\n    public enum Scripts\r\n" +
+            "    {\r\n        augshufflenet = 0,\r\n        densenet = 1,\r\n        efficientnetv2" +
+            " = 2,\r\n        mobilenetv3 = 3,\r\n        resnet = 4,\r\n        shufflenetv2 = 5\r\n" +
+            "    }\r\n\r\n    [Serializable()]\r\n    public enum Datasets\r\n    {\r\n        cifar10 " +
+            "= 0,\r\n        cifar100 = 1,\r\n        fashionmnist = 2,\r\n        mnist = 3,\r\n    " +
+            "    tinyimagenet = 4\r\n    }\r\n\r\n    [Serializable()]\r\n    public enum Fillers\r\n  " +
+            "  {\r\n        Constant = 0,\r\n        HeNormal = 1,\r\n        HeUniform = 2,\r\n     " +
+            "   LeCunNormal = 3,\r\n        LeCunUniform = 4,\r\n        Normal = 5,\r\n        Tru" +
+            "ncatedNormal = 6,\r\n        Uniform = 7,\r\n        XavierNormal = 8,\r\n        Xavi" +
+            "erUniform = 9\r\n    }\r\n\r\n    [Serializable()]\r\n    public enum FillerModes\r\n    {" +
+            "\r\n        Avg = 0,\r\n        In = 1,\r\n        Out = 2\r\n    }\r\n\r\n    [Serializable" +
+            "()]\r\n    public enum Activations\r\n    {\r\n        FRelu = 1,\r\n        HardSwish =" +
+            " 10,\r\n        HardSigmoid = 11,\r\n        Sigmoid = 12,\r\n        Mish = 16,\r\n    " +
+            "    Relu = 19,\r\n        Swish = 25,\r\n        TanhExp = 27,\r\n        Gelu = 28\r\n " +
+            "   }\r\n\r\n    [Serializable()]\r\n    public class EfficientNetRecord(UInt expandRat" +
+            "io = 4, UInt channels = 24, UInt iterations = 2, UInt stride = 1, bool se = fals" +
+            "e)\r\n    {\r\n        public UInt ExpandRatio { get; set; } = expandRatio;\r\n       " +
+            " public UInt Channels { get; set; } = channels;\r\n        public UInt Iterations " +
+            "{ get; set; } = iterations;\r\n        public UInt Stride { get; set; } = stride;\r" +
+            "\n        public bool SE { get; set; } = se;\r\n        \r\n        public override s" +
+            "tring ToString()\r\n        {\r\n            return \"(\" + ExpandRatio.ToString() + \"" +
+            "-\" + Channels.ToString() + \"-\" + Iterations.ToString() + \"-\" + Stride.ToString()" +
+            " + (SE ? \"-se\" : \"\") + \")\";\r\n        }\r\n    }\r\n\r\n    [Serializable()]\r\n    publi" +
+            "c class ShuffleNetRecord(UInt iterations = 6u, UInt kernel = 3u, UInt pad = 1u, " +
+            "UInt shuffle = 2u, bool se = false)\r\n    {\r\n\tpublic UInt Iterations { get; set; " +
+            "} = iterations;\r\n        public UInt Kernel { get; set; } = kernel;\r\n        pub" +
+            "lic UInt Pad { get; set; } = pad;\r\n        public UInt Shuffle { get; set; } = s" +
+            "huffle;\r\n        public bool SE { get; set; } = se;\r\n        \r\n        public ov" +
+            "erride string ToString()\r\n        {\r\n            return \"(\" + Iterations.ToStrin" +
+            "g() + \"-\" + Kernel.ToString() + \"-\" + Pad.ToString() + \"-\" + Shuffle.ToString() " +
+            "+ (SE ? \"-se\" : \"\") + \")\";\r\n        }\r\n    }\r\n\r\n    [Serializable()]\r\n    public" +
+            " class ScriptParameters(Scripts script = Scripts.shufflenetv2, Datasets dataset " +
+            "= Datasets.cifar10, UInt h = 32, UInt w = 32, UInt padH = 4, UInt padW = 4, bool" +
+            " mirrorPad = false, bool meanStdNorm = true, Fillers weightsFiller = Fillers.HeN" +
+            "ormal, FillerModes weightsFillerMode = FillerModes.In, Float weightsGain = (Floa" +
+            "t)1.0, Float weightsScale = (Float)0.05, Float weightsLRM = 1, Float weightsWDM " +
+            "= 1, bool hasBias = false, Fillers biasesFiller = Fillers.Constant, FillerModes " +
+            "biasesFillerMode = FillerModes.In, Float biasesGain = (Float)1.0, Float biasesSc" +
+            "ale = 0, Float biasesLRM = 1, Float biasesWDM = 1, Float batchNormMomentum = (Fl" +
+            "oat)0.995, Float batchNormEps = (Float)1E-04, bool batchNormScaling = false, Flo" +
+            "at alpha = (Float)0, Float beta = (Float)0, UInt groups = 3, UInt iterations = 4" +
+            ", UInt width = 8, UInt growthRate = 12, bool bottleneck = false, Float dropout =" +
+            " 0, Float compression = 0, bool squeezeExcitation = false, bool channelZeroPad =" +
+            " true, Activations activation = Activations.Relu, UInt strideHFirstConv = 2, UIn" +
+            "t strideWFirstConv = 2, Float depthDrop = (Float)0.2, bool fixedDepthDrop = fals" +
+            "e)\r\n    {\r\n        public Scripts Script { get; set; } = script;\r\n\r\n        publ" +
+            "ic Datasets Dataset { get; set; } = dataset;\r\n\r\n        public UInt C { get; set" +
+            "; } = 3u;\r\n\r\n        public UInt D { get; set; } = 1u;\r\n\r\n        public UInt H " +
+            "{ get; set; } = h;\r\n\r\n        public UInt W { get; set; } = w;\r\n\r\n        public" +
+            " UInt PadD { get; set; } = 0u;\r\n\r\n        public UInt PadH { get; set; } = padH;" +
+            "\r\n\r\n        public UInt PadW { get; set; } = padW;\r\n\r\n        public bool Mirror" +
+            "Pad { get; set; } = mirrorPad;\r\n\r\n        public bool MeanStdNormalization { get" +
+            "; set; } = meanStdNorm;\r\n\r\n        public Fillers WeightsFiller { get; set; } = " +
+            "weightsFiller;\r\n\r\n        public FillerModes WeightsFillerMode { get; set; } = w" +
+            "eightsFillerMode;\r\n\r\n        public Float WeightsGain { get; set; } = weightsGai" +
+            "n;\r\n\r\n        public Float WeightsScale { get; set; } = weightsScale;\r\n\r\n       " +
+            " public Float WeightsLRM { get; set; } = weightsLRM;\r\n\r\n        public Float Wei" +
+            "ghtsWDM { get; set; } = weightsWDM;\r\n\r\n        public bool HasBias { get; set; }" +
+            " = hasBias;\r\n\r\n        public Fillers BiasesFiller { get; set; } = biasesFiller;" +
+            "\r\n\r\n        public FillerModes BiasesFillerMode { get; set; } = biasesFillerMode" +
+            ";\r\n\r\n        public Float BiasesGain { get; set; } = biasesGain;\r\n\r\n        publ" +
+            "ic Float BiasesScale { get; set; } = biasesScale;\r\n\r\n        public Float Biases" +
+            "LRM { get; set; } = biasesLRM;\r\n\r\n        public Float BiasesWDM { get; set; } =" +
+            " biasesWDM;\r\n\r\n        public bool FixedDepthDrop { get; set; } = fixedDepthDrop" +
+            ";\r\n\r\n        public Float DepthDrop { get; set; } = depthDrop;\r\n\r\n        public" +
+            " Float BatchNormMomentum { get; set; } = batchNormMomentum;\r\n\r\n        public Fl" +
+            "oat BatchNormEps { get; set; } = batchNormEps;\r\n\r\n        public bool BatchNormS" +
+            "caling { get; set; } = batchNormScaling;\r\n\r\n        public Float Alpha { get; se" +
+            "t; } = alpha;\r\n\r\n        public Float Beta { get; set; } = beta;\r\n\r\n        publ" +
+            "ic UInt Groups { get; set; } = groups;\r\n\r\n        public UInt Iterations { get; " +
+            "set; } = iterations;\r\n\r\n        public UInt Width { get; set; } = width;\r\n\r\n    " +
+            "    public UInt GrowthRate { get; set; } = growthRate;\r\n\r\n        public bool Bo" +
+            "ttleneck { get; set; } = bottleneck;\r\n\r\n        public Float Dropout { get; set;" +
+            " } = dropout;\r\n\r\n        public Float Compression { get; set; } = compression;\r\n" +
+            "\r\n        public bool SqueezeExcitation { get; set; } = squeezeExcitation;\r\n\r\n  " +
+            "      public bool ChannelZeroPad { get; set; } = channelZeroPad;\r\n\r\n        publ" +
+            "ic Activations Activation { get; set; } = activation;\r\n\r\n        public UInt Str" +
+            "ideHFirstConv { get; set; } = strideHFirstConv;\r\n\r\n        public UInt StrideWFi" +
+            "rstConv { get; set; } = strideWFirstConv;\r\n\r\n        public ObservableCollection" +
+            "<EfficientNetRecord> EfficientNet { get; set; } = [new(1, 24, 2, 1, false), new(" +
+            "4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 16" +
+            "0, 9, 1, true), new(6, 256, 15, 2, true)];\r\n\r\n        public ObservableCollectio" +
+            "n<ShuffleNetRecord> ShuffleNet { get; set; } = [new(7, 3, 1, 2, false), new(7, 3" +
+            ", 1, 2, true), new(7, 3, 1, 2, true)];\r\n\r\n        public bool RandomCrop { get {" +
+            " return PadH > 0 || PadW > 0; } }\r\n\r\n        public IEnumerable<Scripts> Scripts" +
+            "List { get { return Enum.GetValues(typeof(Scripts)).Cast<Scripts>(); } }\r\n\r\n    " +
+            "    public IEnumerable<Datasets> DatasetsList { get { return Enum.GetValues(type" +
+            "of(Datasets)).Cast<Datasets>(); } }\r\n\r\n        public IEnumerable<Activations> A" +
+            "ctivationsList { get { return Enum.GetValues(typeof(Activations)).Cast<Activatio" +
+            "ns>(); } }\r\n\r\n        public IEnumerable<Fillers> FillersList { get { return Enu" +
+            "m.GetValues(typeof(Fillers)).Cast<Fillers>(); } }\r\n\r\n        public IEnumerable<" +
+            "FillerModes> FillerModesList { get { return Enum.GetValues(typeof(FillerModes))." +
+            "Cast<FillerModes>(); } }\r\n\r\n        public bool WeightsFillerModeVisible { get {" +
+            " return WeightsFiller == Fillers.HeNormal || WeightsFiller == Fillers.HeUniform " +
+            "|| WeightsFiller == Fillers.LeCunNormal || WeightsFiller == Fillers.LeCunUniform" +
+            "; } }\r\n\r\n        public bool WeightsGainVisible { get { return WeightsFiller == " +
+            "Fillers.HeNormal || WeightsFiller == Fillers.HeUniform || WeightsFiller == Fille" +
+            "rs.LeCunNormal || WeightsFiller == Fillers.LeCunUniform || WeightsFiller == Fill" +
+            "ers.XavierNormal || WeightsFiller == Fillers.XavierUniform; } }\r\n\r\n        publi" +
+            "c bool WeightsScaleVisible { get { return WeightsFiller == Fillers.Constant || W" +
+            "eightsFiller == Fillers.Normal || WeightsFiller == Fillers.TruncatedNormal || We" +
+            "ightsFiller == Fillers.Uniform; } }\r\n\r\n        public bool BiasesFillerModeVisib" +
+            "le { get { return BiasesFiller == Fillers.HeNormal || BiasesFiller == Fillers.He" +
+            "Uniform || BiasesFiller == Fillers.LeCunNormal || BiasesFiller == Fillers.LeCunU" +
+            "niform; } }\r\n\r\n        public bool BiasesGainVisible { get { return BiasesFiller" +
+            " == Fillers.HeNormal || BiasesFiller == Fillers.HeUniform || BiasesFiller == Fil" +
+            "lers.LeCunNormal || BiasesFiller == Fillers.LeCunUniform || BiasesFiller == Fill" +
+            "ers.XavierNormal || BiasesFiller == Fillers.XavierUniform; } }\r\n\r\n        public" +
+            " bool BiasesScaleVisible { get { return BiasesFiller == Fillers.Constant || Bias" +
+            "esFiller == Fillers.Normal || BiasesFiller == Fillers.TruncatedNormal || BiasesF" +
+            "iller == Fillers.Uniform; } }\r\n\r\n        public bool DropoutUsed { get { return " +
+            "(Dropout > 0 && Dropout < 1); } }\r\n\r\n        public bool GroupsVisible { get { r" +
+            "eturn Script != Scripts.efficientnetv2 && Script != Scripts.shufflenetv2 && Scri" +
+            "pt != Scripts.augshufflenet; } }\r\n\r\n        public bool IterationsVisible { get " +
+            "{ return Script != Scripts.efficientnetv2 && Script != Scripts.shufflenetv2 && S" +
+            "cript != Scripts.augshufflenet; } }\r\n\r\n        public bool WidthVisible { get { " +
+            "return Script == Scripts.mobilenetv3 || Script == Scripts.resnet || Script == Sc" +
+            "ripts.shufflenetv2 || Script == Scripts.augshufflenet; } }\r\n\r\n        public boo" +
+            "l GrowthRateVisible { get { return Script == Scripts.densenet; } }\r\n\r\n        pu" +
+            "blic bool DropoutVisible { get { return Script == Scripts.densenet || Script == " +
+            "Scripts.resnet || Script == Scripts.efficientnetv2; } }\r\n\r\n        public bool D" +
+            "epthDropVisible { get { return Script == Scripts.efficientnetv2 || Script == Scr" +
+            "ipts.mobilenetv3 || Script == Scripts.resnet || Script == Scripts.densenet; } }\r" +
+            "\n\r\n        public bool CompressionVisible { get { return Script == Scripts.dense" +
+            "net; } }\r\n\r\n        public bool BottleneckVisible { get { return Script == Scrip" +
+            "ts.densenet || Script == Scripts.resnet; } }\r\n\r\n        public bool SqueezeExcit" +
+            "ationVisible { get { return Script == Scripts.mobilenetv3; } }\r\n\r\n        public" +
+            " bool ChannelZeroPadVisible { get { return Script == Scripts.resnet; } }\r\n\r\n    " +
+            "    public bool EfficientNetVisible { get { return Script == Scripts.efficientne" +
+            "tv2; } }\r\n\r\n        public bool ShuffleNetVisible { get { return Script == Scrip" +
+            "ts.shufflenetv2 || Script == Scripts.augshufflenet; } }\r\n        \r\n        publi" +
+            "c UInt Depth\r\n        {\r\n            get\r\n            {\r\n                switch " +
+            "(Script)\r\n                {\r\n                    case Scripts.densenet:\r\n       " +
+            "                 return (Groups * Iterations * (Bottleneck ? 2u : 1u)) + ((Group" +
+            "s - 1) * 2);\r\n                    case Scripts.mobilenetv3:\r\n                   " +
+            "     return (Groups * Iterations * 3) + ((Groups - 1) * 2);\r\n                   " +
+            " case Scripts.resnet:\r\n                        return (Groups * Iterations * (Bo" +
+            "ttleneck ? 3u : 2u)) + ((Groups - 1) * 2);\r\n                    default:\r\n      " +
+            "                  return 0;\r\n                }\r\n            }\r\n        }\r\n      " +
+            "  \r\n        public string ModelName\r\n        {\r\n            get\r\n            {\r\n" +
+            "                switch (Script)\r\n                {\r\n                    case Scr" +
+            "ipts.densenet:\r\n                        return Script.ToString() + \"-\" + Groups." +
+            "ToString() + \"-\" + Iterations.ToString() + \"-\" + GrowthRate.ToString() + (Dropou" +
+            "t > 0 ? \"-dropout\" : \"\") + (DepthDrop > 0 ? (FixedDepthDrop ? \"-fixeddepthdrop\" " +
+            ": \"-depthdrop\") : \"\") + (Compression > 0 ? \"-compression\" : \"\") + (Bottleneck ? " +
+            "\"-bottleneck\" : \"\") + \"-\" + Activation.ToString().ToLower();\r\n                  " +
+            "  case Scripts.efficientnetv2:\r\n                        {\r\n                     " +
+            "       string name = \"\";\r\n                            foreach (var rec in Effici" +
+            "entNet)\r\n                                name += rec.ToString();\r\n              " +
+            "              return Script.ToString() + (DepthDrop > 0 ? (FixedDepthDrop ? \"-fi" +
+            "xeddepthdrop-\" : \"-depthdrop-\") : \"\") + name;\r\n                        }\r\n      " +
+            "              case Scripts.mobilenetv3:\r\n                        return Script.T" +
+            "oString() + \"-\" + Groups.ToString() + \"-\" + Iterations.ToString() + \"-\" + Width." +
+            "ToString() + \"-\" + Activation.ToString().ToLower() + (SqueezeExcitation ? \" -se\"" +
+            " : \"\") + (DepthDrop > 0 ? (FixedDepthDrop ? \"-fixeddepthdrop\" : \"-depthdrop\") : " +
+            "\"\");\r\n                    case Scripts.resnet:\r\n                        return S" +
+            "cript.ToString() + \"-\" + Groups.ToString() + \"-\" + Iterations.ToString() + \"-\" +" +
+            " Width.ToString() + (Dropout > 0 ? \"-dropout\" : \"\") + (DepthDrop > 0 ? (FixedDep" +
+            "thDrop ? \"-fixeddepthdrop\" : \"-depthdrop\") : \"\") + (Bottleneck ? \"-bottleneck\" :" +
+            " \"\") + (ChannelZeroPad ? \"-channelzeropad\" : \"\") + \"-\" + Activation.ToString().T" +
+            "oLower();\r\n                    case Scripts.augshufflenet:\r\n                    " +
+            "case Scripts.shufflenetv2:\r\n                        {\r\n                         " +
+            "   string name = \"\";\r\n                            foreach (var rec in ShuffleNet" +
+            ")\r\n                                name += rec.ToString();\r\n                    " +
+            "        return Script.ToString() + \"-\" + Width.ToString() + name;\r\n             " +
+            "           }\r\n                    default:\r\n                        return Scrip" +
+            "t.ToString() + \"-\" + Groups.ToString() + \"-\" + Iterations.ToString();\r\n         " +
+            "       }\r\n            }\r\n        }\r\n        \r\n        public UInt Classes\r\n     " +
+            "   {\r\n            get\r\n            {\r\n                switch (Dataset)\r\n        " +
+            "        {\r\n                    case Datasets.cifar100:\r\n                        " +
+            "return 100;\r\n                    case Datasets.tinyimagenet:\r\n                  " +
+            "      return 200;\r\n                    default:\r\n                        return " +
+            "10;\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    public class Scri" +
+            "ptCatalog\r\n    {\r\n        public static string nwl { get; } = Environment.NewLin" +
+            "e;\r\n\r\n\r\n        public static string to_string(bool variable)\r\n        {\r\n      " +
+            "      return variable ? \"Yes\" : \"No\";\r\n        }\r\n\r\n        public static string" +
+            " to_string(UInt number)\r\n        {\r\n            return number.ToString();\r\n     " +
+            "   }\r\n\r\n        public static string to_string(Float number)\r\n        {\r\n       " +
+            "     return number.ToString(new CultureInfo(\"en-US\"));\r\n        }\r\n\r\n        pub" +
+            "lic static string to_string(Datasets dataset)\r\n        {\r\n            return dat" +
+            "aset.ToString();\r\n        }\r\n\r\n        public static string to_string(Fillers fi" +
+            "ller)\r\n        {\r\n            return filler.ToString();\r\n        }\r\n\r\n        pu" +
+            "blic static string to_string(FillerModes fillerMode)\r\n        {\r\n            ret" +
+            "urn fillerMode.ToString();\r\n        }\r\n\r\n        public static UInt DIV8(UInt ch" +
+            "annels)\r\n        {\r\n            if (channels % 8ul == 0ul)\r\n                retu" +
+            "rn channels;\r\n\r\n            return ((channels / 8ul) + 1ul) * 8ul;\r\n        }\r\n\r" +
+            "\n        public static UInt DIV16(UInt channels)\r\n        {\r\n            if (cha" +
+            "nnels % 16ul == 0ul)\r\n                return channels;\r\n\r\n            return ((c" +
+            "hannels / 16ul) + 1ul) * 16ul;\r\n        }\r\n\r\n        public static string In(str" +
+            "ing prefix, UInt id)\r\n        {\r\n            return prefix + to_string(id);\r\n   " +
+            "     }\r\n\r\n        public static string BatchNorm(UInt id, string inputs, string " +
+            "group = \"\", string prefix = \"B\")\r\n        {\r\n            return \"[\" + group + pr" +
+            "efix + to_string(id) + \"]\" + nwl +\r\n                \"Type=BatchNorm\" + nwl +\r\n  " +
+            "              \"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n        public stati" +
+            "c string LayerNorm(UInt id, string inputs, string group = \"\", string prefix = \"L" +
+            "N\")\r\n        {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + " +
+            "nwl +\r\n                \"Type=LayerNorm\" + nwl +\r\n                \"Inputs=\" + inp" +
+            "uts + nwl +\r\n                \"Eps=1e-6\" + nwl + nwl;\r\n        }\r\n\r\n        // pu" +
+            "blic static string BatchNormActivation(UInt id, string inputs, string activation" +
+            " = \"Relu\", string group = \"\", string prefix = \"B\")\r\n        // {\r\n        //    " +
+            "if (activation == \"Relu\")\r\n        //        return \r\n        //            \"[\" " +
+            "+ group + prefix + to_string(id) + \"]\" + nwl +\r\n        //            \"Type=Batc" +
+            "hNormRelu\" + nwl +\r\n        //            \"Inputs=\" + inputs + nwl + nwl;\r\n     " +
+            "   //    else\r\n        //        return \r\n        //            \"[\" + group + pr" +
+            "efix + to_string(id) + \"]\" + nwl +\r\n        //            \"Type=BatchNormActivat" +
+            "ion\" + nwl +\r\n        //            \"Inputs=\" + inputs + nwl + \r\n        //     " +
+            "       \"Activation=\" + activation + nwl + nwl;\r\n        // }\r\n\r\n        public s" +
+            "tatic string BatchNormActivation(UInt id, string inputs, Activations activation " +
+            "= Activations.Relu, string group = \"\", string prefix = \"B\")\r\n        {\r\n        " +
+            "    if (activation != Activations.FRelu)\r\n            {\r\n                if (act" +
+            "ivation == Activations.Relu)\r\n                {\r\n                    return \"[\" " +
+            "+ group + prefix + to_string(id) + \"]\" + nwl +\r\n                        \"Type=Ba" +
+            "tchNormRelu\" + nwl +\r\n                        \"Inputs=\" + inputs + nwl + nwl;\r\n " +
+            "               }\r\n                else\r\n                {\r\n                    r" +
+            "eturn \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n                      " +
+            "  \"Type=BatchNormActivation\" + nwl +\r\n                        \"Inputs=\" + inputs" +
+            " + nwl +\r\n                        \"Activation=\" + activation.ToString() + nwl + " +
+            "nwl;\r\n\r\n                    //return \"[\" + group + \"BN\" + to_string(id) + \"]\" + " +
+            "nwl +\r\n                    //    \"Type=BatchNorm\" + nwl +\r\n                    /" +
+            "/\t\"Inputs=\" + inputs + nwl + nwl +\r\n                    //\t\"[\" + group + prefix " +
+            "+ to_string(id) + \"]\" + nwl +\r\n                    //\t\"Type=Activation\" + nwl +\r" +
+            "\n                    //\t\"Inputs=\" + group + \"BN\" + to_string(id) + nwl +\r\n      " +
+            "              //\t\"Activation=\" + activation.ToString() + nwl + nwl;\r\n           " +
+            "     }\r\n            }\r\n            else\r\n            {\r\n                return \"" +
+            "[\" + group + \"B\" + to_string(id) + \"B1]\" + nwl +\r\n                    \"Type=Batc" +
+            "hNorm\" + nwl +\r\n                    \"Inputs=\" + inputs + nwl + nwl +\r\n\r\n        " +
+            "            \"[\" + group + \"DC\" + to_string(id) + \"DC]\" + nwl +\r\n                " +
+            "    \"Type=DepthwiseConvolution\" + nwl +\r\n                    \"Inputs=\" + group +" +
+            " \"B\" + to_string(id) + \"B1\" + nwl +\r\n                    \"Kernel=3,3\" + nwl +\r\n " +
+            "                   \"Pad=1,1\" + nwl + nwl +\r\n\r\n                    \"[\" + group + " +
+            "\"B\" + to_string(id) + \"B2]\" + nwl +\r\n                    \"Type=BatchNorm\" + nwl " +
+            "+\r\n                    \"Inputs=\" + group + \"DC\" + to_string(id) + \"DC\" + nwl + n" +
+            "wl +\r\n\r\n                    \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n" +
+            "                    \"Type=Max\" + nwl +\r\n                    \"Inputs=\" + group + " +
+            "\"B\" + to_string(id) + \"B2,\" + group + \"B\" + to_string(id) + \"B1\" + nwl + nwl;\r\n " +
+            "           }\r\n        }\r\n\r\n        public static string BatchNormActivationDropo" +
+            "ut(UInt id, string inputs, Activations activation = Activations.Relu, Float drop" +
+            "out = 0.0f, string group = \"\", string prefix = \"B\")\r\n        {\r\n            if (" +
+            "activation != Activations.FRelu)\r\n            {\r\n                return\r\n       " +
+            "             \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n               " +
+            "     \"Type=BatchNormActivationDropout\" + nwl +\r\n                    \"Inputs=\" + " +
+            "inputs + nwl +\r\n                    \"Activation=\" + activation.ToString() + nwl " +
+            "+\r\n                    (dropout > 0f ? \"Dropout=\" + to_string(dropout) + nwl + n" +
+            "wl : nwl);\r\n            }\r\n            else\r\n            {\r\n                retu" +
+            "rn\r\n                    \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n    " +
+            "                \"Type=BatchNormActivationDropout\" + nwl +\r\n                    \"" +
+            "Inputs=\" + inputs + nwl +\r\n                    \"Activation=HardSwish\" + nwl +\r\n " +
+            "                   (dropout > 0f ? \"Dropout=\" + to_string(dropout) + nwl + nwl :" +
+            " nwl);\r\n            }\r\n        }\r\n\r\n        public static string Resampling(UInt" +
+            " id, string inputs, string group = \"\", string prefix = \"R\")\r\n        {\r\n        " +
+            "    return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n                \"" +
+            "Type=Resampling\" + nwl +\r\n                \"Inputs=\" + inputs + nwl +\r\n          " +
+            "      \"Factor=0.5,0.5\" + nwl +\r\n                \"Algorithm=Linear\" + nwl + nwl;\r" +
+            "\n        }\r\n\r\n        public static string ReductionAvg(UInt id, string inputs, " +
+            "string group = \"\", string prefix = \"RAVG\")\r\n        {\r\n            return \"[\" + " +
+            "group + prefix + to_string(id) + \"]\" + nwl +\r\n                \"Type=Reduction\" +" +
+            " nwl +\r\n                \"Inputs=\" + inputs + nwl +\r\n                \"Operation=A" +
+            "vg\" + nwl + nwl;\r\n        }\r\n\r\n        public static string ReductionMax(UInt id" +
+            ", string inputs, string group = \"\", string prefix = \"RMAX\")\r\n        {\r\n        " +
+            "    return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n                \"" +
+            "Type=Reduction\" + nwl +\r\n                \"Inputs=\" + inputs + nwl +\r\n           " +
+            "     \"Operation=Max\" + nwl + nwl;\r\n        }\r\n\r\n        public static string Con" +
+            "volution(UInt id, string inputs, UInt channels, UInt kernelX = 3, UInt kernelY =" +
+            " 3, UInt strideX = 1, UInt strideY = 1, UInt padX = 1, UInt padY = 1, bool biase" +
+            "s = false, string group = \"\", string prefix = \"C\", string weightsFiller = \"\")\r\n " +
             "       {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r" +
-            "\n               \"Type=Activation\" + nwl +\r\n               \"Inputs=\" + inputs + n" +
-            "wl +\r\n               \"Activation=\" + activation + nwl + nwl;\r\n        }\r\n\r\n     " +
-            "   public static string Activation(UInt id, string inputs, Activations activatio" +
-            "n = Activations.Relu, string group = \"\", string prefix = \"ACT\")\r\n        {\r\n    " +
-            "        return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n             " +
-            "  \"Type=Activation\" + nwl +\r\n               \"Inputs=\" + inputs + nwl +\r\n        " +
-            "       \"Activation=\" + activation.ToString() + nwl + nwl;\r\n        }\r\n\r\n        " +
-            "public static string Cost(string inputs, Datasets dataset, UInt channels, string" +
-            " cost = \"CategoricalCrossEntropy\", Float eps = 0.0f, string group = \"\", string p" +
-            "refix = \"Cost\")\r\n        {\r\n            return \"[\" + group + prefix + \"]\" + nwl " +
-            "+\r\n               \"Type=Cost\" + nwl +\r\n               \"Inputs=\" + inputs + nwl +" +
-            "\r\n               \"Cost=\" + cost + nwl +\r\n               \"LabelIndex=\" + ((datase" +
-            "t == Datasets.cifar100 && channels == 100) ? \"1\" : \"0\") + nwl +\r\n               " +
-            "\"Channels=\" + to_string(channels) + nwl +\r\n               \"Eps=\" + to_string(eps" +
-            ");\r\n        }\r\n\r\n        public static List<string> FusedMBConv(UInt A, UInt C, " +
-            "string inputs, UInt inputChannels, UInt outputChannels, UInt stride = 1, UInt ex" +
-            "pandRatio = 4, bool se = false, Activations activation = Activations.HardSwish)\r" +
-            "\n        {\r\n            var blocks = new List<string>();\r\n            var hidden" +
-            "Dim = DIV8(inputChannels * expandRatio);\r\n            var identity = stride == 1" +
-            " && inputChannels == outputChannels;\r\n\r\n            if (se)\r\n            {\r\n    " +
-            "            var group = In(\"SE\", C);\r\n\r\n                blocks.Add(\r\n           " +
-            "         Convolution(C, inputs, hiddenDim, 3, 3, stride, stride, 1, 1) +\r\n      " +
-            "              (expandRatio > 1 ? BatchNormActivationDropout(C, In(\"C\", C), activ" +
-            "ation) : BatchNormActivation(C, In(\"C\", C), activation)) +\r\n\r\n                  " +
-            "  GlobalAvgPooling(In(\"B\", C), group) +\r\n                    Convolution(1, grou" +
-            "p + \"GAP\", DIV8(hiddenDim / expandRatio), 1, 1, 1, 1, 0, 0, false, group) +\r\n   " +
-            "                 BatchNormActivation(1, group + \"C1\", (activation == Activations" +
-            ".FRelu ? Activations.HardSwish : activation), group) +\r\n                    Conv" +
-            "olution(2, group + \"B1\", hiddenDim, 1, 1, 1, 1, 0, 0, false, group) +\r\n         " +
-            "           BatchNormActivation(2, group + \"C2\", Activations.HardSigmoid, group) " +
-            "+\r\n                    Multiply(In(\"B\", C) + \",\" + group + \"B2\", group) +\r\n\r\n   " +
-            "                 Convolution(C + 1, group + \"CM\", DIV8(outputChannels), 1, 1, 1," +
-            " 1, 0, 0) +\r\n                    BatchNorm(C + 1, In(\"C\", C + 1)));\r\n           " +
-            " }\r\n            else\r\n            {\r\n                blocks.Add(\r\n              " +
-            "      Convolution(C, inputs, hiddenDim, 3, 3, stride, stride, 1, 1) +\r\n         " +
-            "           (expandRatio > 1 ? BatchNormActivationDropout(C, In(\"C\", C), activati" +
-            "on) : BatchNormActivation(C, In(\"C\", C), activation)) +\r\n                    Con" +
-            "volution(C + 1, In(\"B\", C), DIV8(outputChannels), 1, 1, 1, 1, 0, 0) +\r\n         " +
-            "           BatchNorm(C + 1, In(\"C\", C + 1)));\r\n            }\r\n\r\n            if (" +
-            "identity)\r\n            {\r\n                blocks.Add(\r\n                    Add(A" +
-            ", In(\"B\", C + 1) + \",\" + inputs));\r\n            }\r\n\r\n            return blocks;\r" +
-            "\n        }\r\n\r\n        public static List<string> MBConv(UInt A, UInt C, string i" +
-            "nputs, UInt inputChannels, UInt outputChannels, UInt stride = 1, UInt expandRati" +
-            "o = 4, bool se = false, Activations activation = Activations.HardSwish)\r\n       " +
-            " {\r\n            var blocks = new List<string>();\r\n            var hiddenDim = DI" +
-            "V8(inputChannels * expandRatio);\r\n            var identity = stride == 1 && inpu" +
-            "tChannels == outputChannels;\r\n\r\n            if (se)\r\n            {\r\n            " +
-            "    var group = In(\"SE\", C + 1);\r\n\r\n                blocks.Add(\r\n               " +
-            "     Convolution(C, inputs, hiddenDim, 1, 1, 1, 1, 0, 0) +\r\n                    " +
-            "BatchNormActivation(C, In(\"C\", C), activation) +\r\n                    DepthwiseC" +
-            "onvolution(C + 1, In(\"B\", C), 1, 3, 3, stride, stride, 1, 1) +\r\n                " +
-            "    (expandRatio > 1 ? BatchNormActivationDropout(C + 1, In(\"DC\", C + 1), activa" +
-            "tion) : BatchNormActivation(C + 1, In(\"DC\", C + 1), activation)) +\r\n\r\n          " +
-            "          GlobalAvgPooling(In(\"B\", C + 1), group) +\r\n                    Convolu" +
-            "tion(1, group + \"GAP\", DIV8(hiddenDim / expandRatio), 1, 1, 1, 1, 0, 0, false, g" +
-            "roup) +\r\n                    BatchNormActivation(1, group + \"C1\", (activation ==" +
-            " Activations.FRelu ? Activations.HardSwish : activation), group) +\r\n            " +
-            "        Convolution(2, group + \"B1\", hiddenDim, 1, 1, 1, 1, 0, 0, false, group) " +
-            "+\r\n                    BatchNormActivation(2, group + \"C2\", Activations.HardSigm" +
-            "oid, group) +\r\n                    Multiply(In(\"B\", C + 1) + \",\" + group + \"B2\"," +
-            " group) +\r\n\r\n                    Convolution(C + 2, group + \"CM\", DIV8(outputCha" +
-            "nnels), 1, 1, 1, 1, 0, 0) +\r\n                    BatchNorm(C + 2, In(\"C\", C + 2)" +
-            "));\r\n            }\r\n            else\r\n            {\r\n                blocks.Add(" +
-            "\r\n                    Convolution(C, inputs, hiddenDim, 1, 1, 1, 1, 0, 0) +\r\n   " +
-            "                 BatchNormActivation(C, In(\"C\", C), activation) +\r\n             " +
-            "       DepthwiseConvolution(C + 1, In(\"B\", C), 1, 3, 3, stride, stride, 1, 1) +\r" +
-            "\n                    (expandRatio > 1 ? BatchNormActivationDropout(C + 1, In(\"DC" +
-            "\", C + 1), activation) : BatchNormActivation(C + 1, In(\"DC\", C + 1), activation)" +
-            ") +\r\n                    Convolution(C + 2, In(\"B\", C + 1), DIV8(outputChannels)" +
-            ", 1, 1, 1, 1, 0, 0) +\r\n                    BatchNorm(C + 2, In(\"C\", C + 2)));\r\n " +
-            "           }\r\n\r\n            if (identity)\r\n            {\r\n                blocks" +
-            ".Add(\r\n                    Add(A, In(\"B\", C + 2) + \",\" + inputs));\r\n            " +
-            "}\r\n\r\n            return blocks;\r\n        }\r\n\r\n\r\n        public static string Inv" +
-            "ertedResidual(UInt A, UInt C, UInt channels, UInt kernel = 3, UInt pad = 1, bool" +
-            " subsample = false, UInt shuffle = 2, bool se = false, Activations activation = " +
-            "Activations.HardSwish)\r\n        {\r\n            if (subsample)\r\n            {\r\n  " +
-            "              return\r\n                    Convolution(C, In(\"CC\", A), channels, " +
-            "1, 1, 1, 1, 0, 0) +\r\n                    BatchNormActivation(C + 1, In(\"C\", C), " +
-            "activation) +\r\n                    DepthwiseConvolution(C + 1, In(\"B\", C + 1), 1" +
-            ", kernel, kernel, 1, 1, pad, pad) +\r\n                    Resampling(C + 1, In(\"D" +
-            "C\", C + 1)) +\r\n                    BatchNorm(C + 2, In(\"R\", C + 1)) +\r\n         " +
-            "           Convolution(C + 2, In(\"B\", C + 2), channels, 1, 1, 1, 1, 0, 0) +\r\n   " +
-            "                 BatchNormActivation(C + 3, In(\"C\", C + 2), activation) +\r\n     " +
-            "               DepthwiseConvolution(C + 3, In(\"CC\", A), 1, kernel, kernel, 1, 1," +
-            " pad, pad) +\r\n                    Resampling(C + 3, In(\"DC\", C + 3)) +\r\n        " +
-            "            BatchNorm(C + 4, In(\"R\", C + 3)) +\r\n                    Convolution(" +
-            "C + 4, In(\"B\", C + 4), channels, 1, 1, 1, 1, 0, 0) +\r\n                    BatchN" +
-            "ormActivation(C + 5, In(\"C\", C + 4), activation) +\r\n                    Concat(A" +
-            " + 1, In(\"B\", C + 5) + \",\" + In(\"B\", C + 3));\r\n            }\r\n            else\r\n" +
-            "            {\r\n                var groupCH = In(\"CHATT\", C + 3); // Channel Atte" +
-            "ntion\r\n                var groupSP = In(\"SPATT\", C + 3); // Spatial Attention\r\n " +
-            "               var strSE = se ?\r\n                    GlobalAvgPooling(In(\"B\", C " +
-            "+ 3), groupCH) +\r\n                    Convolution(1, groupCH + \"GAP\", DIV8(chann" +
-            "els), 1, 1, 1, 1, 0, 0, false, groupCH) +\r\n                    BatchNormActivati" +
-            "on(1, groupCH + In(\"C\", 1), activation, groupCH) +\r\n                    GlobalMa" +
-            "xPooling(In(\"B\", C + 3), groupCH) +\r\n                    Convolution(2, groupCH " +
-            "+ \"GMP\", DIV8(channels), 1, 1, 1, 1, 0, 0, false, groupCH) +\r\n                  " +
-            "  BatchNormActivation(2, groupCH + In(\"C\", 2), activation, groupCH) +\r\n         " +
-            "           Add(1, In(groupCH + \"B\", 1) + \",\" + In(groupCH + \"B\", 2), groupCH) +\r" +
-            "\n                    Convolution(3, groupCH + \"A1\", DIV8(channels), 1, 1, 1, 1, " +
-            "0, 0, false, groupCH) +\r\n                    BatchNormActivation(3, groupCH + In" +
-            "(\"C\", 3), Activations.HardSigmoid, groupCH) +\r\n                    Multiply(In(\"" +
-            "B\", C + 3) + \",\" + In(groupCH + \"B\", 3), groupCH) +\r\n                    Reducti" +
-            "onAvg(1, groupCH + \"CM\", groupSP) +\r\n                    ReductionMax(1, groupCH" +
-            " + \"CM\", groupSP) +\r\n                    Concat(1, In(groupSP + \"RAVG\", 1) + \",\"" +
-            " + In(groupSP + \"RMAX\", 1), groupSP) +\r\n                    Convolution(1, group" +
-            "SP + In(\"CC\", 1), 1, 7, 7, 1, 1, 3, 3, false, groupSP) +\r\n                    Ba" +
-            "tchNormActivation(1, groupSP + In(\"C\", 1), Activations.HardSigmoid, groupSP) +\r\n" +
-            "                    Multiply(groupCH + \"CM,\" + groupSP + In(\"B\", 1), groupSP) +\r" +
-            "\n                    Concat(A + 1, In(\"LCS\", A) + \",\" + groupSP + \"CM\") :\r\n     " +
-            "               Concat(A + 1, In(\"LCS\", A) + \",\" + In(\"B\", C + 3));\r\n\r\n          " +
-            "      return\r\n                    Shuffle(A, In(\"CC\", A), shuffle) +\r\n          " +
-            "          ChannelSplit(A, In(\"SH\", A), 2, 1, \"L\") + ChannelSplit(A, In(\"SH\", A)," +
-            " 2, 2, \"R\") +\r\n                    Convolution(C, In(\"RCS\", A), channels, 1, 1, " +
-            "1, 1, 0, 0) +\r\n                    BatchNormActivation(C + 1, In(\"C\", C), activa" +
-            "tion) +\r\n                    DepthwiseConvolution(C + 1, In(\"B\", C + 1), 1, kern" +
-            "el, kernel, 1, 1, pad, pad) +\r\n                    BatchNorm(C + 2, In(\"DC\", C +" +
-            " 1)) +\r\n                    Convolution(C + 2, In(\"B\", C + 2), channels, 1, 1, 1" +
-            ", 1, 0, 0) +\r\n                    BatchNormActivation(C + 3, In(\"C\", C + 2), act" +
-            "ivation) +\r\n                    strSE;\r\n            }\r\n        }\r\n\r\n        publ" +
-            "ic static string AugmentedInvertedResidual(UInt A, UInt C, UInt channels, UInt k" +
-            "ernel = 3, UInt pad = 1, bool subsample = false, UInt shuffle = 2, bool se = fal" +
-            "se, Activations activation = Activations.HardSwish)\r\n        {\r\n            if (" +
-            "subsample)\r\n            {\r\n                return\r\n                    Convoluti" +
-            "on(C, In(\"CC\", A), channels, 1, 1, 1, 1, 0, 0) +\r\n                    BatchNormA" +
-            "ctivation(C + 1, In(\"C\", C), activation) +\r\n                    DepthwiseConvolu" +
-            "tion(C + 1, In(\"B\", C + 1), 1, kernel, kernel, 1, 1, pad, pad) +\r\n              " +
-            "      Resampling(C + 1, In(\"DC\", C + 1)) +\r\n                    BatchNorm(C + 2," +
-            " In(\"R\", C + 1)) +\r\n                    Convolution(C + 2, In(\"B\", C + 2), chann" +
-            "els, 1, 1, 1, 1, 0, 0) +\r\n                    BatchNormActivation(C + 3, In(\"C\"," +
-            " C + 2), activation) +\r\n                    DepthwiseConvolution(C + 3, In(\"CC\"," +
-            " A), 1, kernel, kernel, 1, 1, pad, pad) +\r\n                    Resampling(C + 3," +
-            " In(\"DC\", C + 3)) +\r\n                    BatchNorm(C + 4, In(\"R\", C + 3)) +\r\n   " +
-            "                 Convolution(C + 4, In(\"B\", C + 4), channels, 1, 1, 1, 1, 0, 0) " +
-            "+\r\n                    BatchNormActivation(C + 5, In(\"C\", C + 4), activation) +\r" +
-            "\n                    Concat(A + 1, In(\"B\", C + 5) + \",\" + In(\"B\", C + 3));\r\n    " +
-            "        }\r\n            else\r\n            {\r\n                var groupCH = In(\"CH" +
-            "ATT\", C + 3); // Channel Attention\r\n                var groupSP = In(\"SPATT\", C " +
-            "+ 3); // Spatial Attention\r\n                var strSE = se ?\r\n                  " +
-            "  GlobalAvgPooling(In(\"B\", C + 3), groupCH) +\r\n                    Convolution(1" +
-            ", groupCH + \"GAP\", DIV8(channels), 1, 1, 1, 1, 0, 0, false, groupCH) +\r\n        " +
-            "            BatchNormActivation(1, groupCH + In(\"C\", 1), activation, groupCH) +\r" +
-            "\n                    GlobalMaxPooling(In(\"B\", C + 3), groupCH) +\r\n              " +
-            "      Convolution(2, groupCH + \"GMP\", DIV8(channels), 1, 1, 1, 1, 0, 0, false, g" +
-            "roupCH) +\r\n                    BatchNormActivation(2, groupCH + In(\"C\", 2), acti" +
-            "vation, groupCH) +\r\n                    Add(1, In(groupCH + \"B\", 1) + \",\" + In(g" +
-            "roupCH + \"B\", 2), groupCH) +\r\n                    Convolution(3, groupCH + \"A1\"," +
-            " DIV8(channels), 1, 1, 1, 1, 0, 0, false, groupCH) +\r\n                    BatchN" +
-            "ormActivation(3, groupCH + In(\"C\", 3), Activations.HardSigmoid, groupCH) +\r\n    " +
-            "                Multiply(In(\"B\", C + 3) + \",\" + In(groupCH + \"B\", 3), groupCH) +" +
-            "\r\n                    ReductionAvg(1, groupCH + \"CM\", groupSP) +\r\n              " +
-            "      ReductionMax(1, groupCH + \"CM\", groupSP) +\r\n                    Concat(1, " +
-            "In(groupSP + \"RAVG\", 1) + \",\" + In(groupSP + \"RMAX\", 1), groupSP) +\r\n           " +
-            "         Convolution(1, groupSP + In(\"CC\", 1), 1, 7, 7, 1, 1, 3, 3, false, group" +
-            "SP) +\r\n                    BatchNormActivation(1, groupSP + In(\"C\", 1), Activati" +
-            "ons.HardSigmoid, groupSP) +\r\n                    Multiply(groupCH + \"CM,\" + grou" +
-            "pSP + In(\"B\", 1), groupSP) +\r\n                    Concat(A + 1, In(\"LCC\", A) + \"" +
-            ",\" + groupSP + \"CM\") :\r\n                    Concat(A + 1, In(\"LCC\", A) + \",\" + I" +
-            "n(\"B\", C + 3));\r\n\r\n                return\r\n                    Shuffle(A, In(\"CC" +
-            "\", A), shuffle) +\r\n                    ChannelSplitRatioLeft(A, In(\"SH\", A), 0.3" +
-            "75f) + ChannelSplitRatioRight(A, In(\"SH\", A), 0.375f) +\r\n                    Con" +
-            "volution(C, In(\"CSRR\", A), DIV8((UInt)((2 * channels) * 0.375f)), 1, 1, 1, 1, 0," +
-            " 0) +\r\n                    // BatchNorm(C + 1, In(\"C\", C)) +\r\n                  " +
+            "\n                \"Type=Convolution\" + nwl +\r\n                \"Inputs=\" + inputs " +
+            "+ nwl +\r\n                \"Channels=\" + to_string(channels) + nwl +\r\n            " +
+            "    \"Kernel=\" + to_string(kernelX) + \",\" + to_string(kernelY) + nwl +\r\n         " +
+            "       (strideX != 1 || strideY != 1 ? \"Stride=\" + to_string(strideX) + \",\" + to" +
+            "_string(strideY) + nwl : \"\") +\r\n                (padX != 0 || padY != 0 ? \"Pad=\"" +
+            " + to_string(padX) + \",\" + to_string(padY) + nwl : \"\") +\r\n                (biase" +
+            "s ? \"Biases=Yes\" + nwl : \"\") +\r\n                (weightsFiller != \"\" ? \"WeightsF" +
+            "iller=\" + weightsFiller + nwl + nwl : nwl);\r\n        }\r\n\r\n        public static " +
+            "string DepthwiseConvolution(UInt id, string inputs, UInt multiplier = 1, UInt ke" +
+            "rnelX = 3, UInt kernelY = 3, UInt strideX = 1, UInt strideY = 1, UInt padX = 1, " +
+            "UInt padY = 1, bool biases = false, string group = \"\", string prefix = \"DC\", str" +
+            "ing weightsFiller = \"\")\r\n        {\r\n            return \"[\" + group + prefix + to" +
+            "_string(id) + \"]\" + nwl +\r\n                \"Type=DepthwiseConvolution\" + nwl +\r\n" +
+            "                \"Inputs=\" + inputs + nwl +\r\n                (multiplier > 1 ? \"M" +
+            "ultiplier=\" + to_string(multiplier) + nwl : \"\") +\r\n                \"Kernel=\" + t" +
+            "o_string(kernelX) + \",\" + to_string(kernelY) + nwl +\r\n                (strideX !" +
+            "= 1 || strideY != 1 ? \"Stride=\" + to_string(strideX) + \",\" + to_string(strideY) " +
+            "+ nwl : \"\") +\r\n                (padX != 0 || padY != 0 ? \"Pad=\" + to_string(padX" +
+            ") + \",\" + to_string(padY) + nwl : \"\") +\r\n                (biases ? \"Biases=Yes\" " +
+            "+ nwl : \"\") +\r\n                (weightsFiller != \"\" ? \"WeightsFiller=\" + weights" +
+            "Filler + nwl + nwl : nwl);\r\n        }\r\n\r\n        public static string PartialDep" +
+            "thwiseConvolution(UInt id, string inputs, UInt part = 1, UInt groups = 1, UInt k" +
+            "ernelX = 3, UInt kernelY = 3, UInt strideX = 1, UInt strideY = 1, UInt padX = 1," +
+            " UInt padY = 1, bool biases = false, string group = \"\", string prefix = \"DC\", st" +
+            "ring weightsFiller = \"\")\r\n        {\r\n            return \"[\" + group + prefix + t" +
+            "o_string(id) + \"]\" + nwl +\r\n                \"Type=PartialDepthwiseConvolution\" +" +
+            " nwl +\r\n                \"Inputs=\" + inputs + nwl +\r\n                \"Group=\" + t" +
+            "o_string(part) + nwl +\r\n                \"Groups=\" + to_string(groups) + nwl +\r\n " +
+            "               \"Kernel=\" + to_string(kernelX) + \",\" + to_string(kernelY) + nwl +" +
+            "\r\n                (strideX != 1 || strideY != 1 ? \"Stride=\" + to_string(strideX)" +
+            " + \",\" + to_string(strideY) + nwl : \"\") +\r\n                (padX != 0 || padY !=" +
+            " 0 ? \"Pad=\" + to_string(padX) + \",\" + to_string(padY) + nwl : \"\") +\r\n           " +
+            "     (biases ? \"Biases=Yes\" + nwl : \"\") +\r\n                (weightsFiller != \"\" " +
+            "? \"WeightsFiller=\" + weightsFiller + nwl + nwl : nwl);\r\n        }\r\n\r\n        pub" +
+            "lic static string DepthwiseMixedConvolution(UInt g, UInt id, string inputs, UInt" +
+            " strideX = 1, UInt strideY = 1, bool biases = false, bool useChannelSplit = true" +
+            ", string group = \"\", string prefix = \"DC\")\r\n        {\r\n            switch (g)\r\n " +
+            "           {\r\n                case 0:\r\n                    return DepthwiseConvo" +
+            "lution(id, inputs, 1, 3, 3, strideX, strideY, 1, 1, biases, group, prefix);\r\n\r\n " +
+            "               case 1:\r\n                    return useChannelSplit ? ChannelSpli" +
+            "t(id, inputs, 2, 1, \"Q1\") + ChannelSplit(id, inputs, 2, 2, \"Q2\") +\r\n            " +
+            "            DepthwiseConvolution(id, In(\"Q1CS\", id), 1, 3, 3, strideX, strideY, " +
+            "1, 1, biases, \"A\") + DepthwiseConvolution(id, In(\"Q2CS\", id), 1, 5, 5, strideX, " +
+            "strideY, 2, 2, biases, \"B\") +\r\n                        Concat(id, In(\"ADC\", id) " +
+            "+ \",\" + In(\"BDC\", id), group, prefix) :\r\n                        PartialDepthwis" +
+            "eConvolution(id, inputs, 1, 2, 3, 3, strideX, strideY, 1, 1, biases, \"A\") + Part" +
+            "ialDepthwiseConvolution(id, inputs, 2, 2, 5, 5, strideX, strideY, 2, 2, biases, " +
+            "\"B\") +\r\n                        Concat(id, In(\"ADC\", id) + \",\" + In(\"BDC\", id), " +
+            "group, prefix);\r\n                /*\r\n                case 2:\r\n                  " +
+            "  return useChannelSplit ? ChannelSplit(id, inputs, 3, 1, \"Q1\") + ChannelSplit(i" +
+            "d, inputs, 3, 2, \"Q2\") + ChannelSplit(id, inputs, 3, 3, \"Q3\") +\r\n               " +
+            "         DepthwiseConvolution(id, In(\"Q1CS\", id), 1, 3, 3, strideX, strideY, 1, " +
+            "1, biases, \"A\") + DepthwiseConvolution(id, In(\"Q2CS\", id), 1, 5, 5, strideX, str" +
+            "ideY, 2, 2, biases, \"B\") + DepthwiseConvolution(id, In(\"Q3CS\", id), 1, 7, 7, str" +
+            "ideX, strideY, 3, 3, biases, \"C\") +\r\n                        Concat(id, In(\"ADC\"" +
+            ", id) + \",\" + In(\"BDC\", id) + \",\" + In(\"CDC\", id), group, prefix) :\r\n           " +
+            "             PartialDepthwiseConvolution(id, inputs, 1, 3, 3, 3, strideX, stride" +
+            "Y, 1, 1, biases, \"A\") + PartialDepthwiseConvolution(id, inputs, 2, 3, 5, 5, stri" +
+            "deX, strideY, 2, 2, biases, \"B\") +\r\n                        PartialDepthwiseConv" +
+            "olution(id, inputs, 3, 3, 7, 7, strideX, strideY, 3, 3, biases, \"C\") +\r\n        " +
+            "                Concat(id, In(\"ADC\", id) + \",\" + In(\"BDC\", id) + \",\" + In(\"CDC\"," +
+            " id), group, prefix);\r\n                */\r\n\r\n                default:\r\n         " +
+            "           return useChannelSplit ? ChannelSplit(id, inputs, 4, 1, \"Q1\") + Chann" +
+            "elSplit(id, inputs, 4, 2, \"Q2\") + ChannelSplit(id, inputs, 4, 3, \"Q3\") + Channel" +
+            "Split(id, inputs, 4, 4, \"Q4\") +\r\n                        DepthwiseConvolution(id" +
+            ", In(\"Q1CS\", id), 1, 3, 3, strideX, strideY, 1, 1, biases, \"A\") + DepthwiseConvo" +
+            "lution(id, In(\"Q2CS\", id), 1, 5, 5, strideX, strideY, 2, 2, biases, \"B\") +\r\n    " +
+            "                    DepthwiseConvolution(id, In(\"Q3CS\", id), 1, 7, 7, strideX, s" +
+            "trideY, 3, 3, biases, \"C\") + DepthwiseConvolution(id, In(\"Q4CS\", id), 1, 9, 9, s" +
+            "trideX, strideY, 4, 4, biases, \"D\") +\r\n                        Concat(id, In(\"AD" +
+            "C\", id) + \",\" + In(\"BDC\", id) + \",\" + In(\"CDC\", id) + \",\" + In(\"DDC\", id), group" +
+            ", prefix) :\r\n                        PartialDepthwiseConvolution(id, inputs, 1, " +
+            "4, 3, 3, strideX, strideY, 1, 1, biases, \"A\") + PartialDepthwiseConvolution(id, " +
+            "inputs, 2, 4, 5, 5, strideX, strideY, 2, 2, biases, \"B\") +\r\n                    " +
+            "    PartialDepthwiseConvolution(id, inputs, 3, 4, 7, 7, strideX, strideY, 3, 3, " +
+            "biases, \"C\") + PartialDepthwiseConvolution(id, inputs, 4, 4, 9, 9, strideX, stri" +
+            "deY, 4, 4, biases, \"D\") +\r\n                        Concat(id, In(\"ADC\", id) + \"," +
+            "\" + In(\"BDC\", id) + \",\" + In(\"CDC\", id) + \",\" + In(\"DDC\", id), group, prefix);\r\n" +
+            "            }\r\n        }\r\n\r\n        public static string ChannelSplitRatioLeft(U" +
+            "Int id, string inputs, Float ratio = 0.375f, string group = \"\", string prefix = " +
+            "\"CSRL\")\r\n        {\r\n            return \"[\" + group + prefix + to_string(id) + \"]" +
+            "\" + nwl +\r\n                \"Type=ChannelSplitRatioLeft\" + nwl +\r\n               " +
+            " \"Inputs=\" + inputs + nwl +\r\n                \"Ratio=\" + to_string(ratio) + nwl +" +
+            " nwl;\r\n        }\r\n\r\n        public static string ChannelSplitRatioRight(UInt id," +
+            " string inputs, Float ratio = 0.375f, string group = \"\", string prefix = \"CSRR\")" +
+            "\r\n        {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + nwl" +
+            " +\r\n                \"Type=ChannelSplitRatioRight\" + nwl +\r\n                \"Inpu" +
+            "ts=\" + inputs + nwl +\r\n                \"Ratio=\" + to_string(ratio) + nwl + nwl;\r" +
+            "\n        }\r\n\r\n        public static string ChannelSplit(UInt id, string inputs, " +
+            "UInt groups, UInt part, string group = \"\", string prefix = \"CS\")\r\n        {\r\n   " +
+            "         return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n            " +
+            "    \"Type=ChannelSplit\" + nwl +\r\n                \"Inputs=\" + inputs + nwl +\r\n   " +
+            "             \"Groups=\" + to_string(groups) + nwl +\r\n                \"Group=\" + t" +
+            "o_string(part) + nwl + nwl;\r\n        }\r\n\r\n        public static string Shuffle(U" +
+            "Int id, string inputs, UInt groups = 2, string group = \"\", string prefix = \"SH\")" +
+            "\r\n        {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + nwl" +
+            " +\r\n                \"Type=Shuffle\" + nwl +\r\n                \"Inputs=\" + inputs +" +
+            " nwl +\r\n                \"Groups=\" + to_string(groups) + nwl + nwl;\r\n        }\r\n\r" +
+            "\n        public static string Concat(UInt id, string inputs, string group = \"\", " +
+            "string prefix = \"CC\")\r\n        {\r\n            return \"[\" + group + prefix + to_s" +
+            "tring(id) + \"]\" + nwl +\r\n                \"Type=Concat\" + nwl +\r\n                " +
+            "\"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n        public static string AvgPo" +
+            "oling(UInt id, string input, string kernel = \"3,3\", string stride = \"2,2\", strin" +
+            "g pad = \"1,1\", string group = \"\", string prefix = \"P\")\r\n        {\r\n            r" +
+            "eturn \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n                \"Type=" +
+            "AvgPooling\" + nwl +\r\n                \"Inputs=\" + input + nwl +\r\n                " +
+            "\"Kernel=\" + kernel + nwl +\r\n                \"Stride=\" + stride + nwl +\r\n        " +
+            "        \"Pad=\" + pad + nwl + nwl;\r\n        }\r\n\r\n        public static string Glo" +
+            "balAvgPooling(string input, string group = \"\", string prefix = \"GAP\")\r\n        {" +
+            "\r\n            return \"[\" + group + prefix + \"]\" + nwl +\r\n                \"Type=G" +
+            "lobalAvgPooling\" + nwl +\r\n                \"Inputs=\" + input + nwl + nwl;\r\n      " +
+            "  }\r\n\r\n        public static string GlobalMaxPooling(string input, string group " +
+            "= \"\", string prefix = \"GMP\")\r\n        {\r\n            return \"[\" + group + prefix" +
+            " + \"]\" + nwl +\r\n                \"Type=GlobalMaxPooling\" + nwl +\r\n               " +
+            " \"Inputs=\" + input + nwl + nwl;\r\n        }\r\n\r\n        public static string Dense" +
+            "(UInt id, string inputs, UInt channels, bool biases = false, string group = \"\", " +
+            "string prefix = \"DS\", string weightsFiller = \"\")\r\n        {\r\n            return " +
+            "\"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n                \"Type=Dense\"" +
+            " + nwl +\r\n                \"Inputs=\" + inputs + nwl +\r\n                \"Channels=" +
+            "\" + to_string(channels) + nwl +\r\n                (biases ? \"Biases=Yes\" + nwl : " +
+            "\"\") +\r\n                (weightsFiller != \"\" ? \"WeightsFiller=\" + weightsFiller +" +
+            " nwl + nwl : nwl);\r\n        }\r\n\r\n        public static string Add(UInt id, strin" +
+            "g inputs, string group = \"\", string prefix = \"A\")\r\n        {\r\n            return" +
+            " \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n                \"Type=Add\" " +
+            "+ nwl +\r\n                \"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n        p" +
+            "ublic static string Multiply(string inputs, string group = \"\", string prefix = \"" +
+            "CM\")\r\n        {\r\n            return \"[\" + group + prefix + \"]\" + nwl +\r\n        " +
+            "        \"Type=Multiply\" + nwl +\r\n                \"Inputs=\" + inputs + nwl + nwl;" +
+            "\r\n        }\r\n\r\n        public static string Dropout(UInt id, string inputs, stri" +
+            "ng group = \"\", string prefix = \"D\")\r\n        {\r\n            return \"[\" + group +" +
+            " prefix + to_string(id) + \"]\" + nwl +\r\n                \"Type=Dropout\" + nwl +\r\n " +
+            "               \"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n        public stat" +
+            "ic string Softmax(UInt id, string inputs, string group = \"\", string prefix = \"SM" +
+            "\")\r\n        {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + n" +
+            "wl +\r\n                \"Type=Softmax\" + nwl +\r\n                \"Inputs=\" + inputs" +
+            " + nwl + nwl;\r\n        }\r\n\r\n        public static string Softmax(string inputs, " +
+            "string group = \"\", string prefix = \"SM\")\r\n        {\r\n            return \"[\" + gr" +
+            "oup + prefix + \"]\" + nwl +\r\n                \"Type=Softmax\" + nwl +\r\n            " +
+            "    \"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n        public static string L" +
+            "ogSoftmax(UInt id, string inputs, string group = \"\", string prefix = \"LSM\")\r\n   " +
+            "     {\r\n            return \"[\" + group + prefix + to_string(id) + \"]\" + nwl +\r\n " +
+            "               \"Type=LogSoftmax\" + nwl +\r\n                \"Inputs=\" + inputs + n" +
+            "wl + nwl;\r\n        }\r\n\r\n        public static string LogSoftmax(string inputs, s" +
+            "tring group = \"\", string prefix = \"LSM\")\r\n        {\r\n            return \"[\" + gr" +
+            "oup + prefix + \"]\" + nwl +\r\n                \"Type=LogSoftmax\" + nwl +\r\n         " +
+            "       \"Inputs=\" + inputs + nwl + nwl;\r\n        }\r\n\r\n        public static strin" +
+            "g Activation(UInt id, string inputs, string activation = \"Relu\", string group = " +
+            "\"\", string prefix = \"ACT\")\r\n        {\r\n            return \"[\" + group + prefix +" +
+            " to_string(id) + \"]\" + nwl +\r\n                \"Type=Activation\" + nwl +\r\n       " +
+            "         \"Inputs=\" + inputs + nwl +\r\n                \"Activation=\" + activation " +
+            "+ nwl + nwl;\r\n        }\r\n\r\n        public static string Activation(UInt id, stri" +
+            "ng inputs, Activations activation = Activations.Relu, string group = \"\", string " +
+            "prefix = \"ACT\")\r\n        {\r\n            return \"[\" + group + prefix + to_string(" +
+            "id) + \"]\" + nwl +\r\n                \"Type=Activation\" + nwl +\r\n                \"I" +
+            "nputs=\" + inputs + nwl +\r\n                \"Activation=\" + activation.ToString() " +
+            "+ nwl + nwl;\r\n        }\r\n\r\n        public static string Cost(string inputs, Data" +
+            "sets dataset, UInt channels, string cost = \"CategoricalCrossEntropy\", Float eps " +
+            "= 0.0f, string group = \"\", string prefix = \"Cost\")\r\n        {\r\n            retur" +
+            "n \"[\" + group + prefix + \"]\" + nwl +\r\n                \"Type=Cost\" + nwl +\r\n     " +
+            "           \"Inputs=\" + inputs + nwl +\r\n                \"Cost=\" + cost + nwl +\r\n " +
+            "               \"LabelIndex=\" + ((dataset == Datasets.cifar100 && channels == 100" +
+            ") ? \"1\" : \"0\") + nwl +\r\n                \"Channels=\" + to_string(channels) + nwl " +
+            "+\r\n                \"Eps=\" + to_string(eps);\r\n        }\r\n\r\n        public static " +
+            "List<string> FusedMBConv(UInt A, UInt C, string inputs, UInt inputChannels, UInt" +
+            " outputChannels, UInt stride = 1, UInt expandRatio = 4, bool se = false, Activat" +
+            "ions activation = Activations.HardSwish)\r\n        {\r\n            var blocks = ne" +
+            "w List<string>();\r\n            var hiddenDim = DIV8(inputChannels * expandRatio)" +
+            ";\r\n            var identity = stride == 1 && inputChannels == outputChannels;\r\n\r" +
+            "\n            if (se)\r\n            {\r\n                var group = In(\"SE\", C);\r\n\r" +
+            "\n                blocks.Add(\r\n                    Convolution(C, inputs, hiddenD" +
+            "im, 3, 3, stride, stride, 1, 1) +\r\n                    (expandRatio > 1 ? BatchN" +
+            "ormActivationDropout(C, In(\"C\", C), activation) : BatchNormActivation(C, In(\"C\"," +
+            " C), activation)) +\r\n\r\n                    GlobalAvgPooling(In(\"B\", C), group) +" +
+            "\r\n                    Convolution(1, group + \"GAP\", DIV8(hiddenDim / expandRatio" +
+            "), 1, 1, 1, 1, 0, 0, false, group) +\r\n                    BatchNormActivation(1," +
+            " group + \"C1\", (activation == Activations.FRelu ? Activations.HardSwish : activa" +
+            "tion), group) +\r\n                    Convolution(2, group + \"B1\", hiddenDim, 1, " +
+            "1, 1, 1, 0, 0, false, group) +\r\n                    BatchNormActivation(2, group" +
+            " + \"C2\", Activations.HardSigmoid, group) +\r\n                    Multiply(In(\"B\"," +
+            " C) + \",\" + group + \"B2\", group) +\r\n\r\n                    Convolution(C + 1, gro" +
+            "up + \"CM\", DIV8(outputChannels), 1, 1, 1, 1, 0, 0) +\r\n                    BatchN" +
+            "orm(C + 1, In(\"C\", C + 1)));\r\n            }\r\n            else\r\n            {\r\n  " +
+            "              blocks.Add(\r\n                    Convolution(C, inputs, hiddenDim," +
+            " 3, 3, stride, stride, 1, 1) +\r\n                    (expandRatio > 1 ? BatchNorm" +
+            "ActivationDropout(C, In(\"C\", C), activation) : BatchNormActivation(C, In(\"C\", C)" +
+            ", activation)) +\r\n                    Convolution(C + 1, In(\"B\", C), DIV8(output" +
+            "Channels), 1, 1, 1, 1, 0, 0) +\r\n                    BatchNorm(C + 1, In(\"C\", C +" +
+            " 1)));\r\n            }\r\n\r\n            if (identity)\r\n            {\r\n             " +
+            "   blocks.Add(\r\n                    Add(A, In(\"B\", C + 1) + \",\" + inputs));\r\n   " +
+            "         }\r\n\r\n            return blocks;\r\n        }\r\n\r\n        public static Lis" +
+            "t<string> MBConv(UInt A, UInt C, string inputs, UInt inputChannels, UInt outputC" +
+            "hannels, UInt stride = 1, UInt expandRatio = 4, bool se = false, Activations act" +
+            "ivation = Activations.HardSwish)\r\n        {\r\n            var blocks = new List<s" +
+            "tring>();\r\n            var hiddenDim = DIV8(inputChannels * expandRatio);\r\n     " +
+            "       var identity = stride == 1 && inputChannels == outputChannels;\r\n\r\n       " +
+            "     if (se)\r\n            {\r\n                var group = In(\"SE\", C + 1);\r\n\r\n   " +
+            "             blocks.Add(\r\n                    Convolution(C, inputs, hiddenDim, " +
+            "1, 1, 1, 1, 0, 0) +\r\n                    BatchNormActivation(C, In(\"C\", C), acti" +
+            "vation) +\r\n                    DepthwiseConvolution(C + 1, In(\"B\", C), 1, 3, 3, " +
+            "stride, stride, 1, 1) +\r\n                    (expandRatio > 1 ? BatchNormActivat" +
+            "ionDropout(C + 1, In(\"DC\", C + 1), activation) : BatchNormActivation(C + 1, In(\"" +
+            "DC\", C + 1), activation)) +\r\n\r\n                    GlobalAvgPooling(In(\"B\", C + " +
+            "1), group) +\r\n                    Convolution(1, group + \"GAP\", DIV8(hiddenDim /" +
+            " expandRatio), 1, 1, 1, 1, 0, 0, false, group) +\r\n                    BatchNormA" +
+            "ctivation(1, group + \"C1\", (activation == Activations.FRelu ? Activations.HardSw" +
+            "ish : activation), group) +\r\n                    Convolution(2, group + \"B1\", hi" +
+            "ddenDim, 1, 1, 1, 1, 0, 0, false, group) +\r\n                    BatchNormActivat" +
+            "ion(2, group + \"C2\", Activations.HardSigmoid, group) +\r\n                    Mult" +
+            "iply(In(\"B\", C + 1) + \",\" + group + \"B2\", group) +\r\n\r\n                    Convol" +
+            "ution(C + 2, group + \"CM\", DIV8(outputChannels), 1, 1, 1, 1, 0, 0) +\r\n          " +
+            "          BatchNorm(C + 2, In(\"C\", C + 2)));\r\n            }\r\n            else\r\n " +
+            "           {\r\n                blocks.Add(\r\n                    Convolution(C, in" +
+            "puts, hiddenDim, 1, 1, 1, 1, 0, 0) +\r\n                    BatchNormActivation(C," +
+            " In(\"C\", C), activation) +\r\n                    DepthwiseConvolution(C + 1, In(\"" +
+            "B\", C), 1, 3, 3, stride, stride, 1, 1) +\r\n                    (expandRatio > 1 ?" +
+            " BatchNormActivationDropout(C + 1, In(\"DC\", C + 1), activation) : BatchNormActiv" +
+            "ation(C + 1, In(\"DC\", C + 1), activation)) +\r\n                    Convolution(C " +
+            "+ 2, In(\"B\", C + 1), DIV8(outputChannels), 1, 1, 1, 1, 0, 0) +\r\n                " +
+            "    BatchNorm(C + 2, In(\"C\", C + 2)));\r\n            }\r\n\r\n            if (identit" +
+            "y)\r\n            {\r\n                blocks.Add(\r\n                    Add(A, In(\"B" +
+            "\", C + 2) + \",\" + inputs));\r\n            }\r\n\r\n            return blocks;\r\n      " +
+            "  }\r\n\r\n\r\n        public static string InvertedResidual(UInt A, UInt C, UInt chan" +
+            "nels, UInt kernel = 3, UInt pad = 1, bool subsample = false, UInt shuffle = 2, b" +
+            "ool se = false, Activations activation = Activations.HardSwish)\r\n        {\r\n    " +
+            "        if (subsample)\r\n            {\r\n                return\r\n                 " +
+            "   Convolution(C, In(\"CC\", A), channels, 1, 1, 1, 1, 0, 0) +\r\n                  " +
             "  BatchNormActivation(C + 1, In(\"C\", C), activation) +\r\n                    Dept" +
             "hwiseConvolution(C + 1, In(\"B\", C + 1), 1, kernel, kernel, 1, 1, pad, pad) +\r\n  " +
-            "                  BatchNorm(C + 2, In(\"DC\", C + 1)) +\r\n                    Chann" +
-            "elSplit(A, In(\"B\", C + 2), 2, 1, \"L1\") + ChannelSplit(A, In(\"B\", C + 2), 2, 2, \"" +
-            "R1\") +\r\n                    ChannelSplit(A, In(\"CSRL\", A), 2, 1, \"L2\") + Channel" +
-            "Split(A, In(\"CSRL\", A), 2, 2, \"R2\") +\r\n                    Concat(A, In(\"L1CS\", " +
-            "A) + \",\" + In(\"L2CS\", A), \"L\") +\r\n                    Concat(A, In(\"R1CS\", A) + " +
-            "\",\" + In(\"R2CS\", A), \"R\") +\r\n                    Convolution(C + 2, In(\"RCC\", A)" +
-            ", channels, 1, 1, 1, 1, 0, 0) +\r\n                    BatchNormActivation(C + 3, " +
-            "In(\"C\", C + 2), activation) +\r\n                    strSE;\r\n            }\r\n      " +
-            "  }\r\n\r\n        internal static string Generate(ScriptParameters p)\r\n        {\r\n " +
-            "           var net =\r\n                \"[\" + p.ModelName + \"]\" + nwl +\r\n         " +
-            "       \"Dataset=\" + to_string(p.Dataset) + nwl +\r\n                \"Dim=\" + to_st" +
-            "ring(p.C) + \",\" + to_string(p.H) + \",\" + to_string(p.W) + nwl +\r\n               " +
-            "  ((p.PadH > 0 || p.PadW > 0) ? (!p.MirrorPad ? \"ZeroPad=\" + to_string(p.PadH) +" +
-            " \",\" + to_string(p.PadW) + nwl : \"MirrorPad=\" + to_string(p.PadH) + \",\" + to_str" +
-            "ing(p.PadW) + nwl) : \"\") +\r\n                ((p.PadH > 0 || p.PadW > 0) ? \"Rando" +
-            "mCrop=Yes\" + nwl : \"\") +\r\n                \"WeightsFiller=\" + to_string(p.Weights" +
-            "Filler) + (p.WeightsFillerModeVisible ? \"(\" + p.WeightsFillerMode.ToString() + \"" +
-            ",\" + to_string(p.WeightsGain) + \")\" : \"\") + (p.WeightsGainVisible && !p.WeightsF" +
-            "illerModeVisible ? \"(\" + to_string(p.WeightsGain) + \")\" : \"\") + (p.WeightsScaleV" +
-            "isible ? \"(\" + to_string(p.WeightsScale) + \")\" : \"\") + nwl +\r\n                (p" +
-            ".WeightsLRM != 1 ? \"WeightsLRM=\" + to_string(p.WeightsLRM) + nwl : \"\") +\r\n      " +
-            "          (p.WeightsWDM != 1 ? \"WeightsWDM=\" + to_string(p.WeightsWDM) + nwl : \"" +
-            "\") +\r\n                (p.HasBias ? \"BiasesFiller=\" + to_string(p.BiasesFiller) +" +
-            " (p.BiasesFillerModeVisible ? \"(\" + p.BiasesFillerMode.ToString() + \",\" + to_str" +
-            "ing(p.BiasesGain) + \")\" : \"\") + (p.BiasesGainVisible && !p.BiasesFillerModeVisib" +
-            "le ? \"(\" + to_string(p.BiasesGain) + \")\" : \"\") + (p.BiasesScaleVisible ? \"(\" + t" +
-            "o_string(p.BiasesScale) + \")\" : \"\") + nwl +\r\n                (p.BiasesLRM != 1 ?" +
-            " \"BiasesLRM=\" + to_string(p.BiasesLRM) + nwl : \"\") +\r\n                (p.BiasesW" +
-            "DM != 1 ? \"BiasesWDM=\" + to_string(p.BiasesWDM) + nwl : \"\") : \"Biases=No\" + nwl)" +
-            " +\r\n                (p.DropoutVisible ? \"Dropout=\" + to_string(p.Dropout) + nwl " +
-            ": \"\") +\r\n                (p.DepthDropVisible ? \"DepthDrop=\" + to_string(p.DepthD" +
-            "rop) + nwl : \"\") +\r\n                (p.DepthDropVisible ? \"FixedDepthDrop=\" + to" +
-            "_string(p.FixedDepthDrop) + nwl : \"\") +\r\n                \"Scaling=\" + to_string(" +
-            "p.BatchNormScaling) + nwl +\r\n                \"Momentum=\" + to_string(p.BatchNorm" +
-            "Momentum) + nwl +\r\n                \"Eps=\" + to_string(p.BatchNormEps) + nwl + nw" +
-            "l;\r\n\r\n            var blocks = new List<string>();\r\n\r\n            switch (p.Scri" +
-            "pt)\r\n            {\r\n                case Scripts.augshufflenet:\r\n               " +
-            "     {\r\n                        var channels = DIV8(p.Width * 16);\r\n\r\n          " +
-            "              net +=\r\n                            Convolution(1, \"Input\", channe" +
-            "ls, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +\r\n                     " +
-            "       BatchNormActivation(1, \"C1\", p.Activation) +\r\n                           " +
-            " Convolution(2, \"B1\", channels, 1, 1, 1, 1, 0, 0) +\r\n                           " +
-            " BatchNormActivation(2, \"C2\", p.Activation) +\r\n                            Depth" +
-            "wiseConvolution(3, \"B2\", 1, 3, 3, 1, 1, 1, 1) +\r\n                            Bat" +
-            "chNorm(3, \"DC3\") +\r\n                            Convolution(4, \"B3\", channels, 1" +
-            ", 1, 1, 1, 0, 0) +\r\n                            BatchNormActivation(4, \"C4\", p.A" +
-            "ctivation) +\r\n                            Convolution(5, \"B1\", channels, 1, 1, 1" +
-            ", 1, 0, 0) +\r\n                            Concat(1, \"C5,B4\");\r\n\r\n               " +
-            "         var C = 6ul;\r\n                        var A = 1ul;\r\n                   " +
-            "     var subsample = false;\r\n                        foreach (var rec in p.Shuff" +
-            "leNet)\r\n                        {\r\n                            if (subsample)\r\n " +
-            "                           {\r\n                                channels *= 2;\r\n  " +
-            "                              net += AugmentedInvertedResidual(A++, C, channels," +
-            " rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation);\r\n               " +
-            "                 C += 5;\r\n                            }\r\n                       " +
-            "     for (var n = 0ul; n < rec.Iterations; n++)\r\n                            {\r\n" +
-            "                                net += AugmentedInvertedResidual(A++, C, channel" +
-            "s, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);\r\n            " +
-            "                    C += 3;\r\n                            }\r\n                    " +
-            "        subsample = true;\r\n                        }\r\n\r\n                        " +
-            "net +=\r\n                            Convolution(C, In(\"CC\", A), p.Classes, 1, 1," +
-            " 1, 1, 0, 0) +\r\n                            BatchNorm(C + 1, In(\"C\", C)) +\r\n    " +
-            "                        GlobalAvgPooling(In(\"B\", C + 1)) +\r\n                    " +
-            "        LogSoftmax(\"GAP\") +\r\n                            Cost(\"LSM\", p.Dataset, " +
-            "p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n                    }\r\n         " +
-            "           break;\r\n\r\n                case Scripts.densenet:\r\n                   " +
-            " {\r\n                        var channels = DIV8(p.GrowthRate);\r\n\r\n              " +
-            "          net += Convolution(1, \"Input\", channels, 3, 3, p.StrideHFirstConv, p.S" +
-            "trideWFirstConv, 1, 1);\r\n\r\n                        if (p.Bottleneck)\r\n          " +
-            "              {\r\n                            blocks.Add(\r\n                      " +
-            "          BatchNormActivation(1, \"C1\", p.Activation) +\r\n                        " +
-            "        Convolution(2, \"B1\", DIV8(4 * p.GrowthRate), 1, 1, 1, 1, 0, 0) +\r\n      " +
-            "                          BatchNormActivation(2, \"C2\", p.Activation) +\r\n        " +
-            "                        Convolution(3, \"B2\", DIV8(p.GrowthRate), 3, 3, 1, 1, 1, " +
-            "1) +\r\n                                (p.Dropout > 0 ? Dropout(3, \"C3\") + Concat" +
-            "(1, \"C1,D3\") : Concat(1, \"C1,C3\")));\r\n                        }\r\n               " +
-            "         else\r\n                        {\r\n                            blocks.Add" +
-            "(\r\n                                BatchNormActivation(1, \"C1\", p.Activation) +\r" +
-            "\n                                Convolution(2, \"B1\", DIV8(p.GrowthRate), 3, 3, " +
-            "1, 1, 1, 1) +\r\n                                (p.Dropout > 0 ? Dropout(2, \"C2\")" +
-            " + Concat(1, \"C1,D2\") : Concat(1, \"C1,C2\")));\r\n                        }\r\n\r\n    " +
-            "                    var CC = 1ul;\r\n                        var C = p.Bottleneck " +
-            "? 4ul : 3ul;\r\n\r\n                        channels += DIV8(p.GrowthRate);\r\n\r\n     " +
-            "                   for (var g = 1ul; g <= p.Groups; g++)\r\n                      " +
-            "  {\r\n                            for (var i = 1ul; i < p.Iterations; i++)\r\n     " +
-            "                       {\r\n                                if (p.Bottleneck)\r\n   " +
-            "                             {\r\n                                    blocks.Add(\r" +
-            "\n                                        BatchNormActivation(C, In(\"CC\", CC), p." +
-            "Activation) +\r\n                                        Convolution(C, In(\"B\", C)" +
-            ", DIV8(4 * p.GrowthRate), 1, 1, 1, 1, 0, 0) +\r\n                                 " +
-            "       BatchNormActivation(C + 1, In(\"C\", C), p.Activation) +\r\n                 " +
-            "                       Convolution(C + 1, In(\"B\", C + 1), DIV8(p.GrowthRate), 3," +
-            " 3, 1, 1, 1, 1) +\r\n                                        (p.Dropout > 0 ? Drop" +
-            "out(C + 1, In(\"C\", C + 1)) + Concat(CC + 1, In(\"CC\", CC) + \",\" + In(\"D\", C + 1))" +
-            " : Concat(CC + 1, In(\"CC\", CC) + \",\" + In(\"C\", C + 1))));\r\n\r\n                   " +
-            "                 C += 2;\r\n                                }\r\n                   " +
-            "             else\r\n                                {\r\n                          " +
-            "          blocks.Add(\r\n                                        BatchNormActivati" +
-            "on(C, In(\"CC\", CC), p.Activation) +\r\n                                        Con" +
-            "volution(C, In(\"B\", C), DIV8(p.GrowthRate), 3, 3, 1, 1, 1, 1) +\r\n               " +
-            "                         (p.Dropout > 0 ? Dropout(C, In(\"C\", C)) + Concat(CC + 1" +
-            ", In(\"CC\", CC) + \",\" + In(\"D\", C)) : Concat(CC + 1, In(\"CC\", CC) + \",\" + In(\"C\"," +
-            " C))));\r\n\r\n                                    C++;\r\n                           " +
-            "     }\r\n\r\n                                CC++;\r\n                               " +
-            " channels += DIV8(p.GrowthRate);\r\n                            }\r\n\r\n             " +
-            "              if (g < p.Groups)\r\n                            {\r\n                " +
-            "                channels = DIV8((UInt)System.Math.Floor(2.0 * channels * p.Compr" +
-            "ession));\r\n\r\n                                if (p.Dropout > 0)\r\n               " +
-            "                     blocks.Add(\r\n                                        Convol" +
-            "ution(C, In(\"CC\", CC), channels, 1, 1, 1, 1, 0, 0) +\r\n                          " +
-            "              Dropout(C, In(\"C\", C)) +\r\n                                        " +
-            "AvgPooling(g, In(\"D\", C), \"2,2\", \"2,2\", \"0,0\"));\r\n                              " +
-            "  else\r\n                                    blocks.Add(\r\n                       " +
-            "                 Convolution(C, \"CC\" + to_string(CC), channels, 1, 1, 1, 1, 0, 0" +
-            ") +\r\n                                        AvgPooling(g, In(\"C\", C), \"2,2\", \"2" +
-            ",2\", \"0,0\"));\r\n                                C++;\r\n                           " +
-            "     CC++;\r\n\r\n                                if (p.Bottleneck)\r\n               " +
-            "                 {\r\n                                    blocks.Add(\r\n           " +
-            "                             BatchNormActivation(C, In(\"P\", g), p.Activation) +\r" +
-            "\n                                        Convolution(C, In(\"B\", C), DIV8(4 * p.G" +
-            "rowthRate), 1, 1, 1, 1, 0, 0) +\r\n                                        BatchNo" +
-            "rmActivation(C + 1, In(\"C\", C), p.Activation) +\r\n                               " +
-            "         Convolution(C + 1, In(\"B\", C + 1), DIV8(p.GrowthRate), 3, 3, 1, 1, 1, 1" +
-            ") +\r\n                                        (p.Dropout > 0 ? Dropout(C + 1, In(" +
-            "\"C\", C + 1)) + Concat(CC, In(\"B\", C) + \",\" + In(\"D\", C + 1)) : Concat(CC, In(\"B\"" +
-            ", C) + \",\" + In(\"C\", C + 1))));\r\n\r\n                                    C += 2;\r\n" +
-            "                                }\r\n                                else\r\n       " +
-            "                         {\r\n                                    blocks.Add(\r\n   " +
-            "                                     BatchNormActivation(C, In(\"P\", g), p.Activa" +
-            "tion) +\r\n                                        Convolution(C, In(\"B\", C), DIV8" +
-            "(p.GrowthRate), 3, 3, 1, 1, 1, 1) +\r\n                                        (p." +
-            "Dropout > 0 ? Dropout(C, In(\"C\", C)) + Concat(CC, In(\"B\", C) + \",\" + In(\"D\", C))" +
-            " : Concat(CC, In(\"B\", C) + \",\" + In(\"C\", C))));\r\n\r\n                             " +
-            "       C++;\r\n                                }\r\n\r\n                              " +
-            "  channels += DIV8(p.GrowthRate);\r\n                            }\r\n              " +
-            "          }\r\n\r\n                        foreach (var block in blocks)\r\n          " +
-            "                  net += block;\r\n\r\n                        net +=\r\n             " +
-            "               Convolution(C, In(\"CC\", CC), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n    " +
-            "                        BatchNorm(C + 1, In(\"C\", C)) +\r\n                        " +
-            "    GlobalAvgPooling(In(\"B\", C + 1)) +\r\n                            LogSoftmax(\"" +
-            "GAP\") +\r\n                            Cost(\"LSM\", p.Dataset, p.Classes, \"Categori" +
-            "calCrossEntropy\", 0.125f);\r\n                    }\r\n                    break;\r\n\r" +
-            "\n                case Scripts.efficientnetv2:\r\n                    {\r\n          " +
-            "              const Float width = 1.0f;\r\n                        var inputChanne" +
-            "ls = DIV8((UInt)((Float)p.EfficientNet[0].Channels * width));\r\n                 " +
-            "       var A = 1ul;\r\n                        var C = 1ul;\r\n\r\n                   " +
-            "     net +=\r\n                           Convolution(C, \"Input\", inputChannels, 3" +
-            ", 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +\r\n                          " +
-            " BatchNormActivation(C, In(\"C\", C), p.Activation);\r\n\r\n                        va" +
-            "r stage = 0ul;\r\n                        var input = In(\"B\", C++);\r\n             " +
-            "           foreach (var rec in p.EfficientNet)\r\n                        {\r\n     " +
-            "                      var beginStage = stage < 3ul;\r\n                           " +
-            " var outputChannels = DIV8((UInt)((Float)rec.Channels * width));\r\n              " +
-            "              for (var n = 0ul; n < rec.Iterations; n++)\r\n                      " +
-            "      {\r\n                                var stride = n == 0ul ? rec.Stride : 1u" +
-            "l;\r\n                                var identity = stride == 1ul && inputChannel" +
-            "s == outputChannels;\r\n\r\n                                var subblocks = beginSta" +
-            "ge ? FusedMBConv(A, C, input, inputChannels, outputChannels, stride, rec.ExpandR" +
-            "atio, rec.SE, p.Activation) :\r\n                                                 " +
-            "                  MBConv(A, C, input, inputChannels, outputChannels, stride, rec" +
-            ".ExpandRatio, rec.SE, p.Activation);\r\n                                foreach (v" +
-            "ar blk in subblocks)\r\n                                    net += blk;\r\n\r\n       " +
-            "                         inputChannels = outputChannels;\r\n                      " +
-            "          C += beginStage ? 1ul : 2ul;\r\n\r\n                                if (id" +
-            "entity)\r\n                                {\r\n                                    " +
-            "input = In(\"A\", A++);\r\n                                    C++;\r\n               " +
-            "                 }\r\n                                else\r\n                      " +
-            "              input = In(\"B\", C++);\r\n                            }\r\n            " +
-            "                stage++;\r\n                        }\r\n\r\n                        n" +
-            "et +=\r\n                            Convolution(C, In(\"A\", A - 1), p.Classes, 1, " +
-            "1, 1, 1, 0, 0) +\r\n                            BatchNormActivationDropout(C, In(\"" +
-            "C\", C), p.Activation) +\r\n                            GlobalAvgPooling(In(\"B\", C)" +
-            ") +\r\n                            LogSoftmax(\"GAP\") +\r\n                          " +
-            "  Cost(\"LSM\", p.Dataset, p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n       " +
-            "             }\r\n                    break;\r\n\r\n                case Scripts.mobil" +
-            "enetv3:\r\n                    {\r\n                        var se = p.SqueezeExcita" +
-            "tion;\r\n                        var channelsplit = true;\r\n                       " +
-            " var W = p.Width * 16;\r\n\r\n                        net +=\r\n                      " +
-            "      Convolution(1, \"Input\", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstC" +
-            "onv, 1, 1) +\r\n                            BatchNormActivation(1, \"C1\", p.Activat" +
-            "ion);\r\n\r\n                        blocks.Add(\r\n                            Convol" +
-            "ution(2, \"B1\", DIV8(6 * W), 1, 1, 1, 1, 0, 0) +\r\n                            Bat" +
-            "chNormActivation(2, \"C2\", p.Activation) +\r\n                            Depthwise" +
-            "MixedConvolution(0, 3, \"B2\", 1, 1, p.HasBias, channelsplit) +\r\n                 " +
-            "           BatchNormActivation(3, \"DC3\", p.Activation) +\r\n                      " +
-            "      Convolution(4, \"B3\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                       " +
-            "     BatchNorm(4, \"C4\"));\r\n\r\n                        var A = 1ul;\r\n             " +
-            "           var C = 5ul;\r\n                        for (var g = 1ul; g <= p.Groups" +
-            "; g++)\r\n                        {\r\n                            var mix = g - 1ul" +
-            ";\r\n\r\n                            if (g > 1)\r\n                            {\r\n    " +
-            "                            W *= 2;\r\n\r\n                                var group" +
-            " = In(\"SE\", C + 1);\r\n                                var strSE =\r\n              " +
-            "                      se ? GlobalAvgPooling(In(\"B\", C + 1), group) +\r\n          " +
-            "                          Convolution(1, group + \"GAP\", DIV8((6 * W) / 4), 1, 1," +
-            " 1, 1, 0, 0, false, group) +\r\n                                    BatchNormActiv" +
-            "ation(1, group + \"C1\", (p.Activation == Activations.FRelu ? Activations.HardSwis" +
-            "h : p.Activation), group) +\r\n                                    Convolution(2, " +
-            "group + \"B1\", DIV8(6 * W), 1, 1, 1, 1, 0, 0, false, group) +\r\n                  " +
-            "                  BatchNormActivation(2, group + \"C2\", Activations.HardSigmoid, " +
-            "group) +\r\n                                    Multiply(In(\"B\", C + 1) + \",\" + gr" +
-            "oup + \"B2\", group) +\r\n                                    Convolution(C + 2, gro" +
-            "up + \"CM\", DIV8(W), 1, 1, 1, 1, 0, 0) :\r\n                                    Con" +
-            "volution(C + 2, In(\"B\", C + 1), DIV8(W), 1, 1, 1, 1, 0, 0);\r\n\r\n                 " +
-            "               blocks.Add(\r\n                                    Convolution(C, I" +
-            "n(\"A\", A), DIV8(6 * W), 1, 1, 1, 1, 0, 0) +\r\n                                   " +
-            " BatchNormActivation(C, In(\"C\", C), p.Activation) +\r\n                           " +
-            "         DepthwiseMixedConvolution(1ul, C + 1, In(\"B\", C), 2, 2, p.HasBias, chan" +
-            "nelsplit) +\r\n                                    BatchNormActivation(C + 1, In(\"" +
-            "DC\", C + 1), p.Activation) +\r\n                                    strSE +\r\n     " +
-            "                               BatchNorm(C + 2, In(\"C\", C + 2)));\r\n\r\n           " +
-            "                     C += 3;\r\n                            }\r\n\r\n                 " +
-            "           for (var i = 1ul; i < p.Iterations; i++)\r\n                           " +
-            " {\r\n                                var strOutputLayer = (i == 1 && g > 1) ? In(" +
-            "\"B\", C - 1) : (i == 1 && g == 1) ? In(\"B\", 4) : In(\"A\", A);\r\n\r\n                 " +
-            "               var group = In(\"SE\", C + 1);\r\n\r\n                                v" +
-            "ar strSE =\r\n                                    se ? GlobalAvgPooling(In(\"B\", C " +
-            "+ 1), group) +\r\n                                    Convolution(1, group + \"GAP\"" +
-            ", DIV8((6 * W) / 4), 1, 1, 1, 1, 0, 0, false, group) +\r\n                        " +
-            "            BatchNormActivation(1, group + \"C1\", (p.Activation == Activations.FR" +
-            "elu ? Activations.HardSwish : p.Activation), group) +\r\n                         " +
-            "           Convolution(2, group + \"B1\", DIV8(6 * W), 1, 1, 1, 1, 0, 0, false, gr" +
-            "oup) +\r\n                                    BatchNormActivation(2, group + \"C2\"," +
-            " Activations.HardSigmoid, group) +\r\n                                    Multiply" +
-            "(In(\"B\", C + 1) + \",\" + group + \"B2\", group) +\r\n                                " +
-            "    Convolution(C + 2, group + \"CM\", DIV8(W), 1, 1, 1, 1, 0, 0) :\r\n             " +
-            "                       Convolution(C + 2, In(\"B\", C + 1), DIV8(W), 1, 1, 1, 1, 0" +
-            ", 0);\r\n\r\n                                blocks.Add(\r\n                          " +
-            "          Convolution(C, strOutputLayer, DIV8(6 * W), 1, 1, 1, 1, 0, 0) +\r\n     " +
-            "                               BatchNormActivation(C, In(\"C\", C), p.Activation) " +
-            "+\r\n                                    DepthwiseMixedConvolution(1ul, C + 1, In(" +
-            "\"B\", C), 1, 1, p.HasBias, channelsplit) +\r\n                                    B" +
-            "atchNormActivation(C + 1, In(\"DC\", C + 1), p.Activation) +\r\n                    " +
-            "                strSE +\r\n                                    BatchNorm(C + 2, In" +
-            "(\"C\", C + 2)) +\r\n                                    Add(A + 1, In(\"B\", C + 2) +" +
-            " \",\" + strOutputLayer));\r\n\r\n                                A++;\r\n              " +
-            "                  C += 3;\r\n                            }\r\n                      " +
-            "  }\r\n\r\n                        foreach (var block in blocks)\r\n                  " +
-            "          net += block;\r\n\r\n                        net +=\r\n                     " +
-            "       BatchNormActivation(C, In(\"A\", A), p.Activation) +\r\n                     " +
-            "       Convolution(C + 1, In(\"B\", C), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n          " +
-            "                  BatchNorm(C + 1, In(\"C\", C + 1)) +\r\n                          " +
-            "  GlobalAvgPooling(In(\"B\", C + 1)) +\r\n                            LogSoftmax(\"GA" +
-            "P\") +\r\n                            Cost(\"LSM\", p.Dataset, p.Classes, \"Categorica" +
-            "lCrossEntropy\", 0.125f);\r\n                    }\r\n                    break;\r\n\r\n " +
-            "               case Scripts.resnet:\r\n                    {\r\n                    " +
-            "    var bn = p.Bottleneck ? 1ul : 0ul;\r\n                        const Float K = " +
-            "2.0f;\r\n                        var W = p.Width * 16;\r\n                        va" +
-            "r A = 1ul;\r\n                        var C = 5ul;\r\n\r\n                        net " +
-            "+= Convolution(1, \"Input\", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstConv" +
-            ", 1, 1);\r\n\r\n                        if (p.Bottleneck)\r\n                        {" +
+            "                  Resampling(C + 1, In(\"DC\", C + 1)) +\r\n                    Batc" +
+            "hNorm(C + 2, In(\"R\", C + 1)) +\r\n                    Convolution(C + 2, In(\"B\", C" +
+            " + 2), channels, 1, 1, 1, 1, 0, 0) +\r\n                    BatchNormActivation(C " +
+            "+ 3, In(\"C\", C + 2), activation) +\r\n                    DepthwiseConvolution(C +" +
+            " 3, In(\"CC\", A), 1, kernel, kernel, 1, 1, pad, pad) +\r\n                    Resam" +
+            "pling(C + 3, In(\"DC\", C + 3)) +\r\n                    BatchNorm(C + 4, In(\"R\", C " +
+            "+ 3)) +\r\n                    Convolution(C + 4, In(\"B\", C + 4), channels, 1, 1, " +
+            "1, 1, 0, 0) +\r\n                    BatchNormActivation(C + 5, In(\"C\", C + 4), ac" +
+            "tivation) +\r\n                    Concat(A + 1, In(\"B\", C + 5) + \",\" + In(\"B\", C " +
+            "+ 3));\r\n            }\r\n            else\r\n            {\r\n                var grou" +
+            "pCH = In(\"CHATT\", C + 3); // Channel Attention\r\n                var groupSP = In" +
+            "(\"SPATT\", C + 3); // Spatial Attention\r\n                var strSE = se ?\r\n      " +
+            "              GlobalAvgPooling(In(\"B\", C + 3), groupCH) +\r\n                    C" +
+            "onvolution(1, groupCH + \"GAP\", DIV8(channels), 1, 1, 1, 1, 0, 0, false, groupCH)" +
+            " +\r\n                    BatchNormActivation(1, groupCH + In(\"C\", 1), activation," +
+            " groupCH) +\r\n                    GlobalMaxPooling(In(\"B\", C + 3), groupCH) +\r\n  " +
+            "                  Convolution(2, groupCH + \"GMP\", DIV8(channels), 1, 1, 1, 1, 0," +
+            " 0, false, groupCH) +\r\n                    BatchNormActivation(2, groupCH + In(\"" +
+            "C\", 2), activation, groupCH) +\r\n                    Add(1, In(groupCH + \"B\", 1) " +
+            "+ \",\" + In(groupCH + \"B\", 2), groupCH) +\r\n                    Convolution(3, gro" +
+            "upCH + \"A1\", DIV8(channels), 1, 1, 1, 1, 0, 0, false, groupCH) +\r\n              " +
+            "      BatchNormActivation(3, groupCH + In(\"C\", 3), Activations.HardSigmoid, grou" +
+            "pCH) +\r\n                    Multiply(In(\"B\", C + 3) + \",\" + In(groupCH + \"B\", 3)" +
+            ", groupCH) +\r\n                    ReductionAvg(1, groupCH + \"CM\", groupSP) +\r\n  " +
+            "                  ReductionMax(1, groupCH + \"CM\", groupSP) +\r\n                  " +
+            "  Concat(1, In(groupSP + \"RAVG\", 1) + \",\" + In(groupSP + \"RMAX\", 1), groupSP) +\r" +
+            "\n                    Convolution(1, groupSP + In(\"CC\", 1), 1, 7, 7, 1, 1, 3, 3, " +
+            "false, groupSP) +\r\n                    BatchNormActivation(1, groupSP + In(\"C\", " +
+            "1), Activations.HardSigmoid, groupSP) +\r\n                    Multiply(groupCH + " +
+            "\"CM,\" + groupSP + In(\"B\", 1), groupSP) +\r\n                    Concat(A + 1, In(\"" +
+            "LCS\", A) + \",\" + groupSP + \"CM\") :\r\n                    Concat(A + 1, In(\"LCS\", " +
+            "A) + \",\" + In(\"B\", C + 3));\r\n\r\n                return\r\n                    Shuff" +
+            "le(A, In(\"CC\", A), shuffle) +\r\n                    ChannelSplit(A, In(\"SH\", A), " +
+            "2, 1, \"L\") + ChannelSplit(A, In(\"SH\", A), 2, 2, \"R\") +\r\n                    Conv" +
+            "olution(C, In(\"RCS\", A), channels, 1, 1, 1, 1, 0, 0) +\r\n                    Batc" +
+            "hNormActivation(C + 1, In(\"C\", C), activation) +\r\n                    DepthwiseC" +
+            "onvolution(C + 1, In(\"B\", C + 1), 1, kernel, kernel, 1, 1, pad, pad) +\r\n        " +
+            "            BatchNorm(C + 2, In(\"DC\", C + 1)) +\r\n                    Convolution" +
+            "(C + 2, In(\"B\", C + 2), channels, 1, 1, 1, 1, 0, 0) +\r\n                    Batch" +
+            "NormActivation(C + 3, In(\"C\", C + 2), activation) +\r\n                    strSE;\r" +
+            "\n            }\r\n        }\r\n\r\n        public static string AugmentedInvertedResid" +
+            "ual(UInt A, UInt C, UInt channels, UInt kernel = 3, UInt pad = 1, bool subsample" +
+            " = false, UInt shuffle = 2, bool se = false, Activations activation = Activation" +
+            "s.HardSwish)\r\n        {\r\n            if (subsample)\r\n            {\r\n            " +
+            "    return\r\n                    Convolution(C, In(\"CC\", A), channels, 1, 1, 1, 1" +
+            ", 0, 0) +\r\n                    BatchNormActivation(C + 1, In(\"C\", C), activation" +
+            ") +\r\n                    DepthwiseConvolution(C + 1, In(\"B\", C + 1), 1, kernel, " +
+            "kernel, 1, 1, pad, pad) +\r\n                    Resampling(C + 1, In(\"DC\", C + 1)" +
+            ") +\r\n                    BatchNorm(C + 2, In(\"R\", C + 1)) +\r\n                   " +
+            " Convolution(C + 2, In(\"B\", C + 2), channels, 1, 1, 1, 1, 0, 0) +\r\n             " +
+            "       BatchNormActivation(C + 3, In(\"C\", C + 2), activation) +\r\n               " +
+            "     DepthwiseConvolution(C + 3, In(\"CC\", A), 1, kernel, kernel, 1, 1, pad, pad)" +
+            " +\r\n                    Resampling(C + 3, In(\"DC\", C + 3)) +\r\n                  " +
+            "  BatchNorm(C + 4, In(\"R\", C + 3)) +\r\n                    Convolution(C + 4, In(" +
+            "\"B\", C + 4), channels, 1, 1, 1, 1, 0, 0) +\r\n                    BatchNormActivat" +
+            "ion(C + 5, In(\"C\", C + 4), activation) +\r\n                    Concat(A + 1, In(\"" +
+            "B\", C + 5) + \",\" + In(\"B\", C + 3));\r\n            }\r\n            else\r\n          " +
+            "  {\r\n                var groupCH = In(\"CHATT\", C + 3); // Channel Attention\r\n   " +
+            "             var groupSP = In(\"SPATT\", C + 3); // Spatial Attention\r\n           " +
+            "     var strSE = se ?\r\n                    GlobalAvgPooling(In(\"B\", C + 3), grou" +
+            "pCH) +\r\n                    Convolution(1, groupCH + \"GAP\", DIV8(channels), 1, 1" +
+            ", 1, 1, 0, 0, false, groupCH) +\r\n                    BatchNormActivation(1, grou" +
+            "pCH + In(\"C\", 1), activation, groupCH) +\r\n                    GlobalMaxPooling(I" +
+            "n(\"B\", C + 3), groupCH) +\r\n                    Convolution(2, groupCH + \"GMP\", D" +
+            "IV8(channels), 1, 1, 1, 1, 0, 0, false, groupCH) +\r\n                    BatchNor" +
+            "mActivation(2, groupCH + In(\"C\", 2), activation, groupCH) +\r\n                   " +
+            " Add(1, In(groupCH + \"B\", 1) + \",\" + In(groupCH + \"B\", 2), groupCH) +\r\n         " +
+            "           Convolution(3, groupCH + \"A1\", DIV8(channels), 1, 1, 1, 1, 0, 0, fals" +
+            "e, groupCH) +\r\n                    BatchNormActivation(3, groupCH + In(\"C\", 3), " +
+            "Activations.HardSigmoid, groupCH) +\r\n                    Multiply(In(\"B\", C + 3)" +
+            " + \",\" + In(groupCH + \"B\", 3), groupCH) +\r\n                    ReductionAvg(1, g" +
+            "roupCH + \"CM\", groupSP) +\r\n                    ReductionMax(1, groupCH + \"CM\", g" +
+            "roupSP) +\r\n                    Concat(1, In(groupSP + \"RAVG\", 1) + \",\" + In(grou" +
+            "pSP + \"RMAX\", 1), groupSP) +\r\n                    Convolution(1, groupSP + In(\"C" +
+            "C\", 1), 1, 7, 7, 1, 1, 3, 3, false, groupSP) +\r\n                    BatchNormAct" +
+            "ivation(1, groupSP + In(\"C\", 1), Activations.HardSigmoid, groupSP) +\r\n          " +
+            "          Multiply(groupCH + \"CM,\" + groupSP + In(\"B\", 1), groupSP) +\r\n         " +
+            "           Concat(A + 1, In(\"LCC\", A) + \",\" + groupSP + \"CM\") :\r\n               " +
+            "     Concat(A + 1, In(\"LCC\", A) + \",\" + In(\"B\", C + 3));\r\n\r\n                retu" +
+            "rn\r\n                    Shuffle(A, In(\"CC\", A), shuffle) +\r\n                    " +
+            "ChannelSplitRatioLeft(A, In(\"SH\", A), 0.375f) + ChannelSplitRatioRight(A, In(\"SH" +
+            "\", A), 0.375f) +\r\n                    Convolution(C, In(\"CSRR\", A), DIV8((UInt)(" +
+            "(2 * channels) * 0.375f)), 1, 1, 1, 1, 0, 0) +\r\n                    // BatchNorm" +
+            "(C + 1, In(\"C\", C)) +\r\n                    BatchNormActivation(C + 1, In(\"C\", C)" +
+            ", activation) +\r\n                    DepthwiseConvolution(C + 1, In(\"B\", C + 1)," +
+            " 1, kernel, kernel, 1, 1, pad, pad) +\r\n                    BatchNorm(C + 2, In(\"" +
+            "DC\", C + 1)) +\r\n                    ChannelSplit(A, In(\"B\", C + 2), 2, 1, \"L1\") " +
+            "+ ChannelSplit(A, In(\"B\", C + 2), 2, 2, \"R1\") +\r\n                    ChannelSpli" +
+            "t(A, In(\"CSRL\", A), 2, 1, \"L2\") + ChannelSplit(A, In(\"CSRL\", A), 2, 2, \"R2\") +\r\n" +
+            "                    Concat(A, In(\"L1CS\", A) + \",\" + In(\"L2CS\", A), \"L\") +\r\n     " +
+            "               Concat(A, In(\"R1CS\", A) + \",\" + In(\"R2CS\", A), \"R\") +\r\n          " +
+            "          Convolution(C + 2, In(\"RCC\", A), channels, 1, 1, 1, 1, 0, 0) +\r\n      " +
+            "              BatchNormActivation(C + 3, In(\"C\", C + 2), activation) +\r\n        " +
+            "            strSE;\r\n            }\r\n        }\r\n\r\n        internal static string G" +
+            "enerate(ScriptParameters p)\r\n        {\r\n            var net =\r\n                \"" +
+            "[\" + p.ModelName + \"]\" + nwl +\r\n                \"Dataset=\" + to_string(p.Dataset" +
+            ") + nwl +\r\n                \"Dim=\" + to_string(p.C) + \",\" + to_string(p.H) + \",\" " +
+            "+ to_string(p.W) + nwl +\r\n                ((p.PadH > 0 || p.PadW > 0) ? (!p.Mirr" +
+            "orPad ? \"ZeroPad=\" + to_string(p.PadH) + \",\" + to_string(p.PadW) + nwl : \"Mirror" +
+            "Pad=\" + to_string(p.PadH) + \",\" + to_string(p.PadW) + nwl) : \"\") +\r\n            " +
+            "    ((p.PadH > 0 || p.PadW > 0) ? \"RandomCrop=Yes\" + nwl : \"\") +\r\n              " +
+            "  \"WeightsFiller=\" + to_string(p.WeightsFiller) + (p.WeightsFillerModeVisible ? " +
+            "\"(\" + p.WeightsFillerMode.ToString() + \",\" + to_string(p.WeightsGain) + \")\" : \"\"" +
+            ") + (p.WeightsGainVisible && !p.WeightsFillerModeVisible ? \"(\" + to_string(p.Wei" +
+            "ghtsGain) + \")\" : \"\") + (p.WeightsScaleVisible ? \"(\" + to_string(p.WeightsScale)" +
+            " + \")\" : \"\") + nwl +\r\n                (p.WeightsLRM != 1 ? \"WeightsLRM=\" + to_st" +
+            "ring(p.WeightsLRM) + nwl : \"\") +\r\n                (p.WeightsWDM != 1 ? \"WeightsW" +
+            "DM=\" + to_string(p.WeightsWDM) + nwl : \"\") +\r\n                (p.HasBias ? \"Bias" +
+            "esFiller=\" + to_string(p.BiasesFiller) + (p.BiasesFillerModeVisible ? \"(\" + p.Bi" +
+            "asesFillerMode.ToString() + \",\" + to_string(p.BiasesGain) + \")\" : \"\") + (p.Biase" +
+            "sGainVisible && !p.BiasesFillerModeVisible ? \"(\" + to_string(p.BiasesGain) + \")\"" +
+            " : \"\") + (p.BiasesScaleVisible ? \"(\" + to_string(p.BiasesScale) + \")\" : \"\") + nw" +
+            "l +\r\n                (p.BiasesLRM != 1 ? \"BiasesLRM=\" + to_string(p.BiasesLRM) +" +
+            " nwl : \"\") +\r\n                (p.BiasesWDM != 1 ? \"BiasesWDM=\" + to_string(p.Bia" +
+            "sesWDM) + nwl : \"\") : \"Biases=No\" + nwl) +\r\n                (p.DropoutVisible ? " +
+            "\"Dropout=\" + to_string(p.Dropout) + nwl : \"\") +\r\n                (p.DepthDropVis" +
+            "ible ? \"DepthDrop=\" + to_string(p.DepthDrop) + nwl : \"\") +\r\n                (p.D" +
+            "epthDropVisible ? \"FixedDepthDrop=\" + to_string(p.FixedDepthDrop) + nwl : \"\") +\r" +
+            "\n                \"Scaling=\" + to_string(p.BatchNormScaling) + nwl +\r\n           " +
+            "     \"Momentum=\" + to_string(p.BatchNormMomentum) + nwl +\r\n                \"Eps=" +
+            "\" + to_string(p.BatchNormEps) + nwl + nwl;\r\n\r\n            var blocks = new List<" +
+            "string>();\r\n\r\n            switch (p.Script)\r\n            {\r\n                case" +
+            " Scripts.augshufflenet:\r\n                    {\r\n                        var chan" +
+            "nels = DIV8(p.Width * 16);\r\n\r\n                        net +=\r\n                  " +
+            "          Convolution(1, \"Input\", channels, 3, 3, p.StrideHFirstConv, p.StrideWF" +
+            "irstConv, 1, 1) +\r\n                            BatchNormActivation(1, \"C1\", p.Ac" +
+            "tivation) +\r\n                            Convolution(2, \"B1\", channels, 1, 1, 1," +
+            " 1, 0, 0) +\r\n                            BatchNormActivation(2, \"C2\", p.Activati" +
+            "on) +\r\n                            DepthwiseConvolution(3, \"B2\", 1, 3, 3, 1, 1, " +
+            "1, 1) +\r\n                            BatchNorm(3, \"DC3\") +\r\n                    " +
+            "        Convolution(4, \"B3\", channels, 1, 1, 1, 1, 0, 0) +\r\n                    " +
+            "        BatchNormActivation(4, \"C4\", p.Activation) +\r\n                          " +
+            "  Convolution(5, \"B1\", channels, 1, 1, 1, 1, 0, 0) +\r\n                          " +
+            "  Concat(1, \"C5,B4\");\r\n\r\n                        var C = 6ul;\r\n                 " +
+            "       var A = 1ul;\r\n                        var subsample = false;\r\n           " +
+            "             foreach (var rec in p.ShuffleNet)\r\n                        {\r\n     " +
+            "                       if (subsample)\r\n                            {\r\n          " +
+            "                      channels *= 2;\r\n                                net += Aug" +
+            "mentedInvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle," +
+            " rec.SE, p.Activation);\r\n                                C += 5;\r\n              " +
+            "              }\r\n                            for (var n = 0ul; n < rec.Iteration" +
+            "s; n++)\r\n                            {\r\n                                net += A" +
+            "ugmentedInvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, false, rec.Shuff" +
+            "le, rec.SE, p.Activation);\r\n                                C += 3;\r\n           " +
+            "                 }\r\n                            subsample = true;\r\n             " +
+            "           }\r\n\r\n                        net +=\r\n                            Conv" +
+            "olution(C, In(\"CC\", A), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n                        " +
+            "    BatchNorm(C + 1, In(\"C\", C)) +\r\n                            GlobalAvgPooling" +
+            "(In(\"B\", C + 1)) +\r\n                            LogSoftmax(\"GAP\") +\r\n           " +
+            "                 Cost(\"LSM\", p.Dataset, p.Classes, \"CategoricalCrossEntropy\", 0." +
+            "125f);\r\n                    }\r\n                    break;\r\n\r\n                cas" +
+            "e Scripts.densenet:\r\n                    {\r\n                        var channels" +
+            " = DIV8(p.GrowthRate);\r\n\r\n                        net += Convolution(1, \"Input\"," +
+            " channels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1);\r\n\r\n             " +
+            "           if (p.Bottleneck)\r\n                        {\r\n                       " +
+            "     blocks.Add(\r\n                                BatchNormActivation(1, \"C1\", p" +
+            ".Activation) +\r\n                                Convolution(2, \"B1\", DIV8(4 * p." +
+            "GrowthRate), 1, 1, 1, 1, 0, 0) +\r\n                                BatchNormActiv" +
+            "ation(2, \"C2\", p.Activation) +\r\n                                Convolution(3, \"" +
+            "B2\", DIV8(p.GrowthRate), 3, 3, 1, 1, 1, 1) +\r\n                                (p" +
+            ".Dropout > 0 ? Dropout(3, \"C3\") + Concat(1, \"C1,D3\") : Concat(1, \"C1,C3\")));\r\n  " +
+            "                      }\r\n                        else\r\n                        {" +
             "\r\n                            blocks.Add(\r\n                                Batch" +
             "NormActivation(1, \"C1\", p.Activation) +\r\n                                Convolu" +
-            "tion(2, \"B1\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                Batc" +
-            "hNormActivation(2, \"C2\", p.Activation) +\r\n                                Convol" +
-            "ution(3, \"B2\", DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +\r\n                   " +
-            "             (p.Dropout > 0 ? BatchNormActivationDropout(3, \"C3\", p.Activation) " +
-            ": BatchNormActivation(3, \"C3\", p.Activation)) +\r\n                               " +
-            " Convolution(4, \"B3\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                            " +
-            "    Convolution(5, \"B1\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                         " +
-            "       Add(1, \"C4,C5\"));\r\n\r\n                            C = 6;\r\n                " +
-            "        }\r\n                        else\r\n                        {\r\n            " +
-            "                blocks.Add(\r\n                                BatchNormActivation" +
-            "(1, \"C1\", p.Activation) +\r\n                                Convolution(2, \"B1\", " +
-            "DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n                                (p.Dropout > 0 ? B" +
-            "atchNormActivationDropout(2, \"C2\", p.Activation) : BatchNormActivation(2, \"C2\", " +
-            "p.Activation)) +\r\n                                Convolution(3, \"B2\", DIV8(W), " +
-            "3, 3, 1, 1, 1, 1) +\r\n                                Convolution(4, \"B1\", DIV8(W" +
-            "), 1, 1, 1, 1, 0, 0) +\r\n                                Add(1, \"C3,C4\"));\r\n     " +
-            "                   }\r\n\r\n                        for (var g = 0ul; g <  p.Groups;" +
-            " g++)\r\n                        {\r\n                            if (g > 0)\r\n      " +
-            "                      {\r\n                                W *= 2;\r\n\r\n            " +
-            "                    var strChannelZeroPad = p.ChannelZeroPad ?\r\n                " +
-            "                    AvgPooling(g, In(\"A\", A)) +\r\n                               " +
-            "     \"[CZP\" + to_string(g) + \"]\" + nwl + \"Type=ChannelZeroPad\" + nwl + \"Inputs=\"" +
-            " + In(\"P\", g) + nwl + \"Channels=\" + to_string(W) + nwl + nwl +\r\n                " +
-            "                    Add(A + 1, In(\"C\", C + 1 + bn) + \",\" + In(\"CZP\", g)) :\r\n    " +
-            "                                AvgPooling(g, In(\"B\", C)) +\r\n                   " +
-            "                 Convolution(C + 2 + bn, In(\"P\", g), DIV8(W), 1, 1, 1, 1, 0, 0) " +
-            "+\r\n                                    Add(A + 1, In(\"C\", C + 1 + bn) + \",\" + In" +
-            "(\"C\", C + 2 + bn));\r\n\r\n                                if (p.Bottleneck)\r\n      " +
-            "                          {\r\n                                    blocks.Add(\r\n  " +
-            "                                      BatchNormActivation(C, In(\"A\", A), p.Activ" +
-            "ation) +\r\n                                        Convolution(C, In(\"B\", C), DIV" +
-            "8(W), 1, 1, 1, 1, 0, 0) +\r\n                                        BatchNormActi" +
-            "vation(C + 1, In(\"C\", C), p.Activation) +\r\n                                     " +
-            "   Convolution(C + 1, In(\"B\", C + 1), DIV8(W), 3, 3, 2, 2, 1, 1) +\r\n            " +
-            "                            (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, I" +
-            "n(\"C\", C + 1), p.Activation) : BatchNormActivation(C + 2, In(\"C\", C + 1), p.Acti" +
-            "vation)) +\r\n                                        Convolution(C + 2, In(\"B\", C" +
-            " + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                        str" +
-            "ChannelZeroPad);\r\n                                }\r\n                           " +
-            "     else\r\n                                {\r\n                                  " +
-            "  blocks.Add(\r\n                                        BatchNormActivation(C, In" +
-            "(\"A\", A), p.Activation) +\r\n                                        Convolution(C" +
-            ", In(\"B\", C), DIV8(W), 3, 3, 2, 2, 1, 1) +\r\n                                    " +
-            "    (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In(\"C\", C), p.Activation)" +
-            " : BatchNormActivation(C + 1, In(\"C\", C), p.Activation)) +\r\n                    " +
-            "                    Convolution(C + 1, In(\"B\", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1" +
-            ") +\r\n                                        strChannelZeroPad);\r\n              " +
-            "                  }\r\n\r\n                                A++;\r\n                   " +
-            "             C += p.ChannelZeroPad ? 2 + bn : 3 + bn;\r\n                         " +
-            "   }\r\n\r\n                            for (var i = 1ul; i < p.Iterations; i++)\r\n  " +
-            "                          {\r\n                                if (p.Bottleneck)\r\n" +
-            "                                {\r\n                                    blocks.Ad" +
-            "d(\r\n                                        BatchNormActivation(C, In(\"A\", A), p" +
-            ".Activation) +\r\n                                        Convolution(C, In(\"B\", C" +
-            "), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                        BatchNo" +
-            "rmActivation(C + 1, In(\"C\", C), p.Activation) +\r\n                               " +
-            "         Convolution(C + 1, In(\"B\", C + 1), DIV8((UInt)(K * W / 4)), 3, 3, 1, 1," +
-            " 1, 1) +\r\n                                        (p.Dropout > 0 ? BatchNormActi" +
-            "vationDropout(C + 2, In(\"C\", C + 1), p.Activation) : BatchNormActivation(C + 2, " +
-            "In(\"C\", C + 1), p.Activation)) +\r\n                                        Convol" +
-            "ution(C + 2, In(\"B\", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                     " +
-            "                   Add(A + 1, In(\"C\", C + 2) + \",\" + In(\"A\", A)));\r\n\r\n          " +
-            "                          C += 3;\r\n                                }\r\n          " +
-            "                      else\r\n                                {\r\n                 " +
-            "                   blocks.Add(\r\n                                        BatchNor" +
-            "mActivation(C, In(\"A\", A), p.Activation) +\r\n                                    " +
-            "    Convolution(C, In(\"B\", C), DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n                   " +
-            "                     (p.Dropout >  0 ? BatchNormActivationDropout(C + 1, In(\"C\"," +
-            " C), p.Activation) : BatchNormActivation(C + 1, In(\"C\", C), p.Activation)) +\r\n  " +
-            "                                      Convolution(C + 1, In(\"B\", C + 1), DIV8(W)" +
-            ", 3, 3, 1, 1, 1, 1) +\r\n                                        Add(A + 1, In(\"C\"" +
-            ", C + 1) + \",\" + In(\"A\", A)));\r\n\r\n                                    C += 2;\r\n " +
-            "                               }\r\n                                A++;\r\n        " +
-            "                    }\r\n                        }\r\n\r\n                        fore" +
-            "ach (var block in blocks)\r\n                            net += block;\r\n\r\n        " +
-            "                net +=\r\n                            BatchNormActivation(C, In(\"A" +
-            "\", A), p.Activation) +\r\n                            Convolution(C + 1, In(\"B\", C" +
-            "), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm(C + 1, " +
-            "In(\"C\", C + 1)) +\r\n                            GlobalAvgPooling(In(\"B\", C + 1)) " +
-            "+\r\n                            LogSoftmax(\"GAP\") +\r\n                            " +
-            "Cost(\"LSM\", p.Dataset, p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n         " +
-            "           }\r\n                    break;\r\n\r\n                case Scripts.shuffle" +
-            "netv2:\r\n                    {\r\n                        var channels = DIV8(p.Wid" +
-            "th * 16);\r\n\r\n                        net +=\r\n                            Convolu" +
-            "tion(1, \"Input\", channels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +" +
-            "\r\n                            BatchNormActivation(1, \"C1\", p.Activation) +\r\n    " +
-            "                        Convolution(2, \"B1\", channels, 1, 1, 1, 1, 0, 0) +\r\n    " +
-            "                        BatchNormActivation(2, \"C2\", p.Activation) +\r\n          " +
-            "                  DepthwiseConvolution(3, \"B2\", 1, 3, 3, 1, 1, 1, 1) +\r\n        " +
-            "                    BatchNorm(3, \"DC3\") +\r\n                            Convoluti" +
-            "on(4, \"B3\", channels, 1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm" +
-            "Activation(4, \"C4\", p.Activation) +\r\n                            Convolution(5, " +
-            "\"B1\", channels, 1, 1, 1, 1, 0, 0) +\r\n                            Concat(1, \"C5,B" +
-            "4\");\r\n\r\n                        var C = 6ul;\r\n                        var A = 1u" +
-            "l;\r\n                        var subsample = false;\r\n                        fore" +
-            "ach (var rec in p.ShuffleNet)\r\n                        {\r\n                      " +
-            "      if (subsample)\r\n                            {\r\n                           " +
-            "     channels *= 2;\r\n                                net += InvertedResidual(A++" +
-            ", C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation);\r\n " +
-            "                               C += 5;\r\n                            }\r\n         " +
-            "                   for (var n = 0ul; n < rec.Iterations; n++)\r\n                 " +
-            "           {\r\n                                net += InvertedResidual(A++, C, ch" +
-            "annels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);\r\n       " +
-            "                         C += 3;\r\n                            }\r\n               " +
-            "             subsample = true;\r\n                        }\r\n\r\n                   " +
-            "     net +=\r\n                            Convolution(C, In(\"CC\", A), p.Classes, " +
-            "1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm(C + 1, In(\"C\", C)) +\r" +
-            "\n                            GlobalAvgPooling(In(\"B\", C + 1)) +\r\n               " +
-            "             LogSoftmax(\"GAP\") +\r\n                            Cost(\"LSM\", p.Data" +
-            "set, p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n                    }\r\n    " +
-            "                break;\r\n            }\r\n\r\n            return net;\r\n        }\r\n\r\n\r" +
-            "\n        const string Framework = \"net9.0\";\r\n#if DEBUG\r\n        const string Mod" +
-            "e = \"Debug\";\r\n#else\r\n        const string Mode = \"Release\";\r\n#endif\r\n\r\n        p" +
-            "ublic static string StorageDirectory { get; } = Path.Combine(Environment.GetFold" +
-            "erPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Environment.Special" +
-            "Folder.MyDocuments : Environment.SpecialFolder.UserProfile), \"convnet\");\r\n      " +
-            "  public static string ScriptsDirectory { get; } = Path.Combine(StorageDirectory" +
-            ", \"scripts\");\r\n        public static string ScriptPath { get; } = Path.Combine(S" +
-            "criptsDirectory, \"bin\", Mode, Framework);\r\n\r\n        static void Main() \r\n      " +
-            "  {\r\n             var script = Generate(new ScriptParameters()\r\n\t            {\r\n" +
-            "        \t        Script = Scripts.shufflenetv2,\r\n                    Activation " +
-            "= Activations.HardSwish,\r\n                    Dataset = Datasets.cifar10,\r\n     " +
-            "               MeanStdNormalization = true,\r\n                    H = 32,\r\n      " +
-            "  \t        W = 32,\r\n        \t        PadH = 4,\r\n        \t        PadW = 4,\r\n    " +
-            "                MirrorPad = false,\r\n                    StrideHFirstConv = 1,\r\n " +
-            "                   StrideWFirstConv = 1,\r\n                    WeightsFiller = Fi" +
-            "llers.HeNormal,\r\n        \t        WeightsFillerMode = FillerModes.In,\r\n        \t" +
-            "        WeightsGain = 1f,\r\n        \t        WeightsScale = 0.05f,\r\n        \t    " +
-            "    WeightsLRM = 1f,\r\n        \t        WeightsWDM = 1f,\r\n        \t        HasBia" +
-            "s = false,\r\n        \t        BiasesFiller = Fillers.Constant,\r\n        \t        " +
-            "BiasesFillerMode = FillerModes.In,\r\n        \t        BiasesGain = 1f,\r\n        \t" +
-            "        BiasesScale = 0f,\r\n        \t        BiasesLRM = 1f,\r\n        \t        Bi" +
-            "asesWDM = 1f,\r\n        \t        BatchNormMomentum = 0.995f,\r\n        \t        Ba" +
-            "tchNormEps = 0.0001f,\r\n        \t        BatchNormScaling = false,\r\n        \t    " +
-            "    Alpha = 0f,\r\n        \t        Beta = 0f,\r\n        \t        Groups = 3,\r\n    " +
-            "    \t        Iterations = 4,\r\n        \t        Width = 12,\r\n        \t        Gro" +
-            "wthRate = 12,\r\n        \t        Bottleneck = false,\r\n        \t        Dropout = " +
-            "0f,\r\n        \t        Compression = 0f,\r\n        \t        SqueezeExcitation = tr" +
-            "ue,\r\n        \t        ChannelZeroPad = false,\r\n        \t        DepthDrop = 0.0f" +
-            ",\r\n        \t        FixedDepthDrop = false,\r\n        \t        EfficientNet = [ne" +
-            "w(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, " +
-            "128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],\r\n         " +
-            "           ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, " +
-            "3, 1, 2, true)] \r\n                });\r\n                \r\n            var fileInf" +
-            "o = new FileInfo(Path.Combine(ScriptPath, @\"script.txt\"));\r\n            \r\n      " +
-            "      if (fileInfo.Directory != null)\r\n            {\r\n                if (!fileI" +
-            "nfo.Directory.Exists)\r\n                    fileInfo.Directory.Create();\r\n\r\n     " +
-            "           var streamWriter = fileInfo.CreateText();\r\n                streamWrit" +
-            "er.AutoFlush = true;\r\n                streamWriter.Write(script);\r\n             " +
-            "   streamWriter.Close();\r\n                streamWriter.Dispose();\r\n            }" +
-            "\r\n        }\r\n    }\r\n}\r\n\r\n")]
+            "tion(2, \"B1\", DIV8(p.GrowthRate), 3, 3, 1, 1, 1, 1) +\r\n                         " +
+            "       (p.Dropout > 0 ? Dropout(2, \"C2\") + Concat(1, \"C1,D2\") : Concat(1, \"C1,C2" +
+            "\")));\r\n                        }\r\n\r\n                        var CC = 1ul;\r\n     " +
+            "                   var C = p.Bottleneck ? 4ul : 3ul;\r\n\r\n                        " +
+            "channels += DIV8(p.GrowthRate);\r\n\r\n                        for (var g = 1ul; g <" +
+            "= p.Groups; g++)\r\n                        {\r\n                            for (va" +
+            "r i = 1ul; i < p.Iterations; i++)\r\n                            {\r\n              " +
+            "                  if (p.Bottleneck)\r\n                                {\r\n        " +
+            "                            blocks.Add(\r\n                                       " +
+            " BatchNormActivation(C, In(\"CC\", CC), p.Activation) +\r\n                         " +
+            "               Convolution(C, In(\"B\", C), DIV8(4 * p.GrowthRate), 1, 1, 1, 1, 0," +
+            " 0) +\r\n                                        BatchNormActivation(C + 1, In(\"C\"" +
+            ", C), p.Activation) +\r\n                                        Convolution(C + 1" +
+            ", In(\"B\", C + 1), DIV8(p.GrowthRate), 3, 3, 1, 1, 1, 1) +\r\n                     " +
+            "                   (p.Dropout > 0 ? Dropout(C + 1, In(\"C\", C + 1)) + Concat(CC +" +
+            " 1, In(\"CC\", CC) + \",\" + In(\"D\", C + 1)) : Concat(CC + 1, In(\"CC\", CC) + \",\" + I" +
+            "n(\"C\", C + 1))));\r\n\r\n                                    C += 2;\r\n              " +
+            "                  }\r\n                                else\r\n                     " +
+            "           {\r\n                                    blocks.Add(\r\n                 " +
+            "                       BatchNormActivation(C, In(\"CC\", CC), p.Activation) +\r\n   " +
+            "                                     Convolution(C, In(\"B\", C), DIV8(p.GrowthRat" +
+            "e), 3, 3, 1, 1, 1, 1) +\r\n                                        (p.Dropout > 0 " +
+            "? Dropout(C, In(\"C\", C)) + Concat(CC + 1, In(\"CC\", CC) + \",\" + In(\"D\", C)) : Con" +
+            "cat(CC + 1, In(\"CC\", CC) + \",\" + In(\"C\", C))));\r\n\r\n                             " +
+            "       C++;\r\n                                }\r\n\r\n                              " +
+            "  CC++;\r\n                                channels += DIV8(p.GrowthRate);\r\n      " +
+            "                      }\r\n\r\n                            if (g < p.Groups)\r\n      " +
+            "                      {\r\n                                channels = DIV8((UInt)S" +
+            "ystem.Math.Floor(2.0 * channels * p.Compression));\r\n\r\n                          " +
+            "      if (p.Dropout > 0)\r\n                                    blocks.Add(\r\n     " +
+            "                                   Convolution(C, In(\"CC\", CC), channels, 1, 1, " +
+            "1, 1, 0, 0) +\r\n                                        Dropout(C, In(\"C\", C)) +\r" +
+            "\n                                        AvgPooling(g, In(\"D\", C), \"2,2\", \"2,2\"," +
+            " \"0,0\"));\r\n                                else\r\n                               " +
+            "     blocks.Add(\r\n                                        Convolution(C, \"CC\" + " +
+            "to_string(CC), channels, 1, 1, 1, 1, 0, 0) +\r\n                                  " +
+            "      AvgPooling(g, In(\"C\", C), \"2,2\", \"2,2\", \"0,0\"));\r\n                        " +
+            "        C++;\r\n                                CC++;\r\n\r\n                         " +
+            "       if (p.Bottleneck)\r\n                                {\r\n                   " +
+            "                 blocks.Add(\r\n                                        BatchNormA" +
+            "ctivation(C, In(\"P\", g), p.Activation) +\r\n                                      " +
+            "  Convolution(C, In(\"B\", C), DIV8(4 * p.GrowthRate), 1, 1, 1, 1, 0, 0) +\r\n      " +
+            "                                  BatchNormActivation(C + 1, In(\"C\", C), p.Activ" +
+            "ation) +\r\n                                        Convolution(C + 1, In(\"B\", C +" +
+            " 1), DIV8(p.GrowthRate), 3, 3, 1, 1, 1, 1) +\r\n                                  " +
+            "      (p.Dropout > 0 ? Dropout(C + 1, In(\"C\", C + 1)) + Concat(CC, In(\"B\", C) + " +
+            "\",\" + In(\"D\", C + 1)) : Concat(CC, In(\"B\", C) + \",\" + In(\"C\", C + 1))));\r\n\r\n    " +
+            "                                C += 2;\r\n                                }\r\n    " +
+            "                            else\r\n                                {\r\n           " +
+            "                         blocks.Add(\r\n                                        Ba" +
+            "tchNormActivation(C, In(\"P\", g), p.Activation) +\r\n                              " +
+            "          Convolution(C, In(\"B\", C), DIV8(p.GrowthRate), 3, 3, 1, 1, 1, 1) +\r\n  " +
+            "                                      (p.Dropout > 0 ? Dropout(C, In(\"C\", C)) + " +
+            "Concat(CC, In(\"B\", C) + \",\" + In(\"D\", C)) : Concat(CC, In(\"B\", C) + \",\" + In(\"C\"" +
+            ", C))));\r\n\r\n                                    C++;\r\n                          " +
+            "      }\r\n\r\n                                channels += DIV8(p.GrowthRate);\r\n    " +
+            "                        }\r\n                        }\r\n\r\n                        " +
+            "foreach (var block in blocks)\r\n                            net += block;\r\n\r\n    " +
+            "                    net +=\r\n                            Convolution(C, In(\"CC\", " +
+            "CC), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm(C + 1" +
+            ", In(\"C\", C)) +\r\n                            GlobalAvgPooling(In(\"B\", C + 1)) +\r" +
+            "\n                            LogSoftmax(\"GAP\") +\r\n                            Co" +
+            "st(\"LSM\", p.Dataset, p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n           " +
+            "         }\r\n                    break;\r\n\r\n                case Scripts.efficient" +
+            "netv2:\r\n                    {\r\n                        const Float width = 1.0f;" +
+            "\r\n                        var inputChannels = DIV8((UInt)((Float)p.EfficientNet[" +
+            "0].Channels * width));\r\n                        var A = 1ul;\r\n                  " +
+            "      var C = 1ul;\r\n\r\n                        net +=\r\n                          " +
+            "  Convolution(C, \"Input\", inputChannels, 3, 3, p.StrideHFirstConv, p.StrideWFirs" +
+            "tConv, 1, 1) +\r\n                            BatchNormActivation(C, In(\"C\", C), p" +
+            ".Activation);\r\n\r\n                        var stage = 0ul;\r\n                     " +
+            "   var input = In(\"B\", C++);\r\n                        foreach (var rec in p.Effi" +
+            "cientNet)\r\n                        {\r\n                            var beginStage" +
+            " = stage < 3ul;\r\n                            var outputChannels = DIV8((UInt)((F" +
+            "loat)rec.Channels * width));\r\n                            for (var n = 0ul; n < " +
+            "rec.Iterations; n++)\r\n                            {\r\n                           " +
+            "     var stride = n == 0ul ? rec.Stride : 1ul;\r\n                                " +
+            "var identity = stride == 1ul && inputChannels == outputChannels;\r\n\r\n            " +
+            "                    var subblocks = beginStage ?\r\n                              " +
+            "      FusedMBConv(A, C, input, inputChannels, outputChannels, stride, rec.Expand" +
+            "Ratio, rec.SE, p.Activation) :\r\n                                    MBConv(A, C," +
+            " input, inputChannels, outputChannels, stride, rec.ExpandRatio, rec.SE, p.Activa" +
+            "tion);\r\n\r\n                                foreach (var blk in subblocks)\r\n      " +
+            "                              net += blk;\r\n\r\n                                inp" +
+            "utChannels = outputChannels;\r\n                                C += beginStage ? " +
+            "1ul : 2ul;\r\n\r\n                                if (identity)\r\n                   " +
+            "             {\r\n                                    input = In(\"A\", A++);\r\n     " +
+            "                               C++;\r\n                                }\r\n        " +
+            "                        else\r\n                                    input = In(\"B\"" +
+            ", C++);\r\n                            }\r\n                            stage++;\r\n  " +
+            "                      }\r\n\r\n                        net +=\r\n                     " +
+            "       Convolution(C, In(\"A\", A - 1), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n          " +
+            "                  BatchNormActivationDropout(C, In(\"C\", C), p.Activation) +\r\n   " +
+            "                         GlobalAvgPooling(In(\"B\", C)) +\r\n                       " +
+            "     LogSoftmax(\"GAP\") +\r\n                            Cost(\"LSM\", p.Dataset, p.C" +
+            "lasses, \"CategoricalCrossEntropy\", 0.125f);\r\n                    }\r\n            " +
+            "        break;\r\n\r\n                case Scripts.mobilenetv3:\r\n                   " +
+            " {\r\n                        var se = p.SqueezeExcitation;\r\n                     " +
+            "   var channelsplit = true;\r\n                        var W = p.Width * 16;\r\n\r\n  " +
+            "                      net +=\r\n                            Convolution(1, \"Input\"" +
+            ", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +\r\n              " +
+            "              BatchNormActivation(1, \"C1\", p.Activation);\r\n\r\n                   " +
+            "     blocks.Add(\r\n                            Convolution(2, \"B1\", DIV8(6 * W), " +
+            "1, 1, 1, 1, 0, 0) +\r\n                            BatchNormActivation(2, \"C2\", p." +
+            "Activation) +\r\n                            DepthwiseMixedConvolution(0, 3, \"B2\"," +
+            " 1, 1, p.HasBias, channelsplit) +\r\n                            BatchNormActivati" +
+            "on(3, \"DC3\", p.Activation) +\r\n                            Convolution(4, \"B3\", D" +
+            "IV8(W), 1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm(4, \"C4\"));\r\n\r" +
+            "\n                        var A = 1ul;\r\n                        var C = 5ul;\r\n   " +
+            "                     for (var g = 1ul; g <= p.Groups; g++)\r\n                    " +
+            "    {\r\n                            var mix = g - 1ul;\r\n\r\n                       " +
+            "     if (g > 1)\r\n                            {\r\n                                " +
+            "W *= 2;\r\n\r\n                                var group = In(\"SE\", C + 1);\r\n       " +
+            "                         var strSE =\r\n                                    se ? G" +
+            "lobalAvgPooling(In(\"B\", C + 1), group) +\r\n                                    Co" +
+            "nvolution(1, group + \"GAP\", DIV8((6 * W) / 4), 1, 1, 1, 1, 0, 0, false, group) +" +
+            "\r\n                                    BatchNormActivation(1, group + \"C1\", (p.Ac" +
+            "tivation == Activations.FRelu ? Activations.HardSwish : p.Activation), group) +\r" +
+            "\n                                    Convolution(2, group + \"B1\", DIV8(6 * W), 1" +
+            ", 1, 1, 1, 0, 0, false, group) +\r\n                                    BatchNormA" +
+            "ctivation(2, group + \"C2\", Activations.HardSigmoid, group) +\r\n                  " +
+            "                  Multiply(In(\"B\", C + 1) + \",\" + group + \"B2\", group) +\r\n      " +
+            "                              Convolution(C + 2, group + \"CM\", DIV8(W), 1, 1, 1," +
+            " 1, 0, 0) :\r\n                                    Convolution(C + 2, In(\"B\", C + " +
+            "1), DIV8(W), 1, 1, 1, 1, 0, 0);\r\n\r\n                                blocks.Add(\r\n" +
+            "                                    Convolution(C, In(\"A\", A), DIV8(6 * W), 1, 1" +
+            ", 1, 1, 0, 0) +\r\n                                    BatchNormActivation(C, In(\"" +
+            "C\", C), p.Activation) +\r\n                                    DepthwiseMixedConvo" +
+            "lution(1ul, C + 1, In(\"B\", C), 2, 2, p.HasBias, channelsplit) +\r\n               " +
+            "                     BatchNormActivation(C + 1, In(\"DC\", C + 1), p.Activation) +" +
+            "\r\n                                    strSE +\r\n                                 " +
+            "   BatchNorm(C + 2, In(\"C\", C + 2)));\r\n\r\n                                C += 3;" +
+            "\r\n                            }\r\n\r\n                            for (var i = 1ul;" +
+            " i < p.Iterations; i++)\r\n                            {\r\n                        " +
+            "        var strOutputLayer = (i == 1 && g > 1) ? In(\"B\", C - 1) : (i == 1 && g =" +
+            "= 1) ? In(\"B\", 4) : In(\"A\", A);\r\n\r\n                                var group = I" +
+            "n(\"SE\", C + 1);\r\n\r\n                                var strSE =\r\n                " +
+            "                    se ? GlobalAvgPooling(In(\"B\", C + 1), group) +\r\n            " +
+            "                        Convolution(1, group + \"GAP\", DIV8((6 * W) / 4), 1, 1, 1" +
+            ", 1, 0, 0, false, group) +\r\n                                    BatchNormActivat" +
+            "ion(1, group + \"C1\", (p.Activation == Activations.FRelu ? Activations.HardSwish " +
+            ": p.Activation), group) +\r\n                                    Convolution(2, gr" +
+            "oup + \"B1\", DIV8(6 * W), 1, 1, 1, 1, 0, 0, false, group) +\r\n                    " +
+            "                BatchNormActivation(2, group + \"C2\", Activations.HardSigmoid, gr" +
+            "oup) +\r\n                                    Multiply(In(\"B\", C + 1) + \",\" + grou" +
+            "p + \"B2\", group) +\r\n                                    Convolution(C + 2, group" +
+            " + \"CM\", DIV8(W), 1, 1, 1, 1, 0, 0) :\r\n                                    Convo" +
+            "lution(C + 2, In(\"B\", C + 1), DIV8(W), 1, 1, 1, 1, 0, 0);\r\n\r\n                   " +
+            "             blocks.Add(\r\n                                    Convolution(C, str" +
+            "OutputLayer, DIV8(6 * W), 1, 1, 1, 1, 0, 0) +\r\n                                 " +
+            "   BatchNormActivation(C, In(\"C\", C), p.Activation) +\r\n                         " +
+            "           DepthwiseMixedConvolution(1ul, C + 1, In(\"B\", C), 1, 1, p.HasBias, ch" +
+            "annelsplit) +\r\n                                    BatchNormActivation(C + 1, In" +
+            "(\"DC\", C + 1), p.Activation) +\r\n                                    strSE +\r\n   " +
+            "                                 BatchNorm(C + 2, In(\"C\", C + 2)) +\r\n           " +
+            "                         Add(A + 1, In(\"B\", C + 2) + \",\" + strOutputLayer));\r\n\r\n" +
+            "                                A++;\r\n                                C += 3;\r\n " +
+            "                           }\r\n                        }\r\n\r\n                     " +
+            "   foreach (var block in blocks)\r\n                            net += block;\r\n\r\n " +
+            "                       net +=\r\n                            BatchNormActivation(C" +
+            ", In(\"A\", A), p.Activation) +\r\n                            Convolution(C + 1, In" +
+            "(\"B\", C), p.Classes, 1, 1, 1, 1, 0, 0) +\r\n                            BatchNorm(" +
+            "C + 1, In(\"C\", C + 1)) +\r\n                            GlobalAvgPooling(In(\"B\", C" +
+            " + 1)) +\r\n                            LogSoftmax(\"GAP\") +\r\n                     " +
+            "       Cost(\"LSM\", p.Dataset, p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n  " +
+            "                  }\r\n                    break;\r\n\r\n                case Scripts." +
+            "resnet:\r\n                {\r\n                    var bn = p.Bottleneck ? 1ul : 0u" +
+            "l;\r\n                    const Float K = 2.0f;\r\n                    var W = p.Wid" +
+            "th * 16;\r\n                    var A = 1ul;\r\n                    var C = 5ul;\r\n\r\n" +
+            "                    net += Convolution(1, \"Input\", DIV8(W), 3, 3, p.StrideHFirst" +
+            "Conv, p.StrideWFirstConv, 1, 1);\r\n\r\n                    if (p.Bottleneck)\r\n     " +
+            "               {\r\n                        blocks.Add(\r\n                         " +
+            "   BatchNormActivation(1, \"C1\", p.Activation) +\r\n                            Con" +
+            "volution(2, \"B1\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                            Batc" +
+            "hNormActivation(2, \"C2\", p.Activation) +\r\n                            Convolutio" +
+            "n(3, \"B2\", DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +\r\n                       " +
+            "     (p.Dropout > 0 ? BatchNormActivationDropout(3, \"C3\", p.Activation) : BatchN" +
+            "ormActivation(3, \"C3\", p.Activation)) +\r\n                            Convolution" +
+            "(4, \"B3\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                            Convolution(" +
+            "5, \"B1\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                            Add(1, \"C4,C5" +
+            "\"));\r\n\r\n                        C = 6;\r\n                    }\r\n                 " +
+            "   else\r\n                    {\r\n                        blocks.Add(\r\n           " +
+            "                 BatchNormActivation(1, \"C1\", p.Activation) +\r\n                 " +
+            "           Convolution(2, \"B1\", DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n                  " +
+            "          (p.Dropout > 0 ? BatchNormActivationDropout(2, \"C2\", p.Activation) : B" +
+            "atchNormActivation(2, \"C2\", p.Activation)) +\r\n                            Convol" +
+            "ution(3, \"B2\", DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n                            Convolu" +
+            "tion(4, \"B1\", DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                            Add(1, \"" +
+            "C3,C4\"));\r\n                    }\r\n\r\n                    for (var g = 0ul; g < p." +
+            "Groups; g++)\r\n                        {\r\n                        if (g > 0)\r\n   " +
+            "                         {\r\n                            W *= 2;\r\n\r\n             " +
+            "               var strChannelZeroPad = p.ChannelZeroPad ?\r\n                     " +
+            "           AvgPooling(g, In(\"A\", A)) +\r\n                                \"[CZP\" +" +
+            " to_string(g) + \"]\" + nwl + \"Type=ChannelZeroPad\" + nwl + \"Inputs=\" + In(\"P\", g)" +
+            " + nwl + \"Channels=\" + to_string(W) + nwl + nwl +\r\n                             " +
+            "   Add(A + 1, In(\"C\", C + 1 + bn) + \",\" + In(\"CZP\", g)) :\r\n                     " +
+            "           AvgPooling(g, In(\"B\", C)) +\r\n                                Convolut" +
+            "ion(C + 2 + bn, In(\"P\", g), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                      " +
+            "          Add(A + 1, In(\"C\", C + 1 + bn) + \",\" + In(\"C\", C + 2 + bn));\r\n\r\n      " +
+            "                      if (p.Bottleneck)\r\n                            {\r\n        " +
+            "                        blocks.Add(\r\n                                    BatchNo" +
+            "rmActivation(C, In(\"A\", A), p.Activation) +\r\n                                   " +
+            " Convolution(C, In(\"B\", C), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                      " +
+            "              BatchNormActivation(C + 1, In(\"C\", C), p.Activation) +\r\n          " +
+            "                          Convolution(C + 1, In(\"B\", C + 1), DIV8(W), 3, 3, 2, 2" +
+            ", 1, 1) +\r\n                                    (p.Dropout > 0 ? BatchNormActivat" +
+            "ionDropout(C + 2, In(\"C\", C + 1), p.Activation) : BatchNormActivation(C + 2, In(" +
+            "\"C\", C + 1), p.Activation)) +\r\n                                    Convolution(C" +
+            " + 2, In(\"B\", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                            " +
+            "        strChannelZeroPad);\r\n                            }\r\n                    " +
+            "        else\r\n                            {\r\n                                blo" +
+            "cks.Add(\r\n                                    BatchNormActivation(C, In(\"A\", A)," +
+            " p.Activation) +\r\n                                    Convolution(C, In(\"B\", C)," +
+            " DIV8(W), 3, 3, 2, 2, 1, 1) +\r\n                                    (p.Dropout > " +
+            "0 ? BatchNormActivationDropout(C + 1, In(\"C\", C), p.Activation) : BatchNormActiv" +
+            "ation(C + 1, In(\"C\", C), p.Activation)) +\r\n                                    C" +
+            "onvolution(C + 1, In(\"B\", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n                " +
+            "                    strChannelZeroPad);\r\n                            }\r\n\r\n      " +
+            "                      A++;\r\n                            C += p.ChannelZeroPad ? " +
+            "2 + bn : 3 + bn;\r\n                        }\r\n\r\n                        for (var " +
+            "i = 1ul; i < p.Iterations; i++)\r\n                            {\r\n                " +
+            "            if (p.Bottleneck)\r\n                            {\r\n                  " +
+            "              blocks.Add(\r\n                                    BatchNormActivati" +
+            "on(C, In(\"A\", A), p.Activation) +\r\n                                    Convoluti" +
+            "on(C, In(\"B\", C), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                                " +
+            "    BatchNormActivation(C + 1, In(\"C\", C), p.Activation) +\r\n                    " +
+            "                Convolution(C + 1, In(\"B\", C + 1), DIV8((UInt)(K * W / 4)), 3, 3" +
+            ", 1, 1, 1, 1) +\r\n                                    (p.Dropout > 0 ? BatchNormA" +
+            "ctivationDropout(C + 2, In(\"C\", C + 1), p.Activation) : BatchNormActivation(C + " +
+            "2, In(\"C\", C + 1), p.Activation)) +\r\n                                    Convolu" +
+            "tion(C + 2, In(\"B\", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +\r\n                      " +
+            "              Add(A + 1, In(\"C\", C + 2) + \",\" + In(\"A\", A)));\r\n\r\n               " +
+            "                 C += 3;\r\n                            }\r\n                       " +
+            "     else\r\n                            {\r\n                                blocks" +
+            ".Add(\r\n                                    BatchNormActivation(C, In(\"A\", A), p." +
+            "Activation) +\r\n                                    Convolution(C, In(\"B\", C), DI" +
+            "V8(W), 3, 3, 1, 1, 1, 1) +\r\n                                    (p.Dropout > 0 ?" +
+            " BatchNormActivationDropout(C + 1, In(\"C\", C), p.Activation) : BatchNormActivati" +
+            "on(C + 1, In(\"C\", C), p.Activation)) +\r\n                                    Conv" +
+            "olution(C + 1, In(\"B\", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +\r\n                   " +
+            "                 Add(A + 1, In(\"C\", C + 1) + \",\" + In(\"A\", A)));\r\n\r\n            " +
+            "                    C += 2;\r\n                            }\r\n                    " +
+            "        A++;\r\n                        }\r\n                    }\r\n\r\n              " +
+            "      foreach (var block in blocks)\r\n                        net += block;\r\n\r\n  " +
+            "                  net +=\r\n                        BatchNormActivation(C, In(\"A\"," +
+            " A), p.Activation) +\r\n                        Convolution(C + 1, In(\"B\", C), p.C" +
+            "lasses, 1, 1, 1, 1, 0, 0) +\r\n                        BatchNorm(C + 1, In(\"C\", C " +
+            "+ 1)) +\r\n                        GlobalAvgPooling(In(\"B\", C + 1)) +\r\n           " +
+            "             LogSoftmax(\"GAP\") +\r\n                        Cost(\"LSM\", p.Dataset," +
+            " p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n                }\r\n            " +
+            "    break;\r\n\r\n            case Scripts.shufflenetv2:\r\n                {\r\n       " +
+            "             var channels = DIV8(p.Width * 16);\r\n\r\n                    net +=\r\n " +
+            "                       Convolution(1, \"Input\", channels, 3, 3, p.StrideHFirstCon" +
+            "v, p.StrideWFirstConv, 1, 1) +\r\n                        BatchNormActivation(1, \"" +
+            "C1\", p.Activation) +\r\n                        Convolution(2, \"B1\", channels, 1, " +
+            "1, 1, 1, 0, 0) +\r\n                        BatchNormActivation(2, \"C2\", p.Activat" +
+            "ion) +\r\n                        DepthwiseConvolution(3, \"B2\", 1, 3, 3, 1, 1, 1, " +
+            "1) +\r\n                        BatchNorm(3, \"DC3\") +\r\n                        Con" +
+            "volution(4, \"B3\", channels, 1, 1, 1, 1, 0, 0) +\r\n                        BatchNo" +
+            "rmActivation(4, \"C4\", p.Activation) +\r\n                        Convolution(5, \"B" +
+            "1\", channels, 1, 1, 1, 1, 0, 0) +\r\n                        Concat(1, \"C5,B4\");\r\n" +
+            "\r\n                    var C = 6ul;\r\n                    var A = 1ul;\r\n          " +
+            "          var subsample = false;\r\n                    foreach (var rec in p.Shuf" +
+            "fleNet)\r\n                    {\r\n                        if (subsample)\r\n        " +
+            "                {\r\n                            channels *= 2;\r\n                 " +
+            "           net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, true, " +
+            "rec.Shuffle, rec.SE, p.Activation);\r\n                            C += 5;\r\n      " +
+            "                  }\r\n                        for (var n = 0ul; n < rec.Iteration" +
+            "s; n++)\r\n                            {\r\n                            net += Inver" +
+            "tedResidual(A++, C, channels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p" +
+            ".Activation);\r\n                            C += 3;\r\n                        }\r\n " +
+            "                       subsample = true;\r\n                    }\r\n\r\n             " +
+            "       net +=\r\n                        Convolution(C, In(\"CC\", A), p.Classes, 1," +
+            " 1, 1, 1, 0, 0) +\r\n                        BatchNorm(C + 1, In(\"C\", C)) +\r\n     " +
+            "                   GlobalAvgPooling(In(\"B\", C + 1)) +\r\n                        L" +
+            "ogSoftmax(\"GAP\") +\r\n                        Cost(\"LSM\", p.Dataset, p.Classes, \"C" +
+            "ategoricalCrossEntropy\", 0.125f);\r\n                }\r\n                break;\r\n  " +
+            "          }\r\n\r\n            return net;\r\n        }\r\n\r\n\r\n        const string Fram" +
+            "ework = \"net9.0\";\r\n#if DEBUG\r\n        const string Mode = \"Debug\";\r\n#else\r\n     " +
+            "   const string Mode = \"Release\";\r\n#endif\r\n\r\n        public static string Storag" +
+            "eDirectory { get; } = Path.Combine(Environment.GetFolderPath(RuntimeInformation." +
+            "IsOSPlatform(OSPlatform.Windows) ? Environment.SpecialFolder.MyDocuments : Envir" +
+            "onment.SpecialFolder.UserProfile), \"convnet\");\r\n        public static string Scr" +
+            "iptsDirectory { get; } = Path.Combine(StorageDirectory, \"scripts\");\r\n        pub" +
+            "lic static string ScriptPath { get; } = Path.Combine(ScriptsDirectory, \"bin\", Mo" +
+            "de, Framework);\r\n\r\n        static void Main()\r\n        {\r\n            var script" +
+            " = Generate(new ScriptParameters()\r\n\t\t    {\r\n        \t    Script = Scripts.augsh" +
+            "ufflenet,\r\n                Activation = Activations.HardSwish,\r\n                " +
+            "Dataset = Datasets.cifar10,\r\n                MeanStdNormalization = true,\r\n     " +
+            "           H = 32,\r\n        \t    W = 32,\r\n        \t    PadH = 4,\r\n        \t    P" +
+            "adW = 4,\r\n                MirrorPad = false,\r\n                StrideHFirstConv =" +
+            " 1,\r\n                StrideWFirstConv = 1,\r\n                WeightsFiller = Fill" +
+            "ers.HeNormal,\r\n        \t    WeightsFillerMode = FillerModes.In,\r\n        \t    We" +
+            "ightsGain = 1f,\r\n        \t    WeightsScale = 0.05f,\r\n        \t    WeightsLRM = 1" +
+            "f,\r\n        \t    WeightsWDM = 1f,\r\n        \t    HasBias = false,\r\n        \t    B" +
+            "iasesFiller = Fillers.Constant,\r\n        \t    BiasesFillerMode = FillerModes.In," +
+            "\r\n        \t    BiasesGain = 1f,\r\n        \t    BiasesScale = 0f,\r\n        \t    Bi" +
+            "asesLRM = 1f,\r\n        \t    BiasesWDM = 1f,\r\n        \t    BatchNormMomentum = 0." +
+            "995f,\r\n        \t    BatchNormEps = 0.0001f,\r\n        \t    BatchNormScaling = fal" +
+            "se,\r\n        \t    Alpha = 0f,\r\n        \t    Beta = 0f,\r\n        \t    Groups = 3," +
+            "\r\n        \t    Iterations = 4,\r\n        \t    Width = 16,\r\n        \t    GrowthRat" +
+            "e = 12,\r\n        \t    Bottleneck = false,\r\n        \t    Dropout = 0f,\r\n        \t" +
+            "    Compression = 0f,\r\n        \t    SqueezeExcitation = true,\r\n        \t    Chan" +
+            "nelZeroPad = false,\r\n        \t    DepthDrop = 0.0f,\r\n        \t    FixedDepthDrop" +
+            " = false,\r\n        \t    EfficientNet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2" +
+            ", false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, tr" +
+            "ue), new(6, 256, 15, 2, true)],\r\n                ShuffleNet = [new(7, 3, 1, 2, f" +
+            "alse) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] \r\n            });\r\n\r\n     " +
+            "       var fileInfo = new FileInfo(Path.Combine(ScriptPath, @\"script.txt\"));\r\n  " +
+            "          \r\n            if (fileInfo.Directory != null)\r\n            {\r\n        " +
+            "        if (!fileInfo.Directory.Exists)\r\n                    fileInfo.Directory." +
+            "Create();\r\n\r\n                var streamWriter = fileInfo.CreateText();\r\n        " +
+            "        streamWriter.AutoFlush = true;\r\n                streamWriter.Write(scrip" +
+            "t);\r\n                streamWriter.Close();\r\n                streamWriter.Dispose" +
+            "();\r\n            }\r\n        }\r\n    }\r\n}")]
         public string Script {
             get {
                 return ((string)(this["Script"]));
