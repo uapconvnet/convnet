@@ -5,7 +5,9 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Convnet.PageViewModels;
+using CustomMessageBox.Avalonia;
 using Interop;
+using OxyPlot;
 using System.Collections.Generic;
 
 namespace Convnet.PageViews
@@ -32,7 +34,7 @@ namespace Convnet.PageViews
                 var tpvm = datagrid.DataContext as TrainPageViewModel;
                 if (tpvm != null && tpvm.TrainingLog != null)
                 {
-                    Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                    Dispatcher.UIThread.InvokeAsync(() =>
                     {
                         if (tpvm.SelectedItems != null)
                         {
@@ -125,7 +127,7 @@ namespace Convnet.PageViews
             }
         }
 
-        private void DataGrid_KeyDown(object sender, KeyEventArgs e)
+        private async void DataGrid_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
             {
@@ -136,17 +138,21 @@ namespace Convnet.PageViews
                     
                     if (tpvm != null && tpvm.TrainingLog != null && datagrid.SelectedItems.Count > 0)
                     {
-                        List<DNNTrainingResult> items = new List<DNNTrainingResult>();
+                        var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to delete the selected rows?", "Delete row(s)", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            List<DNNTrainingResult> items = new List<DNNTrainingResult>();
 
-                        foreach (var item in datagrid.SelectedItems)
-                            if (item is DNNTrainingResult row)
-                                if (row != null)
-                                    items.Add(row);
-                     
-                        foreach (var item in items)
-                            tpvm.TrainingLog?.Remove(item);
+                            foreach (var item in datagrid.SelectedItems)
+                                if (item is DNNTrainingResult row)
+                                    if (row != null)
+                                        items.Add(row);
 
-                        datagrid.SelectedItems.Clear();
+                            foreach (var item in items)
+                                tpvm.TrainingLog?.Remove(item);
+
+                            datagrid.SelectedItems.Clear();
+                        }
                     }
                 }
             }
