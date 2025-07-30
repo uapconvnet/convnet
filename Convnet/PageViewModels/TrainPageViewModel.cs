@@ -140,9 +140,9 @@ namespace Convnet.PageViewModels
                         if (item is DNNTrainingResult row)
                             SelectedItems?.Add(row);
                 }
-            }
 
-            e.Handled = true;
+                e.Handled = true;
+            }
         }
 
         public TrainPageViewModel(DNNModel model) : base(model)
@@ -156,13 +156,18 @@ namespace Convnet.PageViewModels
             {
                 Model.NewEpoch += NewEpoch;
                 Model.TrainProgress += TrainProgress;
-                var list = new List<DNNTrainingResult>();
-                foreach (var item in SelectedItems)
-                    if (TrainingLog.Contains(item))
-                        list.Add(item);
-                        
-                foreach (var item in list)
-                    SelectedItems.Remove(item);
+               
+                if (SelectedItems != null && TrainingLog != null)
+                {
+                    var list = new List<DNNTrainingResult>();
+
+                    foreach (var item in SelectedItems)
+                        if (!TrainingLog.Contains(item))
+                            list.Add(item);
+
+                    foreach (var item in list)
+                        SelectedItems.Remove(item);
+                }
             }
 
             SelectionChangedCommand = ReactiveCommand.Create<SelectionChangedEventArgs>(SelectionChanged);
