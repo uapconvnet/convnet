@@ -4,10 +4,10 @@ sudo apt install build-essential curl unzip gzip libomp-dev clang nasm graphviz 
 
 export CC=clang and export CXX=clang++
 # export CC=clang-20 and export CXX=clang++-20
+
 # Set Intel oneAPI DPC++/C++ Compiler as default C and C++ compilers
 # source /opt/intel/oneapi/setvars.sh
-# export CC=icx
-# export CXX=icpx
+# export CC=icx and export CXX=icpx
 
 export KMP_AFFINITY=granularity=fine,compact,1,0
 export OMP_DISPLAY_ENV=TRUE
