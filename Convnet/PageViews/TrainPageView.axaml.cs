@@ -46,14 +46,16 @@ namespace Convnet.PageViews
                                 //else
                                 //    tpvm.SelectedItems.Remove(item);
                             tpvm.IsUpdating = false;
-                            
                         }
 
-
                         if (tpvm.SelectedIndex >= 0 && tpvm.SelectedIndex < tpvm.TrainingLog.Count)
+                        {
+                            //datagrid.SelectedIndex = tpvm.SelectedIndex;
                             datagrid.ScrollIntoView(tpvm.TrainingLog[tpvm.SelectedIndex], null);
+                        }
                         else
                             datagrid.ScrollIntoView(tpvm.TrainingLog[0], null);
+                            
                     }, DispatcherPriority.ContextIdle);
                 }
             }

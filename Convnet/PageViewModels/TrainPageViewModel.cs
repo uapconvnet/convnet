@@ -147,23 +147,29 @@ namespace Convnet.PageViewModels
 
         public TrainPageViewModel(DNNModel model) : base(model)
         {
-            SelectionChangedCommand = ReactiveCommand.Create<SelectionChangedEventArgs>(SelectionChanged);
-
-            refreshRate = Settings.Default.RefreshInterval;
-
-            InitializeTrainingPlot();
-
-            if (Model != null)
-            {
-                Model.NewEpoch += NewEpoch;
-                Model.TrainProgress += TrainProgress;
-            }
-
             showProgress = false;
             showSample = false;
             showWeights = false;
             showWeightsSnapshot = false;
 
+            if (Model != null)
+            {
+                Model.NewEpoch += NewEpoch;
+                Model.TrainProgress += TrainProgress;
+                var list = new List<DNNTrainingResult>();
+                foreach (var item in SelectedItems)
+                    if (TrainingLog.Contains(item))
+                        list.Add(item);
+                        
+                foreach (var item in list)
+                    SelectedItems.Remove(item);
+            }
+
+            SelectionChangedCommand = ReactiveCommand.Create<SelectionChangedEventArgs>(SelectionChanged);
+
+            InitializeTrainingPlot();
+
+            refreshRate = Settings.Default.RefreshInterval;
             sgdr = Settings.Default.SGDR;
             gotoEpoch = Settings.Default.GotoEpoch;
             gotoCycle = Settings.Default.GotoCycle;
