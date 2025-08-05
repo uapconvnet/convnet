@@ -61,6 +61,8 @@ namespace Convnet.PageViews
                         else
                             datagrid.ScrollIntoView(tpvm.TrainingLog[0], null);
 
+                        datagrid.Focus();
+
                     }, DispatcherPriority.ContextIdle);
                 }
             }
