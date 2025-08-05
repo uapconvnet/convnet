@@ -35,14 +35,19 @@ namespace Convnet.PageViews
                 {
                     Dispatcher.UIThread.InvokeAsync(() =>
                     {
-                        if (tpvm.SelectedItems != null)
+                        if (tpvm.SelectedItems != null && datagrid.SelectionMode == DataGridSelectionMode.Extended)
                         {
                             tpvm.IsUpdating = true;
+
                             datagrid.SelectedItems.Clear();
                             foreach (var item in tpvm.SelectedItems)
                                 foreach (var row in tpvm.TrainingLog)
                                     if (item.Equals(row))
                                         datagrid.SelectedItems.Add(row);
+                            
+                            if (datagrid.SelectedItems.Count == 0)
+                                tpvm.SelectedItems.Clear();
+
                             tpvm.IsUpdating = false;
                         }
 

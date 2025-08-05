@@ -129,7 +129,7 @@
       </Grid>
     </ScrollViewer>
 
-    <DataGrid Grid.Row="2" x:Name="ListViewTrainingResult" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" AutoGenerateColumns="False" IsReadOnly="True" CanUserSortColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource DisabledBorderBrush}" BorderThickness="1" GridLinesVisibility="All" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding TrainingLog, Mode=TwoWay}" Grid.ColumnSpan="1" FontFamily="{StaticResource ConsolasFontFamily}" FontWeight="Normal" FontSize="13" SelectionMode="Extended" KeyDown="DataGrid_KeyDown">
+    <DataGrid Grid.Row="2" x:Name="ListViewTrainingResult" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" AutoGenerateColumns="False" IsReadOnly="True" CanUserSortColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource DisabledBorderBrush}" BorderThickness="1" GridLinesVisibility="All" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding TrainingLog, Mode=TwoWay}" Grid.ColumnSpan="1" FontFamily="{StaticResource ConsolasFontFamily}" FontWeight="Normal" FontSize="13" SelectionMode="Single" KeyDown="DataGrid_KeyDown">
       <Interaction.Behaviors>
         <EventTriggerBehavior EventName="SelectionChanged">
           <InvokeCommandAction Command="{Binding SelectionChangedCommand}" PassEventArgsToCommand="true"/>
