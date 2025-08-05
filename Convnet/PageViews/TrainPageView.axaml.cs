@@ -145,7 +145,7 @@ namespace Convnet.PageViews
                     
                     if (tpvm != null && tpvm.TrainingLog != null && datagrid.SelectedItems.Count > 0)
                     {
-                        var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to delete the selected rows?", "Delete row(s)", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+                        var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to delete the selected row(s)?", "Delete row(s)", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
                         if (result == MessageBoxResult.Yes)
                         {
                             List<DNNTrainingResult> items = new List<DNNTrainingResult>();
