@@ -107,6 +107,7 @@ namespace Convnet.PageViewModels
         private bool showTrainingPlot = false;
         private ObservableCollection<DataPoint>? pointsTrain = new ObservableCollection<DataPoint>();
         private ObservableCollection<DataPoint>? pointsTest = new ObservableCollection<DataPoint>();
+        private ObservableCollection<DNNTrainingResult>? selectedItems = new ObservableCollection<DNNTrainingResult>();
         private string? pointsTrainLabel = string.Empty;
         private string? pointsTestLabel = string.Empty;
         private PlotType currentPlotType;
@@ -156,18 +157,11 @@ namespace Convnet.PageViewModels
             {
                 Model.NewEpoch += NewEpoch;
                 Model.TrainProgress += TrainProgress;
-               
-                if (SelectedItems != null && TrainingLog != null)
-                {
-                    var list = new List<DNNTrainingResult>();
 
-                    foreach (var item in SelectedItems)
-                        if (!TrainingLog.Contains(item))
-                            list.Add(item);
+                if (Settings.Default.SelectedItems == null)
+                    Settings.Default.SelectedItems = new ObservableCollection<DNNTrainingResult>();
 
-                    foreach (var item in list)
-                        SelectedItems.Remove(item);
-                }
+                SelectedItems = Settings.Default.SelectedItems;
             }
 
             SelectionChangedCommand = ReactiveCommand.Create<SelectionChangedEventArgs>(SelectionChanged);
@@ -576,7 +570,9 @@ namespace Convnet.PageViewModels
                 layersComboBox.SelectedIndex = 0;
                 Model.SelectedIndex = 0;
             }
-                       
+
+            SelectedItems = new ObservableCollection<DNNTrainingResult>();
+           
             Settings.Default.SelectedLayer = 0;
             Settings.Default.Save();
             if (dataProviderComboBox  != null)
@@ -1278,21 +1274,14 @@ namespace Convnet.PageViewModels
 
         public ObservableCollection<DNNTrainingResult>? SelectedItems
         {
-            get
+            get => selectedItems;
+            set 
             {
-                if (Settings.Default.SelectedItems == null)
-                    Settings.Default.SelectedItems = new ObservableCollection<DNNTrainingResult>();
-
-                return Settings.Default.SelectedItems;
-            }
-
-            set
-            {
-                if (value == Settings.Default.SelectedItems)
-                    return;
-
-                Settings.Default.SelectedItems = value;
-                this.RaisePropertyChanged(nameof(SelectedItems));
+                if (value != selectedItems)
+                {
+                    Settings.Default.SelectedItems = value;
+                    this.RaiseAndSetIfChanged(ref selectedItems, value);
+                }
             }
         }
 

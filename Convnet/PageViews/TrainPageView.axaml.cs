@@ -7,7 +7,6 @@ using Avalonia.Threading;
 using Convnet.PageViewModels;
 using CustomMessageBox.Avalonia;
 using Interop;
-using OxyPlot;
 using System.Collections.Generic;
 
 namespace Convnet.PageViews
@@ -41,11 +40,9 @@ namespace Convnet.PageViews
                             tpvm.IsUpdating = true;
                             datagrid.SelectedItems.Clear();
                             foreach (var item in tpvm.SelectedItems)
-                                if (tpvm.TrainingLog.Contains(item))
-                                    datagrid.SelectedItems.Add(item);
-                                //else
-                                //    tpvm.SelectedItems.Remove(item);
-                            
+                                foreach (var row in tpvm.TrainingLog)
+                                    if (item.Equals(row))
+                                        datagrid.SelectedItems.Add(row);
                             tpvm.IsUpdating = false;
                         }
 
