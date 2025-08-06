@@ -107,7 +107,7 @@ namespace Convnet.PageViewModels
         private bool showTrainingPlot = false;
         private ObservableCollection<DataPoint>? pointsTrain = new ObservableCollection<DataPoint>();
         private ObservableCollection<DataPoint>? pointsTest = new ObservableCollection<DataPoint>();
-        private ObservableCollection<DNNTrainingResult>? selectedItems = new ObservableCollection<DNNTrainingResult>();
+        private ObservableCollection<DNNTrainingResult>? selectedItems = Settings.Default.SelectedItems;
         private string? pointsTrainLabel = string.Empty;
         private string? pointsTestLabel = string.Empty;
         private PlotType currentPlotType;
@@ -141,6 +141,8 @@ namespace Convnet.PageViewModels
                         if (item is DNNTrainingResult row)
                             SelectedItems?.Add(row);
                 }
+
+                Settings.Default.Save();
 
                 e.Handled = true;
             }
@@ -182,6 +184,7 @@ namespace Convnet.PageViewModels
             Modelhanged += TrainPageViewModel_ModelChanged;
             RefreshRateChanged += TrainPageViewModel_RefreshRateChanged;
 
+            //PixelSizeSlider_ValueChanged(this, null);
             LayersComboBox_SelectionChanged(this, null);
             RefreshTrainingPlot();
         }
@@ -521,9 +524,7 @@ namespace Convnet.PageViewModels
             CommandToolBar.Add(refreshButton);                      // 27
             CommandToolBar.Add(refreshRateIntegerUpDown);           // 28
         }
-
         
-
         private void TrainPageViewModel_RefreshRateChanged(object? sender, int e)
         {
             if (RefreshTimer != null)
@@ -872,10 +873,10 @@ namespace Convnet.PageViewModels
         //    }
         //}
        
-        private void PixelSizeSlider_ValueChanged(object? sender, Avalonia.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        private void PixelSizeSlider_ValueChanged(object? sender, Avalonia.Controls.Primitives.RangeBaseValueChangedEventArgs? e)
         {
 
-            int temp = (int)Math.Round(e.NewValue);
+            int temp = e != null ? (int)Math.Round(e.NewValue) : (int)Settings.Default.PixelSize;
             
             if (pixelSizeSlider != null)
             {

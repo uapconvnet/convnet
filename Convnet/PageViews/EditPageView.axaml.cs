@@ -87,7 +87,6 @@ namespace Convnet.PageViews
             if (gr != null)
                 gr.ColumnDefinitions.First().Width = new GridLength(Settings.Default.EditSplitPosition, GridUnitType.Pixel);
         }
-
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);

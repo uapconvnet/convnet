@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Convnet.PageViewModels;
+using Convnet.Properties;
 using CustomMessageBox.Avalonia;
 using Interop;
 using System.Collections.Generic;
@@ -39,12 +40,16 @@ namespace Convnet.PageViews
                         {
                             tpvm.IsUpdating = true;
 
+                            //Settings.Default.SelectedItems?.Clear();
+                            //Settings.Default.Save();
+
                             datagrid.SelectedItems.Clear();
                             foreach (var item in tpvm.SelectedItems)
                                 foreach (var row in tpvm.TrainingLog)
-                                    if (item.Equals(row))
+                                    if (item.Cycle == row.Cycle && item.Epoch == row.Epoch && item.TrainErrors == row.TrainErrors && item.TestErrors == row.TestErrors)
+                                        //if (item.Equals(row))
                                         datagrid.SelectedItems.Add(row);
-                            
+
                             if (datagrid.SelectedItems.Count == 0)
                                 tpvm.SelectedItems.Clear();
 
@@ -60,6 +65,8 @@ namespace Convnet.PageViews
                         }
                         else
                             datagrid.ScrollIntoView(tpvm.TrainingLog[0], null);
+
+                        Settings.Default.Save();
 
                         datagrid.Focus();
 
