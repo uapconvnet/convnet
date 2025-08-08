@@ -23,6 +23,7 @@ namespace dnn
 		bool reorderBwdDataDiffSrc;
 		bool reorderBwdDataWeights;
 		bool reorderBwdDataDiffDst;
+		bool sameDiffFormat;
 		
 	public:
 		const UInt Groups;
@@ -58,7 +59,8 @@ namespace dnn
 			reorderBwdWeightsDiffWeights(false),
 			reorderBwdDataDiffSrc(false),
 			reorderBwdDataWeights(false),
-			reorderBwdDataDiffDst(false)			
+			reorderBwdDataDiffDst(false),
+			sameDiffFormat(false)
 		{
 			assert(Inputs.size() == 1);
 
@@ -180,6 +182,7 @@ namespace dnn
 			reorderBwdDataDiffSrc = bwdDataDesc->diff_src_desc() != *InputLayerBwd->DiffDstMemDesc;
 			reorderBwdDataWeights = bwdDataDesc->weights_desc() != *WeightsMemDesc;
 			reorderBwdDataDiffDst = bwdDataDesc->diff_dst_desc() != *DiffDstMemDesc;
+			sameDiffFormat = bwdWeightsDesc->diff_dst_desc() == bwdDataDesc->diff_dst_desc();
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::convolution_forward>(dnnl::convolution_forward(*fwdDesc));
@@ -274,8 +277,8 @@ namespace dnn
 			auto memDiffSrc = SharesInput ? dnnl::memory(*InputLayerBwd->DiffDstMemDesc, Device.engine) : dnnl::memory(*InputLayerBwd->DiffDstMemDesc, Device.engine, InputLayerBwd->NeuronsD1.data());
 			auto diffSrcMem = reorderBwdDataDiffSrc ? dnnl::memory(bwdDataDesc->diff_src_desc(), Device.engine) : memDiffSrc;
 
-			auto diffDataDstMem = reorderBwdDataDiffDst ? dnnl::memory(bwdDataDesc->diff_dst_desc(), Device.engine) : memDiffDst;
-			if (reorderBwdDataDiffDst)
+			auto diffDataDstMem = reorderBwdDataDiffDst ? (sameDiffFormat ? diffDstMem : dnnl::memory(bwdDataDesc->diff_dst_desc(), Device.engine)) : memDiffDst;
+			if (reorderBwdDataDiffDst && !sameDiffFormat)
 			{
 				dnnl::reorder(memDiffDst, diffDataDstMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memDiffDst}, { DNNL_ARG_TO, diffDataDstMem } });
 				Device.stream.wait();
