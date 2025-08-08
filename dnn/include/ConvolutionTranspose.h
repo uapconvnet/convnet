@@ -18,6 +18,7 @@ namespace dnn
 #endif
 		bool reorderFwdSrc;
 		bool reorderBwdWeightsSrc;
+		bool reorderBwdWeightsDiff;
 		bool reorderBwdWeightsDiffWeights;
 		bool reorderBwdDataDiffSrc;
 		bool reorderBwdDataWeights;
@@ -50,6 +51,7 @@ namespace dnn
 			Padding(dnnl::memory::dims({ dnnl::memory::dim(padH), dnnl::memory::dim(padW) })),
 			reorderFwdSrc(false),
 			reorderBwdWeightsSrc(false),
+			reorderBwdWeightsDiff(false),
 			reorderBwdWeightsDiffWeights(false),
 			reorderBwdDataDiffSrc(false),
 			reorderBwdDataWeights(false),
@@ -138,12 +140,13 @@ namespace dnn
 			WeightsFormat = GetMemoryFormat(*WeightsMemDesc);
 
 			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
-			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(bwdWeightsDesc->diff_dst_desc());
+			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			
 			ChosenFormat = GetMemoryFormat(*DstMemDesc);
 						
 			reorderFwdSrc = fwdDesc->src_desc() != *InputLayer->DstMemDesc;
 			reorderBwdWeightsSrc = bwdWeightsDesc->src_desc() != *InputLayer->DstMemDesc;
+			reorderBwdWeightsDiff = bwdWeightsDesc->diff_dst_desc() != *DiffDstMemDesc;
 			reorderBwdWeightsDiffWeights = bwdWeightsDesc->diff_weights_desc() != *WeightsMemDesc;
 			reorderBwdDataDiffSrc = bwdDataDesc->diff_src_desc() != *InputLayer->DiffDstMemDesc;
 			reorderBwdDataWeights = bwdDataDesc->weights_desc() != *WeightsMemDesc;
@@ -199,7 +202,13 @@ namespace dnn
 			DNN_UNREF_PAR(batchSize);
 #endif // DNN_LEAN
 
-			const auto& diffDstMem = dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data());
+			const auto& memDiffDst = dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data());
+			auto diffDstMem = reorderBwdWeightsDiff ? dnnl::memory(bwdWeightsDesc->diff_dst_desc(), Device.engine) : memDiffDst;
+			if (reorderBwdWeightsDiff)
+			{
+				dnnl::reorder(memDiffDst, diffDstMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memDiffDst}, { DNNL_ARG_TO, diffDstMem } });
+				Device.stream.wait();
+			}
 			
 			const auto& memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());
 			auto srcMem = reorderBwdWeightsSrc ? dnnl::memory(bwdWeightsDesc->src_desc(), Device.engine) : memSrc;
@@ -240,10 +249,10 @@ namespace dnn
 			auto memDiffSrc = SharesInput ? dnnl::memory(*InputLayerBwd->DiffDstMemDesc, Device.engine) : dnnl::memory(*InputLayerBwd->DiffDstMemDesc, Device.engine, InputLayerBwd->NeuronsD1.data());
 			auto diffSrcMem = reorderBwdDataDiffSrc ? dnnl::memory(bwdDataDesc->diff_src_desc(), Device.engine) : memDiffSrc;
 
-			auto diffDataDst = reorderBwdDataDiffDst ? dnnl::memory(bwdDataDesc->diff_dst_desc(), Device.engine) : diffDstMem;
+			auto diffDataDst = reorderBwdDataDiffDst ? dnnl::memory(bwdDataDesc->diff_dst_desc(), Device.engine) : memDiffDst;
 			if (reorderBwdDataDiffDst)
 			{
-				dnnl::reorder(diffDstMem, diffDataDst).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, diffDstMem}, { DNNL_ARG_TO, diffDataDst } });
+				dnnl::reorder(diffDstMem, diffDataDst).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memDiffDst}, { DNNL_ARG_TO, diffDataDst } });
 				Device.stream.wait();
 			}
 

@@ -16,6 +16,7 @@ namespace dnn
 #endif
 		bool reorderFwdSrc;
 		bool reorderBwdWeightsSrc;
+		bool reorderBwdWeightsDiff;
 		bool reorderBwdWeightsDiffWeights;
 		bool reorderBwdDataDiffSrc;
 		bool reorderBwdDataWeights;
@@ -57,6 +58,7 @@ namespace dnn
 			Padding(dnnl::memory::dims({ dnnl::memory::dim(padH), dnnl::memory::dim(padW) })),
 			reorderFwdSrc(false),
 			reorderBwdWeightsSrc(false),
+			reorderBwdWeightsDiff(false),
 			reorderBwdWeightsDiffWeights(false),
 			reorderBwdDataDiffSrc(false),
 			reorderBwdDataWeights(false),
@@ -154,7 +156,7 @@ namespace dnn
 			WeightsFormat = GetMemoryFormat(*WeightsMemDesc);
 			
 			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
-			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(bwdWeightsDesc->diff_dst_desc());
+			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			
 			ChosenFormat = GetMemoryFormat(*DstMemDesc);
 			
@@ -163,6 +165,7 @@ namespace dnn
 
 			reorderFwdSrc = fwdDesc->src_desc() != partSrc;
 			reorderBwdWeightsSrc = bwdWeightsDesc->src_desc() != partSrc;
+			reorderBwdWeightsDiff = bwdWeightsDesc->diff_dst_desc() != *DiffDstMemDesc;
 			reorderBwdWeightsDiffWeights = bwdWeightsDesc->diff_weights_desc() != *WeightsMemDesc;
 			reorderBwdDataDiffSrc = bwdDataDesc->diff_src_desc() != partDiffSrc;
 			reorderBwdDataWeights = bwdDataDesc->weights_desc() != *WeightsMemDesc;
@@ -214,8 +217,14 @@ namespace dnn
 			DNN_UNREF_PAR(batchSize);
 #endif // DNN_LEAN
 
-			const auto& diffDstMem = dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data());
-			
+			const auto& memDiffDst = dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data());
+			auto diffDstMem = reorderBwdWeightsDiff ? dnnl::memory(bwdWeightsDesc->diff_dst_desc(), Device.engine) : memDiffDst;
+			if (reorderBwdWeightsDiff)
+			{
+				dnnl::reorder(memDiffDst, diffDstMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memDiffDst}, { DNNL_ARG_TO, diffDstMem } });
+				Device.stream.wait();
+			}
+
 			auto memSrc = dnnl::memory(partSrc, Device.engine, InputLayer->Neurons.data());
 			auto srcMem = reorderBwdWeightsSrc ? dnnl::memory(bwdWeightsDesc->src_desc(), Device.engine) : memSrc;
 			if (reorderBwdWeightsSrc)

@@ -1,6 +1,6 @@
-﻿using Avalonia.Input;
+﻿using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;

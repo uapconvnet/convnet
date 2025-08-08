@@ -127,21 +127,22 @@ namespace Convnet.PageViewModels
 
         public void SelectionChanged(SelectionChangedEventArgs e)
         {
-            if (!IsUpdating)
+            if (!IsUpdating && TrainingLog != null)
             {
-                if (e.RemovedItems.Count > 0)
-                {
-                    foreach (var item in e.RemovedItems)
-                        if (item is DNNTrainingResult row)
-                            SelectedItems?.Remove(row);
-                }
                 if (e.AddedItems.Count > 0)
                 {
                     foreach (var item in e.AddedItems)
                         if (item is DNNTrainingResult row)
                             SelectedItems?.Add(row);
                 }
+                if (e.RemovedItems.Count > 0)
+                {
+                    foreach (var item in e.RemovedItems)
+                        if (item is DNNTrainingResult row)
+                            SelectedItems?.Remove(row);
+                }
 
+                Settings.Default.SelectedItems = SelectedItems;
                 Settings.Default.Save();
 
                 e.Handled = true;
