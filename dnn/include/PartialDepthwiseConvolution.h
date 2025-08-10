@@ -87,22 +87,22 @@ namespace dnn
 		{
 			auto description = GetDescriptionHeader();
 
-			description.append(nwl + std::string(" Groups:") + tab + std::to_string(Groups));
-			description.append(nwl + std::string(" Group:") + dtab + std::to_string(Group));
+			description.append(nwl + std::string(" Groups:     ") + tab + std::to_string(Groups));
+			description.append(nwl + std::string(" Group:      ") + tab + std::to_string(Group));
 
 			if (Multiplier > 1)
-				description.append(nwl + std::string(" Multiplier:") + tab + std::to_string(Multiplier));
+				description.append(nwl + std::string(" Multiplier: ") + tab + std::to_string(Multiplier));
 			if (DilationH == 1 && DilationW == 1)
-				description.append(nwl + std::string(" Kernel:") + tab + std::to_string(KernelH) + std::string("x") + std::to_string(KernelW));
+				description.append(nwl + std::string(" Kernel:     ") + tab + std::to_string(KernelH) + std::string("x") + std::to_string(KernelW));
 			else
 			{
-				description.append(nwl + std::string(" Dilates:") + tab + std::to_string(DilationH) + std::string("x") + std::to_string(DilationW));
-				description.append(nwl + std::string(" Kernel:") + tab + std::to_string(DilationKernelH) + std::string("x") + std::to_string(DilationKernelW));
+				description.append(nwl + std::string(" Dilates:    ") + tab + std::to_string(DilationH) + std::string("x") + std::to_string(DilationW));
+				description.append(nwl + std::string(" Kernel:     ") + tab + std::to_string(DilationKernelH) + std::string("x") + std::to_string(DilationKernelW));
 			}
 			if (StrideH * StrideW > 1)
-				description.append(nwl + std::string(" Stride:") + tab + std::to_string(StrideH) + std::string("x") + std::to_string(StrideW));
+				description.append(nwl + std::string(" Stride:     ") + tab + std::to_string(StrideH) + std::string("x") + std::to_string(StrideW));
 			if (HasPadding)
-				description.append(nwl + std::string(" Padding:") + tab + std::to_string(PadH) + std::string("x") + std::to_string(PadW));
+				description.append(nwl + std::string(" Padding:    ") + tab + std::to_string(PadH) + std::string("x") + std::to_string(PadW));
 
 			description.append(GetWeightsDescription());
 
@@ -264,6 +264,7 @@ namespace dnn
 				Device.stream.wait();
 			}
 
+			// this gives an exception in reorderBwdDataDiffSrc code
 			auto memDiffSrc = dnnl::memory(partDiffSrc, Device.engine, InputLayer->NeuronsD1.data());
 			auto diffSrcMem = reorderBwdDataDiffSrc ? dnnl::memory(bwdDataDesc->diff_src_desc(), Device.engine) : memDiffSrc;
 

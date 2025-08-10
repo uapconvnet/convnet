@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Runtime.InteropServices;
 
 using Float = System.Single;
@@ -8,7 +7,6 @@ using UInt = System.UInt64;
 
 namespace Scripts
 {
-    [Serializable()]
     public enum Scripts
     {
         augshufflenet = 0,
@@ -19,7 +17,6 @@ namespace Scripts
         shufflenetv2 = 5
     }
 
-    [Serializable()]
     public enum Datasets
     {
         cifar10 = 0,
@@ -29,7 +26,6 @@ namespace Scripts
         tinyimagenet = 4
     }
 
-    [Serializable()]
     public enum Fillers
     {
         Constant = 0,
@@ -44,7 +40,6 @@ namespace Scripts
         XavierUniform = 9
     }
 
-    [Serializable()]
     public enum FillerModes
     {
         Avg = 0,
@@ -52,7 +47,6 @@ namespace Scripts
         Out = 2
     }
 
-    [Serializable()]
     public enum Activations
     {
         FRelu = 1,
@@ -66,7 +60,6 @@ namespace Scripts
         Gelu = 28
     }
 
-    [Serializable()]
     public class EfficientNetRecord(UInt expandRatio = 4, UInt channels = 24, UInt iterations = 2, UInt stride = 1, bool se = false)
     {
         public UInt ExpandRatio { get; set; } = expandRatio;
@@ -81,10 +74,9 @@ namespace Scripts
         }
     }
 
-    [Serializable()]
     public class ShuffleNetRecord(UInt iterations = 6u, UInt kernel = 3u, UInt pad = 1u, UInt shuffle = 2u, bool se = false)
     {
-	public UInt Iterations { get; set; } = iterations;
+	    public UInt Iterations { get; set; } = iterations;
         public UInt Kernel { get; set; } = kernel;
         public UInt Pad { get; set; } = pad;
         public UInt Shuffle { get; set; } = shuffle;
@@ -96,7 +88,6 @@ namespace Scripts
         }
     }
 
-    [Serializable()]
     public class ScriptParameters(Scripts script = Scripts.shufflenetv2, Datasets dataset = Datasets.cifar10, UInt h = 32, UInt w = 32, UInt padH = 4, UInt padW = 4, bool mirrorPad = false, bool meanStdNorm = true, Fillers weightsFiller = Fillers.HeNormal, FillerModes weightsFillerMode = FillerModes.In, Float weightsGain = (Float)1.0, Float weightsScale = (Float)0.05, Float weightsLRM = 1, Float weightsWDM = 1, bool hasBias = false, Fillers biasesFiller = Fillers.Constant, FillerModes biasesFillerMode = FillerModes.In, Float biasesGain = (Float)1.0, Float biasesScale = 0, Float biasesLRM = 1, Float biasesWDM = 1, Float batchNormMomentum = (Float)0.995, Float batchNormEps = (Float)1E-04, bool batchNormScaling = false, Float alpha = (Float)0, Float beta = (Float)0, UInt groups = 3, UInt iterations = 4, UInt width = 8, UInt growthRate = 12, bool bottleneck = false, Float dropout = 0, Float compression = 0, bool squeezeExcitation = false, bool channelZeroPad = true, Activations activation = Activations.Relu, UInt strideHFirstConv = 2, UInt strideWFirstConv = 2, Float depthDrop = (Float)0.2, bool fixedDepthDrop = false)
     {
         public Scripts Script { get; set; } = script;
@@ -185,9 +176,9 @@ namespace Scripts
 
         public UInt StrideWFirstConv { get; set; } = strideWFirstConv;
 
-        public ObservableCollection<EfficientNetRecord> EfficientNet { get; set; } = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)];
+        public List<EfficientNetRecord> EfficientNet { get; set; } = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)];
 
-        public ObservableCollection<ShuffleNetRecord> ShuffleNet { get; set; } = [new(7, 3, 1, 2, false), new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)];
+        public List<ShuffleNetRecord> ShuffleNet { get; set; } = [new(7, 3, 1, 2, false), new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)];
 
         public bool RandomCrop { get { return PadH > 0 || PadW > 0; } }
 
