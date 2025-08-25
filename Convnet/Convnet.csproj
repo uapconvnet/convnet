@@ -115,7 +115,7 @@
     <PackageReference Include="Microsoft.Build.Locator" Version="1.9.1" />
     <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0" />
     <PackageReference Include="Oxyplot.AvaloniaCore" Version="2.1.2" />
-    <PackageReference Include="Splat" Version="15.5.1" />
+    <PackageReference Include="Splat" Version="16.0.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.8" />
     <PackageReference Include="System.IO.Pipelines" Version="9.0.8" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
