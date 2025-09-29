@@ -1,21 +1,11 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using AvaloniaEdit;
-using AvaloniaEdit.Highlighting;
-using AvaloniaEdit.Highlighting.Xshd;
+using Avalonia.Threading;
 //using AvaloniaEdit.TextMate;
-using Convnet.Common;
 using Convnet.PageViewModels;
 using Convnet.Properties;
-using System;
-using System.IO;
-using System.Linq;
-using System.Xml;
-using Interop;
-using System.Collections.ObjectModel;
 using CustomMessageBox.Avalonia;
-using Avalonia.Threading;
+using Interop;
 
 
 namespace Convnet.Dialogs
