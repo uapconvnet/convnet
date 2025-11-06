@@ -140,18 +140,15 @@ namespace dnn
 						else
 						{
 							for (auto c = 0ull; c < C; c++)
-							{
-								const auto inputOffset = (c + ChannelsLeft) * HW();
-								const auto outputOffset = c * HW();
-								PRAGMA_OMP_SIMD()
-								for (auto hw = 0ull; hw < HW(); hw++)
-								{
-									Neurons[hw + outputOffset] = InputLayer->Neurons[hw + inputOffset];
+								for (auto h = 0ull; h < H; h++)
+									PRAGMA_OMP_SIMD()
+									for (auto w = 0ull; w < W; w++)
+									{
+										Neurons[OffsetPlainMem(0, c, h, w)] = InputLayer->Neurons[InputLayer->OffsetPlainMem(0, c + ChannelsLeft, h, w)];
 #ifndef DNN_LEAN
-									NeuronsD1[hw + outputOffset] = Float(0);
-#endif // DNN_LEAN
-								}
-							}
+										NeuronsD1[OffsetPlainMem(0, c, h, w)] = Float(0);
+#endif  // DNN_LEAN	
+									}
 						}
 					}
 					else
@@ -171,13 +168,10 @@ namespace dnn
 						else
 						{
 							for (auto c = 0ull; c < C; c++)
-							{
-								const auto inputOffset = (c + ChannelsLeft) * HW();
-								const auto outputOffset = c * HW();
-								PRAGMA_OMP_SIMD()
-								for (auto hw = 0ull; hw < HW(); hw++)
-									Neurons[hw + outputOffset] = InputLayer->Neurons[hw + inputOffset];
-							}
+								for (auto h = 0ull; h < H; h++)
+									PRAGMA_OMP_SIMD()
+									for (auto w = 0ull; w < W; w++)
+										Neurons[OffsetPlainMem(0, c, h, w)] = InputLayer->Neurons[InputLayer->OffsetPlainMem(0, c + ChannelsLeft, h, w)];
 						}
 					}
 				}
