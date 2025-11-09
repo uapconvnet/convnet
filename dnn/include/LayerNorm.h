@@ -59,8 +59,8 @@ namespace dnn
 		std::string GetDescription() const final override
 		{
 			auto description = GetDescriptionHeader() + GetWeightsDescription(Scaling);
-
-			description.append(nwl + std::string(" Eps:") + dtab + FloatToStringScientific(Eps));
+			
+			description.append(nwl + std::string(" Eps:        ") + tab + FloatToStringScientific(Eps));
 
 			auto mean = Float(0);
 			auto variance = Float(0);
@@ -73,8 +73,8 @@ namespace dnn
 			mean /= Mean.size();
 			variance /= Mean.size();
 			
-			description.append(nwl + std::string(" Mean:") + dtab + FloatToStringFixed(mean));
-			description.append(nwl + std::string(" Variance:") + tab + FloatToStringFixed(variance));
+			description.append(nwl + std::string(" Mean:       ") + tab + FloatToStringFixed(mean));
+			description.append(nwl + std::string(" Variance:   ") + tab + FloatToStringFixed(variance));
 
 			return description;
 		}
