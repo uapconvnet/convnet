@@ -1,14 +1,14 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
-using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using Avalonia.Threading;
 using Convnet.PageViewModels;
 using Convnet.Properties;
 using CustomMessageBox.Avalonia;
 using Interop;
 using System.Collections.Generic;
+using Avalonia.Markup.Xaml;
 
 namespace Convnet.PageViews
 {

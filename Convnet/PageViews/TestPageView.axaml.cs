@@ -1,8 +1,6 @@
-﻿using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
-
+﻿using Avalonia.Markup.Xaml;
 using Convnet.PageViewModels;
+using ReactiveUI.Avalonia;
 
 namespace Convnet.PageViews
 {

@@ -1,4 +1,5 @@
-using Avalonia;
+using Avalonia; // AppBuilder
+using ReactiveUI.Avalonia; // UseReactiveUI, RegisterReactiveUIViews* (core)
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using System;

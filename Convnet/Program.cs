@@ -1,5 +1,5 @@
 ﻿using Avalonia;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using System;
 
 namespace Convnet
@@ -20,7 +20,8 @@ namespace Convnet
                         .UsePlatformDetect()
                         .WithInterFont()
                         .LogToTrace()
-                        .UseReactiveUI();
+                        .UseReactiveUI()
+                        .RegisterReactiveUIViewsFromEntryAssembly();
         }
     }
 }
