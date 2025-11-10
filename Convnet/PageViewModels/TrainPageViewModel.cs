@@ -450,10 +450,6 @@ namespace Convnet.PageViewModels
                 SmallChange = 1,
                 Width = 106,
                 Height = 24,
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
-                Margin= new Avalonia.Thickness(0),
-                Padding = new Avalonia.Thickness(0),
                 Value = Settings.Default.PixelSize
             };
             ToolTip.SetTip(pixelSizeSlider, Math.Round(Settings.Default.PixelSize) == 1 ? "1 Pixel" : Math.Round(Settings.Default.PixelSize).ToString() + " Pixels");
