@@ -185,7 +185,7 @@ namespace Convnet.PageViewModels
             Modelhanged += TrainPageViewModel_ModelChanged;
             RefreshRateChanged += TrainPageViewModel_RefreshRateChanged;
 
-            //PixelSizeSlider_ValueChanged(this, null);
+            PixelSizeSlider_ValueChanged(this, null);
             LayersComboBox_SelectionChanged(this, null);
             RefreshTrainingPlot();
         }
@@ -448,10 +448,12 @@ namespace Convnet.PageViewModels
                 Maximum = 8,
                 LargeChange = 1,
                 SmallChange = 1,
-                Width = 96,
-                Height = 34,
+                Width = 106,
+                Height = 24,
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
+                Margin= new Avalonia.Thickness(0),
+                Padding = new Avalonia.Thickness(0),
                 Value = Settings.Default.PixelSize
             };
             ToolTip.SetTip(pixelSizeSlider, Math.Round(Settings.Default.PixelSize) == 1 ? "1 Pixel" : Math.Round(Settings.Default.PixelSize).ToString() + " Pixels");
