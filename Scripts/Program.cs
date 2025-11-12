@@ -505,20 +505,6 @@ namespace Scripts
                 (weightsFiller != "" ? "WeightsFiller=" + weightsFiller + nwl + nwl : nwl);
         }
 
-        public static string PartialDepthwiseConvolution(UInt id, string inputs, UInt part = 1, UInt groups = 1, UInt kernelX = 3, UInt kernelY = 3, UInt strideX = 1, UInt strideY = 1, UInt padX = 1, UInt padY = 1, bool biases = false, string group = "", string prefix = "DC", string weightsFiller = "")
-        {
-            return "[" + group + prefix + to_string(id) + "]" + nwl +
-                "Type=PartialDepthwiseConvolution" + nwl +
-                "Inputs=" + inputs + nwl +
-                "Group=" + to_string(part) + nwl +
-                "Groups=" + to_string(groups) + nwl +
-                "Kernel=" + to_string(kernelX) + "," + to_string(kernelY) + nwl +
-                (strideX != 1 || strideY != 1 ? "Stride=" + to_string(strideX) + "," + to_string(strideY) + nwl : "") +
-                (padX != 0 || padY != 0 ? "Pad=" + to_string(padX) + "," + to_string(padY) + nwl : "") +
-                (biases ? "Biases=Yes" + nwl : "") +
-                (weightsFiller != "" ? "WeightsFiller=" + weightsFiller + nwl + nwl : nwl);
-        }
-
         public static string DepthwiseMixedConvolution(UInt g, UInt id, string inputs, UInt strideX = 1, UInt strideY = 1, bool biases = false, bool useChannelSplit = true, string group = "", string prefix = "DC")
         {
             switch (g)
@@ -527,28 +513,20 @@ namespace Scripts
                     return DepthwiseConvolution(id, inputs, 1, 3, 3, strideX, strideY, 1, 1, biases, group, prefix);
 
                 case 1:
-                    return useChannelSplit ? ChannelSplit(id, inputs, 2, 1, "Q1") + ChannelSplit(id, inputs, 2, 2, "Q2") +
+                    return ChannelSplit(id, inputs, 2, 1, "Q1") + ChannelSplit(id, inputs, 2, 2, "Q2") +
                         DepthwiseConvolution(id, In("Q1CS", id), 1, 3, 3, strideX, strideY, 1, 1, biases, "A") + DepthwiseConvolution(id, In("Q2CS", id), 1, 5, 5, strideX, strideY, 2, 2, biases, "B") +
-                        Concat(id, In("ADC", id) + "," + In("BDC", id), group, prefix) :
-                        PartialDepthwiseConvolution(id, inputs, 1, 2, 3, 3, strideX, strideY, 1, 1, biases, "A") + PartialDepthwiseConvolution(id, inputs, 2, 2, 5, 5, strideX, strideY, 2, 2, biases, "B") +
                         Concat(id, In("ADC", id) + "," + In("BDC", id), group, prefix);
                 /*
                 case 2:
-                    return useChannelSplit ? ChannelSplit(id, inputs, 3, 1, "Q1") + ChannelSplit(id, inputs, 3, 2, "Q2") + ChannelSplit(id, inputs, 3, 3, "Q3") +
+                    return ChannelSplit(id, inputs, 3, 1, "Q1") + ChannelSplit(id, inputs, 3, 2, "Q2") + ChannelSplit(id, inputs, 3, 3, "Q3") +
                         DepthwiseConvolution(id, In("Q1CS", id), 1, 3, 3, strideX, strideY, 1, 1, biases, "A") + DepthwiseConvolution(id, In("Q2CS", id), 1, 5, 5, strideX, strideY, 2, 2, biases, "B") + DepthwiseConvolution(id, In("Q3CS", id), 1, 7, 7, strideX, strideY, 3, 3, biases, "C") +
-                        Concat(id, In("ADC", id) + "," + In("BDC", id) + "," + In("CDC", id), group, prefix) :
-                        PartialDepthwiseConvolution(id, inputs, 1, 3, 3, 3, strideX, strideY, 1, 1, biases, "A") + PartialDepthwiseConvolution(id, inputs, 2, 3, 5, 5, strideX, strideY, 2, 2, biases, "B") +
-                        PartialDepthwiseConvolution(id, inputs, 3, 3, 7, 7, strideX, strideY, 3, 3, biases, "C") +
                         Concat(id, In("ADC", id) + "," + In("BDC", id) + "," + In("CDC", id), group, prefix);
                 */
 
                 default:
-                    return useChannelSplit ? ChannelSplit(id, inputs, 4, 1, "Q1") + ChannelSplit(id, inputs, 4, 2, "Q2") + ChannelSplit(id, inputs, 4, 3, "Q3") + ChannelSplit(id, inputs, 4, 4, "Q4") +
+                    return ChannelSplit(id, inputs, 4, 1, "Q1") + ChannelSplit(id, inputs, 4, 2, "Q2") + ChannelSplit(id, inputs, 4, 3, "Q3") + ChannelSplit(id, inputs, 4, 4, "Q4") +
                         DepthwiseConvolution(id, In("Q1CS", id), 1, 3, 3, strideX, strideY, 1, 1, biases, "A") + DepthwiseConvolution(id, In("Q2CS", id), 1, 5, 5, strideX, strideY, 2, 2, biases, "B") +
                         DepthwiseConvolution(id, In("Q3CS", id), 1, 7, 7, strideX, strideY, 3, 3, biases, "C") + DepthwiseConvolution(id, In("Q4CS", id), 1, 9, 9, strideX, strideY, 4, 4, biases, "D") +
-                        Concat(id, In("ADC", id) + "," + In("BDC", id) + "," + In("CDC", id) + "," + In("DDC", id), group, prefix) :
-                        PartialDepthwiseConvolution(id, inputs, 1, 4, 3, 3, strideX, strideY, 1, 1, biases, "A") + PartialDepthwiseConvolution(id, inputs, 2, 4, 5, 5, strideX, strideY, 2, 2, biases, "B") +
-                        PartialDepthwiseConvolution(id, inputs, 3, 4, 7, 7, strideX, strideY, 3, 3, biases, "C") + PartialDepthwiseConvolution(id, inputs, 4, 4, 9, 9, strideX, strideY, 4, 4, biases, "D") +
                         Concat(id, In("ADC", id) + "," + In("BDC", id) + "," + In("CDC", id) + "," + In("DDC", id), group, prefix);
             }
         }
@@ -627,6 +605,13 @@ namespace Scripts
                 (weightsFiller != "" ? "WeightsFiller=" + weightsFiller + nwl + nwl : nwl);
         }
 
+        public static string DropPathAdd(UInt id, string inputs, string group = "", string prefix = "A")
+        {
+            return "[" + group + prefix + to_string(id) + "]" + nwl +
+                "Type=DropPathAdd" + nwl +
+                "Inputs=" + inputs + nwl + nwl;
+        }
+        
         public static string Add(UInt id, string inputs, string group = "", string prefix = "A")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
@@ -739,7 +724,7 @@ namespace Scripts
             if (identity)
             {
                 blocks.Add(
-                    Add(A, In("B", C + 1) + "," + inputs));
+                    DropPathAdd(A, In("B", C + 1) + "," + inputs));
             }
 
             return blocks;
@@ -785,7 +770,7 @@ namespace Scripts
             if (identity)
             {
                 blocks.Add(
-                    Add(A, In("B", C + 2) + "," + inputs));
+                    DropPathAdd(A, In("B", C + 2) + "," + inputs));
             }
 
             return blocks;
@@ -1213,7 +1198,7 @@ namespace Scripts
                                     BatchNormActivation(C + 1, In("DC", C + 1), p.Activation) +
                                     strSE +
                                     BatchNorm(C + 2, In("C", C + 2)) +
-                                    Add(A + 1, In("B", C + 2) + "," + strOutputLayer));
+                                    DropPathAdd(A + 1, In("B", C + 2) + "," + strOutputLayer));
 
                                 A++;
                                 C += 3;
@@ -1253,7 +1238,7 @@ namespace Scripts
                             (p.Dropout > 0 ? BatchNormActivationDropout(3, "C3", p.Activation) : BatchNormActivation(3, "C3", p.Activation)) +
                             Convolution(4, "B3", DIV8(W), 1, 1, 1, 1, 0, 0) +
                             Convolution(5, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                            Add(1, "C4,C5"));
+                            DropPathAdd(1, "C4,C5"));
 
                         C = 6;
                     }
@@ -1265,7 +1250,7 @@ namespace Scripts
                             (p.Dropout > 0 ? BatchNormActivationDropout(2, "C2", p.Activation) : BatchNormActivation(2, "C2", p.Activation)) +
                             Convolution(3, "B2", DIV8(W), 3, 3, 1, 1, 1, 1) +
                             Convolution(4, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                            Add(1, "C3,C4"));
+                            DropPathAdd(1, "C3,C4"));
                     }
 
                     for (var g = 0ul; g < p.Groups; g++)
@@ -1277,10 +1262,10 @@ namespace Scripts
                             var strChannelZeroPad = p.ChannelZeroPad ?
                                 AvgPooling(g, In("A", A)) +
                                 "[CZP" + to_string(g) + "]" + nwl + "Type=ChannelZeroPad" + nwl + "Inputs=" + In("P", g) + nwl + "Channels=" + to_string(W) + nwl + nwl +
-                                Add(A + 1, In("C", C + 1 + bn) + "," + In("CZP", g)) :
+                                DropPathAdd(A + 1, In("C", C + 1 + bn) + "," + In("CZP", g)) :
                                 AvgPooling(g, In("B", C)) +
                                 Convolution(C + 2 + bn, In("P", g), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                Add(A + 1, In("C", C + 1 + bn) + "," + In("C", C + 2 + bn));
+                                DropPathAdd(A + 1, In("C", C + 1 + bn) + "," + In("C", C + 2 + bn));
 
                             if (p.Bottleneck)
                             {
@@ -1318,7 +1303,7 @@ namespace Scripts
                                     Convolution(C + 1, In("B", C + 1), DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
                                     (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
                                     Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                    Add(A + 1, In("C", C + 2) + "," + In("A", A)));
+                                    DropPathAdd(A + 1, In("C", C + 2) + "," + In("A", A)));
 
                                 C += 3;
                             }
@@ -1329,7 +1314,7 @@ namespace Scripts
                                     Convolution(C, In("B", C), DIV8(W), 3, 3, 1, 1, 1, 1) +
                                     (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
                                     Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                    Add(A + 1, In("C", C + 1) + "," + In("A", A)));
+                                    DropPathAdd(A + 1, In("C", C + 1) + "," + In("A", A)));
 
                                 C += 2;
                             }

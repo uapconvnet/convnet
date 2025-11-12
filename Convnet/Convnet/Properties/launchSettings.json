@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Convnet": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

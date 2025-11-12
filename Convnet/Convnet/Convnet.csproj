@@ -1,0 +1,232 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <StartupObject>Convnet.Program</StartupObject>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>Resources\App.ico</ApplicationIcon>
+    <Platforms>x64</Platforms>
+    <AssemblyName>Convnet</AssemblyName>
+    <SignAssembly>True</SignAssembly>
+    <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+    <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+    <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <DefineConstants>Windows</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsOSX)'=='true'">
+    <DefineConstants>OSX</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsLinux)'=='true'">
+    <DefineConstants>Linux</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Common\RangeRule.cs" />
+    <Compile Remove="PageViewModels\MainWindowViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+    <TrimmableAssembly Include="Avalonia.Themes.Default" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Fonts\*" />
+    <None Remove="Resources\Calculator.png" />
+    <None Remove="Resources\Cancel.png" />
+    <None Remove="Resources\dark_vs.json" />
+    <None Remove="Resources\Delete.png" />
+    <None Remove="Resources\OpenFile.png" />
+    <None Remove="Resources\SaveAs.png" />
+    <None Remove="Resources\SelectAll.png" />
+    <None Remove="Resources\state\resnet-3-2-6-channelzeropad-relu.txt" />
+    <None Remove="Resources\Annotate_HighPriority.ico" />
+    <None Remove="Resources\App.ico" />
+    <None Remove="Resources\Bolt.png" />
+    <None Remove="Resources\Calculate.png" />
+    <None Remove="Resources\ClearContents.png" />
+    <None Remove="Resources\Collection.png" />
+    <None Remove="Resources\Copy.png" />
+    <None Remove="Resources\CPP-Mode.xshd" />
+    <None Remove="Resources\CSharp-Mode.xshd" />
+    <None Remove="Resources\Cut.png" />
+    <None Remove="Resources\Definition.xshd" />
+    <None Remove="Resources\F1Help.png" />
+    <None Remove="Resources\Favorites.png" />
+    <None Remove="Resources\Forget.png" />
+    <None Remove="Resources\Gear.png" />
+    <None Remove="Resources\Help.png" />
+    <None Remove="Resources\HTML-Mode.xshd" />
+    <None Remove="Resources\ImportOrLoad.png" />
+    <None Remove="Resources\Key.png" />
+    <None Remove="Resources\LightningBolt.png" />
+    <None Remove="Resources\Lock.png" />
+    <None Remove="Resources\ModeV1.xsd" />
+    <None Remove="Resources\ModeV2.xsd" />
+    <None Remove="Resources\Open.png" />
+    <None Remove="Resources\Paste.png" />
+    <None Remove="Resources\Pause.png" />
+    <None Remove="Resources\PerformanceLog.png" />
+    <None Remove="Resources\Play.png" />
+    <None Remove="Resources\PowerShell.xshd" />
+    <None Remove="Resources\Property.png" />
+    <None Remove="Resources\Redo.png" />
+    <None Remove="Resources\Refresh.png" />
+    <None Remove="Resources\Save.png" />
+    <None Remove="Resources\Saveall_6518.png" />
+    <None Remove="Resources\Schema.png" />
+    <None Remove="Resources\SpellCheck.png" />
+    <None Remove="Resources\StatusAlert.png" />
+    <None Remove="Resources\StatusOK.png" />
+    <None Remove="Resources\Stop.png" />
+    <None Remove="Resources\Sync.png" />
+    <None Remove="Resources\Synchronize.png" />
+    <None Remove="Resources\Undo.png" />
+    <None Remove="Resources\Unlock.png" />
+    <None Remove="Resources\VisualStudio.png" />
+    <None Remove="Resources\XML-Mode.xshd" />
+    <None Remove="Resources\XmlDoc.xshd" />
+  </ItemGroup>
+
+ 
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.8" />
+    <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.25547.20250602" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.3.0" />
+    <PackageReference Include="Avalonia.BuildServices" Version="11.3.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.8" />
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.8" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.8" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.8" />
+    <PackageReference Include="AvaloniaControlsToolBar" Version="11.3.6" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.8" />
+    <PackageReference Include="AvaloniaEdit.TextMate" Version="11.3.0" />
+    <PackageReference Include="ReactiveUI" Version="22.2.1" />
+    <PackageReference Include="ReactiveUI.Avalonia" Version="11.3.8" />
+    <PackageReference Include="Splat" Version="17.1.1" />
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <PackageReference Include="CustomMessageBox.Avalonia" Version="11.0.0.2" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="8.3.1.2" />
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.10.12" />
+    <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0" />
+    <PackageReference Include="Oxyplot.AvaloniaCore" Version="2.1.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
+    <PackageReference Include="System.IO.Pipelines" Version="10.0.0" />
+    <PackageReference Include="System.Reactive" Version="6.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0" />
+    <PackageReference Include="TextMateSharp.Grammars" Version="1.0.70" />
+    <PackageReference Include="Xaml.Behaviors" Version="11.3.6.6" />
+    <PackageReference Include="Xaml.Behaviors.Interactions" Version="11.3.6.6" />
+    <PackageVersion Include="XamlNameReferenceGenerator" Version="1.6.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Resources\Annotate_HighPriority.ico" />
+    <AvaloniaResource Include="Resources\App.ico" />
+    <AvaloniaResource Include="Resources\Calculator.png" />
+    <AvaloniaResource Include="Resources\Cancel.png" />
+    <AvaloniaResource Include="Resources\Fonts\*" /> 
+    <AvaloniaResource Include="Resources\Delete.png" />
+    <AvaloniaResource Include="Resources\OpenFile.png" />
+    <AvaloniaResource Include="Resources\SaveAs.png" />
+    <AvaloniaResource Include="Resources\SelectAll.png" />
+    <AvaloniaResource Include="Resources\state\resnet-3-2-6-channelzeropad-relu.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Include="Resources\Sync.png" />
+    <Content Include="Resources\state\resnet-3-2-6-channelzeropad-relu.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>     
+    <AvaloniaResource Include="Resources\Bolt.png" />
+    <AvaloniaResource Include="Resources\Calculate.png" />
+    <AvaloniaResource Include="Resources\ClearContents.png" />
+    <AvaloniaResource Include="Resources\Collection.png" />
+    <AvaloniaResource Include="Resources\Copy.png" />
+    <EmbeddedResource Include="Resources\CPP-Mode.xshd" />
+    <EmbeddedResource Include="Resources\CSharp-Mode.xshd">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <AvaloniaResource Include="Resources\Cut.png" />
+    <Content Include="Resources\dark_vs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Resources\Definition.xshd">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <AvaloniaResource Include="Resources\F1Help.png" />
+    <AvaloniaResource Include="Resources\Favorites.png" />
+    <AvaloniaResource Include="Resources\Forget.png" />
+    <AvaloniaResource Include="Resources\Gear.png" />
+    <AvaloniaResource Include="Resources\Help.png" />
+    <AvaloniaResource Include="Resources\HTML-Mode.xshd" />
+    <AvaloniaResource Include="Resources\ImportOrLoad.png" />
+    <AvaloniaResource Include="Resources\Key.png" />
+    <AvaloniaResource Include="Resources\LightningBolt.png" />
+    <AvaloniaResource Include="Resources\Lock.png" />
+    <AvaloniaResource Include="Resources\ModeV1.xsd" />
+    <AvaloniaResource Include="Resources\ModeV2.xsd" />
+    <AvaloniaResource Include="Resources\Open.png" />
+    <AvaloniaResource Include="Resources\Paste.png" />
+    <AvaloniaResource Include="Resources\Pause.png" />
+    <AvaloniaResource Include="Resources\PerformanceLog.png" />
+    <AvaloniaResource Include="Resources\Play.png" />
+    <AvaloniaResource Include="Resources\PowerShell.xshd" />
+    <AvaloniaResource Include="Resources\Property.png" />
+    <AvaloniaResource Include="Resources\Redo.png" />
+    <AvaloniaResource Include="Resources\Refresh.png" />
+    <AvaloniaResource Include="Resources\Save.png" />
+    <AvaloniaResource Include="Resources\Saveall_6518.png" />
+    <AvaloniaResource Include="Resources\Schema.png" />
+    <AvaloniaResource Include="Resources\SpellCheck.png" />
+    <AvaloniaResource Include="Resources\StatusAlert.png" />
+    <AvaloniaResource Include="Resources\StatusOK.png" />
+    <AvaloniaResource Include="Resources\Stop.png" />
+    <AvaloniaResource Include="Resources\Synchronize.png" />
+    <AvaloniaResource Include="Resources\Undo.png" />
+    <AvaloniaResource Include="Resources\Unlock.png" />
+    <AvaloniaResource Include="Resources\VisualStudio.png" />
+    <AvaloniaResource Include="Resources\XML-Mode.xshd" />
+    <AvaloniaResource Include="Resources\XmlDoc.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dialogs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Common\RangeRule.cs" />
+    <None Include="PageViewModels\MainWindowViewModel.cs" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="xcopy /Y $(SolutionDir)dnn\build\$(ConfigurationName)\dnn.dll $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <Exec Command="cp $(SolutionDir)/dnn/build/libdnn.so $(TargetDir)" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+  </Target>
+</Project>

@@ -1,0 +1,331 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:oxy="using:OxyPlot.Avalonia"
+             xmlns:c="clr-namespace:Convnet.Common"
+             xmlns:props="clr-namespace:Convnet.Properties"
+             xmlns:vm="clr-namespace:Convnet.PageViewModels"
+             x:Class="Convnet.PageViews.TrainPageView"
+             x:DataType="vm:TrainPageViewModel">
+    
+  <Grid x:Name="GridMain" Background="{DynamicResource BackgroundBrushLight}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="26"/>
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+        <StackPanel x:Name="StackPanelInfo" Margin="0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" VerticalAlignment="Stretch" Orientation="Horizontal">
+          <Border x:Name="BorderProgress" BorderThickness="1,1,0,1" CornerRadius="3" Margin="1,1,0,1" Padding="2" IsVisible="True" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" Background="{DynamicResource BackgroundBrushLight}" BorderBrush="{DynamicResource BackgroundBrushLight}">
+            <TextBlock x:Name="TextBlockProgress" Margin="4" FontFamily="{StaticResource CascadiaCodeFontFamily}" FontSize="14" TextWrapping="NoWrap" Text="{Binding Path=ProgressText}" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrushLight}"/>
+          </Border>
+          <Border x:Name="BorderLayerInfo" BorderThickness="1,1,0,1" CornerRadius="3" Margin="1,1,0,1" Padding="2" IsVisible="True" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" Background="{DynamicResource BackgroundBrushLight}" BorderBrush="{DynamicResource BackgroundBrushLight}">
+            <TextBlock x:Name="TextBlockLayerInfo" TextWrapping="NoWrap" Margin="4" FontFamily="{StaticResource CascadiaCodeFontFamily}" FontSize="14" Text="{Binding Path=LayerInfo}" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrushLight}"/>
+          </Border>
+          <Border x:Name="BorderWeightsMinMax" BorderThickness="1,1,1,1" CornerRadius="3" Margin="1,1,0,1" Padding="2" IsVisible="True" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" Background="{DynamicResource BackgroundBrushLight}" BorderBrush="{DynamicResource BackgroundBrushLight}">
+            <TextBlock x:Name="TextBlockWeightsMinMax" Margin="4" FontFamily="{StaticResource CascadiaCodeFontFamily}" FontSize="14" TextWrapping="NoWrap" Text="{Binding Path=WeightsMinMax}" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrushLight}"/>
+          </Border>
+          <Border x:Name="BorderInputSnapShot" BorderThickness="0,1,1,1" CornerRadius="3" Margin="1,1,0,1" Padding="2,0,5,2" IsVisible="{Binding ShowSample}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" Background="{DynamicResource BackgroundBrushLight}" BorderBrush="{DynamicResource BackgroundBrushLight}">
+            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
+              <TextBlock x:Name="TextBlockHeader" Text="Input" Margin="3,6,3,3" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="{StaticResource CascadiaCodeFontFamily}" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrushLight}" FontSize="14"/>
+              <Image Source="{Binding InputSnapshot}" Width="64" Height="64" Margin="12,1,3,3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+              <TextBlock x:Name="TextBlockLabel" Text="{Binding Label}" Margin="12,3,3,3" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource CascadiaCodeFontFamily}" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrushLight}"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+        <Border x:Name="BorderSnapShot" BorderThickness="1,1,0,1" CornerRadius="3" Margin="1,1,0,1" Padding="2" IsVisible="{Binding ShowWeightsSnapshot}" IsHitTestVisible="True" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1" MaxHeight="{Binding Bounds.Height, ElementName=BorderWeightsMinMax}" Background="{DynamicResource BackgroundBrushLight}" BorderBrush="{DynamicResource BackgroundBrushLight}">
+          <ScrollViewer x:Name="SnapShot" PointerPressed="ZoomOut_PointerPressed" AllowAutoHide="True" HorizontalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >
+            <Image Source="{Binding WeightsSnapshot}" UseLayoutRounding="True" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="{Binding WeightsSnapshotX}" Width="{Binding WeightsSnapshotX}" MinHeight="{Binding WeightsSnapshotY}" Height="{Binding WeightsSnapshotY}" IsHitTestVisible="True" />
+          </ScrollViewer>
+        </Border>
+        <Border x:Name="BorderTrainingPlot" BorderThickness="1" CornerRadius="3" Margin="1,1,1,1" Padding="2" IsVisible="{Binding ShowTrainingPlot}" IsHitTestVisible="True" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1" MaxHeight="{Binding Bounds.Height, ElementName=BorderWeightsMinMax}" Background="{DynamicResource BackgroundBrushLight}" BorderBrush="{DynamicResource BackgroundBrushLight}">
+          <oxy:PlotView x:Name="TrainingPlot" PointerPressed="ZoomOut_PointerPressed" Model="{Binding PlotModel}" Background="{DynamicResource BackgroundBrushLight}" IsHitTestVisible="True">
+            <oxy:PlotView.DefaultTrackerTemplate>
+              <ControlTemplate>
+                <oxy:TrackerControl VerticalLineVisibility="False" LineExtents="{Binding PlotModel.PlotArea}" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextBrush}">
+                  <oxy:TrackerControl.Content>
+                    <TextBlock Text="{Binding}" Margin="3"/> 
+                  </oxy:TrackerControl.Content>
+                </oxy:TrackerControl>
+                <!--<oxy:TrackerControl Position="{Binding Position}" LineExtents="{Binding PlotModel.PlotArea}" Background="Transparent" BorderBrush="Transparent" Foreground="{DynamicResource TextBrush}">
+                  <oxy:TrackerControl.Content>
+                    <UniformGrid Columns="2" Margin="3">
+                      <TextBlock Text="{Binding DataPoint.X, StringFormat='{}{0:0}'}"/>
+                      <TextBlock Text="Epochs" FontWeight="DemiBold" />
+                      <TextBlock Text="{Binding DataPoint.Y, StringFormat='{}{0:0.000}'}"/>
+                      <TextBlock Text="{Binding Series.Title}" FontWeight="DemiBold"/>
+                    </UniformGrid>
+                  </oxy:TrackerControl.Content>
+                </oxy:TrackerControl>-->
+              </ControlTemplate>
+            </oxy:PlotView.DefaultTrackerTemplate>
+          </oxy:PlotView>
+        </Border>
+    </Grid>
+
+    <ScrollViewer Grid.Row="1" x:Name="ScrollViewerHeader" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" BorderBrush="DarkGray" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Focusable="False" IsHitTestVisible="False">
+      <Grid >
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="48" />
+          <ColumnDefinition Width="50" />
+          <ColumnDefinition Width="50" />
+          <ColumnDefinition Width="0" />
+          <ColumnDefinition Width="50" />
+          <ColumnDefinition Width="50" />
+          <ColumnDefinition Width="0" />
+          <ColumnDefinition Width="40" />
+          <ColumnDefinition Width="40" />
+          <ColumnDefinition Width="92" />
+          <ColumnDefinition Width="98" />
+          <ColumnDefinition Width="66" />
+          <ColumnDefinition Width="84" />
+          <ColumnDefinition Width="66" />
+          <ColumnDefinition Width="66" />
+          <ColumnDefinition Width="82" />
+          <ColumnDefinition Width="64" />
+          <ColumnDefinition Width="100" />
+          <ColumnDefinition Width="54" />
+          <ColumnDefinition Width="54" />
+          <ColumnDefinition Width="100" />
+          <ColumnDefinition Width="76" />
+          <ColumnDefinition Width="76" />
+          <ColumnDefinition Width="78" />
+          <ColumnDefinition Width="86" />
+          <ColumnDefinition Width="84" />
+          <ColumnDefinition Width="106" />
+          <ColumnDefinition Width="60" />
+          <ColumnDefinition Width="70" />
+          <ColumnDefinition Width="80" />
+          <ColumnDefinition Width="62" />
+          <ColumnDefinition Width="70" />
+          <ColumnDefinition Width="76" />
+          <ColumnDefinition Width="80" />
+          <ColumnDefinition Width="62" />
+          <ColumnDefinition Width="70" />
+          <ColumnDefinition Width="76" />
+          <ColumnDefinition Width="90" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="2" Grid.ColumnSpan="7" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="1,1,0,0" BorderBrush="{DynamicResource TextBrush}" Margin="1,0,-1,0" Background="{DynamicResource BackgroundBrush}">
+          <TextBlock Text="Resolution" Padding="7" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" Foreground="{DynamicResource TextBrush}" FontFamily="{StaticResource ConsolasFontFamily}" FontSize="14" />
+        </Border>
+        <Border Grid.Column="9" Grid.ColumnSpan="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="1,1,0,0" BorderBrush="{DynamicResource TextBrush}" Margin="1,0,-1,0" Background="{DynamicResource BackgroundBrush}">
+          <TextBlock Text="Regularization" Padding="7" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" Foreground="{DynamicResource TextBrush}" FontFamily="{StaticResource ConsolasFontFamily}" FontSize="14" />
+        </Border>
+        <Border Grid.Column="17" Grid.ColumnSpan="12" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="1,1,0,0" BorderBrush="{DynamicResource TextBrush}" Margin="1,0,-1,0" Background="{DynamicResource BackgroundBrush}">
+          <TextBlock Text="Augmentation" Padding="7" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" Foreground="{DynamicResource TextBrush}" FontFamily="{StaticResource ConsolasFontFamily}" FontSize="14" />
+        </Border>
+        <Border Grid.Column="29" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="1,1,0,0" BorderBrush="{DynamicResource TextBrush}" Margin="1,0,-1,0" Background="{DynamicResource BackgroundBrush}">
+          <TextBlock Text="Train" Padding="7" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" Foreground="{DynamicResource TextBrush}" FontFamily="{StaticResource ConsolasFontFamily}" FontSize="14" />
+        </Border>
+        <Border Grid.Column="33" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="1,1,1,0" BorderBrush="{DynamicResource TextBrush}" Margin="1,0,-1,0" Background="{DynamicResource BackgroundBrush}">
+          <TextBlock Text="Test" Padding="7" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" Foreground="{DynamicResource TextBrush}" FontFamily="{StaticResource ConsolasFontFamily}" FontSize="14" />
+        </Border>
+      </Grid>
+    </ScrollViewer>
+
+    <DataGrid Grid.Row="2" x:Name="ListViewTrainingResult" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" AutoGenerateColumns="False" IsReadOnly="True" CanUserSortColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource DisabledBorderBrush}" BorderThickness="1" GridLinesVisibility="All" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding TrainingLog, Mode=TwoWay}" Grid.ColumnSpan="1" FontFamily="{StaticResource ConsolasFontFamily}" FontWeight="Normal" FontSize="13" SelectionMode="Single" KeyDown="DataGrid_KeyDown">
+      <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="SelectionChanged">
+          <InvokeCommandAction Command="{Binding SelectionChangedCommand}" PassEventArgsToCommand="true"/>
+        </EventTriggerBehavior>
+      </Interaction.Behaviors>
+      
+      <DataGrid.Columns>
+        <DataGridTemplateColumn DisplayIndex="0" Header="Cycle" Width="48">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Cycle}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="1" Header="Epoch" Width="50">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Epoch}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn DisplayIndex="2" Header="N" Binding="{Binding N}" Width="50"/>
+        <DataGridTextColumn DisplayIndex="3" Header="D" Binding="{Binding D}" Width="50" IsVisible="False"/>
+        <DataGridTextColumn DisplayIndex="4" Header="H" Binding="{Binding H}" Width="50"/>
+        <DataGridTextColumn DisplayIndex="5" Header="W" Binding="{Binding W}" Width="50"/>
+        <DataGridTextColumn DisplayIndex="6" Header="PadD" Binding="{Binding PadD}" Width="40" IsVisible="False"/>
+        <DataGridTextColumn DisplayIndex="7" Header="PadH" Binding="{Binding PadH}" Width="40"/>
+        <DataGridTextColumn DisplayIndex="8" Header="PadW" Binding="{Binding PadW}" Width="40"/>
+        <DataGridTemplateColumn DisplayIndex="9" Header="Optimizer" Width="92">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Optimizer}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="10" Header="Rate" Width="98">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Rate, StringFormat={}{0:0.00000000}}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn DisplayIndex="11" Header="Eps" Binding="{Binding Eps, StringFormat=G}" Width="66"/>
+        <DataGridTemplateColumn DisplayIndex="12" Header="Momentum" Width="84">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Momentum, StringFormat=0.#######}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="13" Header="Beta2" Width="66">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Beta2, StringFormat=0.#########}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="14" Header="Gamma" Width="66">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Gamma, StringFormat=0.#########}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="15" Header="L2Penalty" Width="82">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding L2Penalty, StringFormat=0.#########}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="16" Header="Dropout" Width="64">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Dropout, StringFormat=0.#######}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="17" Header="InputDropout" Width="100">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding InputDropout}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn DisplayIndex="18" Header="Cutout" Binding="{Binding Cutout}" Width="54"/>
+        <DataGridCheckBoxColumn DisplayIndex="19" Header="CutMix" Binding="{Binding CutMix}" Width="54"/>
+        <DataGridTemplateColumn DisplayIndex="20" Header="AutoAugment" Width="100">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding AutoAugment, StringFormat=0.#####}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridCheckBoxColumn DisplayIndex="21" Header="Horz.Flip" Binding="{Binding HorizontalFlip}" Width="76"/>
+        <DataGridCheckBoxColumn DisplayIndex="22" Header="Vert.Flip" Binding="{Binding VerticalFlip}" Width="76"/>
+        <DataGridTemplateColumn DisplayIndex="23" Header="ColorCast" Width="78">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding ColorCast, StringFormat=0.#####}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="24" Header="ColorAngle" Width="86">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding ColorAngle, StringFormat={}{0}°}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="25" Header="Distortion" Width="84">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Distortion, StringFormat=0.#####}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="26" Header="Interpolation" Width="106">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Interpolation}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="27" Header="Scaling" Width="60">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Scaling, StringFormat='{}{0} %'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="28" Header="Rotation" Width="70">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding Rotation, StringFormat='{}{0}°'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="29" Header="Loss" Width="80">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding AvgTrainLoss, StringFormat={}{0:0.000000}}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="30" Header="Errors" Width="62">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock  Text="{Binding TrainErrors}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="31" Header="Error" Width="70">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock  Text="{Binding TrainErrorPercentage, StringFormat='{}{0:#0.00} %'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="32" Header="Accuracy" Width="76">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding TrainAccuracy, StringFormat='{}{0:#0.00} %'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="33" Header="Loss" Width="80">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding AvgTestLoss, StringFormat={}{0:0.000000}}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="34" Header="Errors" Width="62">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock  Text="{Binding TestErrors}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="35" Header="Error" Width="70">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding TestErrorPercentage, StringFormat='{}{0:#0.00} %'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="36" Header="Accuracy" Width="76">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate >
+              <TextBlock Text="{Binding TestAccuracy, StringFormat='{}{0:#0.00} %'}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn DisplayIndex="37" Header="Duration" Binding="{Binding ElapsedTime}" Width="90"/>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>
