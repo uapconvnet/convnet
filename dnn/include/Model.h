@@ -1398,13 +1398,11 @@ namespace dnn
 		}
 		*/
 
-		
 		auto IsSkippable(const Layer& layer) const
 		{
 			return layer.LayerType == LayerTypes::DropPathAdd;
 		}
 		
-
 		auto GetTotalSkipConnections() const
 		{
 			auto totalSkipConnections = 0ull;
@@ -1436,7 +1434,7 @@ namespace dnn
 						for (auto inputLayer = 0ull; inputLayer < layer->Inputs.size(); inputLayer++)
 						{
 							if (!IsSkippable(*layer->Inputs[inputLayer]))
-								survivalProb = fixed ? Float(1) / (Float(1) - dropRate) : Float(1) / (Float(1) - (dropRate * Float(skipConnection) / Float(totalSkipConnections)));
+								survivalProb = fixed ? (Float(1) / (Float(1) - dropRate)) : (Float(1) / (Float(1) - (dropRate * Float(skipConnection) / Float(totalSkipConnections))));
 							else
 								survivalProb = Float(1);
 							
@@ -1445,25 +1443,9 @@ namespace dnn
 							case LayerTypes::DropPathAdd:
 								dynamic_cast<DropPathAdd*>(layer.get())->SurvivalProbability[inputLayer] = survivalProb;
 								break;
-							/* case LayerTypes::Add:
-								dynamic_cast<Add*>(layer.get())->SurvivalProbability[inputLayer] = survivalProb;
-								break;
-							case LayerTypes::Average:
-								dynamic_cast<Average*>(layer.get())->SurvivalProbability[inputLayer] = survivalProb;
-								break;
-							case LayerTypes::Substract:
-								dynamic_cast<Substract*>(layer.get())->SurvivalProbability[inputLayer] = survivalProb;
-								break;
-							case LayerTypes::Multiply:
-								dynamic_cast<Multiply*>(layer.get())->SurvivalProbability[inputLayer] = survivalProb;
-								break;
-							case LayerTypes::Divide:
-								dynamic_cast<Divide*>(layer.get())->SurvivalProbability[inputLayer] = survivalProb;
-								break; */
 							default:
 								break;
 							}
-							
 						}
 					}
 					
@@ -1475,12 +1457,13 @@ namespace dnn
 							isSkipConnection = true;
 							endLayer = outputLayer->Name;
 							skipConnection++;
-							survive = Bernoulli<bool>(fixed ? Float(1) / (Float(1) - dropRate) : (Float(1) - (dropRate * Float(skipConnection) / Float(totalSkipConnections))));
+							survive = Bernoulli<bool>(fixed ? (Float(1) / (Float(1) - dropRate)) : (Float(1) - (dropRate * Float(skipConnection) / Float(totalSkipConnections))));
 						}
 					}
 				}
-				else if (isSkipConnection)
-					layer->Skip = !survive;
+				else
+					if (isSkipConnection)
+						layer->Skip = !survive;
 			}
 		}
 

@@ -462,7 +462,7 @@ namespace scripts
                 (weightsFiller != "" ? "WeightsFiller=" + weightsFiller + nwl + nwl : nwl);
         }
 
-        static std::string DepthwiseMixedConvolution(UInt g, UInt id, std::string inputs, UInt strideX = 1, UInt strideY = 1, bool biases = false, bool useChannelSplit = true, std::string group = "", std::string prefix = "DC")
+        static std::string DepthwiseMixedConvolution(UInt g, UInt id, std::string inputs, UInt strideX = 1, UInt strideY = 1, bool biases = false, std::string group = "", std::string prefix = "DC")
         {
             switch (g)
             {
@@ -1099,7 +1099,6 @@ namespace scripts
             case Scripts::mobilenetv3:
             {
                 auto se = p.SqueezeExcitation;
-                auto channelsplit = true;
                 auto W = p.Width * 16;
 
                 net +=
@@ -1109,7 +1108,7 @@ namespace scripts
                 blocks.push_back(
                     Convolution(2, "B1", DIV8(6 * W), 1, 1, 1, 1, 0, 0) +
                     BatchNormActivation(2, "C2", p.Activation) +
-                    DepthwiseMixedConvolution(0, 3, "B2", 1, 1, p.HasBias, channelsplit) +
+                    DepthwiseMixedConvolution(0, 3, "B2", 1, 1, p.HasBias) +
                     BatchNormActivation(3, "DC3", p.Activation) +
                     Convolution(4, "B3", DIV8(W), 1, 1, 1, 1, 0, 0) +
                     BatchNorm(4, "C4"));
@@ -1139,7 +1138,7 @@ namespace scripts
                         blocks.push_back(
                             Convolution(C, In("A", A), DIV8(6 * W), 1, 1, 1, 1, 0, 0) +
                             BatchNormActivation(C, In("C", C), p.Activation) +
-                            DepthwiseMixedConvolution(mix, C + 1, In("B", C), 2, 2, p.HasBias, channelsplit) +
+                            DepthwiseMixedConvolution(mix, C + 1, In("B", C), 2, 2, p.HasBias) +
                             BatchNormActivation(C + 1, In("DC", C + 1), p.Activation) +
                             strSE +
                             BatchNorm(C + 2, In("C", C + 2)));
@@ -1166,7 +1165,7 @@ namespace scripts
                         blocks.push_back(
                             Convolution(C, strOutputLayer, DIV8(6 * W), 1, 1, 1, 1, 0, 0) +
                             BatchNormActivation(C, In("C", C), p.Activation) +
-                            DepthwiseMixedConvolution(mix, C + 1, In("B", C), 1, 1, p.HasBias, channelsplit) +
+                            DepthwiseMixedConvolution(mix, C + 1, In("B", C), 1, 1, p.HasBias) +
                             BatchNormActivation(C + 1, In("DC", C + 1), p.Activation) +
                             strSE +
                             BatchNorm(C + 2, In("C", C + 2)) +

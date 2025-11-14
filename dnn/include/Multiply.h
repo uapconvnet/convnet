@@ -8,14 +8,8 @@ namespace dnn
 	private:
 		std::unique_ptr<dnnl::binary::primitive_desc> fwdDesc;
 		std::unordered_map<int, dnnl::memory> fwdArgs;
-		//std::unique_ptr<dnnl::binary::primitive_desc> bwd0Desc;
-		//std::unique_ptr<dnnl::binary::primitive_desc> bwd1Desc;
-		//std::unique_ptr<dnnl::reduction::primitive_desc> bwdReductionDesc;
 #ifdef DNN_CACHE_PRIMITIVES
 		std::unique_ptr<dnnl::binary> fwd;
-		//std::unique_ptr<dnnl::binary> bwd0;
-		//std::unique_ptr<dnnl::binary> bwd1;
-		//std::unique_ptr<dnnl::reduction> bwdReduction;
 #endif
 		
 	public:

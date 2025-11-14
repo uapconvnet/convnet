@@ -60,7 +60,7 @@ namespace dnn
 			std::locale::global(std::locale(""));
 		}
 
-		virtual ~Dataprovider() = default;
+		~Dataprovider() = default;
 
 		bool DatasetAvailable(const Datasets dataset) const
 		{
