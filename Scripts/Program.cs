@@ -505,7 +505,7 @@ namespace Scripts
                 (weightsFiller != "" ? "WeightsFiller=" + weightsFiller + nwl + nwl : nwl);
         }
 
-        public static string DepthwiseMixedConvolution(UInt g, UInt id, string inputs, UInt strideX = 1, UInt strideY = 1, bool biases = false, bool useChannelSplit = true, string group = "", string prefix = "DC")
+        public static string DepthwiseMixedConvolution(UInt g, UInt id, string inputs, UInt strideX = 1, UInt strideY = 1, bool biases = false, string group = "", string prefix = "DC")
         {
             switch (g)
             {
@@ -1128,7 +1128,6 @@ namespace Scripts
                 case Scripts.mobilenetv3:
                     {
                         var se = p.SqueezeExcitation;
-                        var channelsplit = true;
                         var W = p.Width * 16;
 
                         net +=
@@ -1138,7 +1137,7 @@ namespace Scripts
                         blocks.Add(
                             Convolution(2, "B1", DIV8(6 * W), 1, 1, 1, 1, 0, 0) +
                             BatchNormActivation(2, "C2", p.Activation) +
-                            DepthwiseMixedConvolution(0, 3, "B2", 1, 1, p.HasBias, channelsplit) +
+                            DepthwiseMixedConvolution(0, 3, "B2", 1, 1, p.HasBias) +
                             BatchNormActivation(3, "DC3", p.Activation) +
                             Convolution(4, "B3", DIV8(W), 1, 1, 1, 1, 0, 0) +
                             BatchNorm(4, "C4"));
@@ -1167,7 +1166,7 @@ namespace Scripts
                                 blocks.Add(
                                     Convolution(C, In("A", A), DIV8(6 * W), 1, 1, 1, 1, 0, 0) +
                                     BatchNormActivation(C, In("C", C), p.Activation) +
-                                    DepthwiseMixedConvolution(1ul, C + 1, In("B", C), 2, 2, p.HasBias, channelsplit) +
+                                    DepthwiseMixedConvolution(1ul, C + 1, In("B", C), 2, 2, p.HasBias) +
                                     BatchNormActivation(C + 1, In("DC", C + 1), p.Activation) +
                                     strSE +
                                     BatchNorm(C + 2, In("C", C + 2)));
@@ -1194,7 +1193,7 @@ namespace Scripts
                                 blocks.Add(
                                     Convolution(C, strOutputLayer, DIV8(6 * W), 1, 1, 1, 1, 0, 0) +
                                     BatchNormActivation(C, In("C", C), p.Activation) +
-                                    DepthwiseMixedConvolution(1ul, C + 1, In("B", C), 1, 1, p.HasBias, channelsplit) +
+                                    DepthwiseMixedConvolution(1ul, C + 1, In("B", C), 1, 1, p.HasBias) +
                                     BatchNormActivation(C + 1, In("DC", C + 1), p.Activation) +
                                     strSE +
                                     BatchNorm(C + 2, In("C", C + 2)) +
@@ -1399,8 +1398,8 @@ namespace Scripts
         {
             var script = Generate(new ScriptParameters()
 		    {
-        	    Script = Scripts.augshufflenet,
-                Activation = Activations.HardSwish,
+        	    Script = Scripts.resnet,
+                Activation = Activations.Relu,
                 Dataset = Datasets.cifar10,
                 MeanStdNormalization = true,
                 H = 32,
@@ -1429,14 +1428,14 @@ namespace Scripts
         	    Alpha = 0f,
         	    Beta = 0f,
         	    Groups = 3,
-        	    Iterations = 4,
-        	    Width = 16,
+        	    Iterations = 2,
+        	    Width = 6,
         	    GrowthRate = 12,
         	    Bottleneck = false,
         	    Dropout = 0f,
         	    Compression = 0f,
         	    SqueezeExcitation = true,
-        	    ChannelZeroPad = false,
+        	    ChannelZeroPad = true,
         	    DepthDrop = 0.0f,
         	    FixedDepthDrop = false,
         	    EfficientNet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],

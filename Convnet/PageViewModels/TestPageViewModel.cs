@@ -38,7 +38,7 @@ namespace Convnet.PageViewModels
         private int flag = 0;
 
         
-        public TestPageViewModel(Interop.DNNModel model) : base(model)
+        public TestPageViewModel(DNNModel model) : base(model)
         {
             AddCommandButtons();
 
