@@ -229,7 +229,7 @@ int main(int argc, char* argv[])
 
     scripts::ScriptParameters p;
 
-    p.Script = scripts::Scripts::shufflenetv2;
+    p.Script = scripts::Scripts::resnet;
     p.Dataset = scripts::Datasets::cifar10;
     p.C = 3;
     p.H = 32;
@@ -238,8 +238,8 @@ int main(int argc, char* argv[])
     p.PadW = 4;
     p.MirrorPad = false;
     p.Groups = 3;
-    p.Iterations = 4;
-    p.Width = 12;
+    p.Iterations = 2;
+    p.Width = 4;
     p.Activation = scripts::Activations::HardSwish;
     p.Dropout = Float(0);
     p.Bottleneck = false;
