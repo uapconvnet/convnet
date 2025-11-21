@@ -1982,7 +1982,7 @@ namespace Scripts
         }
 
 
-        const string Framework = "net9.0";
+        const string Framework = "net10.0";
 #if DEBUG
         const string Mode = "Debug";
 #else
@@ -1998,17 +1998,17 @@ namespace Scripts
             var script = Generate(new ScriptParameters()
             {
         	    Script = Scripts.resnet,
-                Activation = Activations.Relu,
-                Dataset = Datasets.cifar10,
-                MeanStdNormalization = true,
-                H = 32,
+                    Activation = Activations.Relu,
+                    Dataset = Datasets.cifar10,
+                    MeanStdNormalization = true,
+                    H = 32,
         	    W = 32,
         	    PadH = 4,
         	    PadW = 4,
-                MirrorPad = false,
-                StrideHFirstConv = 1,
-                StrideWFirstConv = 1,
-                WeightsFiller = Fillers.HeNormal,
+                    MirrorPad = false,
+                    StrideHFirstConv = 1,
+                    StrideWFirstConv = 1,
+                    WeightsFiller = Fillers.HeNormal,
         	    WeightsFillerMode = FillerModes.In,
         	    WeightsGain = 1f,
         	    WeightsScale = 0.05f,
@@ -2038,7 +2038,7 @@ namespace Scripts
         	    DepthDrop = 0.0f,
         	    FixedDepthDrop = false,
         	    EfficientNet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],
-                ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] 
+                    ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] 
             });
 
             var fileInfo = new FileInfo(Path.Combine(ScriptPath, @"script.txt"));
@@ -2057,6 +2057,9 @@ namespace Scripts
         }
     }
 }</Value>
+    </Setting>
+    <Setting Name="Setting" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

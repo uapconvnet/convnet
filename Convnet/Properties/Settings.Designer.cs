@@ -1475,49 +1475,61 @@ namespace Convnet.Properties {
             "       LogSoftmax(\"GAP\") +\r\n                        Cost(\"LSM\", p.Dataset, p.Cla" +
             "sses, \"CategoricalCrossEntropy\", 0.125f);\r\n                }\r\n                br" +
             "eak;\r\n            }\r\n\r\n            return net;\r\n        }\r\n\r\n\r\n        const str" +
-            "ing Framework = \"net9.0\";\r\n#if DEBUG\r\n        const string Mode = \"Debug\";\r\n#els" +
-            "e\r\n        const string Mode = \"Release\";\r\n#endif\r\n\r\n        public static strin" +
-            "g StorageDirectory { get; } = Path.Combine(Environment.GetFolderPath(RuntimeInfo" +
-            "rmation.IsOSPlatform(OSPlatform.Windows) ? Environment.SpecialFolder.MyDocuments" +
-            " : Environment.SpecialFolder.UserProfile), \"convnet\");\r\n        public static st" +
-            "ring ScriptsDirectory { get; } = Path.Combine(StorageDirectory, \"scripts\");\r\n   " +
-            "     public static string ScriptPath { get; } = Path.Combine(ScriptsDirectory, \"" +
-            "bin\", Mode, Framework);\r\n\r\n        static void Main()\r\n        {\r\n            va" +
-            "r script = Generate(new ScriptParameters()\r\n            {\r\n        \t    Script =" +
-            " Scripts.resnet,\r\n                Activation = Activations.Relu,\r\n              " +
-            "  Dataset = Datasets.cifar10,\r\n                MeanStdNormalization = true,\r\n   " +
-            "             H = 32,\r\n        \t    W = 32,\r\n        \t    PadH = 4,\r\n        \t   " +
-            " PadW = 4,\r\n                MirrorPad = false,\r\n                StrideHFirstConv" +
-            " = 1,\r\n                StrideWFirstConv = 1,\r\n                WeightsFiller = Fi" +
-            "llers.HeNormal,\r\n        \t    WeightsFillerMode = FillerModes.In,\r\n        \t    " +
-            "WeightsGain = 1f,\r\n        \t    WeightsScale = 0.05f,\r\n        \t    WeightsLRM =" +
-            " 1f,\r\n        \t    WeightsWDM = 1f,\r\n        \t    HasBias = false,\r\n        \t   " +
-            " BiasesFiller = Fillers.Constant,\r\n        \t    BiasesFillerMode = FillerModes.I" +
-            "n,\r\n        \t    BiasesGain = 1f,\r\n        \t    BiasesScale = 0f,\r\n        \t    " +
-            "BiasesLRM = 1f,\r\n        \t    BiasesWDM = 1f,\r\n        \t    BatchNormMomentum = " +
-            "0.995f,\r\n        \t    BatchNormEps = 0.0001f,\r\n        \t    BatchNormScaling = f" +
-            "alse,\r\n        \t    Alpha = 0f,\r\n        \t    Beta = 0f,\r\n        \t    Groups = " +
-            "3,\r\n        \t    Iterations = 2,\r\n        \t    Width = 6,\r\n        \t    GrowthRa" +
-            "te = 12,\r\n        \t    Bottleneck = false,\r\n        \t    Dropout = 0f,\r\n        " +
-            "\t    Compression = 0f,\r\n        \t    SqueezeExcitation = true,\r\n        \t    Cha" +
-            "nnelZeroPad = true,\r\n        \t    DepthDrop = 0.0f,\r\n        \t    FixedDepthDrop" +
-            " = false,\r\n        \t    EfficientNet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2" +
-            ", false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, tr" +
-            "ue), new(6, 256, 15, 2, true)],\r\n                ShuffleNet = [new(7, 3, 1, 2, f" +
-            "alse) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] \r\n            });\r\n\r\n     " +
-            "       var fileInfo = new FileInfo(Path.Combine(ScriptPath, @\"script.txt\"));\r\n  " +
-            "          \r\n            if (fileInfo.Directory != null)\r\n            {\r\n        " +
-            "        if (!fileInfo.Directory.Exists)\r\n                    fileInfo.Directory." +
-            "Create();\r\n\r\n                var streamWriter = fileInfo.CreateText();\r\n        " +
-            "        streamWriter.AutoFlush = true;\r\n                streamWriter.Write(scrip" +
-            "t);\r\n                streamWriter.Close();\r\n                streamWriter.Dispose" +
-            "();\r\n            }\r\n        }\r\n    }\r\n}")]
+            "ing Framework = \"net10.0\";\r\n#if DEBUG\r\n        const string Mode = \"Debug\";\r\n#el" +
+            "se\r\n        const string Mode = \"Release\";\r\n#endif\r\n\r\n        public static stri" +
+            "ng StorageDirectory { get; } = Path.Combine(Environment.GetFolderPath(RuntimeInf" +
+            "ormation.IsOSPlatform(OSPlatform.Windows) ? Environment.SpecialFolder.MyDocument" +
+            "s : Environment.SpecialFolder.UserProfile), \"convnet\");\r\n        public static s" +
+            "tring ScriptsDirectory { get; } = Path.Combine(StorageDirectory, \"scripts\");\r\n  " +
+            "      public static string ScriptPath { get; } = Path.Combine(ScriptsDirectory, " +
+            "\"bin\", Mode, Framework);\r\n\r\n        static void Main()\r\n        {\r\n            v" +
+            "ar script = Generate(new ScriptParameters()\r\n            {\r\n        \t    Script " +
+            "= Scripts.resnet,\r\n                    Activation = Activations.Relu,\r\n         " +
+            "           Dataset = Datasets.cifar10,\r\n                    MeanStdNormalization" +
+            " = true,\r\n                    H = 32,\r\n        \t    W = 32,\r\n        \t    PadH =" +
+            " 4,\r\n        \t    PadW = 4,\r\n                    MirrorPad = false,\r\n           " +
+            "         StrideHFirstConv = 1,\r\n                    StrideWFirstConv = 1,\r\n     " +
+            "               WeightsFiller = Fillers.HeNormal,\r\n        \t    WeightsFillerMode" +
+            " = FillerModes.In,\r\n        \t    WeightsGain = 1f,\r\n        \t    WeightsScale = " +
+            "0.05f,\r\n        \t    WeightsLRM = 1f,\r\n        \t    WeightsWDM = 1f,\r\n        \t " +
+            "   HasBias = false,\r\n        \t    BiasesFiller = Fillers.Constant,\r\n        \t   " +
+            " BiasesFillerMode = FillerModes.In,\r\n        \t    BiasesGain = 1f,\r\n        \t   " +
+            " BiasesScale = 0f,\r\n        \t    BiasesLRM = 1f,\r\n        \t    BiasesWDM = 1f,\r\n" +
+            "        \t    BatchNormMomentum = 0.995f,\r\n        \t    BatchNormEps = 0.0001f,\r\n" +
+            "        \t    BatchNormScaling = false,\r\n        \t    Alpha = 0f,\r\n        \t    B" +
+            "eta = 0f,\r\n        \t    Groups = 3,\r\n        \t    Iterations = 2,\r\n        \t    " +
+            "Width = 6,\r\n        \t    GrowthRate = 12,\r\n        \t    Bottleneck = false,\r\n   " +
+            "     \t    Dropout = 0f,\r\n        \t    Compression = 0f,\r\n        \t    SqueezeExc" +
+            "itation = true,\r\n        \t    ChannelZeroPad = true,\r\n        \t    DepthDrop = 0" +
+            ".0f,\r\n        \t    FixedDepthDrop = false,\r\n        \t    EfficientNet = [new(1, " +
+            "24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, " +
+            "6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],\r\n              " +
+            "      ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1," +
+            " 2, true)] \r\n            });\r\n\r\n            var fileInfo = new FileInfo(Path.Com" +
+            "bine(ScriptPath, @\"script.txt\"));\r\n            \r\n            if (fileInfo.Direct" +
+            "ory != null)\r\n            {\r\n                if (!fileInfo.Directory.Exists)\r\n  " +
+            "                  fileInfo.Directory.Create();\r\n\r\n                var streamWrit" +
+            "er = fileInfo.CreateText();\r\n                streamWriter.AutoFlush = true;\r\n   " +
+            "             streamWriter.Write(script);\r\n                streamWriter.Close();\r" +
+            "\n                streamWriter.Dispose();\r\n            }\r\n        }\r\n    }\r\n}")]
         public string Script {
             get {
                 return ((string)(this["Script"]));
             }
             set {
                 this["Script"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Setting {
+            get {
+                return ((string)(this["Setting"]));
+            }
+            set {
+                this["Setting"] = value;
             }
         }
     }
