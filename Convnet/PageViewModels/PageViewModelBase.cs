@@ -16,7 +16,7 @@ namespace Convnet.PageViewModels
 {
     public abstract class PageViewModelBase : ReactiveObject
     {
-        const string Framework = @"net9.0";
+        const string Framework = @"net10.0";
 #if DEBUG
         const string Mode = "Debug";
 #else

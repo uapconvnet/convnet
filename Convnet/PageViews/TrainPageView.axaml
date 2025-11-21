@@ -168,7 +168,7 @@
         <DataGridTemplateColumn DisplayIndex="10" Header="Rate" Width="98">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate >
-              <TextBlock Text="{Binding Rate, StringFormat={}{0:0.00000000}}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+              <TextBlock Text="{Binding Rate, StringFormat={}{0:0.00000000}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -271,7 +271,7 @@
         <DataGridTemplateColumn DisplayIndex="29" Header="Loss" Width="80">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate >
-              <TextBlock Text="{Binding AvgTrainLoss, StringFormat={}{0:0.000000}}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+              <TextBlock Text="{Binding AvgTrainLoss, StringFormat={}{0:0.000000}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -299,7 +299,7 @@
         <DataGridTemplateColumn DisplayIndex="33" Header="Loss" Width="80">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate >
-              <TextBlock Text="{Binding AvgTestLoss, StringFormat={}{0:0.000000}}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+              <TextBlock Text="{Binding AvgTestLoss, StringFormat={}{0:0.000000}}" VerticalAlignment="Center" HorizontalAlignment="Center" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>

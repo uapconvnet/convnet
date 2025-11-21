@@ -544,10 +544,12 @@ namespace Convnet.PageViewModels
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var vspath = @"C:\Program Files\Microsoft Visual Studio\2022\";
+                var vspath = @"C:\Program Files\Microsoft Visual Studio\2026\";
                 var version = @"Community";
                 const string common = @"\Common7\IDE\";
 
+                if (!Directory.Exists(vspath))
+                    vspath = @"C:\Program Files (x86)\Microsoft Visual Studio\2022\";
                 if (!Directory.Exists(vspath))
                     vspath = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\";
                 if (Directory.Exists(vspath + @"Community" + common))
@@ -638,7 +640,7 @@ namespace Convnet.PageViewModels
 
                 try
                 {
-                    var csproj = "<Project Sdk=\"Microsoft.NET.Sdk\">\r\n\r\n  <PropertyGroup>\r\n    <OutputType>Exe</OutputType>\r\n    <TargetFramework>net9.0</TargetFramework>\r\n    <ImplicitUsings>enable</ImplicitUsings>\r\n    <Nullable>enable</Nullable>\r\n  </PropertyGroup>\r\n\r\n</Project>";
+                    var csproj = "<Project Sdk=\"Microsoft.NET.Sdk\">\r\n\r\n  <PropertyGroup>\r\n    <OutputType>Exe</OutputType>\r\n    <TargetFramework>net10.0</TargetFramework>\r\n    <ImplicitUsings>enable</ImplicitUsings>\r\n    <Nullable>enable</Nullable>\r\n  </PropertyGroup>\r\n\r\n</Project>";
                     File.WriteAllText(Path.Combine(ScriptsDirectory, "Scripts.csproj"), csproj);
                     File.WriteAllText(Path.Combine(ScriptsDirectory, "Program.cs"), Script);
 

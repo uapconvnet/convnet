@@ -1383,7 +1383,7 @@ namespace Scripts
         }
 
 
-        const string Framework = "net9.0";
+        const string Framework = "net10.0";
 #if DEBUG
         const string Mode = "Debug";
 #else
