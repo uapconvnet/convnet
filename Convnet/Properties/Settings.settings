@@ -1836,7 +1836,7 @@ namespace Scripts
                             (p.Dropout &gt; 0 ? BatchNormActivationDropout(3, "C3", p.Activation) : BatchNormActivation(3, "C3", p.Activation)) +
                             Convolution(4, "B3", DIV8(W), 1, 1, 1, 1, 0, 0) +
                             Convolution(5, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                            DropPathAdd(1, "C4,C5"));
+                            Add(1, "C4,C5"));
 
                         C = 6;
                     }
@@ -1848,7 +1848,7 @@ namespace Scripts
                             (p.Dropout &gt; 0 ? BatchNormActivationDropout(2, "C2", p.Activation) : BatchNormActivation(2, "C2", p.Activation)) +
                             Convolution(3, "B2", DIV8(W), 3, 3, 1, 1, 1, 1) +
                             Convolution(4, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                            DropPathAdd(1, "C3,C4"));
+                            Add(1, "C3,C4"));
                     }
 
                     for (var g = 0ul; g &lt; p.Groups; g++)
@@ -1860,10 +1860,10 @@ namespace Scripts
                             var strChannelZeroPad = p.ChannelZeroPad ?
                                 AvgPooling(g, In("A", A)) +
                                 "[CZP" + to_string(g) + "]" + nwl + "Type=ChannelZeroPad" + nwl + "Inputs=" + In("P", g) + nwl + "Channels=" + to_string(W) + nwl + nwl +
-                                DropPathAdd(A + 1, In("C", C + 1 + bn) + "," + In("CZP", g)) :
+                                Add(A + 1, In("C", C + 1 + bn) + "," + In("CZP", g)) :
                                 AvgPooling(g, In("B", C)) +
                                 Convolution(C + 2 + bn, In("P", g), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                DropPathAdd(A + 1, In("C", C + 1 + bn) + "," + In("C", C + 2 + bn));
+                                Add(A + 1, In("C", C + 1 + bn) + "," + In("C", C + 2 + bn));
 
                             if (p.Bottleneck)
                             {
