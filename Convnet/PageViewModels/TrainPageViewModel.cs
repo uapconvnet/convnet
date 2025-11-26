@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Interactivity;
@@ -190,7 +190,6 @@ namespace Convnet.PageViewModels
             RefreshTrainingPlot();
         }
 
-     
         private void AddCommandButtons()
         {
             Button startButton = new Button
@@ -572,14 +571,14 @@ namespace Convnet.PageViewModels
             }
 
             SelectedItems = new ObservableCollection<DNNTrainingResult>();
-           
+
             Settings.Default.SelectedLayer = 0;
             Settings.Default.Save();
             if (dataProviderComboBox  != null)
                 dataProviderComboBox.SelectedIndex = (int)Dataset;
 
             LayersComboBox_SelectionChanged(sender, null);
-           
+
             if (TrainingLog?.Count > 0)
             {
                 var clear = await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Do you want to clear the training log?", "Clear log?", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1));
