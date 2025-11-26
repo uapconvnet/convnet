@@ -133,10 +133,3 @@
 * [OxyPlot Avalonia Plotting Library - MIT License](https://github.com/oxyplot/oxyplot-avalonia)
 * [XAML Math - MIT License](https://github.com/ForNeVeR/xaml-math)
 * [zlib - zlib License](https://github.com/madler/zlib)
-
-### Datasets SOTA
-* [cifar-10](https://paperswithcode.com/sota/image-classification-on-cifar-10)
-* [cifar-100](https://paperswithcode.com/sota/image-classification-on-cifar-100)
-* [fashion-mnist](https://paperswithcode.com/sota/image-classification-on-fashion-mnist)
-* [mnist](https://paperswithcode.com/sota/image-classification-on-mnist)
-* [tiny-imagenet](https://paperswithcode.com/sota/image-classification-on-tiny-imagenet-1)
