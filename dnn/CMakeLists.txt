@@ -44,6 +44,7 @@ option(BUILD_SHARED_LIBS "Build shared library" ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(WIN32 OR MSVC)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
   set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
   set(flags /arch:AVX512 /fp:contract /favor:AMD64)
   set(linkflags "")
