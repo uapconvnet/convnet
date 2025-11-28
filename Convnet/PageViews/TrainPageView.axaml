@@ -73,10 +73,10 @@
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="48" />
           <ColumnDefinition Width="50" />
-          <ColumnDefinition Width="58" />
+          <ColumnDefinition Width="62" />
           <ColumnDefinition Width="0" />
-          <ColumnDefinition Width="58" />
-          <ColumnDefinition Width="58" />
+          <ColumnDefinition Width="62" />
+          <ColumnDefinition Width="62" />
           <ColumnDefinition Width="0" />
           <ColumnDefinition Width="40" />
           <ColumnDefinition Width="40" />
@@ -151,13 +151,31 @@
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
-        <DataGridTextColumn DisplayIndex="2" Header="N" Binding="{Binding N}" Width="50"/>
-        <DataGridTextColumn DisplayIndex="3" Header="D" Binding="{Binding D}" Width="58" IsVisible="False"/>
-        <DataGridTextColumn DisplayIndex="4" Header="H" Binding="{Binding H}" Width="58"/>
-        <DataGridTextColumn DisplayIndex="5" Header="W" Binding="{Binding W}" Width="58"/>
-        <DataGridTextColumn DisplayIndex="6" Header="PadD" Binding="{Binding PadD}" Width="40" IsVisible="False"/>
-        <DataGridTextColumn DisplayIndex="7" Header="PadH" Binding="{Binding PadH}" Width="40"/>
-        <DataGridTextColumn DisplayIndex="8" Header="PadW" Binding="{Binding PadW}" Width="40"/>
+        <DataGridTemplateColumn DisplayIndex="2" Header="N" Width="62" >
+            <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding N}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn DisplayIndex="3" Header="D" Binding="{Binding D}" Width="62" IsVisible="False" />
+        <DataGridTemplateColumn DisplayIndex="4" Header="H" Width="62" >
+            <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding H}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTemplateColumn DisplayIndex="5" Header="W" Width="62" >
+            <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding W}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn DisplayIndex="6" Header="PadD" Binding="{Binding PadD}" Width="40" IsVisible="False" />
+        <DataGridTextColumn DisplayIndex="7" Header="PadH" Binding="{Binding PadH}" Width="40" />
+        <DataGridTextColumn DisplayIndex="8" Header="PadW" Binding="{Binding PadW}" Width="40" />
         <DataGridTemplateColumn DisplayIndex="9" Header="Optimizer" Width="92">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate >
