@@ -78,8 +78,8 @@
           <ColumnDefinition Width="62" />
           <ColumnDefinition Width="62" />
           <ColumnDefinition Width="0" />
-          <ColumnDefinition Width="40" />
-          <ColumnDefinition Width="40" />
+          <ColumnDefinition Width="46" />
+          <ColumnDefinition Width="46" />
           <ColumnDefinition Width="92" />
           <ColumnDefinition Width="98" />
           <ColumnDefinition Width="66" />
@@ -173,9 +173,9 @@
                 </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
-        <DataGridTextColumn DisplayIndex="6" Header="PadD" Binding="{Binding PadD}" Width="40" IsVisible="False" />
-        <DataGridTextColumn DisplayIndex="7" Header="PadH" Binding="{Binding PadH}" Width="40" />
-        <DataGridTextColumn DisplayIndex="8" Header="PadW" Binding="{Binding PadW}" Width="40" />
+        <DataGridTextColumn DisplayIndex="6" Header="PadD" Binding="{Binding PadD}" Width="46" IsVisible="False" />
+        <DataGridTextColumn DisplayIndex="7" Header="PadH" Binding="{Binding PadH}" Width="46" />
+        <DataGridTextColumn DisplayIndex="8" Header="PadW" Binding="{Binding PadW}" Width="46" />
         <DataGridTemplateColumn DisplayIndex="9" Header="Optimizer" Width="92">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate >
