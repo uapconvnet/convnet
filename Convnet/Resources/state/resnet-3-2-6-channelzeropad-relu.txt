@@ -7,7 +7,7 @@ WeightsFiller=HeNormal(In,1)
 Biases=No
 Dropout=0
 DepthDrop=0
-FixedDepthDrop=Yes
+FixedDepthDrop=No
 Scaling=No
 Momentum=0.995
 Eps=0.0001
@@ -74,7 +74,7 @@ Kernel=3,3
 Pad=1,1
 
 [A2]
-Type=Add
+Type=DropPathAdd
 Inputs=C6,A1
 
 [B7]
@@ -113,7 +113,7 @@ Inputs=P1
 Channels=192
 
 [A3]
-Type=Add
+Type=DropPathAdd
 Inputs=C8,CZP1
 
 [B9]
@@ -139,7 +139,7 @@ Kernel=3,3
 Pad=1,1
 
 [A4]
-Type=Add
+Type=DropPathAdd
 Inputs=C10,A3
 
 [B11]
@@ -178,7 +178,7 @@ Inputs=P2
 Channels=384
 
 [A5]
-Type=Add
+Type=DropPathAdd
 Inputs=C12,CZP2
 
 [B13]
@@ -204,14 +204,14 @@ Kernel=3,3
 Pad=1,1
 
 [A6]
-Type=Add
+Type=DropPathAdd
 Inputs=C14,A5
 
 [B15]
 Type=BatchNormRelu
 Inputs=A6
 
-[C15]
+[C16]
 Type=Convolution
 Inputs=B15
 Channels=10
@@ -219,7 +219,7 @@ Kernel=1,1
 
 [B16]
 Type=BatchNorm
-Inputs=C15
+Inputs=C16
 
 [GAP]
 Type=GlobalAvgPooling
