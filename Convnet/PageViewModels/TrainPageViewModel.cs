@@ -581,9 +581,9 @@ namespace Convnet.PageViewModels
 
             if (TrainingLog?.Count > 0)
             {
-                var clear = await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Do you want to clear the training log?", "Clear log?", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1));
+                var clear = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you want to clear the training log?", "Clear log?", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1), DispatcherPriority.Render);
                 if (clear == MessageBoxResult.Yes)
-                    TrainingLog.Clear();
+                     TrainingLog.Clear();
             }
 
             RefreshTrainingPlot();
