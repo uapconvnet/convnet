@@ -144,7 +144,7 @@ namespace Convnet.PageViewModels
             }
         }
 
-        private void TestPageViewModel_ModelChanged(object? sender, EventArgs e)
+        private async void TestPageViewModel_ModelChanged(object? sender, EventArgs e)
         {
             if (Model != null && Model.CostLayers != null)
             {

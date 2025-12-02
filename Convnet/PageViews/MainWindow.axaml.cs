@@ -223,27 +223,25 @@ namespace Convnet.PageViews
             //menuMain.Items.Add(file);
             //menuMain.Items.Add(edit);
 
-
-
             Directory.CreateDirectory(StorageDirectory);
             Directory.CreateDirectory(DefinitionsDirectory);
             Directory.CreateDirectory(StateDirectory);
 
-            if (!Directory.Exists(ScriptsDirectory) && ApplicationPath != null)
-            {
-                Directory.CreateDirectory(ScriptsDirectory);
-                ApplicationHelper.CopyDir(Path.Combine(ApplicationPath.Replace(Path.Combine("Convnet", "bin", (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "x64" : ""), Mode, Framework), ""), "Scripts"), ScriptsDirectory);
-            }
-
             var fileName = Path.Combine(StateDirectory, Settings.Default.ModelNameActive + ".txt");
             var backupModelName = "resnet-3-2-6-channelzeropad-relu";
 
-            if (!File.Exists(Path.Combine(StateDirectory, backupModelName + ".txt")) && ApplicationPath != null)
-                File.Copy(Path.Combine(ApplicationPath, "Resources", "state", backupModelName + ".txt"), Path.Combine(StateDirectory, backupModelName + ".txt"), true);
-
             if (ApplicationPath != null)
-            { 
-                if (!File.Exists(fileName) || !File.ReadLines(Path.Combine(StateDirectory, backupModelName + ".txt")).SequenceEqual(File.ReadLines(Path.Combine(ApplicationPath, "Resources", "state", backupModelName + ".txt"))))
+            {
+                if (!Directory.Exists(ScriptsDirectory))
+                {
+                    Directory.CreateDirectory(ScriptsDirectory);
+                    ApplicationHelper.CopyDir(Path.Combine(ApplicationPath.Replace(Path.Combine("Convnet", "bin", (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "x64" : ""), Mode, Framework), ""), "Scripts"), ScriptsDirectory);
+                }
+
+                if (!File.Exists(Path.Combine(StateDirectory, backupModelName + ".txt")) || !File.ReadLines(Path.Combine(StateDirectory, backupModelName + ".txt")).SequenceEqual(File.ReadLines(Path.Combine(ApplicationPath, "Resources", "state", backupModelName + ".txt"))))
+                    File.Copy(Path.Combine(ApplicationPath, "Resources", "state", backupModelName + ".txt"), Path.Combine(StateDirectory, backupModelName + ".txt"), true);
+
+                if (!File.Exists(fileName))
                 {
                     Directory.CreateDirectory(Path.Combine(DefinitionsDirectory, backupModelName));
                     File.Copy(Path.Combine(ApplicationPath, "Resources", "state", backupModelName + ".txt"), Path.Combine(DefinitionsDirectory, backupModelName + ".txt"), true);
