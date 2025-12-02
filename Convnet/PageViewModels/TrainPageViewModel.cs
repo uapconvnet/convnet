@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reactive;
 using System.Runtime;
 using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
 using Float = System.Single;
 using UInt = System.UInt64;
@@ -581,7 +582,7 @@ namespace Convnet.PageViewModels
 
             if (TrainingLog?.Count > 0)
             {
-                var clear = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you want to clear the training log?", "Clear log?", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1), DispatcherPriority.Render);
+                var clear = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you want to clear the training log?", "Clear log?", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1));
                 if (clear == MessageBoxResult.Yes)
                      TrainingLog.Clear();
             }
