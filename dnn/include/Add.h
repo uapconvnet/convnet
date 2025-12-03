@@ -187,6 +187,7 @@ namespace dnn
 			{
 #endif
 				const auto threads = GetThreads(batchSize * size, BwdTrainingWeight);
+				const auto strideHW = HW() * VectorSize;
 
 				if (EqualDimensions(Inputs))
 				{
@@ -209,18 +210,17 @@ namespace dnn
 						for_i(batchSize, threads, [=](UInt n)
 						{
 							const auto start = n * size;
-
+								
 							VecFloat neuronsD1;
-							for (auto cdhw = start; cdhw < start + part; cdhw += VectorSize)
+							for (auto c = 0ull; c < PaddedC; c += VectorSize)
 							{
-								neuronsD1.load_a(&NeuronsD1[cdhw]);
-								(VecFloat().load_a(&InputsBwd[0]->NeuronsD1[cdhw]) + neuronsD1).store_a(&InputsBwd[0]->NeuronsD1[cdhw]);
-								(VecFloat().load_a(&InputsBwd[1]->NeuronsD1[cdhw]) + neuronsD1).store_a(&InputsBwd[1]->NeuronsD1[cdhw]);
-							}
-							for (auto cdhw = start + part; cdhw < start + size; cdhw++)
-							{
-								InputsBwd[0]->NeuronsD1[cdhw] += NeuronsD1[cdhw];
-								InputsBwd[1]->NeuronsD1[cdhw] += NeuronsD1[cdhw];
+								const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+								for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+								{
+									neuronsD1.load_a(&NeuronsD1[hw]);
+									(neuronsD1 + VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+									(neuronsD1 + VecFloat().load_a(&InputsBwd[second]->NeuronsD1[hw])).store_a(&InputsBwd[second]->NeuronsD1[hw]);
+								}
 							}
 						});
 					}
@@ -246,8 +246,7 @@ namespace dnn
 					}
 					else
 					{
-						const auto strideHW = HW() * VectorSize;
-
+						
 						for_i(batchSize, threads, [=](UInt n)
 						{
 							VecFloat neuronsD1;

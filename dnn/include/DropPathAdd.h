@@ -431,6 +431,7 @@ namespace dnn
 			{
 #endif
 				const auto threads = GetThreads(batchSize * size, BwdTrainingWeight);
+				const auto strideHW = HW() * VectorSize;
 
 				if (EqualDimensions(Inputs))
 				{
@@ -469,38 +470,36 @@ namespace dnn
 							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * size;
-
+								
 								VecFloat neuronsD1;
-								for (auto cdhw = start; cdhw < start + part; cdhw += VectorSize)
+								for (auto c = 0ull; c < PaddedC; c += VectorSize)
 								{
-									neuronsD1.load_a(&NeuronsD1[cdhw]);
-									(VecFloat().load_a(&InputsBwd[0]->NeuronsD1[cdhw]) + neuronsD1).store_a(&InputsBwd[0]->NeuronsD1[cdhw]);
-									(VecFloat().load_a(&InputsBwd[1]->NeuronsD1[cdhw]) + neuronsD1).store_a(&InputsBwd[1]->NeuronsD1[cdhw]);
-								}
-								for (auto cdhw = start + part; cdhw < start + size; cdhw++)
-								{
-									InputsBwd[0]->NeuronsD1[cdhw] += NeuronsD1[cdhw];
-									InputsBwd[1]->NeuronsD1[cdhw] += NeuronsD1[cdhw];
+									const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+									for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+									{
+										neuronsD1.load_a(&NeuronsD1[hw]);
+										(neuronsD1 + VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+										(neuronsD1 + VecFloat().load_a(&InputsBwd[second]->NeuronsD1[hw])).store_a(&InputsBwd[second]->NeuronsD1[hw]);
+									}
 								}
 							});
 						else
 							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * size;
-								const auto scale0 = scales[0];
-								const auto scale1 = scales[1];
+								const auto scale0Vec = VecFloat(scale0[0]);
+								const auto scale1Vec = VecFloat(scale1[0]);
 
 								VecFloat neuronsD1;
-								for (auto cdhw = start; cdhw < start + part; cdhw += VectorSize)
+								for (auto c = 0ull; c < PaddedC; c += VectorSize)
 								{
-									neuronsD1.load_a(&NeuronsD1[cdhw]);
-									mul_add(neuronsD1, scale0, VecFloat().load_a(&InputsBwd[0]->NeuronsD1[cdhw])).store_a(&InputsBwd[0]->NeuronsD1[cdhw]);
-									mul_add(neuronsD1, scale1, VecFloat().load_a(&InputsBwd[1]->NeuronsD1[cdhw])).store_a(&InputsBwd[1]->NeuronsD1[cdhw]);
-								}
-								for (auto cdhw = start + part; cdhw < start + size; cdhw++)
-								{
-									InputsBwd[0]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scale0;
-									InputsBwd[1]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scale1;
+									const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+									for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+									{
+										neuronsD1.load_a(&NeuronsD1[hw]);
+										mul_add(neuronsD1, scale0Vec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+										mul_add(neuronsD1, scale1Vec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[hw])).store_a(&InputsBwd[second]->NeuronsD1[hw]);
+									}
 								}
 							});
 					}
@@ -565,8 +564,8 @@ namespace dnn
 						else
 							for_i(batchSize, threads, [=](UInt n)
 							{
-								const auto scale0 = scales[first];
-								const auto scale1 = scales[second];
+								const auto scale0Vec = VecFloat(scale0[0]);
+								const auto scale1Vec = VecFloat(scale1[0]);
 								VecFloat neuronsD1;
 								for (auto c = 0ull; c < PaddedC; c += VectorSize)
 								{
@@ -575,8 +574,8 @@ namespace dnn
 									for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
 									{
 										neuronsD1.load_a(&NeuronsD1[hw]);
-										mul_add(neuronsD1, scale0, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
-										mul_add(neuronsD1, scale1, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[channelOffset])).store_a(&InputsBwd[second]->NeuronsD1[channelOffset]);
+										mul_add(neuronsD1, scale0Vec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+										mul_add(neuronsD1, scale1Vec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[channelOffset])).store_a(&InputsBwd[second]->NeuronsD1[channelOffset]);
 									}
 								}
 							});
