@@ -67,7 +67,7 @@ namespace Scripts
         public UInt Iterations { get; set; } = iterations;
         public UInt Stride { get; set; } = stride;
         public bool SE { get; set; } = se;
-        
+
         public override string ToString()
         {
             return "(" + ExpandRatio.ToString() + "-" + Channels.ToString() + "-" + Iterations.ToString() + "-" + Stride.ToString() + (SE ? "-se" : "") + ")";
@@ -76,12 +76,12 @@ namespace Scripts
 
     public class ShuffleNetRecord(UInt iterations = 6u, UInt kernel = 3u, UInt pad = 1u, UInt shuffle = 2u, bool se = false)
     {
-	    public UInt Iterations { get; set; } = iterations;
+        public UInt Iterations { get; set; } = iterations;
         public UInt Kernel { get; set; } = kernel;
         public UInt Pad { get; set; } = pad;
         public UInt Shuffle { get; set; } = shuffle;
         public bool SE { get; set; } = se;
-        
+
         public override string ToString()
         {
             return "(" + Iterations.ToString() + "-" + Kernel.ToString() + "-" + Pad.ToString() + "-" + Shuffle.ToString() + (SE ? "-se" : "") + ")";
@@ -229,7 +229,7 @@ namespace Scripts
         public bool EfficientNetVisible { get { return Script == Scripts.efficientnetv2; } }
 
         public bool ShuffleNetVisible { get { return Script == Scripts.shufflenetv2 || Script == Scripts.augshufflenet; } }
-        
+
         public UInt Depth
         {
             get
@@ -247,7 +247,7 @@ namespace Scripts
                 }
             }
         }
-        
+
         public string ModelName
         {
             get
@@ -280,7 +280,7 @@ namespace Scripts
                 }
             }
         }
-        
+
         public UInt Classes
         {
             get
@@ -611,7 +611,7 @@ namespace Scripts
                 "Type=DropPathAdd" + nwl +
                 "Inputs=" + inputs + nwl + nwl;
         }
-        
+
         public static string Add(UInt id, string inputs, string group = "", string prefix = "A")
         {
             return "[" + group + prefix + to_string(id) + "]" + nwl +
@@ -1218,165 +1218,165 @@ namespace Scripts
                     break;
 
                 case Scripts.resnet:
-                {
-                    var bn = p.Bottleneck ? 1ul : 0ul;
-                    const Float K = 2.0f;
-                    var W = p.Width * 16;
-                    var A = 1ul;
-                    var C = 5ul;
-
-                    net += Convolution(1, "Input", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1);
-
-                    if (p.Bottleneck)
                     {
-                        blocks.Add(
-                            BatchNormActivation(1, "C1", p.Activation) +
-                            Convolution(2, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                            BatchNormActivation(2, "C2", p.Activation) +
-                            Convolution(3, "B2", DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
-                            (p.Dropout > 0 ? BatchNormActivationDropout(3, "C3", p.Activation) : BatchNormActivation(3, "C3", p.Activation)) +
-                            Convolution(4, "B3", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                            Convolution(5, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                            DropPathAdd(1, "C4,C5"));
+                        var bn = p.Bottleneck ? 1ul : 0ul;
+                        const Float K = 2.0f;
+                        var W = p.Width * 16;
+                        var A = 1ul;
+                        var C = 5ul;
 
-                        C = 6;
-                    }
-                    else
-                    {
-                        blocks.Add(
-                            BatchNormActivation(1, "C1", p.Activation) +
-                            Convolution(2, "B1", DIV8(W), 3, 3, 1, 1, 1, 1) +
-                            (p.Dropout > 0 ? BatchNormActivationDropout(2, "C2", p.Activation) : BatchNormActivation(2, "C2", p.Activation)) +
-                            Convolution(3, "B2", DIV8(W), 3, 3, 1, 1, 1, 1) +
-                            Convolution(4, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
-                            DropPathAdd(1, "C3,C4"));
-                    }
+                        net += Convolution(1, "Input", DIV8(W), 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1);
 
-                    for (var g = 0ul; g < p.Groups; g++)
+                        if (p.Bottleneck)
                         {
-                        if (g > 0)
-                            {
-                            W *= 2;
+                            blocks.Add(
+                                BatchNormActivation(1, "C1", p.Activation) +
+                                Convolution(2, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                BatchNormActivation(2, "C2", p.Activation) +
+                                Convolution(3, "B2", DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
+                                (p.Dropout > 0 ? BatchNormActivationDropout(3, "C3", p.Activation) : BatchNormActivation(3, "C3", p.Activation)) +
+                                Convolution(4, "B3", DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                Convolution(5, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                Add(1, "C4,C5"));
 
-                            var strChannelZeroPad = p.ChannelZeroPad ?
-                                AvgPooling(g, In("A", A)) +
-                                "[CZP" + to_string(g) + "]" + nwl + "Type=ChannelZeroPad" + nwl + "Inputs=" + In("P", g) + nwl + "Channels=" + to_string(W) + nwl + nwl +
-                                DropPathAdd(A + 1, In("C", C + 1 + bn) + "," + In("CZP", g)) :
-                                AvgPooling(g, In("B", C)) +
-                                Convolution(C + 2 + bn, In("P", g), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                DropPathAdd(A + 1, In("C", C + 1 + bn) + "," + In("C", C + 2 + bn));
-
-                            if (p.Bottleneck)
-                            {
-                                blocks.Add(
-                                    BatchNormActivation(C, In("A", A), p.Activation) +
-                                    Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                    BatchNormActivation(C + 1, In("C", C), p.Activation) +
-                                    Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 2, 2, 1, 1) +
-                                    (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
-                                    Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                    strChannelZeroPad);
-                            }
-                            else
-                            {
-                                blocks.Add(
-                                    BatchNormActivation(C, In("A", A), p.Activation) +
-                                    Convolution(C, In("B", C), DIV8(W), 3, 3, 2, 2, 1, 1) +
-                                    (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
-                                    Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                    strChannelZeroPad);
-                            }
-
-                            A++;
-                            C += p.ChannelZeroPad ? 2 + bn : 3 + bn;
+                            C = 6;
+                        }
+                        else
+                        {
+                            blocks.Add(
+                                BatchNormActivation(1, "C1", p.Activation) +
+                                Convolution(2, "B1", DIV8(W), 3, 3, 1, 1, 1, 1) +
+                                (p.Dropout > 0 ? BatchNormActivationDropout(2, "C2", p.Activation) : BatchNormActivation(2, "C2", p.Activation)) +
+                                Convolution(3, "B2", DIV8(W), 3, 3, 1, 1, 1, 1) +
+                                Convolution(4, "B1", DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                Add(1, "C3,C4"));
                         }
 
-                        for (var i = 1ul; i < p.Iterations; i++)
+                        for (var g = 0ul; g < p.Groups; g++)
+                        {
+                            if (g > 0)
                             {
-                            if (p.Bottleneck)
-                            {
-                                blocks.Add(
-                                    BatchNormActivation(C, In("A", A), p.Activation) +
-                                    Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                    BatchNormActivation(C + 1, In("C", C), p.Activation) +
-                                    Convolution(C + 1, In("B", C + 1), DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
-                                    (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
-                                    Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
-                                    DropPathAdd(A + 1, In("C", C + 2) + "," + In("A", A)));
+                                W *= 2;
 
+                                var strChannelZeroPad = p.ChannelZeroPad ?
+                                    AvgPooling(g, In("A", A)) +
+                                    "[CZP" + to_string(g) + "]" + nwl + "Type=ChannelZeroPad" + nwl + "Inputs=" + In("P", g) + nwl + "Channels=" + to_string(W) + nwl + nwl +
+                                    DropPathAdd(A + 1, In("C", C + 1 + bn) + "," + In("CZP", g)) :
+                                    AvgPooling(g, In("B", C)) +
+                                    Convolution(C + 2 + bn, In("P", g), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                    DropPathAdd(A + 1, In("C", C + 1 + bn) + "," + In("C", C + 2 + bn));
+
+                                if (p.Bottleneck)
+                                {
+                                    blocks.Add(
+                                        BatchNormActivation(C, In("A", A), p.Activation) +
+                                        Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                        BatchNormActivation(C + 1, In("C", C), p.Activation) +
+                                        Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 2, 2, 1, 1) +
+                                        (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
+                                        Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                        strChannelZeroPad);
+                                }
+                                else
+                                {
+                                    blocks.Add(
+                                        BatchNormActivation(C, In("A", A), p.Activation) +
+                                        Convolution(C, In("B", C), DIV8(W), 3, 3, 2, 2, 1, 1) +
+                                        (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
+                                        Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
+                                        strChannelZeroPad);
+                                }
+
+                                A++;
+                                C += p.ChannelZeroPad ? 2 + bn : 3 + bn;
+                            }
+
+                            for (var i = 1ul; i < p.Iterations; i++)
+                            {
+                                if (p.Bottleneck)
+                                {
+                                    blocks.Add(
+                                        BatchNormActivation(C, In("A", A), p.Activation) +
+                                        Convolution(C, In("B", C), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                        BatchNormActivation(C + 1, In("C", C), p.Activation) +
+                                        Convolution(C + 1, In("B", C + 1), DIV8((UInt)(K * W / 4)), 3, 3, 1, 1, 1, 1) +
+                                        (p.Dropout > 0 ? BatchNormActivationDropout(C + 2, In("C", C + 1), p.Activation) : BatchNormActivation(C + 2, In("C", C + 1), p.Activation)) +
+                                        Convolution(C + 2, In("B", C + 2), DIV8(W), 1, 1, 1, 1, 0, 0) +
+                                        DropPathAdd(A + 1, In("C", C + 2) + "," + In("A", A)));
+
+                                    C += 3;
+                                }
+                                else
+                                {
+                                    blocks.Add(
+                                        BatchNormActivation(C, In("A", A), p.Activation) +
+                                        Convolution(C, In("B", C), DIV8(W), 3, 3, 1, 1, 1, 1) +
+                                        (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
+                                        Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
+                                        DropPathAdd(A + 1, In("C", C + 1) + "," + In("A", A)));
+
+                                    C += 2;
+                                }
+                                A++;
+                            }
+                        }
+
+                        foreach (var block in blocks)
+                            net += block;
+
+                        net +=
+                            BatchNormActivation(C, In("A", A), p.Activation) +
+                            Convolution(C + 1, In("B", C), p.Classes, 1, 1, 1, 1, 0, 0) +
+                            BatchNorm(C + 1, In("C", C + 1)) +
+                            GlobalAvgPooling(In("B", C + 1)) +
+                            LogSoftmax("GAP") +
+                            Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
+                    }
+                    break;
+
+                case Scripts.shufflenetv2:
+                    {
+                        var channels = DIV8(p.Width * 16);
+
+                        net +=
+                            Convolution(1, "Input", channels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +
+                            BatchNormActivation(1, "C1", p.Activation) +
+                            Convolution(2, "B1", channels, 1, 1, 1, 1, 0, 0) +
+                            BatchNormActivation(2, "C2", p.Activation) +
+                            DepthwiseConvolution(3, "B2", 1, 3, 3, 1, 1, 1, 1) +
+                            BatchNorm(3, "DC3") +
+                            Convolution(4, "B3", channels, 1, 1, 1, 1, 0, 0) +
+                            BatchNormActivation(4, "C4", p.Activation) +
+                            Convolution(5, "B1", channels, 1, 1, 1, 1, 0, 0) +
+                            Concat(1, "C5,B4");
+
+                        var C = 6ul;
+                        var A = 1ul;
+                        var subsample = false;
+                        foreach (var rec in p.ShuffleNet)
+                        {
+                            if (subsample)
+                            {
+                                channels *= 2;
+                                net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation);
+                                C += 5;
+                            }
+                            for (var n = 0ul; n < rec.Iterations; n++)
+                            {
+                                net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);
                                 C += 3;
                             }
-                            else
-                            {
-                                blocks.Add(
-                                    BatchNormActivation(C, In("A", A), p.Activation) +
-                                    Convolution(C, In("B", C), DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                    (p.Dropout > 0 ? BatchNormActivationDropout(C + 1, In("C", C), p.Activation) : BatchNormActivation(C + 1, In("C", C), p.Activation)) +
-                                    Convolution(C + 1, In("B", C + 1), DIV8(W), 3, 3, 1, 1, 1, 1) +
-                                    DropPathAdd(A + 1, In("C", C + 1) + "," + In("A", A)));
-
-                                C += 2;
-                            }
-                            A++;
+                            subsample = true;
                         }
+
+                        net +=
+                            Convolution(C, In("CC", A), p.Classes, 1, 1, 1, 1, 0, 0) +
+                            BatchNorm(C + 1, In("C", C)) +
+                            GlobalAvgPooling(In("B", C + 1)) +
+                            LogSoftmax("GAP") +
+                            Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
                     }
-
-                    foreach (var block in blocks)
-                        net += block;
-
-                    net +=
-                        BatchNormActivation(C, In("A", A), p.Activation) +
-                        Convolution(C + 1, In("B", C), p.Classes, 1, 1, 1, 1, 0, 0) +
-                        BatchNorm(C + 1, In("C", C + 1)) +
-                        GlobalAvgPooling(In("B", C + 1)) +
-                        LogSoftmax("GAP") +
-                        Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
-                }
-                break;
-
-            case Scripts.shufflenetv2:
-                {
-                    var channels = DIV8(p.Width * 16);
-
-                    net +=
-                        Convolution(1, "Input", channels, 3, 3, p.StrideHFirstConv, p.StrideWFirstConv, 1, 1) +
-                        BatchNormActivation(1, "C1", p.Activation) +
-                        Convolution(2, "B1", channels, 1, 1, 1, 1, 0, 0) +
-                        BatchNormActivation(2, "C2", p.Activation) +
-                        DepthwiseConvolution(3, "B2", 1, 3, 3, 1, 1, 1, 1) +
-                        BatchNorm(3, "DC3") +
-                        Convolution(4, "B3", channels, 1, 1, 1, 1, 0, 0) +
-                        BatchNormActivation(4, "C4", p.Activation) +
-                        Convolution(5, "B1", channels, 1, 1, 1, 1, 0, 0) +
-                        Concat(1, "C5,B4");
-
-                    var C = 6ul;
-                    var A = 1ul;
-                    var subsample = false;
-                    foreach (var rec in p.ShuffleNet)
-                    {
-                        if (subsample)
-                        {
-                            channels *= 2;
-                            net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, true, rec.Shuffle, rec.SE, p.Activation);
-                            C += 5;
-                        }
-                        for (var n = 0ul; n < rec.Iterations; n++)
-                            {
-                            net += InvertedResidual(A++, C, channels, rec.Kernel, rec.Pad, false, rec.Shuffle, rec.SE, p.Activation);
-                            C += 3;
-                        }
-                        subsample = true;
-                    }
-
-                    net +=
-                        Convolution(C, In("CC", A), p.Classes, 1, 1, 1, 1, 0, 0) +
-                        BatchNorm(C + 1, In("C", C)) +
-                        GlobalAvgPooling(In("B", C + 1)) +
-                        LogSoftmax("GAP") +
-                        Cost("LSM", p.Dataset, p.Classes, "CategoricalCrossEntropy", 0.125f);
-                }
-                break;
+                    break;
             }
 
             return net;
@@ -1397,53 +1397,53 @@ namespace Scripts
         static void Main()
         {
             var script = Generate(new ScriptParameters()
-		    {
-        	    Script = Scripts.resnet,
+            {
+                Script = Scripts.resnet,
                 Activation = Activations.Relu,
                 Dataset = Datasets.cifar10,
                 MeanStdNormalization = true,
                 H = 32,
-        	    W = 32,
-        	    PadH = 4,
-        	    PadW = 4,
+                W = 32,
+                PadH = 4,
+                PadW = 4,
                 MirrorPad = false,
                 StrideHFirstConv = 1,
                 StrideWFirstConv = 1,
                 WeightsFiller = Fillers.HeNormal,
-        	    WeightsFillerMode = FillerModes.In,
-        	    WeightsGain = 1f,
-        	    WeightsScale = 0.05f,
-        	    WeightsLRM = 1f,
-        	    WeightsWDM = 1f,
-        	    HasBias = false,
-        	    BiasesFiller = Fillers.Constant,
-        	    BiasesFillerMode = FillerModes.In,
-        	    BiasesGain = 1f,
-        	    BiasesScale = 0f,
-        	    BiasesLRM = 1f,
-        	    BiasesWDM = 1f,
-        	    BatchNormMomentum = 0.995f,
-        	    BatchNormEps = 0.0001f,
-        	    BatchNormScaling = false,
-        	    Alpha = 0f,
-        	    Beta = 0f,
-        	    Groups = 3,
-        	    Iterations = 2,
-        	    Width = 6,
-        	    GrowthRate = 12,
-        	    Bottleneck = false,
-        	    Dropout = 0f,
-        	    Compression = 0f,
-        	    SqueezeExcitation = true,
-        	    ChannelZeroPad = true,
-        	    DepthDrop = 0.0f,
-        	    FixedDepthDrop = false,
-        	    EfficientNet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],
-                ShuffleNet = [new(7, 3, 1, 2, false) , new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)] 
+                WeightsFillerMode = FillerModes.In,
+                WeightsGain = 1f,
+                WeightsScale = 0.05f,
+                WeightsLRM = 1f,
+                WeightsWDM = 1f,
+                HasBias = false,
+                BiasesFiller = Fillers.Constant,
+                BiasesFillerMode = FillerModes.In,
+                BiasesGain = 1f,
+                BiasesScale = 0f,
+                BiasesLRM = 1f,
+                BiasesWDM = 1f,
+                BatchNormMomentum = 0.995f,
+                BatchNormEps = 0.0001f,
+                BatchNormScaling = false,
+                Alpha = 0f,
+                Beta = 0f,
+                Groups = 3,
+                Iterations = 2,
+                Width = 6,
+                GrowthRate = 12,
+                Bottleneck = false,
+                Dropout = 0f,
+                Compression = 0f,
+                SqueezeExcitation = true,
+                ChannelZeroPad = true,
+                DepthDrop = 0.0f,
+                FixedDepthDrop = false,
+                EfficientNet = [new(1, 24, 2, 1, false), new(4, 48, 4, 2, false), new(4, 64, 4, 2, false), new(4, 128, 6, 2, true), new(6, 160, 9, 1, true), new(6, 256, 15, 2, true)],
+                ShuffleNet = [new(7, 3, 1, 2, false), new(7, 3, 1, 2, true), new(7, 3, 1, 2, true)]
             });
 
             var fileInfo = new FileInfo(Path.Combine(ScriptPath, @"script.txt"));
-            
+
             if (fileInfo.Directory != null)
             {
                 if (!fileInfo.Directory.Exists)
