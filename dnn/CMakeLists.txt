@@ -33,7 +33,8 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "")
         "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel RelWithAssert ...")
 endif()
 
-project(dnn VERSION ${DNN_VERSION} LANGUAGES C CXX)
+enable_language(C CXX ASM)
+project(dnn VERSION ${DNN_VERSION} LANGUAGES C CXX ASM)
 
 INCLUDE(GNUInstallDirs)
 INCLUDE(CheckCSourceCompiles)
