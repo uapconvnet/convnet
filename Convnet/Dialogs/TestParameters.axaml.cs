@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-//using AvaloniaEdit.TextMate;
 using Convnet.PageViewModels;
 using Convnet.Properties;
 using CustomMessageBox.Avalonia;
@@ -109,7 +108,9 @@ namespace Convnet.Dialogs
 
         private void Window_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            buttonCancel.Focus();
+            var bc = this.FindControl<Button>("buttonCancel");
+            if (bc != null)
+                bc.Focus();
         }
 
         private void TextBoxDistortions_TextChanged(object? sender, TextChangedEventArgs e)
