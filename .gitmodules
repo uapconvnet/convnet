@@ -19,3 +19,6 @@
 [submodule "dnn/deps/oneDNN"]
 	path = dnn/deps/oneDNN
 	url = https://github.com/oneapi-src/oneDNN
+[submodule "dnn/deps/libpng"]
+	path = dnn/deps/libpng
+	url = https://github.com/pnggroup/libpng
