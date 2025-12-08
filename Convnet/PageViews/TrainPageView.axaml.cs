@@ -157,6 +157,11 @@ namespace Convnet.PageViews
                         var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to delete the selected row(s)?", "Delete row(s)", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
                         if (result == MessageBoxResult.Yes)
                         {
+                            var item = datagrid.SelectedItem as DNNTrainingResult;
+                            if (item != null)
+                                tpvm.TrainingLog?.Remove(item);
+                            
+                            /*
                             List<DNNTrainingResult> items = new List<DNNTrainingResult>();
 
                             foreach (var item in datagrid.SelectedItems)
@@ -168,6 +173,8 @@ namespace Convnet.PageViews
                                 tpvm.TrainingLog?.Remove(item);
 
                             datagrid.SelectedItems.Clear();
+                            */
+
                         }
                     }
                 }
