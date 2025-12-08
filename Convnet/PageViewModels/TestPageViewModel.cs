@@ -48,8 +48,6 @@ namespace Convnet.PageViewModels
         {
             AddCommandButtons();
 
-            sb = new StringBuilder();
-
             showProgress = false;
             showSample = false;
             if (Model != null)
