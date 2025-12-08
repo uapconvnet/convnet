@@ -22,6 +22,20 @@ if(POLICY CMP0015)
 endif(POLICY CMP0015)
 
 #####
+# Enables link_directories() treat paths relative
+# to the source dir.
+if(POLICY CMP194)
+    cmake_policy(SET CMP194 NEW)
+endif(POLICY CMP194)
+
+#####
+# Enables link_directories() treat paths relative
+# to the source dir.
+if(POLICY CMP0091)
+    cmake_policy(SET CMP0091 NEW)
+endif(POLICY CMP0091)
+
+#####
 # Enables project() command manages VERSION variables.
 if(POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
@@ -46,7 +60,7 @@ option(BUILD_SHARED_LIBS "Build shared library" ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(WIN32 OR MSVC)
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>") # MD or MDd
   set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
   set(flags /arch:AVX512 /fp:contract /favor:AMD64)
   set(linkflags "")
