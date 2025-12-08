@@ -11,7 +11,6 @@ using ReactiveUI;
 using System;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Timers;
 
 using Float = System.Single;
@@ -143,7 +142,7 @@ namespace Convnet.PageViewModels
                     Model?.GetConfusionMatrix();
                     ConfusionDataTable = GetConfusionDataTable();
                     Model?.UpdateCostInfo(costIndex);
-                    ProgressText = string.Format("Loss:\t\t{0:N7}" + nwl + "Errors:\t{1:G}" + nwl + "Error:\t\t{2:N2} %" + nwl + "Accuracy:\t{3:N2} %", Model?.CostLayers[costIndex].AvgTestLoss, Model?.CostLayers[costIndex].TestErrors, Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - Model?.CostLayers[costIndex].TestErrorPercentage);
+                    ProgressText = string.Format(stringTesting, 0, Model?.BatchSize, Model?.CostLayers[costIndex].AvgTestLoss, Model?.CostLayers[costIndex].TestErrors, Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - Model?.CostLayers[costIndex].TestErrorPercentage);
                 }
             }
         }
