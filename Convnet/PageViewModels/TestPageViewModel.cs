@@ -24,19 +24,25 @@ namespace Convnet.PageViewModels
     {
         private static readonly string nwl = Environment.NewLine;
 
+        private readonly string stringTesting           = "Testing" + nwl + 
+                                                          " Sample:\t\t\t{0:G}" + nwl + 
+                                                          " Batch Size:\t\t{1:G}" + nwl + 
+                                                          " Loss:\t\t\t  {2:N7}" + nwl + 
+                                                          " Errors:\t\t\t{3:G}" + nwl + 
+                                                          " Error:\t\t\t {4:N2} %" + nwl + 
+                                                          " Accuracy:\t\t  {5:N2} %";
+
         private string? progressText;
         private bool showProgress;
         private string? label;
         private bool showSample;
         private DataTable? confusionDataTable;
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
-        private readonly StringBuilder sb;
         private ComboBox? dataProviderComboBox;
         private ComboBox? costLayersComboBox;
         public Timer? RefreshTimer;
         public event EventHandler? Open;
-        private int flag = 0;
-
+      
         
         public TestPageViewModel(DNNModel model) : base(model)
         {
@@ -177,14 +183,14 @@ namespace Convnet.PageViewModels
 
         private void TestProgress(UInt BatchSize, UInt SampleIndex, Float AvgTestLoss, Float TestErrorPercentage, Float TestAccuracy, UInt TestErrors, DNNStates State, DNNTaskStates TaskState)
         {
-            if (flag == 0 && State != DNNStates.Completed)
+            if (State != DNNStates.Completed)
             {
-                Dispatcher.UIThread.Post(() =>
+                Dispatcher.UIThread.Invoke(() =>
                 {
-                    ProgressText = string.Format("Sample:\t\t{0:G}" + nwl + "Loss:\t\t{1:N7}" + nwl + "Errors:\t\t{2:G}" + nwl + "Error:\t\t{3:N2} %" + nwl + "Accuracy:\t{4:N2} %", SampleIndex, AvgTestLoss, TestErrors, TestErrorPercentage, TestAccuracy);
-
                     if (Model != null)
                     {
+                        ProgressText = string.Format(stringTesting, SampleIndex, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
+
                         Model.UpdateLayerInfo(0ul, true);
                         InputSnapshot = Model.InputSnapshot;
                         Label = Model.Label;
@@ -193,11 +199,12 @@ namespace Convnet.PageViewModels
             }
             else
             {
-                Dispatcher.UIThread.Post(() =>
+                Dispatcher.UIThread.Invoke(() =>
                 {
-                    ProgressText = string.Format("Loss:\t\t{0:N7}" + nwl + "Errors:\t\t{1:G}" + nwl + "Error:\t\t{2:N2} %" + nwl + "Accuracy:\t{3:N2} %", AvgTestLoss, TestErrors, TestErrorPercentage, TestAccuracy);
+                    if (Model != null)
+                        ProgressText = string.Format(stringTesting, SampleIndex, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
 
-                    flag = 1;
+
                     if (RefreshTimer != null)
                     {
                         RefreshTimer.Stop();
@@ -360,7 +367,6 @@ namespace Convnet.PageViewModels
                         TestRate = dialog.Rate;
                         Settings.Default.Save();
 
-                        flag = 0;
                         Model.AddTrainingRate(new DNNTrainingRate(dialog.Rate.Optimizer, dialog.Rate.Momentum, dialog.Rate.Beta2, dialog.Rate.L2Penalty, dialog.Rate.Dropout, dialog.Rate.Eps, dialog.Rate.N, dialog.Rate.D, dialog.Rate.H, dialog.Rate.W, dialog.Rate.PadD, dialog.Rate.PadH, dialog.Rate.PadW, 1, 1, dialog.Rate.EpochMultiplier, dialog.Rate.MaximumRate, dialog.Rate.MinimumRate, dialog.Rate.FinalRate, dialog.Rate.Gamma, dialog.Rate.DecayAfterEpochs, dialog.Rate.DecayFactor, dialog.Rate.HorizontalFlip, dialog.Rate.VerticalFlip, dialog.Rate.InputDropout, dialog.Rate.Cutout, dialog.Rate.CutMix, dialog.Rate.AutoAugment, dialog.Rate.ColorCast, dialog.Rate.ColorAngle, dialog.Rate.Distortion, dialog.Rate.Interpolation, dialog.Rate.Scaling, dialog.Rate.Rotation), true, 1, Model.TrainingSamples);
                         if (costLayersComboBox != null)
                             Model.SetCostIndex((uint)costLayersComboBox.SelectedIndex);
