@@ -12,8 +12,8 @@ namespace dnn
 		std::unique_ptr<dnnl::binary> fwd;
 #endif
 		std::vector<Float> scales;
-		FloatVector scale0;
-		FloatVector scale1;
+		//FloatVector scale0;
+		//FloatVector scale1;
 		
 	public:
 		const Byte first, second;
@@ -24,15 +24,14 @@ namespace dnn
 			first(GetFirst(inputs)),
 			second(GetSecond(inputs)),
 			SurvivalProbability(FloatVector(2, Float(1))),
-			scale0(FloatVector(1, Float(1))),
-			scale1(FloatVector(1, Float(1)))
+			scales(std::vector<Float>(2, Float(1)))
+			//scale0(FloatVector(1, Float(1))),
+			//scale1(FloatVector(1, Float(1)))
 		{
 			assert(Inputs.size() == 2);
 			assert(Inputs[0]->C == Inputs[1]->C);
 			assert(Inputs[0]->D == Inputs[1]->D);
 			
-			scales = std::vector<Float>(2, Float(1));
-
 			FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(5);
 			FwdTrainingWeight = Float(10);
@@ -84,26 +83,27 @@ namespace dnn
 				DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::data_type::f32, ChosenFormat));
 			}
 
-			
+			/*
 			dnnl::primitive_attr attr;
 			attr.set_scales_mask(DNNL_ARG_SRC_0, 0);
 			attr.set_scales_mask(DNNL_ARG_SRC_1, 0);
 			
 			fwdDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[first]->DstMemDesc, *Inputs[second]->DstMemDesc, *DstMemDesc, attr));
-			// fwdDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[first]->DstMemDesc, *Inputs[second]->DstMemDesc, *DstMemDesc));
+			*/
+			fwdDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[first]->DstMemDesc, *Inputs[second]->DstMemDesc, *DstMemDesc));
 			
 			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			
-			fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } };
-			// fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) } };
 			// fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } };
+			fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) } };
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::binary>(dnnl::binary(*fwdDesc));
 #endif
 		}
 
+/*
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
@@ -122,16 +122,17 @@ namespace dnn
 				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
 #endif // DNN_LEAN
 		}
+*/
 
-/*
+
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
 			scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
 			scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
 					
-			scale0[0] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
-			scale1[0] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
+			//scale0[0] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
+			//scale1[0] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
 
 			if (training)
 			{
@@ -240,45 +241,34 @@ namespace dnn
 							if (fullDepth)
 								for_i(batchSize, threads, [=](UInt n)
 								{
-									const auto start = n * size;
-									for (auto cdhw = start; cdhw < start + part; cdhw += VectorSize)
+									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
-										(VecFloat().load_a(&Inputs[0]->Neurons[cdhw]) + VecFloat().load_a(&Inputs[1]->Neurons[cdhw])).store_a(&Neurons[cdhw]);
+										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+										{
+											(VecFloat().load_a(&Inputs[first]->Neurons[hw]) + VecFloat().load_a(&Inputs[second]->Neurons[hw])).store_a(&Neurons[hw]);
 #ifndef DNN_LEAN
-										VecZero.store_nt(&NeuronsD1[cdhw]);
+											VecZero.store_nt(&NeuronsD1[hw]);
 #endif
-									}
-									for (auto cdhw = start + part; cdhw < start + size; cdhw++)
-									{
-										Neurons[cdhw] = Inputs[0]->Neurons[cdhw] + Inputs[1]->Neurons[cdhw];
-#ifndef DNN_LEAN
-										NeuronsD1[cdhw] = 0;
-#endif
+										}
 									}
 								});
 							else
 								for_i(batchSize, threads, [=](UInt n)
 								{
-									const auto start = n * size;
-									const auto scales0 = scales[0];
-									const auto scales1 = scales[1];
+									const auto scaleFirst = scales[first];
+									const auto scaleSecond = scales[second];
 
-									VecFloat In0, In1;
-									for (auto cdhw = start; cdhw < start + part; cdhw += VectorSize)
+									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
-										In0.load_a(&Inputs[0]->Neurons[cdhw]);
-										In1.load_a(&Inputs[1]->Neurons[cdhw]);
-										((In0 * scales0) + (In1 * scales1)).store_a(&Neurons[cdhw]);
+										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+										{
+											((VecFloat().load_a(&Inputs[first]->Neurons[hw]) * scaleFirst) + (VecFloat().load_a(&Inputs[second]->Neurons[hw]) * scaleSecond)).store_a(&Neurons[hw]);
 #ifndef DNN_LEAN
-										VecZero.store_nt(&NeuronsD1[cdhw]);
+											VecZero.store_nt(&NeuronsD1[hw]);
 #endif
-									}
-									for (auto cdhw = start + part; cdhw < start + size; cdhw++)
-									{
-										Neurons[cdhw] = (Inputs[0]->Neurons[cdhw] * scales0) + (Inputs[1]->Neurons[cdhw] * scales1);
-#ifndef DNN_LEAN
-										NeuronsD1[cdhw] = 0;
-#endif
+										}
 									}
 								});
 						}
@@ -304,8 +294,8 @@ namespace dnn
 							else
 								for_i(batchSize, threads, [=](UInt n)
 								{
-									const auto scales0 = scales[first];
-									const auto scales1 = scales[second];
+									const auto scaleFirst = scales[first];
+									const auto scaleSecond = scales[second];
 
 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
@@ -313,7 +303,7 @@ namespace dnn
 										const auto channelOffset = Inputs[second]->OffsetPaddedMem(n, c, 0, 0);
 										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
 										{
-											((VecFloat().load_a(&Inputs[first]->Neurons[hw]) * scales0) + (VecFloat().load_a(&Inputs[second]->Neurons[channelOffset]) * scales1)).store_a(&Neurons[hw]);
+											((VecFloat().load_a(&Inputs[first]->Neurons[hw]) * scaleFirst) + (VecFloat().load_a(&Inputs[second]->Neurons[channelOffset]) * scaleSecond)).store_a(&Neurons[hw]);
 #ifndef DNN_LEAN
 											VecZero.store_nt(&NeuronsD1[hw]);
 #endif
@@ -334,7 +324,7 @@ namespace dnn
 				Device.stream.wait();
 			}
 		}
-	*/
+
 
 		void BackwardProp(const UInt batchSize) final override
 		{
@@ -353,8 +343,10 @@ namespace dnn
 			*/
 
 			const auto fullDepth = (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
-			scale0[0] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
-			scale1[0] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
+			//scale0[0] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
+			//scale1[0] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
+			scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
+			scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
 
 #ifdef DNN_STOCHASTIC
 			if (batchSize == 1)
@@ -487,8 +479,8 @@ namespace dnn
 							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * size;
-								const auto scale0Vec = VecFloat(scale0[0]);
-								const auto scale1Vec = VecFloat(scale1[0]);
+								const auto scaleFirstVec = VecFloat(scales[first]);
+								const auto scaleSecondVec = VecFloat(scales[second]);
 
 								VecFloat neuronsD1;
 								for (auto c = 0ull; c < PaddedC; c += VectorSize)
@@ -497,8 +489,8 @@ namespace dnn
 									for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
 									{
 										neuronsD1.load_a(&NeuronsD1[hw]);
-										mul_add(neuronsD1, scale0Vec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
-										mul_add(neuronsD1, scale1Vec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[hw])).store_a(&InputsBwd[second]->NeuronsD1[hw]);
+										mul_add(neuronsD1, scaleFirstVec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+										mul_add(neuronsD1, scaleSecondVec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[hw])).store_a(&InputsBwd[second]->NeuronsD1[hw]);
 									}
 								}
 							});
@@ -564,8 +556,8 @@ namespace dnn
 						else
 							for_i(batchSize, threads, [=](UInt n)
 							{
-								const auto scale0Vec = VecFloat(scale0[0]);
-								const auto scale1Vec = VecFloat(scale1[0]);
+								const auto scaleFirstVec = VecFloat(scales[first]);
+								const auto scaleSecondVec = VecFloat(scales[second]);
 								VecFloat neuronsD1;
 								for (auto c = 0ull; c < PaddedC; c += VectorSize)
 								{
@@ -574,8 +566,8 @@ namespace dnn
 									for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
 									{
 										neuronsD1.load_a(&NeuronsD1[hw]);
-										mul_add(neuronsD1, scale0Vec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
-										mul_add(neuronsD1, scale1Vec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[channelOffset])).store_a(&InputsBwd[second]->NeuronsD1[channelOffset]);
+										mul_add(neuronsD1, scaleFirstVec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+										mul_add(neuronsD1, scaleSecondVec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[channelOffset])).store_a(&InputsBwd[second]->NeuronsD1[channelOffset]);
 									}
 								}
 							});
