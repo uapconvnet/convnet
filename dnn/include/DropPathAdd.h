@@ -366,8 +366,8 @@ namespace dnn
 							PRAGMA_OMP_SIMD()
 							for (auto cdhw = start; cdhw < end; cdhw++)
 							{
-								InputsBwd[first]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scale0;
-								InputsBwd[second]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scale1;
+								InputsBwd[first]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scaleFirst;
+								InputsBwd[second]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scaleSecond;
 							}
 						});
 				}
