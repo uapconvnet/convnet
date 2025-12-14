@@ -88,6 +88,7 @@ namespace dnn
 #endif
 		}
 
+/*
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 			
@@ -101,10 +102,125 @@ namespace dnn
 #ifndef DNN_LEAN
 			 if (training)
 				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
-#endif // DNN_LEAN
-		
+#endif // DNN_LEAN		
 		}
-		
+*/
+
+		void ForwardProp(const UInt batchSize, const bool training) final override
+		{
+			if (training)
+			{
+				if constexpr (Reference || ReferenceAdd)
+				{
+#ifdef DNN_CACHE_PRIMITIVES
+					fwd->execute(Device.stream, fwdArgs);
+#else
+					dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
+#endif
+					Device.stream.wait();
+#ifndef DNN_LEAN
+					InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
+#endif // DNN_LEAN
+				}
+				else
+				{
+					const auto plain = IsPlainFormat();
+					const auto size = GetElementsCount();
+					const auto part = GetVectorPart(size);
+					const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * size, FwdTrainingWeight);
+					const auto strideHW = HW() * VectorSize;
+
+					if (plain)
+					{
+						if (EqualDimensions(Inputs))
+						{
+							
+							for_i(batchSize, threads, [=](UInt n)
+							{
+								const auto start = n * size;
+								const auto end = start + size;
+								PRAGMA_OMP_SIMD()
+								for (auto cdhw = start; cdhw < end; cdhw++)
+								{
+									Neurons[cdhw] = Inputs[0]->Neurons[cdhw] + Inputs[1]->Neurons[cdhw];
+#ifndef DNN_LEAN
+									NeuronsD1[cdhw] = 0;
+#endif
+								}
+							});
+						}
+						else
+						{
+							for_i(batchSize, threads, [=](UInt n)
+							{
+								for (auto c = 0ull; c < C; c++)
+								{
+									const auto outputOffset = n * CDHW() + c * HW();
+									const auto channelOffset = n * C + c;
+									PRAGMA_OMP_SIMD()
+									for (auto hw = outputOffset; hw < outputOffset + HW(); hw++)
+									{
+										Neurons[hw] = Inputs[first]->Neurons[hw] + Inputs[second]->Neurons[channelOffset];
+#ifndef DNN_LEAN
+										NeuronsD1[hw] = 0;
+#endif
+									}
+								}
+							});
+							
+						}
+					}
+					else
+					{
+						if (EqualDimensions(Inputs)) // same H and W
+						{
+							for_i(batchSize, threads, [=](UInt n)
+							{
+								for (auto c = 0ull; c < PaddedC; c += VectorSize)
+								{
+									const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+									for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+									{
+										(VecFloat().load_a(&Inputs[first]->Neurons[hw]) + VecFloat().load_a(&Inputs[second]->Neurons[hw])).store_a(&Neurons[hw]);
+#ifndef DNN_LEAN
+										VecZero.store_nt(&NeuronsD1[hw]);
+#endif
+									}
+								}
+							});
+						}
+						else
+						{
+							for_i(batchSize, threads, [=](UInt n)
+							{
+								for (auto c = 0ull; c < PaddedC; c += VectorSize)
+								{
+									const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+									const auto channelOffset = Inputs[second]->OffsetPaddedMem(n, c, 0, 0);
+									for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+									{
+										(VecFloat().load_a(&Inputs[first]->Neurons[hw]) + VecFloat().load_a(&Inputs[second]->Neurons[channelOffset])).store_a(&Neurons[hw]);
+#ifndef DNN_LEAN
+										VecZero.store_nt(&NeuronsD1[hw]);
+#endif
+									}
+								}
+							});
+						}
+					}
+				}
+			}
+			else
+			{
+#ifdef DNN_CACHE_PRIMITIVES
+				fwd->execute(Device.stream, fwdArgs);
+#else
+				dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
+#endif
+				Device.stream.wait();
+			}
+		}
+
 		void BackwardProp(const UInt batchSize) final override
 		{
 #ifdef DNN_LEAN

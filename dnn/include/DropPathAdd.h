@@ -151,7 +151,6 @@ namespace dnn
 				}
 				else
 				{
-					const auto padded = C == PaddedC;
 					const auto plain = IsPlainFormat();
 					const auto size = GetElementsCount();
 					const auto part = GetVectorPart(size);
@@ -336,23 +335,16 @@ namespace dnn
 			const auto size = GetElementsCount();
 			const auto part = GetVectorPart(size);
 			
-			/*
-			const auto fullDepth = SurvivalProbability[0] == Float(1) && SurvivalProbability[1] == Float(1);
-			scales[0] = fullDepth ? Float(1) : (Inputs[0]->Skip ? Float(0) : Float(1));
-			scales[1] = fullDepth ? Float(1) : (Inputs[1]->Skip ? Float(0) : Float(1));
-			*/
-
 			const auto fullDepth = (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
-			//scale0[0] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
-			//scale1[0] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
+			
 			scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
 			scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
 
 #ifdef DNN_STOCHASTIC
 			if (batchSize == 1)
 			{
-				const auto scales0 = scales[0];
-				const auto scales1 = scales[1];
+				const auto scaleFirst = scales[first];
+				const auto scaleSecond = scales[second];
 
 				if (EqualDimensions(Inputs))
 				{
@@ -361,8 +353,8 @@ namespace dnn
 						PRAGMA_OMP_SIMD()
 						for (auto cdhw = 0ull; cdhw < size; cdhw++)
 						{
-							InputsBwd[0]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scales0;
-							InputsBwd[1]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scales1;
+							InputsBwd[0]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scaleFirst;
+							InputsBwd[1]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scaleSecond;
 						}
 					}
 					else
@@ -373,17 +365,17 @@ namespace dnn
 							D1.load_a(&NeuronsD1[cdhw]);
 
 							inputD1.load_a(&InputsBwd[0]->NeuronsD1[cdhw]);
-							inputD1 += D1 * scales0;
+							inputD1 += D1 * scaleFirst;
 							inputD1.store_a(&InputsBwd[0]->NeuronsD1[cdhw]);
 
 							inputD1.load_a(&InputsBwd[1]->NeuronsD1[cdhw]);
-							inputD1 += D1 * scales1;
+							inputD1 += D1 * scaleSecond;
 							inputD1.store_a(&InputsBwd[1]->NeuronsD1[cdhw]);
 						}
 						for (auto cdhw = part; cdhw < size; cdhw++)
 						{
-							InputsBwd[0]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scales0;
-							InputsBwd[1]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scales1;
+							InputsBwd[0]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scaleFirst;
+							InputsBwd[1]->NeuronsD1[cdhw] += NeuronsD1[cdhw] * scaleSecond;
 						}
 					}
 				}
