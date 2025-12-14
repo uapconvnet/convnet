@@ -130,10 +130,7 @@ namespace dnn
 			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
 			scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
 			scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
-					
-			//scale0[0] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
-			//scale1[0] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
-
+			
 			if (training)
 			{
 				if ((Reference || ReferenceAdd) && fullDepth)
@@ -153,7 +150,6 @@ namespace dnn
 				{
 					const auto plain = IsPlainFormat();
 					const auto size = GetElementsCount();
-					const auto part = GetVectorPart(size);
 					const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * size, FwdTrainingWeight);
 					const auto strideHW = HW() * VectorSize;
 
@@ -169,7 +165,7 @@ namespace dnn
 									PRAGMA_OMP_SIMD()
 									for (auto cdhw = start; cdhw < end; cdhw++)
 									{
-										Neurons[cdhw] = Inputs[0]->Neurons[cdhw] + Inputs[1]->Neurons[cdhw];
+										Neurons[cdhw] = Inputs[first]->Neurons[cdhw] + Inputs[second]->Neurons[cdhw];
 #ifndef DNN_LEAN
 										NeuronsD1[cdhw] = 0;
 #endif
@@ -180,12 +176,12 @@ namespace dnn
 								{
 									const auto start = n * size;
 									const auto end = start + size;
-									const auto scales0 = scales[0];
-									const auto scales1 = scales[1];
+									const auto scaleFirst = scales[first];
+									const auto scaleSecond = scales[second];
 									PRAGMA_OMP_SIMD()
 									for (auto cdhw = start; cdhw < end; cdhw++)
 									{
-										Neurons[cdhw] = (Inputs[0]->Neurons[cdhw] * scales0) + (Inputs[1]->Neurons[cdhw] * scales1);
+										Neurons[cdhw] = (Inputs[first]->Neurons[cdhw] * scaleFirst) + (Inputs[second]->Neurons[cdhw] * scaleSecond);
 #ifndef DNN_LEAN
 										NeuronsD1[cdhw] = 0;
 #endif
