@@ -130,7 +130,7 @@ namespace dnn
 			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
 			scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
 			scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
-			
+					
 			if (training)
 			{
 				if ((Reference || ReferenceAdd) && fullDepth)
@@ -210,17 +210,16 @@ namespace dnn
 							else
 								for_i(batchSize, threads, [=](UInt n)
 								{
-									const auto scales0 = scales[first];
-									const auto scales1 = scales[second];
-
-									for (auto c = 0ull; c < C; c++)
+									const auto scaleFirst = scales[first];
+									const auto scaleSecond = scales[second];
+    								for (auto c = 0ull; c < C; c++)
 									{
 										const auto outputOffset = n * CDHW() + c * HW();
 										const auto channelOffset = n * C + c;
 										PRAGMA_OMP_SIMD()
 										for (auto hw = outputOffset; hw < outputOffset + HW(); hw++)
 										{
-											Neurons[hw] = ((Inputs[first]->Neurons[hw] * scales0) + (Inputs[second]->Neurons[channelOffset] * scales1));
+											Neurons[hw] = ((Inputs[first]->Neurons[hw] * scaleFirst) + (Inputs[second]->Neurons[channelOffset] * scaleSecond));
 #ifndef DNN_LEAN
 											NeuronsD1[hw] = 0;
 #endif
@@ -253,7 +252,6 @@ namespace dnn
 								{
 									const auto scaleFirst = scales[first];
 									const auto scaleSecond = scales[second];
-
 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
 										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
@@ -276,7 +274,6 @@ namespace dnn
 									{
 										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
 										const auto channelOffset = Inputs[second]->OffsetPaddedMem(n, c, 0, 0);
-
 										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
 										{
 											(VecFloat().load_a(&Inputs[first]->Neurons[hw]) + VecFloat().load_a(&Inputs[second]->Neurons[channelOffset])).store_a(&Neurons[hw]);
@@ -291,7 +288,6 @@ namespace dnn
 								{
 									const auto scaleFirst = scales[first];
 									const auto scaleSecond = scales[second];
-
 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
 									{
 										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
@@ -307,7 +303,7 @@ namespace dnn
 								});
 						}
 					}
-				}
+				}	
 			}
 			else
 			{
