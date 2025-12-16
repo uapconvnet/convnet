@@ -118,6 +118,7 @@ namespace dnn
 					dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
 #endif
 					Device.stream.wait();
+
 #ifndef DNN_LEAN
 					InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
 #endif // DNN_LEAN
@@ -126,7 +127,6 @@ namespace dnn
 				{
 					const auto plain = IsPlainFormat();
 					const auto size = GetElementsCount();
-					const auto part = GetVectorPart(size);
 					const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * size, FwdTrainingWeight);
 					const auto strideHW = HW() * VectorSize;
 
@@ -134,7 +134,6 @@ namespace dnn
 					{
 						if (EqualDimensions(Inputs))
 						{
-							
 							for_i(batchSize, threads, [=](UInt n)
 							{
 								const auto start = n * size;
@@ -142,7 +141,7 @@ namespace dnn
 								PRAGMA_OMP_SIMD()
 								for (auto cdhw = start; cdhw < end; cdhw++)
 								{
-									Neurons[cdhw] = Inputs[0]->Neurons[cdhw] + Inputs[1]->Neurons[cdhw];
+									Neurons[cdhw] = Inputs[first]->Neurons[cdhw] + Inputs[second]->Neurons[cdhw];
 #ifndef DNN_LEAN
 									NeuronsD1[cdhw] = 0;
 #endif
@@ -252,8 +251,6 @@ namespace dnn
 				{	
 					for_i(batchSize, threads, [=](UInt n)
 					{
-						const auto start = n * size;
-								
 						VecFloat neuronsD1;
 						for (auto c = 0ull; c < PaddedC; c += VectorSize)
 						{

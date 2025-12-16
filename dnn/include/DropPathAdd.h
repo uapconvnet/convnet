@@ -368,8 +368,6 @@ namespace dnn
 					if (fullDepth)
 						for_i(batchSize, threads, [=](UInt n)
 						{
-							const auto start = n * size;
-								
 							VecFloat neuronsD1;
 							for (auto c = 0ull; c < PaddedC; c += VectorSize)
 							{
@@ -385,10 +383,8 @@ namespace dnn
 					else
 						for_i(batchSize, threads, [=](UInt n)
 						{
-							const auto start = n * size;
 							const auto scaleFirstVec = VecFloat(scales[first]);
 							const auto scaleSecondVec = VecFloat(scales[second]);
-
 							VecFloat neuronsD1;
 							for (auto c = 0ull; c < PaddedC; c += VectorSize)
 							{
@@ -425,8 +421,8 @@ namespace dnn
 					else
 						for_i(batchSize, threads, [=](UInt n)
 						{
-							const auto scale0 = scales[first];
-							const auto scale1 = scales[second];
+							const auto scaleFirst = scales[first];
+							const auto scaleSecond = scales[second];
 							for (auto c = 0ull; c < C; c++)
 							{
 								const auto outputOffset = n * CDHW() + c * HW();
@@ -434,8 +430,8 @@ namespace dnn
 								PRAGMA_OMP_SIMD()
 								for (auto hw = outputOffset; hw < outputOffset + HW(); hw++)
 								{
-									InputsBwd[first]->NeuronsD1[hw] += NeuronsD1[hw] * scale0;
-									InputsBwd[second]->NeuronsD1[channelOffset] += NeuronsD1[hw] * scale1;
+									InputsBwd[first]->NeuronsD1[hw] += NeuronsD1[hw] * scaleFirst;
+									InputsBwd[second]->NeuronsD1[channelOffset] += NeuronsD1[hw] * scaleSecond;
 								}
 							}
 						});
