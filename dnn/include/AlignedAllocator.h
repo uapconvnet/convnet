@@ -11,6 +11,20 @@
 
 namespace dnn
 {
+#if defined(__VEC__)
+#define DNN_INLINE inline
+#elif defined __has_attribute
+#if __has_attribute(always_inline)
+#define DNN_INLINE inline __attribute__((always_inline))
+#else
+#define DNN_INLINE inline
+#endif
+#elif defined(_MSC_VER)
+#define DNN_INLINE inline __forceinline
+#else
+#define DNN_INLINE inline
+#endif
+
 	template <typename T, std::size_t alignment>
 	class AlignedAllocator
 	{
@@ -29,16 +43,18 @@ namespace dnn
 			typedef AlignedAllocator<U, alignment> other;
 		};
 
-		AlignedAllocator() {}
+		DNN_INLINE AlignedAllocator() noexcept {};
 
 		template <typename U>
-		AlignedAllocator(const AlignedAllocator<U, alignment>&) {}
+		DNN_INLINE AlignedAllocator(const AlignedAllocator<U, alignment>&) noexcept {};
 
-		const_pointer address(const_reference value) const { return std::addressof(value); }
+		DNN_INLINE ~AlignedAllocator() {};
 
-		pointer address(reference value) const { return std::addressof(value); }
+		DNN_INLINE const_pointer address(const_reference value) const noexcept { return std::addressof(value); }
 
-		pointer allocate(const size_type size, const void* = nullptr)
+		DNN_INLINE pointer address(reference value) const noexcept { return std::addressof(value); }
+
+		DNN_INLINE pointer allocate(const size_type size, const void* = nullptr)
 		{
 			void* p = AlignedAlloc(alignment, sizeof(T) * size);
 
@@ -48,39 +64,39 @@ namespace dnn
 			return static_cast<pointer>(p);
 		}
 
-		size_type max_size() const { return ~static_cast<std::size_t>(0ull) / sizeof(T); }
+		DNN_INLINE size_type max_size() const noexcept { return ~static_cast<std::size_t>(0ull) / sizeof(T); }
 
-		void deallocate(pointer ptr, size_type) { AlignedFree(ptr); }
+		DNN_INLINE void deallocate(pointer ptr, size_type) { AlignedFree(ptr); }
 
 		template <class U, class V>
-		void construct(U* ptr, const V& value)
+		DNN_INLINE void construct(U* ptr, const V& value)
 		{
 			void* p = ptr;
 			::new (p) U(value);
 		}
 
 		template <class U, class... Args>
-		void construct(U* ptr, Args &&... args)
+		DNN_INLINE void construct(U* ptr, Args &&... args)
 		{
 			void* p = ptr;
 			::new (p) U(std::forward<Args>(args)...);
 		}
 
 		template <class U>
-		void construct(U* ptr)
+		DNN_INLINE void construct(U* ptr)
 		{
 			void* p = ptr;
 			::new (p) U();
 		}
 
 		template <class U>
-		void destroy(U* ptr)
+		DNN_INLINE void destroy(U* ptr)
 		{
 			ptr->~U();
 		}
 
 	protected:
-		size_type DIVALIGN([[maybe_unused]] const size_type align, const size_type size) const
+		DNN_INLINE size_type DIVALIGN([[maybe_unused]] const size_type align, const size_type size) const noexcept
 		{
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 			return size;
@@ -92,7 +108,7 @@ namespace dnn
 #endif
 		}
 
-		inline void* AlignedAlloc(const size_type align, const size_type size) const
+		DNN_INLINE void* AlignedAlloc(const size_type align, const size_type size) const
 		{
 #if defined(_WIN32) || defined(__CYGWIN__)
 			return ::_aligned_malloc(DIVALIGN(align, size), align);
@@ -105,7 +121,7 @@ namespace dnn
 #endif
 		}
 
-		inline void AlignedFree(pointer ptr)
+		DNN_INLINE void AlignedFree(pointer ptr)
 		{
 #if defined(_WIN32) || defined(__CYGWIN__)
 			::_aligned_free(ptr);
@@ -118,8 +134,8 @@ namespace dnn
 	};
 
 	template <typename T1, typename T2, std::size_t alignment>
-	inline bool operator==(const AlignedAllocator<T1,alignment>&, const AlignedAllocator<T2,alignment>&) { return true; }
+	DNN_INLINE bool operator==(const AlignedAllocator<T1,alignment>&, const AlignedAllocator<T2,alignment>&) noexcept { return true; }
 
 	template <typename T1, typename T2, std::size_t alignment>
-	inline bool operator!=(const AlignedAllocator<T1,alignment>&, const AlignedAllocator<T2,alignment>&) { return false; }
+	DNN_INLINE bool operator!=(const AlignedAllocator<T1,alignment>&, const AlignedAllocator<T2,alignment>&) noexcept { return false; }
 }
