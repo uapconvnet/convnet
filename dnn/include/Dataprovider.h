@@ -327,7 +327,7 @@ namespace dnn
 			case Datasets::tinyimagenet:
 			{
 				path = DatasetsDirectory;
-
+				
 				batch <<
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 					std::string("@echo off") << std::endl <<
@@ -339,7 +339,7 @@ namespace dnn
 					std::string("echo loading ") + std::string(magic_enum::enum_name<Datasets>(dataset)) + std::string(" dataset...") << std::endl <<
 					std::string("cd ") + path.string() << std::endl <<
 #endif
-					std::string("curl -O http://cs231n.stanford.edu/tiny-imagenet-200.zip") << std::endl <<
+					std::string("curl --location --output  tiny-imagenet-200.zip http://cs231n.stanford.edu/tiny-imagenet-200.zip") << std::endl <<
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 					std::string("powershell -ExecutionPolicy Bypass -command \"& {&./UnZip-File.ps1}\";") << std::endl <<
 					std::string("ren tiny-imagenet-200 tinyimagenet && del /Q tiny-imagenet-200.zip") << std::endl <<
