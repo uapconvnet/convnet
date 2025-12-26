@@ -579,7 +579,7 @@ namespace Convnet.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("using System.Globalization;\r\nusing System.Globalization;\r\nusing System.Runtime.In" +
+        [global::System.Configuration.DefaultSettingValueAttribute("using System.Globalization;\r\nusing System.Runtime.In" +
             "teropServices;\r\n\r\nusing Float = System.Single;\r\nusing UInt = System.UInt64;\r\n\r\n\r" +
             "\nnamespace Scripts\r\n{\r\n    public enum Scripts\r\n    {\r\n        augshufflenet = 0" +
             ",\r\n        densenet = 1,\r\n        efficientnetv2 = 2,\r\n        mobilenetv3 = 3,\r" +

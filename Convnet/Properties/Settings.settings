@@ -601,7 +601,7 @@ Eps=0.125
 </Value>
     </Setting>
     <Setting Name="Script" Type="System.String" Scope="User">
-      <Value Profile="(Default)">using System.Globalization;
+      <Value Profile="(Default)">
 using System.Globalization;
 using System.Runtime.InteropServices;
 
