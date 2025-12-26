@@ -190,7 +190,7 @@ namespace
 	constexpr auto VectorSize = 4ull;
 	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw4c;
 #endif
-	inline const auto VecZero = VecFloat(Float(0));
+	DNN_INLINE const auto VecZero = VecFloat(Float(0));
 
 	/*
 	static inline int div_up(int value, int divisor) {	return (value + divisor - 1) / divisor;	}
@@ -201,16 +201,16 @@ namespace
 	*/
 
 	template<typename T>
-	static inline constexpr auto Square(const T& value) NOEXCEPT { return (value * value); }
+	static DNN_INLINE constexpr auto Square(const T& value) NOEXCEPT { return (value * value); }
 	template <typename T>
-	static inline constexpr auto Clamp(T val, T lo, T hi) NOEXCEPT { return std::min<T>(hi, std::max<T>(lo, val)); }
+	static DNN_INLINE constexpr auto Clamp(T val, T lo, T hi) NOEXCEPT { return std::min<T>(hi, std::max<T>(lo, val)); }
 	template<typename T>
-	static inline constexpr auto Saturate(const T& value) NOEXCEPT { return (value > T(255)) ? Byte(255) : (value < T(0)) ? Byte(0) : Byte(value); }
+	static DNN_INLINE constexpr auto Saturate(const T& value) NOEXCEPT { return (value > T(255)) ? Byte(255) : (value < T(0)) ? Byte(0) : Byte(value); }
 	template<typename T>
-	static inline constexpr auto GetColorFromRange(const T& range, const T& minimum, const T& value) NOEXCEPT { return Saturate<T>(T(255) - ((value - minimum) * range)); }
+	static DNN_INLINE constexpr auto GetColorFromRange(const T& range, const T& minimum, const T& value) NOEXCEPT { return Saturate<T>(T(255) - ((value - minimum) * range)); }
 	template<typename T>
-	static inline constexpr auto GetColorRange(const T& min, const T& max) NOEXCEPT { return (min == max) ? T(0) : T(255) / ((std::signbit(min) && std::signbit(max)) ? -(min + max) : (max - min)); }
-	static auto inline ClampVecFloat(const VecFloat& v, const Float& lo, const Float& hi) NOEXCEPT { return min(VecFloat(hi), max(v, VecFloat(lo))); }
+	static DNN_INLINE constexpr auto GetColorRange(const T& min, const T& max) NOEXCEPT { return (min == max) ? T(0) : T(255) / ((std::signbit(min) && std::signbit(max)) ? -(min + max) : (max - min)); }
+	static auto DNN_INLINE ClampVecFloat(const VecFloat& v, const Float& lo, const Float& hi) NOEXCEPT { return min(VecFloat(hi), max(v, VecFloat(lo))); }
 	
 	constexpr auto GetVectorPart(const UInt& elements) NOEXCEPT { return (elements / VectorSize) * VectorSize; }
 	constexpr auto DivUp(const UInt& c) NOEXCEPT { if (c == 0ull) return 0ull; else return (((c - 1) / VectorSize) + 1) * VectorSize; }

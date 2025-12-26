@@ -9,8 +9,6 @@
 #include <mm_malloc.h>
 #endif
 
-namespace dnn
-{
 #if defined(__VEC__)
 #define DNN_INLINE inline
 #elif defined __has_attribute
@@ -25,6 +23,8 @@ namespace dnn
 #define DNN_INLINE inline
 #endif
 
+namespace dnn
+{
 	template <typename T, std::size_t alignment>
 	class AlignedAllocator
 	{
