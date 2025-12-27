@@ -246,50 +246,39 @@ namespace dnn
 
 		ByteArray GetImage(const Byte fillColor) final override
 		{
-			if (BiasCount > 0)
+			const auto rangeWeights = GetColorRange<Float>(WeightsStats.Min, WeightsStats.Max);
+			const auto rangeBiases = GetColorRange<Float>(BiasesStats.Min, BiasesStats.Max);
+
+			auto weights = FloatVector();
+			if (*WeightsMemDesc != *PersistWeightsMemDesc)
 			{
-				const auto rangeWeights = GetColorRange<Float>(WeightsStats.Min, WeightsStats.Max);
-				const auto rangeBiases = GetColorRange<Float>(BiasesStats.Min, BiasesStats.Max);
+				weights = FloatVector(WeightsMemDesc->get_size() / sizeof(Float));
 
-				FloatVector weights;
-				if (*WeightsMemDesc != *PersistWeightsMemDesc)
-				{
-					weights = FloatVector(WeightsMemDesc->get_size() / sizeof(Float));
+				auto memWeights = dnnl::memory(*WeightsMemDesc, Device.engine, Weights.data());
+				auto weightsMem = dnnl::memory(*PersistWeightsMemDesc, Device.engine, weights.data());
 
-					auto memWeights = dnnl::memory(*WeightsMemDesc, Device.engine, Weights.data());
-					auto weightsMem = dnnl::memory(*PersistWeightsMemDesc, Device.engine, weights.data());
-
-					dnnl::reorder(memWeights, weightsMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memWeights}, { DNNL_ARG_TO, weightsMem } });
-					Device.stream.wait();
-				}
-				else
-					weights = Weights;
-
-				const auto width = BiasCount;
-				const auto height = WeightCount / BiasCount;
-				const auto totalSize = width * (height + 3);
-
-				auto image = ByteArray(totalSize, fillColor);
-
-				for (auto y = 0ull; y < height; y++)
-				{
-					const auto start = y * width;
-					const auto end = start + width;
-					for (auto x = start; x < end; x++)
-						image[x] = GetColorFromRange<Float>(rangeWeights, WeightsStats.Min, weights[x]);
-				}
-
-				if (HasBias)
-				{
-					const auto offset = (height + 1) * width;
-					for (auto x = 0ull; x < width; x++)
-						image[x + offset] = GetColorFromRange<Float>(rangeBiases, BiasesStats.Min, Biases[x]);
-				}
-
-				return image;
+				dnnl::reorder(memWeights, weightsMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memWeights}, { DNNL_ARG_TO, weightsMem } });
+				Device.stream.wait();
 			}
 			else
-				return ByteArray();
+				weights = Weights;
+			
+			const auto width = C;
+			const auto height = InputLayer->C;
+			const auto biasOffset = height * width;
+			auto image = ByteArray(biasOffset + width, fillColor);
+
+			for (auto c = 0ull; c < C; c++)
+			{
+				const auto left = c;
+				for (auto r = 0ull; r < InputLayer->C; r++)
+					image[(r * width) + c] = GetColorFromRange<Float>(rangeWeights, WeightsStats.Min, weights[c * InputLayer->C + r]);
+				
+				if (HasBias)
+					image[c + biasOffset] = GetColorFromRange<Float>(rangeBiases, BiasesStats.Min, Biases[c]);
+			}
+
+			return image;
 		}
 	};
 }

@@ -4120,11 +4120,46 @@ namespace Interop
                             }
                             break;
 
+                        case DNNLayerTypes.Dense:
+                            {
+                                var width = info.C;
+                                var height = info.InputC;
+                                var area = height * width;
+                                var nativeTotalSize = area + width;
+                                var totalSize = 4 * area;
+                                var format = Avalonia.Platform.PixelFormat.Rgba8888;
+                                var stride = (int)width * ((format.BitsPerPixel + 7) / 8);
+
+                                if (totalSize > 0 && totalSize <= int.MaxValue)
+                                {
+                                    var img = new Byte[nativeTotalSize];
+                                    DNNGetImage(layerIndex, BackgroundColor, img);
+                                    
+                                    var newImg = new Byte[totalSize];
+                                    for (var i = 0ul; i < area; i++)
+                                    {
+                                        newImg[(i * 4) + 0] = img[i];  // R
+                                        newImg[(i * 4) + 1] = img[i];  // G
+                                        newImg[(i * 4) + 2] = img[i];  // B
+                                        newImg[(i * 4) + 3] = 255;     // A
+                                    }
+                                                                       
+                                    int length = Marshal.SizeOf(newImg[0]) * newImg.Length;
+                                    IntPtr pnt = Marshal.AllocHGlobal(length);
+                                    Marshal.Copy(newImg, 0, pnt, newImg.Length);
+                                    var bitmap = new WriteableBitmap(format, AlphaFormat.Premul, pnt, new PixelSize((int)width, (int)height), new Vector(96, 96), stride);
+                                    Marshal.FreeHGlobal(pnt);
+                                    info.WeightsSnapshotX = (int)(width * BlockSize);
+                                    info.WeightsSnapshotY = (int)(height * BlockSize);
+                                    info.WeightsSnapshot = bitmap;
+                                }
+                            }
+                        break;
+
                         case DNNLayerTypes.BatchNorm:
                         case DNNLayerTypes.BatchNormActivation:
                         case DNNLayerTypes.BatchNormActivationDropout:
                         case DNNLayerTypes.BatchNormRelu:
-                        case DNNLayerTypes.Dense:
                         case DNNLayerTypes.GroupNorm:
                         case DNNLayerTypes.LayerNorm:
                             {
