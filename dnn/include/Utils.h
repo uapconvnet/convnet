@@ -190,7 +190,7 @@ namespace
 	constexpr auto VectorSize = 4ull;
 	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw4c;
 #endif
-	DNN_INLINE const auto VecZero = VecFloat(Float(0));
+	const auto VecZero = VecFloat(Float(0));
 
 	/*
 	static inline int div_up(int value, int divisor) {	return (value + divisor - 1) / divisor;	}
