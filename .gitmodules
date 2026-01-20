@@ -4,9 +4,6 @@
 [submodule "dnn/deps/version2"]
 	path = dnn/deps/version2
 	url = https://github.com/uapconvnet/version2
-[submodule "dnn/deps/zlib"]
-	path = dnn/deps/zlib
-	url = https://github.com/madler/zlib
 [submodule "dnn/deps/bitsery"]
 	path = dnn/deps/bitsery
 	url = https://github.com/fraillt/bitsery
