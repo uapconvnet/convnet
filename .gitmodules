@@ -7,15 +7,9 @@
 [submodule "dnn/deps/bitsery"]
 	path = dnn/deps/bitsery
 	url = https://github.com/fraillt/bitsery
-[submodule "dnn/deps/libjpeg-turbo"]
-	path = dnn/deps/libjpeg-turbo
-	url = https://github.com/libjpeg-turbo/libjpeg-turbo
 [submodule "dnn/deps/CImg"]
 	path = dnn/deps/CImg
 	url = https://github.com/GreycLab/CImg
-[submodule "dnn/deps/oneDNN"]
-	path = dnn/deps/oneDNN
-	url = https://github.com/oneapi-src/oneDNN
 [submodule "dnn/deps/libpng"]
 	path = dnn/deps/libpng
 	url = https://github.com/pnggroup/libpng
