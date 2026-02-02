@@ -1,6 +1,3 @@
-[submodule "dnn/deps/magic_enum"]
-	path = dnn/deps/magic_enum
-	url = https://github.com/Neargye/magic_enum
 [submodule "dnn/deps/version2"]
 	path = dnn/deps/version2
 	url = https://github.com/uapconvnet/version2
