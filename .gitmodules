@@ -19,3 +19,6 @@
 [submodule "dnn/deps/libjpeg-turbo"]
 	path = dnn/deps/libjpeg-turbo
 	url = https://github.com/libjpeg-turbo/libjpeg-turbo
+[submodule "dnn/deps/magic_enum"]
+	path = dnn/deps/magic_enum
+	url = https://github.com/Neargye/magic_enum
