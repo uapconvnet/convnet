@@ -20,7 +20,10 @@ namespace Convnet
                         .UsePlatformDetect()
                         .WithInterFont()
                         .LogToTrace()
-                        .UseReactiveUI()
+                        .UseReactiveUI(rxui =>
+                        {
+                            // Optional: add custom registration here via rxui.WithRegistration(...)
+                        })
                         .RegisterReactiveUIViewsFromEntryAssembly();
         }
     }
