@@ -621,20 +621,9 @@ namespace
 	}
 
 	template<typename T>
-	static void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const Float weight = Float(1), const int initValue = 0) NOEXCEPT
+	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const int initValue = 0) NOEXCEPT
 	{
-		const auto items = elements * batchSize;
-
-		if (items < 1048576ull)
-			::memset(destination, initValue, items * sizeof(T));
-		else
-		{
-			const auto threads = GetThreads(items, weight);
-			const auto part = items / threads;
-			for_i(threads, [=](const std::size_t thread) { ::memset(destination + part * thread, initValue, part * sizeof(T)); });
-			if (items % threads != 0)
-				::memset(destination + (part * threads), initValue, (items - (part * threads)) * sizeof(T));
-		}
+		::memset(destination, initValue, elements * batchSize * sizeof(T));
 	}
 
 	struct aligned_free
@@ -708,7 +697,7 @@ namespace
 				if constexpr (std::is_floating_point_v<T>)
 				{
 					if (value == T(0))
-						InitArray<T>(dataPtr, nelems, 1, Float(1), 0);
+						InitArray<T>(dataPtr, nelems, 1, 0);
 					else
 						PRAGMA_OMP_SIMD()
 						for (auto i = 0ull; i < nelems; i++)
@@ -739,7 +728,7 @@ namespace
 					if constexpr (std::is_floating_point_v<T>)
 					{
 						if (value == T(0))
-							InitArray<T>(dataPtr, nelems, 1, Float(1), 0);
+							InitArray<T>(dataPtr, nelems, 1, 0);
 						else
 							PRAGMA_OMP_SIMD()
 							for (auto i = 0ull; i < nelems; i++)
@@ -792,7 +781,7 @@ namespace
 					if constexpr (std::is_floating_point_v<T>)
 					{
 						if (value == T(0))
-							InitArray<T>(dataPtr, nelems, 1, Float(1), 0);
+							InitArray<T>(dataPtr, nelems, 1, 0);
 						else
 							PRAGMA_OMP_SIMD()
 							for (auto i = 0ull; i < nelems; i++)
@@ -830,7 +819,7 @@ namespace
 						if constexpr (std::is_floating_point_v<T>)
 						{
 							if (value == T(0))
-								InitArray<T>(dataPtr, nelems, 1, Float(1), 0);
+								InitArray<T>(dataPtr, nelems, 1, 0);
 							else
 								PRAGMA_OMP_SIMD()
 								for (auto i = 0ull; i < nelems; i++)

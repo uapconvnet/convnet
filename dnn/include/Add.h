@@ -101,7 +101,7 @@ namespace dnn
 			
 #ifndef DNN_LEAN
 			 if (training)
-				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
+				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize);
 #endif // DNN_LEAN		
 		}
 */
@@ -120,7 +120,7 @@ namespace dnn
 					Device.stream.wait();
 
 #ifndef DNN_LEAN
-					InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize, FwdZeroGradient);
+					InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize);
 #endif // DNN_LEAN
 				}
 				else
