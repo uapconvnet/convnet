@@ -43,8 +43,6 @@ namespace dnn
 		{
 			assert(Inputs.size() == 1);
 
-			FwdZeroGradient = Float(1);
-
 			WeightsMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(C) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::a));
 			PersistWeightsMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(C) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::a));
 			WeightsFormat = GetMemoryFormat(*WeightsMemDesc);

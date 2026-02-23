@@ -24,8 +24,6 @@ namespace dnn
 		{
 			assert(Inputs.size() == 1);
 			assert(Groups > 0 && Groups <= C);
-
-			FwdZeroGradient = Float(1);
 		}
 
 		void UpdateResolution() final override

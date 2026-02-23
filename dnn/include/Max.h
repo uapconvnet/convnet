@@ -29,7 +29,6 @@ namespace dnn
 
 			scales = std::vector<Float>(2, Float(1));
 
-			FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(2);
 			FwdTrainingWeight = Float(4);
 			BwdTrainingWeight = Float(4);
@@ -148,7 +147,7 @@ namespace dnn
 									PRAGMA_OMP_SIMD()
 									for (auto cdhw = start; cdhw < end; cdhw++)
 									{
-										Neurons[cdhw] = std::max(Inputs[0]->Neurons[cdhw] * scales0, Inputs[1]->Neurons[cdhw] * scales1);
+		     							Neurons[cdhw] = std::max(Inputs[0]->Neurons[cdhw] * scales0, Inputs[1]->Neurons[cdhw] * scales1);
 #ifndef DNN_LEAN
 										NeuronsD1[cdhw] = Float(0);
 #endif
@@ -172,7 +171,7 @@ namespace dnn
 											NeuronsD1[hw + outputOffset] = Float(0);
 #endif
 										}
-									}
+								}
 								});
 							else
 								for_i(batchSize, threads, [=](UInt n)
@@ -234,7 +233,7 @@ namespace dnn
 									}
 									for (auto cdhw = start + part; cdhw < start + size; cdhw++)
 									{
-										Neurons[cdhw] = std::max(Inputs[0]->Neurons[cdhw] * scales0, Inputs[1]->Neurons[cdhw] * scales1);
+		    							Neurons[cdhw] = std::max(Inputs[0]->Neurons[cdhw] * scales0, Inputs[1]->Neurons[cdhw] * scales1);
 #ifndef DNN_LEAN
 										NeuronsD1[cdhw] = Float(0);
 #endif

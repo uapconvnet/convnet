@@ -55,8 +55,6 @@ namespace dnn
 		{
 			assert(Inputs.size() == 1);
 
-			FwdZeroGradient = Float(1);
-			
 			InputLayer->LayerBeforeCost = true;
 
 			TrainErrors = 0;

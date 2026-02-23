@@ -13,7 +13,6 @@ namespace dnn
 			assert(InputLayer->C >= 1);
 			assert(InputLayer->C < C);
 
-			FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(10);
 			FwdTrainingWeight = Float(10);
 			BwdTrainingWeight = Float(10);

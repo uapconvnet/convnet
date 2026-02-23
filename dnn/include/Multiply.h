@@ -28,7 +28,6 @@ namespace dnn
 			assert(Inputs[0]->H >= Inputs[1]->H);
 			assert(Inputs[0]->W >= Inputs[1]->W);
 
-			FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(5);
 			FwdTrainingWeight = Float(10);
 			BwdTrainingWeight = Float(10);

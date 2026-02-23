@@ -21,7 +21,6 @@ namespace dnn
 			assert(Ratio > Float(0));
 			assert(Ratio < Float(1));
 
-			FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(10);
 			FwdTrainingWeight = Float(10);
 			BwdTrainingWeight = Float(10);

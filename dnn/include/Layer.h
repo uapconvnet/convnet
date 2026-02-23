@@ -517,7 +517,6 @@ namespace dnn
 		Float B1;
 		Float B2;
 		Float Gamma;
-		Float FwdZeroGradient;
 		Float FwdInferenceWeight;
 		Float FwdTrainingWeight;
 		Float BwdTrainingWeight;

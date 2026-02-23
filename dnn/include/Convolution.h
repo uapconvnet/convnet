@@ -66,8 +66,6 @@ namespace dnn
 
 			assert(Groups > 0 && Groups <= InputLayer->C && Groups <= C);
 
-			FwdZeroGradient = Float(1);
-
 			if (Groups > 1)
 			{
 				PersistWeightsMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(Groups), dnnl::memory::dim(C / Groups), dnnl::memory::dim(InputLayer->C / Groups), dnnl::memory::dim(KernelH), dnnl::memory::dim(KernelW) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::goihw));

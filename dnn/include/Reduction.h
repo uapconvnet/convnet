@@ -34,7 +34,6 @@ namespace dnn
 			scale0(FloatVector(1, Float(1))),
 			scale1(FloatVector(1, (Float(1) / Float(inputs[0]->C))))
 		{
-			FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(5);
 			FwdTrainingWeight = Float(10);
 			BwdTrainingWeight = Float(10);

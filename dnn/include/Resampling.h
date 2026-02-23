@@ -33,8 +33,6 @@ namespace dnn
 			FactorW(factorW)
 		{
 			assert(Inputs.size() == 1);
-
-			FwdZeroGradient = Float(1);
 		}
 
 		void UpdateResolution() final override

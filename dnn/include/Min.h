@@ -29,7 +29,6 @@ namespace dnn
 
 			scales = std::vector<Float>(2, Float(1));
 
-			FwdZeroGradient = Float(1);
 			FwdInferenceWeight = Float(2);
 			FwdTrainingWeight = Float(4);
 			BwdTrainingWeight = Float(4);
