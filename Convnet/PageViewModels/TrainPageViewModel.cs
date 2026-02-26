@@ -330,18 +330,21 @@ namespace Convnet.PageViewModels
             layersComboBox = new ComboBox
             {
                 Name = "ComboBoxLayers",
-                DataContext = Model
+                DataContext = Model,
+                ItemSource = Model?.Layers,
+                ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value) => value is not null, (value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }}),
+                SelectedIndex = Settings.Default.SelectedLayer,
+                SelectionChanged += LayersComboBox_SelectionChanged
             };
-            if (Model != null)
-                layersComboBox.ItemsSource = Model.Layers;
+            ToolTip.SetTip(layersComboBox, "Layer");
             //layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
-            layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value) => value is not null, (value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
+            //layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value) => value is not null, (value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
             //layersComboBox.ItemTemplate = GetLockTemplate();
             //layersComboBox.SourceUpdated += LayersComboBox_SourceUpdated;
             //layersComboBox.IsSynchronizedWithCurrentItem = true;
-            layersComboBox.SelectedIndex = Settings.Default.SelectedLayer;
-            layersComboBox.SelectionChanged += LayersComboBox_SelectionChanged;
-            ToolTip.SetTip(layersComboBox, "Layer");
+            //layersComboBox.SelectedIndex = Settings.Default.SelectedLayer;
+            //layersComboBox.SelectionChanged += LayersComboBox_SelectionChanged;
+            
             if (Model != null)
                 Model.SelectedIndex = Settings.Default.SelectedLayer;
 
