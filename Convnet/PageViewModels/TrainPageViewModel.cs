@@ -326,24 +326,30 @@ namespace Convnet.PageViewModels
             costLayersComboBox.SelectionChanged += CostLayersComboBox_SelectionChanged;
             if (Model != null)
                 costLayersComboBox.IsVisible = Model.CostLayerCount > 1;
-
+            
             layersComboBox = new ComboBox
             {
                 Name = "ComboBoxLayers",
+                Height=20,
                 DataContext = Model,
-                ItemSource = Model?.Layers,
-                ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value) => value is not null, (value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }}),
+                ItemsSource = Model?.Layers,
+                ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } }),
                 SelectedIndex = Settings.Default.SelectedLayer,
-                SelectionChanged += LayersComboBox_SelectionChanged
+                //SelectionChanged += LayersComboBox_SelectionChanged
             };
             ToolTip.SetTip(layersComboBox, "Layer");
+
+            if (Settings.Default.DisableLocking)
+                layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
+             else
+                 layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
             //layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
             //layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value) => value is not null, (value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
             //layersComboBox.ItemTemplate = GetLockTemplate();
             //layersComboBox.SourceUpdated += LayersComboBox_SourceUpdated;
             //layersComboBox.IsSynchronizedWithCurrentItem = true;
             //layersComboBox.SelectedIndex = Settings.Default.SelectedLayer;
-            //layersComboBox.SelectionChanged += LayersComboBox_SelectionChanged;
+            layersComboBox.SelectionChanged += LayersComboBox_SelectionChanged;
             
             if (Model != null)
                 Model.SelectedIndex = Settings.Default.SelectedLayer;
@@ -639,6 +645,7 @@ namespace Convnet.PageViewModels
             return number > 0 ? number.ToString() : "No";
         }
 
+
         private string BoolToString(bool value)
         {
             return value ? "Yes" : "No";
@@ -780,7 +787,11 @@ namespace Convnet.PageViewModels
                 if (lockAllButton != null)
                     lockAllButton.IsVisible = !Settings.Default.DisableLocking;
 
-                //layersComboBox.ItemTemplate = GetLockTemplate();
+                if (Settings.Default.DisableLocking)
+                    layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
+                else
+                    layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value) => value is not null, (value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
+        
 
                 //int index = layersComboBox.SelectedIndex;
                 //if (index > 0)
