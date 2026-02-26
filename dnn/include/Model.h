@@ -932,7 +932,13 @@ namespace dnn
 			for (auto &layer : Layers)
 				if (layer->Lockable() && !DisableLocking)
 					layer->LockUpdate.store(locked);
-			
+			for (int i = Layers.size() - 1; i >= 0; i--)
+				if (Layers[i]->Lockable() && !DisableLocking)
+				{
+					Layers[i]->LockUpdate.store(false);
+					break;
+				}
+				
 			if (!DisableLocking)
 			{
 				FirstUnlockedLayer.store(Layers.size() - 2);

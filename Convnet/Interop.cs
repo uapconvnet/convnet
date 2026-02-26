@@ -4399,6 +4399,13 @@ namespace Interop
                 for (var i = (UInt)0; i < LayerCount; i++)
                     if (Layers[(int)i].Lockable)
                         Layers[(int)i].LockUpdate = locked;
+                
+                for (var i = LayerCount - 1; i >= 0; i--)
+				    if (Layers[(int)i].Lockable)
+				    {
+					    Layers[(int)i].LockUpdate = false;
+					    break;
+				    }
             }
         }
 
