@@ -2,7 +2,10 @@
 // It pretty much entirely negates the need to write these by hand in asm.
 #include "avxmem.h"
 
-  
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // I renamed the function from memset to memsetZ to avoid naming conflicts in c++
 void * memsetZ (void *dest, const uint8_t val, size_t len)
 {
@@ -15,7 +18,6 @@ void * memsetZ (void *dest, const uint8_t val, size_t len)
 
   return dest;
 }
-
 
 ///=============================================================================
 /// LICENSING INFORMATION
@@ -3104,3 +3106,6 @@ void * AVX_memset_4B(void *dest, const uint32_t val, size_t numbytes_div_4)
 }
 
 // AVX-1024+ support pending existence of the standard.
+#ifdef __cplusplus
+}
+#endif
