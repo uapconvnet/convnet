@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #include "stdafx.h"
 #else
@@ -112,6 +113,7 @@
 #include "bitsery/traits/vector.h"
 // #include "bitsery/ext/std_atomic.h"
 // #include "bitsery/ext/growable.h"
+#include "avxmem.h"
 
 using namespace dnn;
 
@@ -623,7 +625,10 @@ namespace
 	template<typename T>
 	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const int initValue = 0) NOEXCEPT
 	{
-		::memset(destination, initValue, elements * batchSize * sizeof(T));
+		// const auto totalElements = elements * batchSize;
+
+		//::memset(destination, initValue, elements * batchSize * sizeof(T));		
+		AVX_memset(destination, uint8_t(initValue), elements * batchSize * sizeof(T));
 	}
 
 	struct aligned_free

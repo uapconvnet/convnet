@@ -48,7 +48,7 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "")
 endif()
 
 
-project(dnn VERSION ${DNN_VERSION} LANGUAGES C CXX)
+project(dnn VERSION ${DNN_VERSION} LANGUAGES C CXX ASM)
 enable_language(C CXX ASM)
 
 INCLUDE(GNUInstallDirs)
@@ -197,6 +197,7 @@ set(libdnn_headers
 
 set(libdnn_sources
   ${libdnn_headers}
+  src/memset.c
   src/dllmain.cpp
   src/stdafx.cpp
 )
@@ -257,7 +258,7 @@ IF(NOT DEFINED VECTORCLASS_SOURCE_DIR)
   SET(VECTORCLASS_SOURCE_DIR "${DNN_DEPENDENCIES_SOURCE_DIR}/version2" CACHE STRING "vectorclass source directory")
  ENDIF()
 
- IF(NOT DEFINED JPEG_SOURCE_DIR)
+IF(NOT DEFINED JPEG_SOURCE_DIR)
   MESSAGE(STATUS "Downloading jpeg to ${DNN_DEPENDENCIES_SOURCE_DIR}/libjpeg-turbo (define JPEG_SOURCE_DIR to avoid it)")
   CONFIGURE_FILE(cmake/DownloadJPEG.cmake "${DNN_DEPENDENCIES_BINARY_DIR}/libjpeg-turbo-download/CMakeLists.txt")
   EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
@@ -306,7 +307,8 @@ if(BUILD_SHARED_LIBS)
   target_compile_definitions(${PROJECT_NAME} PRIVATE DNN_DLL DNN_EXPORTS DNN_CACHE_PRIMITIVES DNN_AVX512 cimg_use_openmp cimg_use_cpp11 cimg_use_jpeg cimg_use_png cimg_use_zlib)
 else()
   target_compile_definitions(${PROJECT_NAME} PRIVATE DNN_EXPORTS DNN_CACHE_PRIMITIVES DNN_AVX512 cimg_use_openmp cimg_use_cpp11 cimg_use_jpeg cimg_use_png cimg_use_zlib)
-endif()
+endif() 
+
 target_include_directories(${PROJECT_NAME}
     PUBLIC
        $<INSTALL_INTERFACE:include>
