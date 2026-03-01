@@ -11,6 +11,7 @@
 
 #include "Model.h"
 #include "Scripts.h"
+#include "avxmem.h"
 
 #ifdef _WIN32
 static const auto path = std::string(getenv("USERPROFILE")) + std::string("\\Documents\\convnet\\");
