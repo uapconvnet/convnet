@@ -623,12 +623,10 @@ namespace
 	}
 
 	template<typename T>
-	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const int initValue = 0) NOEXCEPT
+	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const uint8_t initValue = 0) NOEXCEPT
 	{
-		// const auto totalElements = elements * batchSize;
-
 		//::memset(destination, initValue, elements * batchSize * sizeof(T));		
-		AVX_memset(destination, uint8_t(initValue), elements * batchSize * sizeof(T));
+		AVX_memset(destination, initValue, elements * batchSize * sizeof(T));
 	}
 
 	struct aligned_free

@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,8 +26,6 @@ extern "C" {
 // since it adds extra latency that really can be avoided by using AVX_memmove directly.
 //
 
-#ifndef _avxmem_H
-#define _avxmem_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -145,7 +145,6 @@ void * memset_512bit_4kB_as(void *dest, __m512i_u val, size_t len); // 4096 byte
 #endif
 // END MEMSET
 
-#endif /* _avxmem_H */
 #ifdef __cplusplus
 }
 #endif
