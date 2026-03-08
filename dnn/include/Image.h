@@ -1261,7 +1261,7 @@ namespace dnn
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(srcImage._width + deltaW, y, z, c), 0, -deltaW * sizeof(T));
 						else
-							fast_memset(srcImage.data(srcImage._width + deltaW, y, z, c), (int)mean[c], -deltaW * sizeof(T));
+							fast_memset(srcImage.data(srcImage._width + deltaW, y, z, c), (uint8_t)mean[c], -deltaW * sizeof(T));
 					}
 				else
 					cimg_forYZC(srcImage, y, z, c)
@@ -1270,7 +1270,7 @@ namespace dnn
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(0, y, z, c), 0, deltaW * sizeof(T));
 						else
-							fast_memset(srcImage.data(0, y, z, c), (int)mean[c], deltaW * sizeof(T));
+							fast_memset(srcImage.data(0, y, z, c), (uint8_t)mean[c], deltaW * sizeof(T));
 					}
 			}
 
@@ -1283,7 +1283,7 @@ namespace dnn
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(0, srcImage._height + deltaH, z, c), 0, -deltaH * UInt(srcImage._width) * sizeof(T));
 						else
-							fast_memset(srcImage.data(0, srcImage._height + deltaH, z, c), (int)mean[c], -deltaH * UInt(srcImage._width) * sizeof(T));
+							fast_memset(srcImage.data(0, srcImage._height + deltaH, z, c), (uint8_t)mean[c], -deltaH * UInt(srcImage._width) * sizeof(T));
 					}
 				else
 					cimg_forZC(srcImage, z, c)
@@ -1292,7 +1292,7 @@ namespace dnn
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(0, 0, z, c), 0, deltaH * UInt(srcImage._width) * sizeof(T));
 						else
-							fast_memset(srcImage.data(0, 0, z, c), (int)mean[c], deltaH * UInt(srcImage._width) * sizeof(T));
+							fast_memset(srcImage.data(0, 0, z, c), (uint8_t)mean[c], deltaH * UInt(srcImage._width) * sizeof(T));
 					}
 			}
 
