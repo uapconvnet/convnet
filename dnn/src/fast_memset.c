@@ -1,56 +1,22 @@
 // Compile with GCC -O3 for best performance
 // It pretty much entirely negates the need to write these by hand in asm.
-#include "avxmem.h"
+#include "fastmem.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// I renamed the function from memset to memsetZ to avoid naming conflicts in c++
-void * memsetZ (void *dest, const uint8_t val, size_t len)
-{
-  uint8_t *ptr = (uint8_t*)dest;
-
-  while (len--)
-  {
-    *ptr++ = val;
-  }
-
-  return dest;
-}
-
-///=============================================================================
-/// LICENSING INFORMATION
-///=============================================================================
-//
-// The code above this comment is in the public domain.
-// The code below this comment is subject to the custom attribution license found
-// here: https://github.com/KNNSpeed/AVX-Memmove/blob/master/LICENSE
-//
-//==============================================================================
-//  AVX Memory Functions: AVX Memset
-//==============================================================================
-//
-// Version 1.4
-//
-// Author:
-//  KNNSpeed
-//
-// Source Code:
-//  https://github.com/KNNSpeed/AVX-Memmove
-//
 // Minimum requirement:
 //  x86_64 CPU with SSE2, but AVX2 or later is recommended
 //
 // This file provides a highly optimized version of memset.
 //
-// There is also an AVX_memset_4B for mass-setting of 4-byte data types, for example
+// There is also an fast_memset_4B for mass-setting of 4-byte data types, for example
 // framebuffers with 32 bits per pixel could use this to set a contiguous portion
 // of the buffer as one color.
 //
-// If you just want to zero a big array, use plain AVX_memset since it
-// implments a dedicated zeroing function (AVX_memset_4B does not).
-//
+// If you just want to zero a big array, use plain fast_memset since it
+// implments a dedicated zeroing function (fast_memset_4B does not).
 
 #ifdef __clang__
 #define __m128i_u __m128i
@@ -66,9 +32,19 @@ void * memsetZ (void *dest, const uint8_t val, size_t len)
 #define BYTE_ALIGNMENT 0x0F // For 16-byte alignment
 #endif
 
-//-----------------------------------------------------------------------------
-// Individual Functions:
-//-----------------------------------------------------------------------------
+// 8-bit (1 byte at a time)
+// Len is (# of total bytes)
+void * memset_8bit (void *dest, const uint8_t val, size_t len)
+{
+  uint8_t *ptr = (uint8_t*)dest;
+
+  while (len--)
+  {
+    *ptr++ = val;
+  }
+
+  return dest;
+}
 
 // 16-bit (2 bytes at a time)
 // Len is (# of total bytes/2), so it's "# of 16-bits"
@@ -1405,7 +1381,7 @@ void * memset_large(void *dest, const uint8_t val, size_t numbytes)
   {
     if(numbytes < 16) // 1-15 bytes (the other scalars would need to be memset anyways)
     {
-      memsetZ(dest, val, numbytes);
+      memset_8bit(dest, val, numbytes);
       offset = numbytes;
       dest = (char *)dest + offset;
       numbytes = 0;
@@ -1577,7 +1553,7 @@ void * memset_large_a(void *dest, const uint8_t val, size_t numbytes)
   {
     if(numbytes < 16) // 1-15 bytes (the other scalars would need to be memset anyways)
     {
-      memsetZ(dest, val, numbytes);
+      memset_8bit(dest, val, numbytes);
       offset = numbytes;
       dest = (char *)dest + offset;
       numbytes = 0;
@@ -1749,7 +1725,7 @@ void * memset_large_as(void *dest, const uint8_t val, size_t numbytes)
   {
     if(numbytes < 16) // 1-15 bytes (the other scalars would need to be memset anyways)
     {
-      memsetZ(dest, val, numbytes);
+      memset_8bit(dest, val, numbytes);
       offset = numbytes;
       dest = (char *)dest + offset;
       numbytes = 0;
@@ -1913,7 +1889,7 @@ void * memset_zeroes(void *dest, size_t numbytes) // Worst-case scenario: 127 by
   {
     if(numbytes < 2) // 1 byte
     {
-      memsetZ(dest, 0, numbytes);
+      memset_8bit(dest, 0, numbytes);
       offset = numbytes & -1;
       dest = (char *)dest + offset;
       numbytes = 0;
@@ -2099,7 +2075,7 @@ void * memset_zeroes_a(void *dest, size_t numbytes) // Worst-case scenario: 127 
   {
     if(numbytes < 2) // 1 byte
     {
-      memsetZ(dest, 0, numbytes);
+      memset_8bit(dest, 0, numbytes);
       offset = numbytes & -1;
       dest = (char *)dest + offset;
       numbytes = 0;
@@ -2285,7 +2261,7 @@ void * memset_zeroes_as(void *dest, size_t numbytes) // Worst-case scenario: 127
   {
     if(numbytes < 2) // 1 byte
     {
-      memsetZ(dest, 0, numbytes);
+      memset_8bit(dest, 0, numbytes);
       offset = numbytes & -1;
       dest = (char *)dest + offset;
       numbytes = 0;
@@ -2962,7 +2938,7 @@ void * memset_large_4B_as(void *dest, const uint32_t val, size_t numbytes_div_4)
 
 // To set values of sizes > 1 byte, call the desired memset functions directly
 // instead. A 4-byte version exists below, however.
-void * AVX_memset(void *dest, const uint8_t val, size_t numbytes)
+void * fast_memset(void *dest, const uint8_t val, size_t numbytes)
 {
   void * returnval = dest;
 
@@ -3056,7 +3032,7 @@ void * AVX_memset(void *dest, const uint8_t val, size_t numbytes)
 // Numbytes_div_4 is total number of bytes / 4.
 // Also, the destination address can, at worst, only be misaligned from the
 // cacheline by a value that is a multiple of 4 bytes.
-void * AVX_memset_4B(void *dest, const uint32_t val, size_t numbytes_div_4)
+void * fast_memset_4B(void *dest, const uint32_t val, size_t numbytes_div_4)
 {
   void * returnval = dest;
 

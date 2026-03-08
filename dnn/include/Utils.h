@@ -113,7 +113,8 @@
 #include "bitsery/traits/vector.h"
 // #include "bitsery/ext/std_atomic.h"
 // #include "bitsery/ext/growable.h"
-#include "avxmem.h"
+
+#include "fastmem.h"
 
 using namespace dnn;
 
@@ -626,7 +627,7 @@ namespace
 	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const uint8_t initValue = 0) NOEXCEPT
 	{
 		//::memset(destination, initValue, elements * batchSize * sizeof(T));		
-		AVX_memset(destination, initValue, elements * batchSize * sizeof(T));
+		fast_memset(destination, initValue, elements * batchSize * sizeof(T));
 	}
 
 	struct aligned_free

@@ -168,6 +168,7 @@ set(libdnn_headers
   include/Divide.h
   include/DropPathAdd.h
   include/Dropout.h
+  include/fastmem.h
   include/GlobalAvgPooling.h
   include/GlobalMaxPooling.h
   include/GroupNorm.h
@@ -197,7 +198,10 @@ set(libdnn_headers
 
 set(libdnn_sources
   ${libdnn_headers}
-  src/memset.c
+  src/fast_memcmp.c
+  src/fast_memcpy.c
+  src/fast_memmove.c
+  src/fast_memset.c
   src/dllmain.cpp
   src/stdafx.cpp
 )

@@ -242,7 +242,7 @@ extern "C" DNN_API void DNNGetLayerInputs(const UInt layerIndex, UInt* inputs)
 	{
 		for (auto i = 0ull; i < model->Layers[layerIndex]->Inputs.size(); i++)
 		{
-			auto inputLayerName = model->Layers[layerIndex]->Inputs[i]->Name;
+			const auto inputLayerName = model->Layers[layerIndex]->Inputs[i]->Name;
 			for (auto index = 0ull; index < model->Layers.size(); index++)
 				if (model->Layers[index]->Name == inputLayerName)
 					inputs[i] = index;
@@ -357,7 +357,8 @@ extern "C" DNN_API void DNNGetImage(const UInt layerIndex, const Byte fillColor,
 			case LayerTypes::PRelu:
 			{
 				auto img = model->Layers[layerIndex]->GetImage(fillColor);
-				std::memcpy(image, img.data(), img.size());
+				//std::memcpy(image, img.data(), img.size());
+				fast_memcpy(image, img.data(), img.size());
 				img.release();
 			}
 			break;
