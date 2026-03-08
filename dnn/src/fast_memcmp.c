@@ -2,6 +2,10 @@
 // It pretty much entirely negates the need to write these by hand in asm.
 #include "fastmem.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 ///=============================================================================
 /// LICENSING INFORMATION
@@ -1318,3 +1322,6 @@ int fast_memcmp(const void *str1, const void *str2, size_t numbytes, int equalit
 }
 
 // AVX-1024+ support pending existence of the standard.
+#ifdef __cplusplus
+}
+#endif
