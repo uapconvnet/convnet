@@ -78,8 +78,7 @@ namespace dnn
 			Width(w),
 			Data(VectorT(c * d * h * w))
 		{
-			//std::memcpy(Data.data(), image, c * d * h * w * sizeof(T));
-			fast_memcpy(Data.data(), image, c * d * h * w * sizeof(T));
+			std::memcpy(Data.data(), image, c * d * h * w * sizeof(T));
 		}
 
 		Image(const UInt c, const UInt d, const UInt h, const UInt w) :
