@@ -678,6 +678,7 @@ namespace
 		size_type nelems = 0;
 
 	public:
+	    static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value || std::is_same<T, unsigned int>::value || std::is_same<T, int>::value || std::is_same<T, UInt>::value,, "T has unsupported type");
 		void release() NOEXCEPT
 		{
 			if (arrPtr)
@@ -701,9 +702,14 @@ namespace
 				if (value == T(0))
 					InitArray<T>(dataPtr, nelems, 1, 0);
 				else
-					PRAGMA_OMP_SIMD()
-					for (auto i = 0ull; i < nelems; i++)
-						dataPtr[i] = value;
+				{
+					if constexpr (std::is_same<T, Byte>::value)
+						InitArray<T>(dataPtr, nelems, 1, value);
+					else
+						PRAGMA_OMP_SIMD()
+						for (auto i = 0ull; i < nelems; i++)
+							dataPtr[i] = value;
+				}
 			}
 		}
 		inline auto data() noexcept { return dataPtr; }
@@ -727,9 +733,14 @@ namespace
 					if (value == T(0))
 						InitArray<T>(dataPtr, nelems, 1, 0);
 					else
-						PRAGMA_OMP_SIMD()
-						for (auto i = 0ull; i < nelems; i++)
-							dataPtr[i] = value;
+					{
+						if constexpr (std::is_same<T, Byte>::value)
+							InitArray<T>(dataPtr, nelems, 1, value);
+						else
+							PRAGMA_OMP_SIMD()
+							for (auto i = 0ull; i < nelems; i++)
+								dataPtr[i] = value;
+					}
 				}
 			}		
 		}
@@ -749,6 +760,7 @@ namespace
 		dnnl::memory::desc description;
 
 	public:
+		static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value || std::is_same<T, unsigned int>::value || std::is_same<T, int>::value || std::is_same<T, UInt>::value,, "T has unsupported type");
 		void release() NOEXCEPT
 		{
 			if (arrPtr)
@@ -774,11 +786,14 @@ namespace
 					if (value == T(0))
 						InitArray<T>(dataPtr, nelems, 1, 0);
 					else
-						PRAGMA_OMP_SIMD()
-						for (auto i = 0ull; i < nelems; i++)
-							dataPtr[i] = value;
-					
-							description = md;
+					{
+						if constexpr (std::is_same<T, Byte>::value)
+							InitArray<T>(dataPtr, nelems, 1, value);
+						else
+							PRAGMA_OMP_SIMD()
+							for (auto i = 0ull; i < nelems; i++)
+								dataPtr[i] = value;
+					}
 				}
 			}
 		}
@@ -807,10 +822,15 @@ namespace
 						if (value == T(0))
 							InitArray<T>(dataPtr, nelems, 1, 0);
 						else
-							PRAGMA_OMP_SIMD()
-							for (auto i = 0ull; i < nelems; i++)
-								dataPtr[i] = value;
-
+						{
+							if constexpr (std::is_same<T, Byte>::value)
+								InitArray<T>(dataPtr, nelems, 1, value);
+							else
+								PRAGMA_OMP_SIMD()
+								for (auto i = 0ull; i < nelems; i++)
+									dataPtr[i] = value;
+						}
+						
 						description = md;
 					}
 				}
