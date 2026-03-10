@@ -28,7 +28,12 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdint.h>
+
+#ifdef _WIN32
+#include <intrin.h>
+#elif defined(__GNUC__)
 #include <x86intrin.h>
+#endif
 
 // Size limit (in bytes) before switching to non-temporal/streaming loads & stores
 // Applies to: fast_memmove, fast_memset, and fast_memcpy
