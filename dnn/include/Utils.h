@@ -698,16 +698,10 @@ namespace
 				dataPtr = arrPtr.get();
 				nelems = elements;
 
-				if constexpr (std::is_floating_point_v<T>)
-				{
-					if (value == T(0))
-						InitArray<T>(dataPtr, nelems, 1, 0);
-					else
-						PRAGMA_OMP_SIMD()
-						for (auto i = 0ull; i < nelems; i++)
-							dataPtr[i] = value;
-				}
+				if (value == T(0))
+					InitArray<T>(dataPtr, nelems, 1, 0);
 				else
+					PRAGMA_OMP_SIMD()
 					for (auto i = 0ull; i < nelems; i++)
 						dataPtr[i] = value;
 			}
@@ -729,16 +723,11 @@ namespace
 				{
 					dataPtr = arrPtr.get();
 					nelems = elements;
-					if constexpr (std::is_floating_point_v<T>)
-					{
-						if (value == T(0))
-							InitArray<T>(dataPtr, nelems, 1, 0);
-						else
-							PRAGMA_OMP_SIMD()
-							for (auto i = 0ull; i < nelems; i++)
-								dataPtr[i] = value;
-					}
+					
+					if (value == T(0))
+						InitArray<T>(dataPtr, nelems, 1, 0);
 					else
+						PRAGMA_OMP_SIMD()
 						for (auto i = 0ull; i < nelems; i++)
 							dataPtr[i] = value;
 				}
@@ -782,20 +771,14 @@ namespace
 					dataPtr = static_cast<T*>(arrPtr->get_data_handle());
 					nelems = md.get_size() / sizeof(T);
 
-					if constexpr (std::is_floating_point_v<T>)
-					{
-						if (value == T(0))
-							InitArray<T>(dataPtr, nelems, 1, 0);
-						else
-							PRAGMA_OMP_SIMD()
-							for (auto i = 0ull; i < nelems; i++)
-								dataPtr[i] = value;
-					}
+					if (value == T(0))
+						InitArray<T>(dataPtr, nelems, 1, 0);
 					else
+						PRAGMA_OMP_SIMD()
 						for (auto i = 0ull; i < nelems; i++)
 							dataPtr[i] = value;
-
-					description = md;
+					
+							description = md;
 				}
 			}
 		}
@@ -820,16 +803,11 @@ namespace
 					{
 						dataPtr = static_cast<T*>(arrPtr->get_data_handle());
 						nelems = md.get_size() / sizeof(T);
-						if constexpr (std::is_floating_point_v<T>)
-						{
-							if (value == T(0))
-								InitArray<T>(dataPtr, nelems, 1, 0);
-							else
-								PRAGMA_OMP_SIMD()
-								for (auto i = 0ull; i < nelems; i++)
-									dataPtr[i] = value;
-						}
+						
+						if (value == T(0))
+							InitArray<T>(dataPtr, nelems, 1, 0);
 						else
+							PRAGMA_OMP_SIMD()
 							for (auto i = 0ull; i < nelems; i++)
 								dataPtr[i] = value;
 
