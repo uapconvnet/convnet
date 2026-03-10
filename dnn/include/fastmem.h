@@ -29,9 +29,12 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include <intrin.h>
-#elif defined(__GNUC__)
+typedef __m128i __m128i_u;
+typedef __m256i __m256i_u;
+typedef __m512i __m512i_u;
+#else
 #include <x86intrin.h>
 #endif
 
@@ -42,7 +45,7 @@ extern "C" {
 void * fast_memmove(void *dest, void *src, size_t numbytes);
 void * fast_memcpy(void *dest, void *src, size_t numbytes);
 void * fast_memset(void *dest, const uint8_t val, size_t numbytes);
-int fast_memcmp(const void *str1, const void *str2, size_t numbytes, int equality);
+//int fast_memcmp(const void *str1, const void *str2, size_t numbytes, int equality);
 
 // Numbytes_div_4 is total number of bytes / 4 (since they only do 4 at a time).
 void * fast_memset_4B(void *dest, const uint32_t val, size_t numbytes_div_4);
@@ -349,7 +352,7 @@ void * memcpy_512bit_4kB_as(void *dest, const void *src, size_t len); // 4096 by
 //-----------------------------------------------------------------------------
 // MEMCMP:
 //-----------------------------------------------------------------------------
-
+/*
 int memcmp_large(const void *str1, const void *str2, size_t numbytes);
 int memcmp_large_eq(const void *str1, const void *str2, size_t numbytes);
 
@@ -395,6 +398,7 @@ int memcmp_512bit_eq_u(const void *str1, const void *str2, size_t count);
 int memcmp_512bit_a(const void *str1, const void *str2, size_t count);
 int memcmp_512bit_eq_a(const void *str1, const void *str2, size_t count);
 #endif
+*/
 // END MEMCMP
 
 #ifdef __cplusplus
