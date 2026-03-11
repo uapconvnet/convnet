@@ -623,12 +623,12 @@ namespace
 		return x + m;
 	}
 
-	template<typename T>
+	/* template<typename T>
 	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const uint8_t initValue = 0) NOEXCEPT
 	{
 		//::memset(destination, initValue, elements * batchSize * sizeof(T));		
 		fast_memset(destination, initValue, elements * batchSize * sizeof(T));
-	}
+	} */
 
 	struct aligned_free
 	{

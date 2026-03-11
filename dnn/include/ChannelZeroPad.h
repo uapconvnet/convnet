@@ -159,8 +159,9 @@ namespace dnn
 									Neurons[OffsetPaddedMem(0, c, h, w)] = InputLayer->Neurons[InputLayer->OffsetPaddedMem(0, c, h, w)];
 #ifndef DNN_LEAN
 									NeuronsD1[OffsetPaddedMem(0, c, h, w)] = Float(0);
-								}
 #endif // DNN_LEAN
+								}
+
 
 						for (auto c = InputLayer->PaddedC; c < PaddedC; c++)
 							for (auto h = 0ull; h < H; h++)
@@ -213,8 +214,9 @@ namespace dnn
 										Neurons[OffsetPaddedMem(n, c, h, w)] = InputLayer->Neurons[InputLayer->OffsetPaddedMem(n, c, h, w)];
 #ifndef DNN_LEAN
 										NeuronsD1[OffsetPaddedMem(n, c, h, w)] = Float(0);
-									}
 #endif // DNN_LEAN
+									}
+
 							for (auto c = InputLayer->PaddedC; c < PaddedC; c++)
 								for (auto h = 0ull; h < H; h++)
 									for (auto w = 0ull; w < W; w++)
