@@ -214,7 +214,7 @@ namespace dnn
 
 #ifndef DNN_LEAN
 			if (training)
-				InitArray<Float>(NeuronsD1.data(), PaddedCDHW(), batchSize);
+				fast_memzero(NeuronsD1.data(), PaddedCDHW()*batchSize*sizeof(Float));
 #else
 			DNN_UNREF_PAR(batchSize);
 #endif // DNN_LEAN			
