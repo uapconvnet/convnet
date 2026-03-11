@@ -34,7 +34,7 @@ extern "C" {
 
 // 8-bit (1 byte at a time)
 // Len is (# of total bytes)
-void * memset_8bit (void *dest, const uint8_t val, size_t len)
+void * memset_8bit(void *dest, const uint8_t val, size_t len)
 {
   uint8_t *ptr = (uint8_t*)dest;
 
@@ -2935,6 +2935,48 @@ void * memset_large_4B_as(void *dest, const uint32_t val, size_t numbytes_div_4)
 //-----------------------------------------------------------------------------
 // Main Functions:
 //-----------------------------------------------------------------------------
+void fast_memzero(void *dest, size_t numbytes)
+{
+  if( ((uintptr_t)dest & BYTE_ALIGNMENT) == 0 ) // Check alignment
+  {
+    if(numbytes > CACHESIZELIMIT)
+    {
+      memset_zeroes_as(dest, numbytes);
+    }
+    else
+    {
+      memset_zeroes_a(dest, numbytes);
+    }
+  }
+  else
+  {
+    size_t numbytes_to_align = (BYTE_ALIGNMENT + 1) - ((uintptr_t)dest & BYTE_ALIGNMENT);
+
+    void * destoffset = (char*)dest + numbytes_to_align;
+
+    if(numbytes > numbytes_to_align)
+    {
+      // Get to an aligned position.
+      // This may be a little slower, but since it'll be mostly scalar operations
+      // alignment doesn't matter. Worst case it uses two vector functions, and
+      // this process only needs to be done once per call if dest is unaligned.
+      memset_zeroes(dest, numbytes_to_align);
+      // Now this should be near the fastest possible since stores are aligned.
+      if((numbytes - numbytes_to_align) > CACHESIZELIMIT)
+      {
+        memset_zeroes_as(destoffset, numbytes - numbytes_to_align);
+      }
+      else
+      {
+        memset_zeroes_a(destoffset, numbytes - numbytes_to_align);
+      }
+    }
+    else // Small size
+    {
+      memset_zeroes(dest, numbytes);
+    }     
+  }
+}
 
 // To set values of sizes > 1 byte, call the desired memset functions directly
 // instead. A 4-byte version exists below, however.

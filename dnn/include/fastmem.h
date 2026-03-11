@@ -45,6 +45,7 @@ typedef __m512i __m512i_u;
 void * fast_memmove(void *dest, void *src, size_t numbytes);
 void * fast_memcpy(void *dest, void *src, size_t numbytes);
 void * fast_memset(void *dest, const uint8_t val, size_t numbytes);
+void fast_memzero(void *dest, size_t numbytes);
 //int fast_memcmp(const void *str1, const void *str2, size_t numbytes, int equality);
 
 // Numbytes_div_4 is total number of bytes / 4 (since they only do 4 at a time).

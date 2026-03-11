@@ -678,7 +678,7 @@ namespace
 		size_type nelems = 0;
 
 	public:
-	    static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value || std::is_same<T, unsigned int>::value || std::is_same<T, int>::value || std::is_same<T, UInt>::value,, "T has unsupported type");
+	    static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value || std::is_same<T, unsigned int>::value || std::is_same<T, int>::value || std::is_same<T, unsigned long>::value || std::is_same<T, long>::value, "T has unsupported type");
 		void release() NOEXCEPT
 		{
 			if (arrPtr)
@@ -700,11 +700,17 @@ namespace
 				nelems = elements;
 
 				if (value == T(0))
-					InitArray<T>(dataPtr, nelems, 1, 0);
+					fast_memzero(dataPtr, nelems * sizeof(T));
 				else
 				{
-					if constexpr (std::is_same<T, Byte>::value)
-						InitArray<T>(dataPtr, nelems, 1, value);
+					if constexpr (std::is_same<T, unsigned char>::value)
+						fast_memset(dataPtr, value, nelems * sizeof(T));
+					else if constexpr (std::is_same<T, char>::value)
+						fast_memset(dataPtr, static_cast<unsigned char>(value), nelems * sizeof(T));
+					else if constexpr (std::is_same<T, unsigned int>::value)
+						fast_memset_4B(dataPtr, value, nelems);
+					else if constexpr (std::is_same<T, int>::value)
+						fast_memset_4B(dataPtr, static_cast<unsigned int>(value), nelems);
 					else
 						PRAGMA_OMP_SIMD()
 						for (auto i = 0ull; i < nelems; i++)
@@ -731,11 +737,17 @@ namespace
 					nelems = elements;
 					
 					if (value == T(0))
-						InitArray<T>(dataPtr, nelems, 1, 0);
+						fast_memzero(dataPtr, nelems * sizeof(T));
 					else
 					{
-						if constexpr (std::is_same<T, Byte>::value)
-							InitArray<T>(dataPtr, nelems, 1, value);
+						if constexpr (std::is_same<T, unsigned char>::value)
+							fast_memset(dataPtr, value, nelems * sizeof(T));
+						else if constexpr (std::is_same<T, char>::value)
+							fast_memset(dataPtr, static_cast<unsigned char>(value), nelems * sizeof(T));
+						else if constexpr (std::is_same<T, unsigned int>::value)
+							fast_memset_4B(dataPtr, value, nelems);
+						else if constexpr (std::is_same<T, int>::value)
+							fast_memset_4B(dataPtr, static_cast<unsigned int>(value), nelems);
 						else
 							PRAGMA_OMP_SIMD()
 							for (auto i = 0ull; i < nelems; i++)
@@ -760,7 +772,7 @@ namespace
 		dnnl::memory::desc description;
 
 	public:
-		static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value || std::is_same<T, unsigned int>::value || std::is_same<T, int>::value || std::is_same<T, UInt>::value,, "T has unsupported type");
+		static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value || std::is_same<T, unsigned int>::value || std::is_same<T, int>::value || std::is_same<T, unsigned long>::value || std::is_same<T, long>::value, "T has unsupported type");
 		void release() NOEXCEPT
 		{
 			if (arrPtr)
@@ -784,11 +796,17 @@ namespace
 					nelems = md.get_size() / sizeof(T);
 
 					if (value == T(0))
-						InitArray<T>(dataPtr, nelems, 1, 0);
+						fast_memzero(dataPtr, nelems * sizeof(T));
 					else
 					{
-						if constexpr (std::is_same<T, Byte>::value)
-							InitArray<T>(dataPtr, nelems, 1, value);
+						if constexpr (std::is_same<T, unsigned char>::value)
+							fast_memset(dataPtr, value, nelems * sizeof(T));
+						else if constexpr (std::is_same<T, char>::value)
+							fast_memset(dataPtr, static_cast<unsigned char>(value), nelems * sizeof(T));
+						else if constexpr (std::is_same<T, unsigned int>::value)
+							fast_memset_4B(dataPtr, value, nelems);
+						else if constexpr (std::is_same<T, int>::value)
+							fast_memset_4B(dataPtr, static_cast<unsigned int>(value), nelems);
 						else
 							PRAGMA_OMP_SIMD()
 							for (auto i = 0ull; i < nelems; i++)
@@ -820,11 +838,17 @@ namespace
 						nelems = md.get_size() / sizeof(T);
 						
 						if (value == T(0))
-							InitArray<T>(dataPtr, nelems, 1, 0);
+						    fast_memzero(dataPtr, nelems * sizeof(T));
 						else
 						{
-							if constexpr (std::is_same<T, Byte>::value)
-								InitArray<T>(dataPtr, nelems, 1, value);
+							if constexpr (std::is_same<T, unsigned char>::value)
+								fast_memset(dataPtr, value, nelems * sizeof(T));
+							else if constexpr (std::is_same<T, char>::value)
+								fast_memset(dataPtr, static_cast<unsigned char>(value), nelems * sizeof(T));
+							else if constexpr (std::is_same<T, unsigned int>::value)
+								fast_memset_4B(dataPtr, value, nelems);
+							else if constexpr (std::is_same<T, int>::value)
+								fast_memset_4B(dataPtr, static_cast<unsigned int>(value), nelems);
 							else
 								PRAGMA_OMP_SIMD()
 								for (auto i = 0ull; i < nelems; i++)
