@@ -624,6 +624,7 @@ namespace dnn
 		inline auto PaddedCDHW() const noexcept { return LayerType == LayerTypes::Input ? (C * D * H * W) : (PaddedC * D * H * W); }
 		inline auto OffsetPaddedMem(const UInt n, const UInt c, const UInt h, const UInt w) const noexcept { return (n * PaddedC * D * H * W) + ((c / VectorSize) * H * W * VectorSize) + (h * W * VectorSize) + (w * VectorSize) + (c % VectorSize); }
 		inline auto OffsetPlainMem(const UInt n, const UInt c, const UInt h, const UInt w) const noexcept { return (n * C * D * H * W) + (c * D * H * W) + (h * W) + w; }
+		
 		virtual void UpdateResolution()	{ }
 
 		void SetParameters(const bool useDefaults, const Fillers weightsFiller, const FillerModes weightsFillerMode, const Float weightsGain, const Float weightsScale, const Float weightsLRM, const Float weightsWDM, const Fillers biasesFiller, const FillerModes biasesFillerMode, const Float biasesGain, const Float biasesScale, const Float biasesLRM, const Float biasesWDM)
