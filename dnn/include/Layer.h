@@ -1217,8 +1217,10 @@ namespace dnn
 				case 2ull:
 					WeightsPar1.resize(weightsSize);
 					WeightsPar2.resize(weightsSize);
+					WeightsPar3.resize(0);
 					BiasesPar1.resize(biasesSize);
 					BiasesPar2.resize(biasesSize);
+					BiasesPar3.resize(0);
 					std::fill(WeightsPar1.begin(), WeightsPar1.end(), Float(0));
 					std::fill(WeightsPar2.begin(), WeightsPar2.end(), Float(0));
 					std::fill(BiasesPar1.begin(), BiasesPar1.end(), Float(0));
@@ -1228,8 +1230,10 @@ namespace dnn
 				case 1ull:
 					WeightsPar1.resize(weightsSize);
 					WeightsPar2.resize(0);
+					WeightsPar3.resize(0);
 					BiasesPar1.resize(biasesSize);
 					BiasesPar2.resize(0);
+					BiasesPar3.resize(0);
 					std::fill(WeightsPar1.begin(), WeightsPar1.end(), Float(0));
 					std::fill(BiasesPar1.begin(), BiasesPar1.end(), Float(0));					
 					break;
@@ -1237,8 +1241,10 @@ namespace dnn
 				case 0ull:
 					WeightsPar1.resize(0);
 					WeightsPar2.resize(0);
+					WeightsPar3.resize(0);
 					BiasesPar1.resize(0);
 					BiasesPar2.resize(0);
+					BiasesPar3.resize(0);
 					break;
 				}
 			}
@@ -1539,7 +1545,8 @@ namespace dnn
 
 		void ResetGradients()
 		{
-			std::fill(WeightsD1.begin(), WeightsD1.end(), Float(0));
+			fast_memzero(WeightsD1.data(), WeightsD1.size() * sizeof(Float));
+			//std::fill(WeightsD1.begin(), WeightsD1.end(), Float(0));
 			if (HasBias)
 				std::fill_n(BiasesD1.begin(), BiasCount, Float(0));
 		}
