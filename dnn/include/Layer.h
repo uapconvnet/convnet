@@ -1206,9 +1206,12 @@ namespace dnn
 					BiasesPar1.resize(biasesSize);
 					BiasesPar2.resize(biasesSize);
 					BiasesPar3.resize(biasesSize);
-					std::fill(WeightsPar1.begin(), WeightsPar1.end(), Float(0));
-					std::fill(WeightsPar2.begin(), WeightsPar2.end(), Float(0));
-					std::fill(WeightsPar3.begin(), WeightsPar3.end(), Float(0));
+					fast_memzero(WeightsPar1.data(), WeightsPar1.size() * sizeof(Float));
+					fast_memzero(WeightsPar2.data(), WeightsPar2.size() * sizeof(Float));
+					fast_memzero(WeightsPar3.data(), WeightsPar3.size() * sizeof(Float));
+					//std::fill(WeightsPar1.begin(), WeightsPar1.end(), Float(0));
+					//std::fill(WeightsPar2.begin(), WeightsPar2.end(), Float(0));
+					//std::fill(WeightsPar3.begin(), WeightsPar3.end(), Float(0));
 					std::fill(BiasesPar1.begin(), BiasesPar1.end(), Float(0));
 					std::fill(BiasesPar2.begin(), BiasesPar2.end(), Float(0));
 					std::fill(BiasesPar3.begin(), BiasesPar3.end(), Float(0));
@@ -1221,8 +1224,10 @@ namespace dnn
 					BiasesPar1.resize(biasesSize);
 					BiasesPar2.resize(biasesSize);
 					BiasesPar3.resize(0);
-					std::fill(WeightsPar1.begin(), WeightsPar1.end(), Float(0));
-					std::fill(WeightsPar2.begin(), WeightsPar2.end(), Float(0));
+					fast_memzero(WeightsPar1.data(), WeightsPar1.size() * sizeof(Float));
+					fast_memzero(WeightsPar2.data(), WeightsPar2.size() * sizeof(Float));
+					//std::fill(WeightsPar1.begin(), WeightsPar1.end(), Float(0));
+					//std::fill(WeightsPar2.begin(), WeightsPar2.end(), Float(0));
 					std::fill(BiasesPar1.begin(), BiasesPar1.end(), Float(0));
 					std::fill(BiasesPar2.begin(), BiasesPar2.end(), Float(0));
 					break;
@@ -1234,7 +1239,8 @@ namespace dnn
 					BiasesPar1.resize(biasesSize);
 					BiasesPar2.resize(0);
 					BiasesPar3.resize(0);
-					std::fill(WeightsPar1.begin(), WeightsPar1.end(), Float(0));
+					fast_memzero(WeightsPar1.data(), WeightsPar1.size() * sizeof(Float));
+					//std::fill(WeightsPar1.begin(), WeightsPar1.end(), Float(0));
 					std::fill(BiasesPar1.begin(), BiasesPar1.end(), Float(0));					
 					break;
 
@@ -1274,22 +1280,28 @@ namespace dnn
 				case 2ull:
 					WeightsPar1.resize(weightsSize, Float(0));
 					WeightsPar2.resize(weightsSize, Float(0));
+					WeightsPar3.resize(0);
 					BiasesPar1.resize(biasesSize, Float(0));
 					BiasesPar2.resize(biasesSize, Float(0));
+					BiasesPar3.resize(0);
 					break;
 
 				case 1ull:
 					WeightsPar1.resize(weightsSize, Float(0));
 					WeightsPar2.resize(0);
+					WeightsPar3.resize(0);
 					BiasesPar1.resize(biasesSize, Float(0));
 					BiasesPar2.resize(0);
+					BiasesPar3.resize(0);
 					break;
 
 				case 0ull:
 					WeightsPar1.resize(0);
 					WeightsPar2.resize(0);
+					WeightsPar3.resize(0);
 					BiasesPar1.resize(0);
 					BiasesPar2.resize(0);
+					BiasesPar3.resize(0);
 					break;
 				}
 			}
