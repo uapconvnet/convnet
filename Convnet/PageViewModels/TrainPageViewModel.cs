@@ -787,11 +787,13 @@ namespace Convnet.PageViewModels
                 if (lockAllButton != null)
                     lockAllButton.IsVisible = !Settings.Default.DisableLocking;
 
-                if (Settings.Default.DisableLocking)
-                    layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
-                else
-                    layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value) => value is not null, (value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
-        
+                if (layersComboBox != null)
+                {
+                    if (Settings.Default.DisableLocking)
+                        layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
+                    else
+                        layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value) => value is not null, (value, namescope) => new CheckBox { [!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay }, [!CheckBox.IsCheckedProperty] = new Binding { Path = "LockUpdate", Mode = BindingMode.TwoWay }, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
+                }
 
                 //int index = layersComboBox.SelectedIndex;
                 //if (index > 0)
