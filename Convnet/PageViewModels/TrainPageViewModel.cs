@@ -1851,6 +1851,7 @@ namespace Convnet.PageViewModels
             if (Model != null && Model.Layers != null && App.MainWindow != null && layersComboBox != null)
             {
                 var layerIndex = layersComboBox.SelectedIndex;
+
 #if Linux
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
                 var dialog = new SaveFileDialog
@@ -1875,6 +1876,7 @@ namespace Convnet.PageViewModels
                     }
                 }
 #else
+
                 var provider = App.MainWindow?.StorageProvider;
 
                 if (provider != null && provider.CanSave)

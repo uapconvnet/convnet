@@ -142,6 +142,7 @@ namespace Convnet.PageViewModels
                 if (files != null && files.Length > 0)
                     path = files[0];
 #else
+
                 var provider = App.MainWindow?.StorageProvider;
 
                 if (provider != null && provider.CanOpen)
