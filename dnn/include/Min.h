@@ -108,7 +108,7 @@ namespace dnn
 #endif
 					Device.stream.wait();
 #ifndef DNN_LEAN
-					fast_memzero(NeuronsD1.data(), PaddedCDHW()*batchSize*sizeof(Float));
+					fast_memzero(NeuronsD1.data(), PaddedCDHW() * batchSize * sizeof(Float));
 #endif // DNN_LEAN
 				}
 				else

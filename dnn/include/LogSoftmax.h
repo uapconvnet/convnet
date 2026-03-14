@@ -109,7 +109,7 @@ namespace dnn
 
 #ifndef DNN_LEAN
 			if (training)
-				fast_memzero(NeuronsD1.data(), PaddedCDHW()*batchSize*sizeof(Float));
+				fast_memzero(NeuronsD1.data(), PaddedCDHW() * batchSize * sizeof(Float));
 #endif
 		}
 

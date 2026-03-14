@@ -1,6 +1,11 @@
 #pragma once
 #include "Activation.h"
 
+#define DATA_OFF(f, n, c, d, h, w) \
+    (ndims == 2) ? (f).off(n, c) \
+                 : ((ndims == 3) ? (f).off(n, c, w) \
+                                 : ((ndims == 4) ? (f).off(n, c, h, w) \
+                                                 : (f).off(n, c, d, h, w)))
 namespace dnn
 {
 	class BatchNormActivation final : public Layer
@@ -187,6 +192,10 @@ namespace dnn
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{			
+			//const memory_desc_wrapper data_d(fwdDesc->src_md());
+			//const auto ndims = GetMemoryNDims(fwdDesc->src_desc());
+			//src[DATA_OFF(data_d, n, c, d, h, w)]);
+
 			if constexpr ((Reference || ReferenceBatchNormalization) && !TestBatchNormalization)
 				ForwardPropRef(batchSize, training);
 			else
