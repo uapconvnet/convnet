@@ -152,7 +152,7 @@ namespace dnn
 					const auto size = GetElementsCount();
 					const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * size, FwdTrainingWeight);
 					const auto strideHW = HW() * VectorSize;
-					const auto maxThreads = GetThreads(batchSize * GetElementsCount(), FwdTrainingWeight);
+					
 					
 					if (plain)
 					{
@@ -231,10 +231,11 @@ namespace dnn
 					}
 					else
 					{
+						const auto maxThreads = GetThreads(batchSize * GetElementsCount(), FwdTrainingWeight);
+						const auto threads = std::min<UInt>(maxThreads, PaddedC / VectorSize);
+
 						if (EqualDimensions(Inputs)) // same H and W
 						{
-							const auto threads = std::min<UInt>(maxThreads, PaddedC / VectorSize);
-							
 							if (fullDepth)
 								for_i(PaddedC / VectorSize, threads, [=](UInt c)
 								{
@@ -424,12 +425,14 @@ namespace dnn
 			const auto plain = IsPlainFormat();
 			const auto size = GetElementsCount();
 			const auto fullDepth = (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
-			const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * size, BwdTrainingWeight);
 			const auto strideHW = HW() * VectorSize;
 			const auto strideH = W * VectorSize;
 			scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
 			scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
 				
+			const auto maxThreads = GetThreads(batchSize * GetElementsCount(), FwdTrainingWeight);
+			const auto threads = std::min<UInt>(maxThreads, PaddedC / VectorSize);
+
 			if (EqualDimensions(Inputs))
 			{
 				if (plain)
