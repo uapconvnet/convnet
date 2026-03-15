@@ -630,6 +630,21 @@ namespace
 		fast_memset(destination, initValue, elements * batchSize * sizeof(T));
 	} */
 
+	template<typename T>
+	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const uint8_t initValue = 0) NOEXCEPT
+	{
+		const auto res = std::div(static_cast<int>(elements * batchSize * sizeof(T)), 4096);
+        if (!res.quot)
+			fast_memzero(destination, res.rem);
+        else
+            for_i(res.quot, [=](std::size_t i) 
+			{
+        	    const auto tail = (i + 1 == res.quot) ? res.rem : 0;
+                const auto ptr = reinterpret_cast<unsigned char *>(destination) + i * 4096;
+                fast_memzero(ptr, 4096 + tail);
+            });
+	}
+
 	struct aligned_free
 	{
 		aligned_free() = default;
@@ -689,7 +704,7 @@ namespace
 			dataPtr = nullptr;
 		}
 		AlignedArray() NOEXCEPT	{ }
-		AlignedArray(const size_type elements, const T value = T()) NOEXCEPT
+		AlignedArray(const size_type elements, const T value = T(0)) NOEXCEPT
 		{
 			AlignedArray::release();
 
@@ -721,7 +736,7 @@ namespace
 		inline auto data() noexcept { return dataPtr; }
 		inline auto data() const noexcept { return dataPtr; }
 		inline auto size() const noexcept { return nelems; }
-		void resize(size_type elements, const T value = T()) NOEXCEPT
+		void resize(size_type elements, const T value = T(0)) NOEXCEPT
 		{ 
 			if (elements == nelems)
 				return;
@@ -783,7 +798,7 @@ namespace
 			dataPtr = nullptr;			
 		}
 		AlignedMemory() NOEXCEPT { }
-		AlignedMemory(const dnnl::memory::desc& md, const dnnl::engine& engine, const T value = T()) NOEXCEPT
+		AlignedMemory(const dnnl::memory::desc& md, const dnnl::engine& engine, const T value = T(0)) NOEXCEPT
 		{
 			if (md)
 			{
@@ -820,7 +835,7 @@ namespace
 		inline auto data() const noexcept { return dataPtr; }
 		inline auto size() const noexcept { return nelems; }
 		auto desc() { return description; }
-		void resizeMem(const dnnl::memory::desc& md, const dnnl::engine& engine, const T value = T()) NOEXCEPT
+		void resizeMem(const dnnl::memory::desc& md, const dnnl::engine& engine, const T value = T(0)) NOEXCEPT
 		{
 			if (md)
 			{
