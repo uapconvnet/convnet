@@ -1,5 +1,6 @@
 #pragma once
 #if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
+#include <assert.h>
 #include <omp.h>
 #else
 #include <cassert>
@@ -263,6 +264,45 @@ namespace dnn
 				f(i);
 	}
 
+	/* SFINAE helper -- analogue to std::enable_if */
+	template <bool expr, class T = void>
+	struct enable_if {}; // NOLINT(readability-identifier-naming)
+
+	template <class T>
+	struct enable_if<true, T> {
+		using type = T;
+	};
+
+	// Replacement implementation of std::enable_if_t from C++14, included here for
+	// interoperability with C++11
+	template <bool B, class T = void>
+	using enable_if_t = typename enable_if<B, T>::type;
+
+	template <typename T>
+	using is_vector = std::is_same<T, typename std::vector<typename T::value_type>>;
+
+	template <typename T>
+	struct remove_reference { // NOLINT(readability-identifier-naming)
+		using type = T;
+	};
+	template <typename T>
+	struct remove_reference<T&> {
+		using type = T;
+	};
+	template <typename T>
+	struct remove_reference<T&&> {
+		using type = T;
+	};
+
+	template <typename T, typename U>
+	inline enable_if_t<std::is_integral<T>::value && (std::is_integral<U>::value || std::is_enum<U>::value), typename remove_reference<T>::type> div_up(const T a, const U b)
+	{
+		assert(b > 0);
+		assert(a >= 0);
+		if (a <= 0) return 0;
+		return static_cast<typename remove_reference<T>::type>(1 + (a - 1) / b);
+	}
+
 	inline int dnnl_get_max_threads() 
 	{
 		return omp_get_max_threads();
@@ -295,7 +335,7 @@ namespace dnn
 	}
 
 	/* general parallelization */
-	inline int adjust_num_threads(int nthr, UInt work_amount) 
+	inline int adjust_num_threads(int nthr, std::size_t work_amount) 
 	{
 		if (nthr == 0) nthr = dnnl_get_current_num_threads();
 #if DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_OMP
@@ -316,7 +356,7 @@ namespace dnn
 		else if (n_min == 1) {
 			// team = T1 + T2
 			// n = T1*n1 + T2*n2  (n1 - n2 = 1)
-			T n1 = utils::div_up(n, (T)team);
+			T n1 = div_up(n, (T)team);
 			T n2 = n1 - 1;
 			T T1 = n - n2 * (T)team;
 			n_my = (T)tid < T1 ? n1 : n2;
@@ -326,11 +366,11 @@ namespace dnn
 		n_end += n_start;
 	}
 
-	static inline void for_nd(const int ithr, const int nthr, UInt D0, const std::function<void(UInt)>& f) 
+	static inline void for_nd(const int ithr, const int nthr, std::size_t D0, const std::function<void(std::size_t)>& f)
 	{
-		UInt start{ 0 }, end{ 0 };
+		std::size_t start{ 0 }, end{ 0 };
 		balance211(D0, nthr, ithr, start, end);
-		for (UInt d0 = start; d0 < end; ++d0)
+		for (auto d0 = start; d0 < end; ++d0)
 			f(d0);
 	}
 
@@ -429,7 +469,7 @@ namespace dnn
 #endif
 	}
 
-	static inline void parallel_nd(UInt D0, const std::function<void(UInt)>& f)
+	static inline void parallel_nd(std::size_t D0, const std::function<void(std::size_t)>& f)
 	{
 		int nthr = adjust_num_threads(omp_get_max_threads(), D0);
 		if (nthr)

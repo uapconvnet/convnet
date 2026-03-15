@@ -195,6 +195,7 @@ namespace
 #endif
 	const auto VecZero = VecFloat(Float(0));
 
+	
 	/*
 	static inline int div_up(int value, int divisor) {	return (value + divisor - 1) / divisor;	}
 	// Round value down to a multiple of factor.
