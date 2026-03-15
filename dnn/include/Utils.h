@@ -633,15 +633,16 @@ namespace
 	template<typename T>
 	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const uint8_t initValue = 0) NOEXCEPT
 	{
-		const auto res = std::div(static_cast<int>(elements * batchSize * sizeof(T)), 4096);
+		const auto PAGE_4K = 4096;
+		const auto res = std::div(static_cast<int>(elements * batchSize * sizeof(T)), PAGE_4K);
         if (!res.quot)
-			fast_memzero(destination, res.rem);
+			std::memset(destination, 0, res.rem);
         else
             for_i(res.quot, [=](std::size_t i) 
 			{
         	    const auto tail = (i + 1 == res.quot) ? res.rem : 0;
-                const auto ptr = reinterpret_cast<unsigned char *>(destination) + i * 4096;
-                fast_memzero(ptr, 4096 + tail);
+                const auto ptr = reinterpret_cast<unsigned char *>(destination) + i * PAGE_4K;
+                fast_memzero(ptr, PAGE_4K + tail);
             });
 	}
 
