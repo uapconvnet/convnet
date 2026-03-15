@@ -638,11 +638,11 @@ namespace
         if (!res.quot)
 			std::memset(destination, 0, res.rem);
         else
-            for_i(res.quot, [=](std::size_t i) 
+			parallel_nd(res.quot, [=](std::size_t i)
 			{
         	    const auto tail = (i + 1 == res.quot) ? res.rem : 0;
                 const auto ptr = reinterpret_cast<unsigned char *>(destination) + i * PAGE_4K;
-                fast_memzero(ptr, PAGE_4K + tail);
+				std::memset(ptr, 0, PAGE_4K + tail);
             });
 	}
 

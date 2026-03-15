@@ -73,7 +73,7 @@
 namespace dnn
 {
 #if DNNL_CPU_RUNTIME != DNNL_RUNTIME_OMP
-	struct blocked_range 
+	struct blocked_range
 	{
 		typedef size_t const_iterator;
 
@@ -96,7 +96,7 @@ namespace dnn
 	}
 
 	template <typename Func>
-	void parallel_for(const size_t begin, const size_t end, const Func& f) 
+	void parallel_for(const size_t begin, const size_t end, const Func& f)
 	{
 		assert(end >= begin);
 
@@ -109,33 +109,33 @@ namespace dnn
 
 		auto blockBegin = begin;
 		auto blockEnd = blockBegin + blockSize;
-		if (blockEnd > end) 
+		if (blockEnd > end)
 			blockEnd = end;
 
-		for (auto i = 0ull; i < nthreads; i++) 
+		for (auto i = 0ull; i < nthreads; i++)
 		{
 			futures.push_back(std::move(std::async(std::launch::async, [blockBegin, blockEnd, &f] {	f(blocked_range(blockBegin, blockEnd));	})));
 
 			blockBegin += blockSize;
-			if (blockBegin >= end) 
+			if (blockBegin >= end)
 				break;
 
 			blockEnd = blockBegin + blockSize;
-			if (blockEnd > end) 
+			if (blockEnd > end)
 				blockEnd = end;
 		}
 
-		for (auto &future : futures) 
+		for (auto& future : futures)
 			future.wait();
 	}
 
 	template <typename T, typename U>
-	bool value_representation(U const &value) { return static_cast<U>(static_cast<T>(value)) == value; }
+	bool value_representation(U const& value) { return static_cast<U>(static_cast<T>(value)) == value; }
 
 	template <typename Func>
 	inline void for_(const size_t begin, const size_t end, const Func& f)
 	{
-		value_representation<size_t>(end) ?	parallel_for(begin, end, f)	: xparallel_for(begin, end, f);
+		value_representation<size_t>(end) ? parallel_for(begin, end, f) : xparallel_for(begin, end, f);
 	}
 #endif
 
@@ -150,20 +150,20 @@ namespace dnn
 		PRAGMA_OMP_PARALLEL_THREADS(thrds)
 		{
 			PRAGMA_OMP_FOR_SCHEDULE_STATIC(chunk)
-			for (auto i = 0ll; i < static_cast<long long>(range); i++)
-				f(i);
+				for (auto i = 0ll; i < static_cast<long long>(range); i++)
+					f(i);
 		}
 #else
-		#pragma omp parallel for schedule(static,chunk) num_threads(thrds)
+#pragma omp parallel for schedule(static,chunk) num_threads(thrds)
 		for (auto i = 0ull; i < range; i++)
 			f(i);
 #endif
 #else
 		for_(0ull, range, [&](const blocked_range& r)
-		{
-			for (auto i = r.begin(); i < r.end(); i++)
-				f(i);
-		});
+			{
+				for (auto i = r.begin(); i < r.end(); i++)
+					f(i);
+			});
 #endif
 	}
 
@@ -176,25 +176,25 @@ namespace dnn
 			const auto thrds = static_cast<int>(std::min(range, threads));
 			const auto chunk = static_cast<int>(std::ceil(static_cast<double>(range) / static_cast<double>(thrds)));
 
-	#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 			PRAGMA_OMP_PARALLEL_THREADS(thrds)
 			{
 				PRAGMA_OMP_FOR_SCHEDULE_STATIC(chunk)
-				for (auto i = 0ll; i < static_cast<long long>(range); i++)
-					f(i);
+					for (auto i = 0ll; i < static_cast<long long>(range); i++)
+						f(i);
 			}
-	#else
-			
-            #pragma omp parallel for schedule(static,chunk) num_threads(thrds)
+#else
+
+#pragma omp parallel for schedule(static,chunk) num_threads(thrds)
 			for (auto i = 0ull; i < range; i++)
 				f(i);
-	#endif
+#endif
 #else
 			for_(0ull, range, [&](const blocked_range& r)
-			{
-				for (auto i = r.begin(); i < r.end(); i++)
-					f(i);
-			});
+				{
+					for (auto i = r.begin(); i < r.end(); i++)
+						f(i);
+				});
 #endif
 		}
 		else
@@ -208,24 +208,24 @@ namespace dnn
 #if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
 		const auto thrds = static_cast<int>(std::min(range, static_cast<size_t>(omp_get_max_threads())));
 
-	#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 		PRAGMA_OMP_PARALLEL_THREADS(thrds)
 		{
 			PRAGMA_OMP_FOR_SCHEDULE_DYNAMIC(1)
-			for (auto i = 0ll; i < static_cast<long long>(range); i++)
-				f(i);
+				for (auto i = 0ll; i < static_cast<long long>(range); i++)
+					f(i);
 		}
-	#else
-		#pragma omp parallel for schedule(dynamic,1) num_threads(thrds)
+#else
+#pragma omp parallel for schedule(dynamic,1) num_threads(thrds)
 		for (auto i = 0ull; i < range; i++)
 			f(i);
-	#endif
+#endif
 #else
 		for_(0ull, range, [&](const blocked_range& r)
-		{
-			for (auto i = r.begin(); i < r.end(); i++)
-				f(i);
-		});
+			{
+				for (auto i = r.begin(); i < r.end(); i++)
+					f(i);
+			});
 #endif
 	}
 
@@ -237,29 +237,202 @@ namespace dnn
 #if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
 			const auto thrds = static_cast<int>(std::min(range, static_cast<size_t>(omp_get_max_threads())));
 
-	#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 			PRAGMA_OMP_PARALLEL_THREADS(thrds)
 			{
 				PRAGMA_OMP_FOR_SCHEDULE_DYNAMIC(1)
-				for (auto i = 0ll; i < static_cast<long long>(range); i++)
-					f(i);
+					for (auto i = 0ll; i < static_cast<long long>(range); i++)
+						f(i);
 			}
-	#else
-			#pragma omp parallel for schedule(dynamic,1) num_threads(thrds)
+#else
+#pragma omp parallel for schedule(dynamic,1) num_threads(thrds)
 			for (auto i = 0ull; i < range; i++)
 				f(i);
-	#endif
+#endif
 #else
 			DNN_UNREF_PAR(threads);
 			for_(0ull, range, [&](const blocked_range& r)
-			{
-				for (auto i = r.begin(); i < r.end(); i++)
-					f(i);
-			});
+				{
+					for (auto i = r.begin(); i < r.end(); i++)
+						f(i);
+				});
 #endif
 		}
 		else
 			for (auto i = 0ull; i < range; i++)
 				f(i);
+	}
+
+	inline int dnnl_get_max_threads() 
+	{
+		return omp_get_max_threads();
+	}
+
+	inline int dnnl_in_parallel() 
+	{
+		return omp_in_parallel();
+	}
+
+	inline void dnnl_thr_barrier() 
+	{
+#pragma omp barrier
+	}
+
+	inline int dnnl_get_current_num_threads() 
+	{
+		if (dnnl_in_parallel()) return 1;
+#if DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_OMP
+		return omp_get_max_threads();
+#elif DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_TBB
+		return tbb::this_task_arena::max_concurrency();
+#elif DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_THREADPOOL
+		using namespace dnnl::impl::threadpool_utils;
+		dnnl::threadpool_interop::threadpool_iface* tp = get_active_threadpool();
+		return (tp) ? dnnl_get_max_threads() : 1;
+#else
+		return 1;
+#endif
+	}
+
+	/* general parallelization */
+	inline int adjust_num_threads(int nthr, UInt work_amount) 
+	{
+		if (nthr == 0) nthr = dnnl_get_current_num_threads();
+#if DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_OMP
+		return (work_amount == 1 || omp_in_parallel()) ? 1 : nthr;
+#else
+		return (int)std::min((dim_t)nthr, work_amount);
+#endif
+	}
+
+	template <typename T, typename U>
+	inline void balance211(T n, U team, U tid, T& n_start, T& n_end) {
+		T n_min = 1;
+		T& n_my = n_end;
+		if (team <= 1 || n == 0) {
+			n_start = 0;
+			n_my = n;
+		}
+		else if (n_min == 1) {
+			// team = T1 + T2
+			// n = T1*n1 + T2*n2  (n1 - n2 = 1)
+			T n1 = utils::div_up(n, (T)team);
+			T n2 = n1 - 1;
+			T T1 = n - n2 * (T)team;
+			n_my = (T)tid < T1 ? n1 : n2;
+			n_start = (T)tid <= T1 ? (T)tid * n1 : T1 * n1 + ((T)tid - T1) * n2;
+		}
+
+		n_end += n_start;
+	}
+
+	static inline void for_nd(const int ithr, const int nthr, UInt D0, const std::function<void(UInt)>& f) 
+	{
+		UInt start{ 0 }, end{ 0 };
+		balance211(D0, nthr, ithr, start, end);
+		for (UInt d0 = start; d0 < end; ++d0)
+			f(d0);
+	}
+
+	static inline void parallel(int nthr, const std::function<void(int, int)>& f) 
+	{
+		nthr = adjust_num_threads(nthr, INT64_MAX);
+#if DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_SEQ
+		for (int i = 0; i < nthr; ++i) {
+			f(i, nthr);
+		}
+#else
+#if defined(DNNL_ENABLE_ITT_TASKS)
+		auto task_primitive_kind = itt::primitive_task_get_current_kind();
+		auto task_primitive_info = itt::primitive_task_get_current_info();
+		auto task_primitive_log_kind = itt::primitive_task_get_current_log_kind();
+		auto task_primitive_itt_id = itt::primitive_task_get_itt_id();
+		bool itt_enable = itt::get_itt(itt::__itt_task_level_high);
+#endif
+#if DNNL_CPU_THREADING_RUNTIME != DNNL_RUNTIME_THREADPOOL
+		// Tasks must be always submitted to a threadpool, it will handle them
+		// properly.
+		if (nthr == 1) 
+		{
+			f(0, 1);
+			return;
+		}
+#endif
+#if DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_OMP
+#pragma omp parallel num_threads(nthr)
+		{
+			int nthr_ = omp_get_num_threads();
+			int ithr_ = omp_get_thread_num();
+			//assert(nthr_ == nthr);
+#if defined(DNNL_ENABLE_ITT_TASKS)
+			if (ithr_ && itt_enable) {
+				itt::primitive_task_start(
+					task_primitive_kind, task_primitive_log_kind);
+				itt::primitive_add_metadata_and_id(task_primitive_info,
+					task_primitive_log_kind, task_primitive_itt_id);
+			}
+#endif
+			f(ithr_, nthr_);
+#if defined(DNNL_ENABLE_ITT_TASKS)
+			if (ithr_ && itt_enable)
+				itt::primitive_task_end(task_primitive_log_kind);
+#endif
+		}
+#elif DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_TBB
+		tbb::parallel_for(0, nthr, [&](int ithr) {
+#if defined(DNNL_ENABLE_ITT_TASKS)
+			bool mark_task = itt::primitive_task_get_current_kind()
+				== primitive_kind::undefined;
+			if (mark_task && itt_enable) {
+				itt::primitive_task_start(
+					task_primitive_kind, task_primitive_log_kind);
+				itt::primitive_add_metadata_and_id(task_primitive_info,
+					task_primitive_log_kind, task_primitive_itt_id);
+			}
+#endif
+			f(ithr, nthr);
+#if defined(DNNL_ENABLE_ITT_TASKS)
+			if (mark_task && itt_enable)
+				itt::primitive_task_end(task_primitive_log_kind);
+#endif
+			}, tbb::static_partitioner());
+#elif DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_THREADPOOL
+		using namespace dnnl::impl::threadpool_utils;
+		dnnl::threadpool_interop::threadpool_iface* tp = get_active_threadpool();
+		if (!tp || dnnl_in_parallel()) {
+			threadpool_utils::deactivate_threadpool();
+			for (int ithr = 0; ithr < nthr; ithr++) {
+				f(ithr, nthr);
+			}
+			threadpool_utils::activate_threadpool(tp);
+		}
+		else {
+			tp->parallel_for(nthr, [=](int ithr, int nthr) {
+#if defined(DNNL_ENABLE_ITT_TASKS)
+				bool is_master = threadpool_utils::get_active_threadpool() == tp;
+				if (!is_master && itt_enable) {
+					itt::primitive_task_start(
+						task_primitive_kind, task_primitive_log_kind);
+					itt::primitive_add_metadata_and_id(task_primitive_info,
+						task_primitive_log_kind, task_primitive_itt_id);
+				}
+#endif
+				f(ithr, nthr);
+#if defined(DNNL_ENABLE_ITT_TASKS)
+				if (!is_master && itt_enable) {
+					itt::primitive_task_end(task_primitive_log_kind);
+				}
+#endif
+				});
+		}
+#endif
+#endif
+	}
+
+	static inline void parallel_nd(UInt D0, const std::function<void(UInt)>& f)
+	{
+		int nthr = adjust_num_threads(omp_get_max_threads(), D0);
+		if (nthr)
+			parallel(nthr, [=](int ithr, int nthr) { for_nd(ithr, nthr, D0, f); });
 	}
 }
