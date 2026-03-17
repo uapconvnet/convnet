@@ -2,6 +2,7 @@
 #if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
 #include <assert.h>
 #include <omp.h>
+#include "fastmem.h"
 #else
 #include <cassert>
 #include <cstdio>
@@ -140,7 +141,7 @@ namespace dnn
 	}
 #endif
 
-	template <typename Func>
+	/* template <typename Func>
 	inline void for_i(const size_t range, const Func& f)
 	{
 #if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
@@ -201,7 +202,7 @@ namespace dnn
 		else
 			for (auto i = 0ull; i < range; i++)
 				f(i);
-	}
+	} */
 
 	template <typename Func>
 	inline void for_i_dynamic(const size_t range, const Func& f)
@@ -403,7 +404,7 @@ namespace dnn
 		{
 			int nthr_ = omp_get_num_threads();
 			int ithr_ = omp_get_thread_num();
-			//assert(nthr_ == nthr);
+			assert(nthr_ == nthr);
 #if defined(DNNL_ENABLE_ITT_TASKS)
 			if (ithr_ && itt_enable) {
 				itt::primitive_task_start(
@@ -474,5 +475,73 @@ namespace dnn
 		int nthr = adjust_num_threads(omp_get_max_threads(), D0);
 		if (nthr)
 			parallel(nthr, [=](int ithr, int nthr) { for_nd(ithr, nthr, D0, f); });
+	}
+	
+
+	static inline void parallel_nd(std::size_t D0, std::size_t threads, const std::function<void(std::size_t)>& f)
+	{
+		int nthr = std::min(static_cast<std::size_t>(adjust_num_threads(omp_get_max_threads(), D0)), threads);
+		//int nthr = adjust_num_threads(omp_get_max_threads(), D0);
+		if (nthr)
+			parallel(nthr, [=](int ithr, int nthr) { for_nd(ithr, nthr, D0, f); });
+	}
+
+	template <typename Func>
+	inline void for_i(const size_t range, const Func& f)
+	{
+#if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
+		
+		parallel_nd(range, [=](size_t i)
+		{
+	  		f(i);
+		});
+#else
+		for_(0ull, range, [&](const blocked_range& r)
+		{
+			for (auto i = r.begin(); i < r.end(); i++)
+				f(i);
+		});
+#endif
+	}
+
+
+	template <typename Func>
+	inline void for_i(const size_t range, const size_t threads, const Func& f)
+	{
+		if (std::min(range, threads) > 1)
+		{
+#if DNNL_CPU_RUNTIME == DNNL_RUNTIME_OMP
+			
+			parallel_nd(range, threads, [=](size_t i)
+			{
+	  			f(i);
+			});
+#else
+			for_(0ull, range, [&](const blocked_range& r)
+			{
+				for (auto i = r.begin(); i < r.end(); i++)
+					f(i);
+			});
+#endif
+		}
+		else
+			for (auto i = 0ull; i < range; i++)
+				f(i);
+	}
+
+	void fast_memzero(void *dest, size_t numbytes)
+	{
+  		const auto PAGE_4K = 256ull * 1024ull * 1024ull;
+		const auto res = std::lldiv(static_cast<long long>(numbytes), static_cast<long long>(PAGE_4K));
+		
+  		if (!res.quot)
+	  		fast_memset(dest, 0, res.rem);
+  		else
+			for_i(res.quot, [=](size_t i)
+			{
+      			const auto tail = (i + 1 == res.quot) ? res.rem : 0;
+      			const auto ptr = reinterpret_cast<unsigned char *>(dest) + i * PAGE_4K;
+				fast_memset(ptr, 0, PAGE_4K + tail);
+    		});
 	}
 }

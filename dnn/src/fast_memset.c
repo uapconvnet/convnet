@@ -2935,6 +2935,8 @@ void * memset_large_4B_as(void *dest, const uint32_t val, size_t numbytes_div_4)
 //-----------------------------------------------------------------------------
 // Main Functions:
 //-----------------------------------------------------------------------------
+
+/*
 void fast_memzero(void *dest, size_t numbytes)
 {
   if( ((uintptr_t)dest & BYTE_ALIGNMENT) == 0 ) // Check alignment
@@ -2977,6 +2979,7 @@ void fast_memzero(void *dest, size_t numbytes)
     }     
   }
 }
+*/
 
 // To set values of sizes > 1 byte, call the desired memset functions directly
 // instead. A 4-byte version exists below, however.

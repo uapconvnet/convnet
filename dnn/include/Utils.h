@@ -629,23 +629,24 @@ namespace
 	{
 		//::memset(destination, initValue, elements * batchSize * sizeof(T));		
 		fast_memset(destination, initValue, elements * batchSize * sizeof(T));
-	} */
+	} 
 
 	template<typename T>
 	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const uint8_t initValue = 0) NOEXCEPT
 	{
-		const auto PAGE_4K = 4096;
+		const auto PAGE_4K = 1024 * 4096;
 		const auto res = std::div(static_cast<int>(elements * batchSize * sizeof(T)), PAGE_4K);
         if (!res.quot)
-			std::memset(destination, 0, res.rem);
+			fast_memset(destination, 0, res.rem);
         else
-			parallel_nd(res.quot, [=](std::size_t i)
+			for_i(res.quot, [=](std::size_t i)
 			{
         	    const auto tail = (i + 1 == res.quot) ? res.rem : 0;
                 const auto ptr = reinterpret_cast<unsigned char *>(destination) + i * PAGE_4K;
-				std::memset(ptr, 0, PAGE_4K + tail);
+				fast_memset(ptr, 0, PAGE_4K + tail);
             });
 	}
+	*/
 
 	struct aligned_free
 	{

@@ -2597,8 +2597,8 @@ namespace dnn
 
 			const auto elements = batchSize * C * D * H * W;
 			const auto threads = batchSize == 1 ? 1ull : GetThreads(elements, Float(10));
-
-			for_i_dynamic(batchSize, threads, [=, &SampleLabels](const UInt batchIndex)
+			
+            for_i_dynamic(batchSize, threads, [=, &SampleLabels](const UInt batchIndex)
 			{
 				const auto randomIndex = (index + batchIndex >= DataProv->TrainSamplesCount) ? RandomTrainSamples[batchIndex] : RandomTrainSamples[index + batchIndex];
 				auto imgByte = Image<Byte>(DataProv->TrainSamples[randomIndex]);
