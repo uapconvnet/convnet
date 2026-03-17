@@ -206,6 +206,9 @@ set(libdnn_sources
 )
 
 set(libdnn_test
+  src/fast_memcpy.c
+  src/fast_memmove.c
+  src/fast_memset.c
   src/test.cpp
 )
 
