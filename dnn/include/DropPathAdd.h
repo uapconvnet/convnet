@@ -159,7 +159,7 @@ namespace dnn
 						if (EqualDimensions(Inputs))
 						{
 							if (fullDepth)
-								parallel_nd(batchSize, [=](UInt n)
+								for_i(batchSize, [=](UInt n)
 								{
 									const auto start = n * size;
 									const auto end = start + size;
@@ -173,7 +173,7 @@ namespace dnn
 									}
 								});
 							else
-								parallel_nd(batchSize, [=](UInt n)
+								for_i(batchSize, [=](UInt n)
 								{
 									const auto start = n * size;
 									const auto end = start + size;
@@ -192,7 +192,7 @@ namespace dnn
 						else
 						{
 							if (fullDepth)
-								parallel_nd(batchSize, [=](UInt n)
+								for_i(batchSize, [=](UInt n)
 								{
 									for (auto c = 0ull; c < C; c++)
 									{
@@ -209,7 +209,7 @@ namespace dnn
 									}
 								});
 							else
-								parallel_nd(batchSize, [=](UInt n)
+								for_i(batchSize, [=](UInt n)
 								{
 									const auto scaleFirst = scales[first];
 									const auto scaleSecond = scales[second];
@@ -258,7 +258,7 @@ namespace dnn
 									}
 								});
 								/*
-									parallel_nd(batchSize, [=](UInt n)
+									for_i(batchSize, [=](UInt n)
 									{
 										for (auto c = 0ull; c < PaddedC; c += VectorSize)
 										{
@@ -275,7 +275,7 @@ namespace dnn
 								*/
 							else
 							/*
-								parallel_nd(batchSize, [=](UInt n)
+								for_i(batchSize, [=](UInt n)
 								{
 									const auto scaleFirst = scales[first];
 									const auto scaleSecond = scales[second];
