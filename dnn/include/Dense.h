@@ -268,7 +268,6 @@ namespace dnn
 
 			for (auto c = 0ull; c < C; c++)
 			{
-				const auto left = c;
 				for (auto r = 0ull; r < InputLayer->C; r++)
 					image[(r * width) + c] = GetColorFromRange<Float>(rangeWeights, WeightsStats.Min, weights[c * InputLayer->C + r]);
 				

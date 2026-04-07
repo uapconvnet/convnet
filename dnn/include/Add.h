@@ -127,7 +127,7 @@ namespace dnn
 					const auto plain = IsPlainFormat();
 					const auto size = GetElementsCount();
 					const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * size, FwdTrainingWeight);
-					const auto strideHW = HW() * VectorSize;
+					//const auto strideHW = HW() * VectorSize;
 					const auto strideH = W * VectorSize;
 
 					if (plain)
@@ -271,7 +271,7 @@ namespace dnn
 			const auto plain = IsPlainFormat();
 			const auto size = GetElementsCount();
 			const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * size, BwdTrainingWeight);
-			const auto strideHW = HW() * VectorSize;
+			//const auto strideHW = HW() * VectorSize;
 			const auto strideH = W * VectorSize;
 
 			if (EqualDimensions(Inputs))

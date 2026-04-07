@@ -480,7 +480,7 @@ namespace dnn
 
 	static inline void parallel_nd(std::size_t D0, std::size_t threads, const std::function<void(std::size_t)>& f)
 	{
-		int nthr = std::min(static_cast<std::size_t>(adjust_num_threads(omp_get_max_threads(), D0)), threads);
+		int nthr = std::min(static_cast<std::size_t>(adjust_num_threads(static_cast<std::size_t>(omp_get_max_threads()), D0)), threads);
 		//int nthr = adjust_num_threads(omp_get_max_threads(), D0);
 		if (nthr)
 			parallel(nthr, [=](int ithr, int nthr) { for_nd(ithr, nthr, D0, f); });
@@ -531,15 +531,15 @@ namespace dnn
 
 	void fast_memzero(void *dest, size_t numbytes)
 	{
-  		const auto PAGE_4K = 256ull * 1024ull * 1024ull;
+  		const auto PAGE_4K = 2 * 1024ll * 1024ll;
 		const auto res = std::lldiv(static_cast<long long>(numbytes), static_cast<long long>(PAGE_4K));
 		
   		if (!res.quot)
 	  		fast_memset(dest, 0, res.rem);
   		else
-			for_i(res.quot, [=](size_t i)
+			for_i(res.quot, [=](long long i)
 			{
-      			const auto tail = (i + 1 == res.quot) ? res.rem : 0;
+      			const auto tail = (i + 1ll == res.quot) ? res.rem : 0ll;
       			const auto ptr = reinterpret_cast<unsigned char *>(dest) + i * PAGE_4K;
 				fast_memset(ptr, 0, PAGE_4K + tail);
     		});

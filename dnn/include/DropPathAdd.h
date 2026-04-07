@@ -150,8 +150,8 @@ namespace dnn
 				{
 					const auto plain = IsPlainFormat();
 					const auto size = GetElementsCount();
-					const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * size, FwdTrainingWeight);
-					const auto strideHW = HW() * VectorSize;
+					//const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * size, FwdTrainingWeight);
+					//const auto strideHW = HW() * VectorSize;
 					
 					
 					if (plain)
@@ -425,7 +425,7 @@ namespace dnn
 			const auto plain = IsPlainFormat();
 			const auto size = GetElementsCount();
 			const auto fullDepth = (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
-			const auto strideHW = HW() * VectorSize;
+			//const auto strideHW = HW() * VectorSize;
 			const auto strideH = W * VectorSize;
 			scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
 			scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
