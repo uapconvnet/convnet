@@ -480,7 +480,7 @@ namespace dnn
 
 	static inline void parallel_nd(std::size_t D0, std::size_t threads, const std::function<void(std::size_t)>& f)
 	{
-		int nthr = std::min(static_cast<std::size_t>(adjust_num_threads(static_cast<std::size_t>(omp_get_max_threads()), D0)), threads);
+		int nthr = std::min(adjust_num_threads(omp_get_max_threads(), D0), static_cast<int>(threads));
 		//int nthr = adjust_num_threads(omp_get_max_threads(), D0);
 		if (nthr)
 			parallel(nthr, [=](int ithr, int nthr) { for_nd(ithr, nthr, D0, f); });
