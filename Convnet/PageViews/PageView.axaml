@@ -6,7 +6,7 @@
              xmlns:view="clr-namespace:Convnet.PageViews"
              xmlns:c="clr-namespace:Convnet.Common"
              xmlns:props="clr-namespace:Convnet.Properties"
-             xmlns:controls="clr-namespace:Avalonia.Controls.ToolBar.Controls;assembly=Avalonia.Controls.ToolBar"
+             xmlns:controls="clr-namespace:ToolBarControls.Avalonia;assembly=ToolBarControls.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:PageViewModel"
              x:Class="Convnet.PageViews.PageView">

@@ -21,7 +21,8 @@
     <FluentTheme/>
     <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
     <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
-    <StyleInclude Source="avares://Avalonia.Controls.ToolBar/Themes/Avalonia.Controls.ToolBar.axaml" />
+    <!-- <StyleInclude Source="avares://Avalonia.Controls.ToolBar/Themes/Avalonia.Controls.ToolBar.axaml" /> -->
+    <StyleInclude Source="avares://ToolBarControls.Avalonia/Themes/ToolBarControls.Avalonia.axaml" />
     <StyleInclude Source="avares://OxyPlot.Avalonia/Themes/Default.axaml"/>
     <Style Selector="DataGridCell:focus /template/ Panel#FocusVisual">
       <Setter Property="IsVisible" Value="False"/>
