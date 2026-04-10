@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks>net10.0</TargetFrameworks>
+	  <LangVersion>10.0</LangVersion>
+	  <Nullable>enable</Nullable>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <Title>Custom MessageBox for Avalonia</Title>
+	  <Authors>Kewin Kupilas</Authors>
+	  <Description>A highly customizable MessageBox pop-up for Avalonia with pre-set or custom buttons and plenty of layout options.</Description>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <PackageProjectUrl>https://github.com/Nickelony/CustomMessageBox.Avalonia</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/Nickelony/CustomMessageBox.Avalonia</RepositoryUrl>
+	  <PackageTags>avalonia avaloniaui custom messagebox message box popup</PackageTags>
+	  <Version>11.0.0.3</Version>
+	  <PackageIcon>Icon.png</PackageIcon>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Icon\Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icon\Icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </Resource>
+  </ItemGroup>
+
+</Project>

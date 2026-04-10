@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Assets\avalonia-logo.ico" />
+    <None Remove="Assets\cn.png" />
+    <None Remove="Assets\de.png" />
+    <None Remove="Assets\es.png" />
+    <None Remove="Assets\fr.png" />
+    <None Remove="Assets\gb.png" />
+    <None Remove="Assets\it.png" />
+    <None Remove="Assets\pl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\avalonia-logo.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Include="Assets\cn.png" />
+    <AvaloniaResource Include="Assets\de.png" />
+    <AvaloniaResource Include="Assets\es.png" />
+    <AvaloniaResource Include="Assets\fr.png" />
+    <AvaloniaResource Include="Assets\gb.png" />
+    <AvaloniaResource Include="Assets\it.png" />
+    <AvaloniaResource Include="Assets\pl.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
+    <PackageReference Include="SkiaSharp" Version="2.88.6" />
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CustomMessageBox.Avalonia\CustomMessageBox.Avalonia.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="App.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="MainWindow.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

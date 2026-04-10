@@ -63,8 +63,8 @@ namespace Convnet.PageViews
 
                             datagrid.ScrollIntoView(tpvm.TrainingLog[tpvm.SelectedIndex], null);
                         }
-                        else
-                            datagrid.ScrollIntoView(tpvm.TrainingLog[0], null);
+                        //else
+                        //    datagrid.ScrollIntoView(tpvm.TrainingLog[0], null);
 
                         Settings.Default.Save();
 

@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBarControls.Avalonia", "src\ToolBarControls.Avalonia\ToolBarControls.Avalonia.csproj", "{31215B8B-0000-48E3-99F2-B36DFC8FA4AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBarControls.Avalonia.Demo", "src\ToolBarControls.Avalonia.Demo\ToolBarControls.Avalonia.Demo.csproj", "{789AD67D-E1B0-4D68-BC6E-A4E125789D1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{166F9032-C25A-47E2-A2AD-D604F5F3B30E}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{F58FF852-D266-486B-8282-8C57B810E3DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{292C63AF-C643-4349-AE78-27E6602CC10B}"
+	ProjectSection(SolutionItems) = preProject
+		build\Avalonia.Desktop.props = build\Avalonia.Desktop.props
+		build\Avalonia.Diagnostics.props = build\Avalonia.Diagnostics.props
+		build\Avalonia.props = build\Avalonia.props
+		build\Avalonia.Themes.Fluent.props = build\Avalonia.Themes.Fluent.props
+		build\Base.props = build\Base.props
+		build\CommunityToolkit.Mvvm.props = build\CommunityToolkit.Mvvm.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9D71B9A1-7321-44FC-9B60-467049181119}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{40D2EE24-7F5B-4723-9EC6-C7042633A717}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31215B8B-0000-48E3-99F2-B36DFC8FA4AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31215B8B-0000-48E3-99F2-B36DFC8FA4AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31215B8B-0000-48E3-99F2-B36DFC8FA4AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31215B8B-0000-48E3-99F2-B36DFC8FA4AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{789AD67D-E1B0-4D68-BC6E-A4E125789D1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{789AD67D-E1B0-4D68-BC6E-A4E125789D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{789AD67D-E1B0-4D68-BC6E-A4E125789D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{789AD67D-E1B0-4D68-BC6E-A4E125789D1A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F58FF852-D266-486B-8282-8C57B810E3DB} = {166F9032-C25A-47E2-A2AD-D604F5F3B30E}
+		{292C63AF-C643-4349-AE78-27E6602CC10B} = {166F9032-C25A-47E2-A2AD-D604F5F3B30E}
+		{789AD67D-E1B0-4D68-BC6E-A4E125789D1A} = {40D2EE24-7F5B-4723-9EC6-C7042633A717}
+		{31215B8B-0000-48E3-99F2-B36DFC8FA4AC} = {9D71B9A1-7321-44FC-9B60-467049181119}
+	EndGlobalSection
+EndGlobal

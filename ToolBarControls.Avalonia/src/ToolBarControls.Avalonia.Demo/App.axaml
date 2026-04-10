@@ -1,0 +1,15 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ToolBarControls.Avalonia.Demo.App"
+             xmlns:demo="clr-namespace:ToolBarControls.Avalonia.Demo"
+             RequestedThemeVariant="Default">
+
+    <Application.DataTemplates>
+        <demo:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://ToolBarControls.Avalonia/Themes/ToolBarControls.Avalonia.axaml" />
+    </Application.Styles>
+</Application>
