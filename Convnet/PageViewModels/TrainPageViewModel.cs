@@ -1876,7 +1876,6 @@ namespace Convnet.PageViewModels
                     }
                 }
 #else
-
                 var provider = App.MainWindow?.StorageProvider;
 
                 if (provider != null && provider.CanSave)
