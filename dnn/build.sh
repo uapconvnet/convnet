@@ -17,4 +17,4 @@ export vCPUs=`cat /proc/cpuinfo | grep processor | wc -l`
 export OMP_NUM_THREADS=$vCPUs
 export ONEDNN_EXPERIMENTAL_BNORM_STATS_ONE_PASS=1
 
-rm -f -r ./build && mkdir -p build && cd build && cmake -G Ninja .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5-DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON && ninja
+rm -f -r ./build && mkdir -p build && cd build && cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON && ninja
