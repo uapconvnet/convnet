@@ -2,8 +2,8 @@
 # sudo apt update && sudo apt upgrade
 # sudo apt install build-essential curl unzip gzip libomp-dev libomp5 clang nasm graphviz doxygen python3-sphinx cmake ninja-build
 
-# export CC=clang and export CXX=clang++
-export CC=clang-22 and export CXX=clang++-22
+export CC=clang and export CXX=clang++
+# export CC=clang-22 and export CXX=clang++-22
 
 # Set Intel oneAPI DPC++/C++ Compiler as default C and C++ compilers
 # source /opt/intel/oneapi/setvars.sh
@@ -17,4 +17,4 @@ export vCPUs=`cat /proc/cpuinfo | grep processor | wc -l`
 export OMP_NUM_THREADS=$vCPUs
 export ONEDNN_EXPERIMENTAL_BNORM_STATS_ONE_PASS=1
 
-rm -f -r ./build && mkdir -p build && cd build && cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON && ninja
+rm -f -r ./build && mkdir -p build && cd build && cmake -G Ninja .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5-DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON && ninja
