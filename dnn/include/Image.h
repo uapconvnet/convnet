@@ -1257,7 +1257,7 @@ namespace dnn
 				if (deltaW < 0)
 					cimg_forYZC(srcImage, y, z, c)
 					{
-						fast_memmove(srcImage.data(0, y, z, c), srcImage.data(-deltaW, y, z, c), UInt(srcImage._width + deltaW) * sizeof(T));
+						std::memmove(srcImage.data(0, y, z, c), srcImage.data(-deltaW, y, z, c), UInt(srcImage._width + deltaW) * sizeof(T));
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(srcImage._width + deltaW, y, z, c), 0, -deltaW * sizeof(T));
 						else
@@ -1266,7 +1266,7 @@ namespace dnn
 				else
 					cimg_forYZC(srcImage, y, z, c)
 					{
-						fast_memmove(srcImage.data(deltaW, y, z, c), srcImage.data(0, y, z, c), UInt(srcImage._width - deltaW) * sizeof(T));
+						std::memmove(srcImage.data(deltaW, y, z, c), srcImage.data(0, y, z, c), UInt(srcImage._width - deltaW) * sizeof(T));
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(0, y, z, c), 0, deltaW * sizeof(T));
 						else
@@ -1279,7 +1279,7 @@ namespace dnn
 				if (deltaH < 0)
 					cimg_forZC(srcImage, z, c)
 					{
-						fast_memmove(srcImage.data(0, 0, z, c), srcImage.data(0, -deltaH, z, c), UInt(srcImage._width) * UInt(srcImage._height + deltaH) * sizeof(T));
+						std::memmove(srcImage.data(0, 0, z, c), srcImage.data(0, -deltaH, z, c), UInt(srcImage._width) * UInt(srcImage._height + deltaH) * sizeof(T));
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(0, srcImage._height + deltaH, z, c), 0, -deltaH * UInt(srcImage._width) * sizeof(T));
 						else
@@ -1288,7 +1288,7 @@ namespace dnn
 				else
 					cimg_forZC(srcImage, z, c)
 					{
-						fast_memmove(srcImage.data(0, deltaH, z, c), srcImage.data(0, 0, z, c), UInt(srcImage._width) * UInt(srcImage._height - deltaH) * sizeof(T));
+						std::memmove(srcImage.data(0, deltaH, z, c), srcImage.data(0, 0, z, c), UInt(srcImage._width) * UInt(srcImage._height - deltaH) * sizeof(T));
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(0, 0, z, c), 0, deltaH * UInt(srcImage._width) * sizeof(T));
 						else

@@ -357,8 +357,8 @@ extern "C" DNN_API void DNNGetImage(const UInt layerIndex, const Byte fillColor,
 			case LayerTypes::PRelu:
 			{
 				auto img = model->Layers[layerIndex]->GetImage(fillColor);
-				//std::memcpy(image, img.data(), img.size());
-				fast_memcpy(image, img.data(), img.size());
+				std::memcpy(image, img.data(), img.size());
+				//fast_memcpy(image, img.data(), img.size());
 				img.release();
 			}
 			break;

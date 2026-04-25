@@ -198,16 +198,12 @@ set(libdnn_headers
 
 set(libdnn_sources
   ${libdnn_headers}
-  src/fast_memcpy.c
-  src/fast_memmove.c
   src/fast_memset.c
   src/dllmain.cpp
   src/stdafx.cpp
 )
 
 set(libdnn_test
-  src/fast_memcpy.c
-  src/fast_memmove.c
   src/fast_memset.c
   src/test.cpp
 )

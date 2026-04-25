@@ -42,8 +42,8 @@ typedef __m512i __m512i_u;
 // Applies to: fast_memmove, fast_memset, and fast_memcpy
 #define CACHESIZELIMIT 3*1024*1024 // 3 MB
 
-void * fast_memmove(void *dest, void *src, size_t numbytes);
-void * fast_memcpy(void *dest, void *src, size_t numbytes);
+//void * fast_memmove(void *dest, void *src, size_t numbytes);
+//void * fast_memcpy(void *dest, void *src, size_t numbytes);
 void * fast_memset(void *dest, const uint8_t val, size_t numbytes);
 //void fast_memzero(void *dest, size_t numbytes);
 //int fast_memcmp(const void *str1, const void *str2, size_t numbytes, int equality);
@@ -145,6 +145,7 @@ void * memset_512bit_2kB_as(void *dest, __m512i_u val, size_t len); // 2048 byte
 void * memset_512bit_4kB_as(void *dest, __m512i_u val, size_t len); // 4096 bytes
 #endif
 
+/*
 
 //-----------------------------------------------------------------------------
 // MEMMOVE:
@@ -353,7 +354,7 @@ void * memcpy_512bit_4kB_as(void *dest, const void *src, size_t len); // 4096 by
 //-----------------------------------------------------------------------------
 // MEMCMP:
 //-----------------------------------------------------------------------------
-/*
+
 int memcmp_large(const void *str1, const void *str2, size_t numbytes);
 int memcmp_large_eq(const void *str1, const void *str2, size_t numbytes);
 
@@ -399,8 +400,10 @@ int memcmp_512bit_eq_u(const void *str1, const void *str2, size_t count);
 int memcmp_512bit_a(const void *str1, const void *str2, size_t count);
 int memcmp_512bit_eq_a(const void *str1, const void *str2, size_t count);
 #endif
-*/
+
 // END MEMCMP
+
+*/
 
 #ifdef __cplusplus
 }

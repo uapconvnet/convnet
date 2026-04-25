@@ -116,9 +116,9 @@
 
 #include "fastmem.h"
 
-using namespace dnn;
+//using namespace dnn;
 
-namespace
+namespace dnn
 {
 	constexpr auto DefaultDatasetMeanStdDev = false;
 	constexpr auto Inplace = true;
@@ -999,7 +999,7 @@ namespace
 		static_assert(std::is_floating_point<T>::value, "Only Floating point type supported in BetaDistribution function");
 		static thread_local auto generator = std::mt19937(Seed<unsigned>());
 
-		return ::beta_distribution<T>(a, b)(generator);
+		return dnn::beta_distribution<T>(a, b)(generator);
 	}
 
 	struct no_separator : std::numpunct<char>

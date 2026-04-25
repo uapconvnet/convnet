@@ -2614,7 +2614,7 @@ namespace dnn
 				{
 					if (CurrentTrainingRate.CutMix)
 					{
-						double lambda = BetaDistribution<double>(1, 1);
+						double lambda = dnn::BetaDistribution<double>(1, 1);
 						imgByte = Image<Byte>::RandomCutMix(imgByte, imgByteMix, &lambda);
 						SampleLabels[batchIndex] = GetCutMixLabelInfo(labels, mixLabels, lambda);
 					}

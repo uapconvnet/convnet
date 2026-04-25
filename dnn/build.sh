@@ -5,6 +5,8 @@
 export CC=clang and export CXX=clang++
 # export CC=clang-22 and export CXX=clang++-22
 
+# export CC=gcc and export CXX=g++
+
 # Set Intel oneAPI DPC++/C++ Compiler as default C and C++ compilers
 # source /opt/intel/oneapi/setvars.sh
 # export CC=icx and export CXX=icpx
