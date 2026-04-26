@@ -1,141 +1,140 @@
 #pragma once
+
 #include <cstdlib>
-#include <stdlib.h>
-#include <string>
-#include <utility>
+#include <new>       // Required for placement new
+#include <limits>    // For std::numeric_limits
 #include <stdexcept>
+#include <type_traits>
+#include <cstddef>
 
 #ifdef __MINGW32__
 #include <mm_malloc.h>
 #endif
 
-#if defined(__VEC__)
-#define DNN_INLINE inline
-#elif defined __has_attribute
-#if __has_attribute(always_inline)
-#define DNN_INLINE inline __attribute__((always_inline))
+// Improved Macro: Use constexpr/inline where possible instead of heavy macros
+#if defined(_MSC_VER)
+    #define DNN_INLINE __forceinline
+#elif defined(__clang__) || defined(__GNUC__)
+    #define DNN_INLINE inline __attribute__((always_inline))
 #else
-#define DNN_INLINE inline
-#endif
-#elif defined(_MSC_VER)
-#define DNN_INLINE inline __forceinline
-#else
-#define DNN_INLINE inline
+    #define DNN_INLINE inline
 #endif
 
 namespace dnn
 {
-	template <typename T, std::size_t alignment>
-	class AlignedAllocator
-	{
-	public:
-		typedef T value_type;
-		typedef T* pointer;
-		typedef std::size_t size_type;
-		typedef std::ptrdiff_t difference_type;
-		typedef T& reference;
-		typedef const T& const_reference;
-		typedef const T* const_pointer;
+    /**
+     * @brief An STL-compatible allocator that ensures memory is aligned to a specific boundary.
+     * @tparam T The type of object to allocate.
+     * @tparam Alignment The byte alignment (must be a power of two).
+     */
+    template <typename T, std::size_t Alignment>
+    class AlignedAllocator
+    {
+        // Static assertion to ensure alignment is a power of two at compile time
+        static_assert((Alignment & (Alignment - 1)) == 0, "Alignment must be a power of two.");
 
-		template <typename U>
-		struct rebind
-		{
-			typedef AlignedAllocator<U, alignment> other;
-		};
+    public:
+        using value_type      = T;
+        using pointer         = T*;
+        using const_pointer   = const T*;
+        using size_type       = std::size_t;
+        using difference_type = std::ptrdiff_t;
+        using reference       = T&;
+        using const_reference = const T&;
 
-		DNN_INLINE AlignedAllocator() noexcept {};
+        // Rebind is still useful for older compilers/specific STL implementations
+        template <typename U>
+        struct rebind {
+            using other = AlignedAllocator<U, Alignment>;
+        };
 
-		template <typename U>
-		DNN_INLINE AlignedAllocator(const AlignedAllocator<U, alignment>&) noexcept {};
+        // Constructors
+        AlignedAllocator() noexcept = default;
+        
+        template <typename U>
+        AlignedAllocator(const AlignedAllocator<U, Alignment>&) noexcept {}
 
-		DNN_INLINE ~AlignedAllocator() {};
+        ~AlignedAllocator() = default;
 
-		DNN_INLINE const_pointer address(const_reference value) const noexcept { return std::addressof(value); }
+        // --- Core Allocation Logic ---
 
-		DNN_INLINE pointer address(reference value) const noexcept { return std::addressof(value); }
+        [[nodiscard]] pointer allocate(std::size_t n)
+        {
+            if (n == 0) return nullptr;
 
-		DNN_INLINE pointer allocate(const size_type size, const void* = nullptr)
-		{
-			void* p = AlignedAlloc(alignment, sizeof(T) * size);
+            // 1. Overflow Check: Ensure size * sizeof(T) doesn't wrap around
+            if (n > std::numeric_limits<std::size_t>::max() / sizeof(T)) {
+                throw std::bad_array_new_length();
+            }
 
-			if (!p && size > 0ull)
-				throw std::runtime_error("failed to allocate");
+            const std::size_t total_size = n * sizeof(T);
+            
+            // 2. Perform aligned allocation
+            void* p = AlignedAlloc(Alignment, total_size);
 
-			return static_cast<pointer>(p);
-		}
+            if (!p) {
+                throw std::bad_alloc();
+            }
 
-		DNN_INLINE size_type max_size() const noexcept { return ~static_cast<std::size_t>(0ull) / sizeof(T); }
+            return static_cast<pointer>(p);
+        }
 
-		DNN_INLINE void deallocate(pointer ptr, size_type) { AlignedFree(ptr); }
+        void deallocate(pointer p, std::size_t /*n*/) noexcept
+        {
+            if (p) {
+                AlignedFree(p);
+            }
+        }
 
-		template <class U, class V>
-		DNN_INLINE void construct(U* ptr, const V& value)
-		{
-			void* p = ptr;
-			::new (p) U(value);
-		}
+        // --- Utilities ---
 
-		template <class U, class... Args>
-		DNN_INLINE void construct(U* ptr, Args &&... args)
-		{
-			void* p = ptr;
-			::new (p) U(std::forward<Args>(args)...);
-		}
+        [[nodiscard]] size_type max_size() const noexcept 
+        { 
+            return std::numeric_limits<std::size_t>::max() / sizeof(T); 
+        }
 
-		template <class U>
-		DNN_INLINE void construct(U* ptr)
-		{
-			void* p = ptr;
-			::new (p) U();
-		}
+        pointer address(reference value) const noexcept { return std::addressof(value); }
+        const_pointer address(const_reference value) const noexcept { return std::addressof(value); }
 
-		template <class U>
-		DNN_INLINE void destroy(U* ptr)
-		{
-			ptr->~U();
-		}
+    protected:
+        // Helper to ensure the requested size is a multiple of the alignment (required by POSIX)
+        static constexpr std::size_t RoundUp(std::size_t size, std::size_t align) noexcept
+        {
+            return (size + align - 1) & ~(align - 1);
+        }
 
-	protected:
-		DNN_INLINE size_type DIVALIGN([[maybe_unused]] const size_type align, const size_type size) const noexcept
-		{
-#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-			return size;
-#else
-			if (size % align == 0ull)
-				return size;
+        void* AlignedAlloc(std::size_t align, std::size_t size) const
+        {
+            const std::size_t adjusted_size = RoundUp(size, align);
 
-			return ((size / align) + 1ull) * align;
-#endif
-		}
-
-		DNN_INLINE void* AlignedAlloc(const size_type align, const size_type size) const
-		{
 #if defined(_WIN32) || defined(__CYGWIN__)
-			return ::_aligned_malloc(DIVALIGN(align, size), align);
+            return ::_aligned_malloc(adjusted_size, align);
 #elif defined(__ANDROID__)
-			return ::memalign(align, DIVALIGN(align, size));
+            return ::memalign(align, adjusted_size);
 #elif defined(__MINGW32__)
-			return ::_mm_malloc(DIVALIGN(align, size), align);
-#else  // posix assumed
-			return ::aligned_alloc(align, DIVALIGN(align, size));
+            return ::_mm_malloc(adjusted_size, align);
+#else // POSIX
+            // C++17 aligned_alloc requires size to be a multiple of alignment
+            return ::aligned_alloc(align, adjusted_size);
 #endif
-		}
+        }
 
-		DNN_INLINE void AlignedFree(pointer ptr)
-		{
+        void AlignedFree(pointer ptr) const noexcept
+        {
 #if defined(_WIN32) || defined(__CYGWIN__)
-			::_aligned_free(ptr);
+            ::_aligned_free(ptr);
 #elif defined(__MINGW32__)
-			::_mm_free(ptr);
+            ::_mm_free(ptr);
 #else
-			::free(ptr);
+            ::free(ptr);
 #endif
-		}
-	};
+        }
+    };
 
-	template <typename T1, typename T2, std::size_t alignment>
-	DNN_INLINE bool operator==(const AlignedAllocator<T1,alignment>&, const AlignedAllocator<T2,alignment>&) noexcept { return true; }
+    // Equality operators are simplified (stateless allocator)
+    template <typename T, typename U, std::size_t A>
+    bool operator==(const AlignedAllocator<T, A>&, const AlignedAllocator<U, A>&) noexcept { return true; }
 
-	template <typename T1, typename T2, std::size_t alignment>
-	DNN_INLINE bool operator!=(const AlignedAllocator<T1,alignment>&, const AlignedAllocator<T2,alignment>&) noexcept { return false; }
+    template <typename T, typename U, std::size_t A>
+    bool operator!=(const AlignedAllocator<T, A>&, const AlignedAllocator<U, A>&) noexcept { return false; }
 }
