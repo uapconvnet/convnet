@@ -58,7 +58,7 @@ namespace dnn
 
         // --- Core Allocation Logic ---
 
-        [[nodiscard]] pointer allocate(std::size_t n)
+        [[nodiscard]] DNN_INLINE pointer allocate(std::size_t n)
         {
             if (n == 0) return nullptr;
 
@@ -79,7 +79,7 @@ namespace dnn
             return static_cast<pointer>(p);
         }
 
-        void deallocate(pointer p, std::size_t /*n*/) noexcept
+        DNN_INLINE void deallocate(pointer p, std::size_t /*n*/) noexcept
         {
             if (p) {
                 AlignedFree(p);
@@ -88,13 +88,13 @@ namespace dnn
 
         // --- Utilities ---
 
-        [[nodiscard]] size_type max_size() const noexcept 
+        [[nodiscard]] DNN_INLINE size_type max_size() const noexcept 
         { 
             return std::numeric_limits<std::size_t>::max() / sizeof(T); 
         }
 
-        pointer address(reference value) const noexcept { return std::addressof(value); }
-        const_pointer address(const_reference value) const noexcept { return std::addressof(value); }
+        DNN_INLINE pointer address(reference value) const noexcept { return std::addressof(value); }
+        DNN_INLINE const_pointer address(const_reference value) const noexcept { return std::addressof(value); }
 
     protected:
         // Helper to ensure the requested size is a multiple of the alignment (required by POSIX)
@@ -103,7 +103,7 @@ namespace dnn
             return (size + align - 1) & ~(align - 1);
         }
 
-        void* AlignedAlloc(std::size_t align, std::size_t size) const
+        DNN_INLINE void* AlignedAlloc(std::size_t align, std::size_t size) const
         {
             const std::size_t adjusted_size = RoundUp(size, align);
 
@@ -119,7 +119,7 @@ namespace dnn
 #endif
         }
 
-        void AlignedFree(pointer ptr) const noexcept
+        DNN_INLINE void AlignedFree(pointer ptr) const noexcept
         {
 #if defined(_WIN32) || defined(__CYGWIN__)
             ::_aligned_free(ptr);
