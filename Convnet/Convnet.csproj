@@ -96,7 +96,7 @@
  
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.14" />
-    <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.25547.20250602" />
+    <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.27548.20260419" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.4.1" />
     <PackageReference Include="Avalonia.BuildServices" Version="11.3.2">
       <PrivateAssets>all</PrivateAssets>
@@ -120,7 +120,7 @@
     <PackageReference Include="Microsoft.Build.Locator" Version="1.11.2" />
     <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0" />
     <PackageReference Include="Oxyplot.AvaloniaCore" Version="2.1.2" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.5" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.7" />
     <PackageReference Include="System.Reactive" Version="6.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="TextMateSharp.Grammars" Version="2.0.3" />
@@ -128,7 +128,7 @@
     <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.9.5" />
     <PackageReference Include="Xaml.Behaviors.Interactions" Version="11.3.9.5" />
     <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.9.5" />
-    <PackageReference Include="System.Resources.Extensions" Version="10.0.5" />
+    <PackageReference Include="System.Resources.Extensions" Version="10.0.7" />
   </ItemGroup>
 
   <ItemGroup>
