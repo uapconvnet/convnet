@@ -22,3 +22,6 @@
 [submodule "dnn/deps/magic_enum"]
 	path = dnn/deps/magic_enum
 	url = https://github.com/Neargye/magic_enum
+[submodule "oxyplot-avalonia"]
+	path = oxyplot-avalonia
+	url = https://github.com/KaiIsNA/oxyplot-avalonia.git

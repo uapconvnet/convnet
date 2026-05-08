@@ -60,6 +60,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomMessageBox.Avalonia",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBarControls.Avalonia", "ToolBarControls.Avalonia\src\ToolBarControls.Avalonia\ToolBarControls.Avalonia.csproj", "{FA765707-CA92-EF4B-93E2-4E518C00F217}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxyPlot.Avalonia", "oxyplot-avalonia\Source\OxyPlot.Avalonia\OxyPlot.Avalonia.csproj", "{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -440,6 +442,22 @@ Global
 		{FA765707-CA92-EF4B-93E2-4E518C00F217}.RelWithDebInfo|Any CPU.Build.0 = Debug|Any CPU
 		{FA765707-CA92-EF4B-93E2-4E518C00F217}.RelWithDebInfo|x64.ActiveCfg = Debug|Any CPU
 		{FA765707-CA92-EF4B-93E2-4E518C00F217}.RelWithDebInfo|x64.Build.0 = Debug|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.Debug|x64.Build.0 = Debug|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.MinSizeRel|Any CPU.ActiveCfg = Release|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.MinSizeRel|Any CPU.Build.0 = Release|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.MinSizeRel|x64.ActiveCfg = Release|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.MinSizeRel|x64.Build.0 = Release|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.Release|x64.ActiveCfg = Release|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.Release|x64.Build.0 = Release|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.RelWithDebInfo|Any CPU.ActiveCfg = Debug|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.RelWithDebInfo|Any CPU.Build.0 = Debug|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.RelWithDebInfo|x64.ActiveCfg = Debug|Any CPU
+		{387B0AB9-CA49-DE38-1FF4-F58408F9D0AF}.RelWithDebInfo|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

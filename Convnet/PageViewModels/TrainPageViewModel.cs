@@ -1750,6 +1750,7 @@ namespace Convnet.PageViewModels
 
         private async void OpenLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
         {
+            /*
 #if Linux
             if (Model != null && App.MainWindow != null)
             {
@@ -1792,6 +1793,7 @@ namespace Convnet.PageViewModels
                 }
             }
 #else
+            */
             var provider = App.MainWindow?.StorageProvider;
 
             if (Model != null && provider != null && provider.CanOpen)
@@ -1843,7 +1845,7 @@ namespace Convnet.PageViewModels
                     }
                 }
             }
-#endif
+//#endif
         }
 
         private async void SaveLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
@@ -1851,7 +1853,7 @@ namespace Convnet.PageViewModels
             if (Model != null && Model.Layers != null && App.MainWindow != null && layersComboBox != null)
             {
                 var layerIndex = layersComboBox.SelectedIndex;
-
+/*
 #if Linux
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
                 var dialog = new SaveFileDialog
@@ -1876,6 +1878,7 @@ namespace Convnet.PageViewModels
                     }
                 }
 #else
+*/
                 var provider = App.MainWindow?.StorageProvider;
 
                 if (provider != null && provider.CanSave)
@@ -1916,7 +1919,7 @@ namespace Convnet.PageViewModels
                         }
                     }
                 }
-#endif
+//#endif
             }
         }
 
