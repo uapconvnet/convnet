@@ -1794,11 +1794,15 @@ namespace Convnet.PageViewModels
             }
 #else
             */
+            
             var provider = App.MainWindow?.StorageProvider;
-
+            
             if (Model != null && provider != null && provider.CanOpen)
             {
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
+
+                IStorageFolder? startingLocation = null;
+                startingLocation = await provider.TryGetFolderFromPathAsync(folder);
 
                 var typeWeights = new FilePickerFileType("Weights")
                 {
@@ -1817,7 +1821,7 @@ namespace Convnet.PageViewModels
                     {
                         AllowMultiple = false,
                         Title = "Load layer weights",
-                        SuggestedStartLocation = provider.TryGetFolderFromPathAsync(folder)?.Result,
+                        SuggestedStartLocation = startingLocation,
                         FileTypeFilter = filterList
                     });
 
@@ -1845,6 +1849,8 @@ namespace Convnet.PageViewModels
                     }
                 }
             }
+            else
+                    Dispatcher.UIThread.Post(() => MessageBox.Show("No suitable storage provider found", "Information", MessageBoxButtons.OK));  
 //#endif
         }
 
@@ -1879,11 +1885,15 @@ namespace Convnet.PageViewModels
                 }
 #else
                 */
+                
                 var provider = App.MainWindow?.StorageProvider;
 
                 if (provider != null && provider.CanSave)
                 {
                     var folder = Path.Combine(DefinitionsDirectory, Model.Name);
+                    
+                    IStorageFolder? startingLocation = null;
+                    startingLocation = await provider.TryGetFolderFromPathAsync(folder);
 
                     var typeWeights = new FilePickerFileType("Weights")
                     {
@@ -1899,7 +1909,7 @@ namespace Convnet.PageViewModels
                         DefaultExtension = "*.bin",
                         Title = "Save layer weights",
                         ShowOverwritePrompt = true,
-                        SuggestedStartLocation = provider.TryGetFolderFromPathAsync(folder)?.Result,
+                        SuggestedStartLocation = startingLocation,
                         FileTypeChoices = filterList
                     });
 
@@ -1919,6 +1929,8 @@ namespace Convnet.PageViewModels
                         }
                     }
                 }
+                else
+                    Dispatcher.UIThread.Post(() => MessageBox.Show("No suitable storage provider found", "Information", MessageBoxButtons.OK));  
 //#endif
             }
         }

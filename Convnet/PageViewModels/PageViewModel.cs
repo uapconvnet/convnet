@@ -172,11 +172,13 @@ namespace Convnet.PageViewModels
                     if (CurrentPage is EditPageViewModel)
                         filterList?.AddRange([typeDefinition, typeCSharp]);
 
+                    IStorageFolder? startingLocation = null;
+                    startingLocation = await provider.TryGetFolderFromPathAsync(folder);
                     var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
                     {
                         AllowMultiple = false,
                         Title = "Load",
-                        SuggestedStartLocation = provider.TryGetFolderFromPathAsync(folder)?.Result,
+                        SuggestedStartLocation = startingLocation,
                         FileTypeFilter = filterList
                     }); 
 
@@ -184,6 +186,9 @@ namespace Convnet.PageViewModels
 
                     path = file?.TryGetLocalPath();
                 }
+                else
+                    Dispatcher.UIThread.Post(() => MessageBox.Show("No suitable storage provider found", "Information", MessageBoxButtons.OK));         
+
 //#endif
                 if (path != null)
                 {
