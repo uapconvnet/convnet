@@ -1750,51 +1750,6 @@ namespace Convnet.PageViewModels
 
         private async void OpenLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
         {
-            /*
-#if Linux
-            if (Model != null && App.MainWindow != null)
-            {
-                var folder = Path.Combine(DefinitionsDirectory, Model.Name);
-
-                var dialog = new OpenFileDialog
-                {
-                    AllowMultiple = false,
-                    Title = "Load layer weights",
-                    Directory = folder,
-                    Filters = new List<FileDialogFilter> { new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } } }
-                };
-
-                var stop = false;
-                while (!stop)
-                {
-                    stop = true;
-
-                    var files = await dialog.ShowAsync(App.MainWindow);
-
-                    if (files != null && files.Length > 0)
-                    {
-                        var path = files[0];
-
-                        if (path.Contains(".bin") && layersComboBox != null)
-                        {
-                            if (Model?.LoadLayerWeights(path, (uint)layersComboBox.SelectedIndex) == 0)
-                            {
-                                Dispatcher.UIThread.Post(() => LayersComboBox_SelectionChanged(sender, null), DispatcherPriority.Render);
-                                await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are loaded", "Information", MessageBoxButtons.OK));
-                                stop = true;
-                            }
-                            else
-                            {
-                                stop = false;
-                                await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are incompatible", "Choose a different file", MessageBoxButtons.OK));
-                            }
-                        }
-                    }
-                }
-            }
-#else
-            */
-            
             var provider = App.MainWindow?.StorageProvider;
             
             if (Model != null && provider != null && provider.CanOpen)
@@ -1851,7 +1806,6 @@ namespace Convnet.PageViewModels
             }
             else
                     Dispatcher.UIThread.Post(() => MessageBox.Show("No suitable storage provider found", "Information", MessageBoxButtons.OK));  
-//#endif
         }
 
         private async void SaveLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
@@ -1859,33 +1813,7 @@ namespace Convnet.PageViewModels
             if (Model != null && Model.Layers != null && App.MainWindow != null && layersComboBox != null)
             {
                 var layerIndex = layersComboBox.SelectedIndex;
-                /*
-#if Linux
-                var folder = Path.Combine(DefinitionsDirectory, Model.Name);
-                var dialog = new SaveFileDialog
-                {
-                    InitialFileName = Model.Layers[layerIndex].Name + ".bin",
-                    Title = "Save layer weights",
-                    Directory = folder,
-                    Filters = new List<FileDialogFilter> { new FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } } },
-                    DefaultExtension = ".bin",
-                    ShowOverwritePrompt = true
-                };
-
-                var path = await dialog.ShowAsync(App.MainWindow);
-                if (path != null)
-                {
-                    if (path.EndsWith(".bin"))
-                    {
-                        if (Model.SaveLayerWeights(path, (ulong)layerIndex) == 0)
-                            await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are saved", "Information", MessageBoxButtons.OK));
-                        else
-                            await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights not saved!", "Information", MessageBoxButtons.OK));
-                    }
-                }
-#else
-                */
-                
+                             
                 var provider = App.MainWindow?.StorageProvider;
 
                 if (provider != null && provider.CanSave)
@@ -1931,7 +1859,6 @@ namespace Convnet.PageViewModels
                 }
                 else
                     Dispatcher.UIThread.Post(() => MessageBox.Show("No suitable storage provider found", "Information", MessageBoxButtons.OK));  
-//#endif
             }
         }
 

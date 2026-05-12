@@ -117,33 +117,7 @@ namespace Convnet.PageViewModels
                 var folder = DefinitionsDirectory;
                 if (Directory.Exists(Path.Combine(DefinitionsDirectory, Model.Name)))
                     folder = Path.Combine(DefinitionsDirectory, Model.Name);
-                /*
-#if Linux
-                var dialog = new Avalonia.Controls.OpenFileDialog
-                {
-                    AllowMultiple = false,
-                    Title = "Load",
-                    Directory = folder
-                };
-
-                if (CurrentPage is TrainPageViewModel)
-                {
-                    dialog.Filters.Add(new Avalonia.Controls.FileDialogFilter() { Name = "Weights|*.bin", Extensions = new List<string> { "bin" } });
-                    dialog.Filters.Add(new Avalonia.Controls.FileDialogFilter() { Name = "Log|*.csv", Extensions = new List<string> { "csv" } });
-                }
-                if (CurrentPage is EditPageViewModel)
-                {
-                    dialog.Filters.Add(new Avalonia.Controls.FileDialogFilter() { Name = "Definition|*.txt", Extensions = new List<string> { "txt" } });
-                    dialog.Filters.Add(new Avalonia.Controls.FileDialogFilter() { Name = "C#|*.cs", Extensions = new List<string> { "cs" } });
-                }
-
-                var files = await dialog.ShowAsync(App.MainWindow);
-
-                if (files != null && files.Length > 0)
-                    path = files[0];
-#else
-                */
-
+               
                 var provider = App.MainWindow?.StorageProvider;
 
                 if (provider != null && provider.CanOpen)
@@ -174,6 +148,7 @@ namespace Convnet.PageViewModels
 
                     IStorageFolder? startingLocation = null;
                     startingLocation = await provider.TryGetFolderFromPathAsync(folder);
+
                     var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
                     {
                         AllowMultiple = false,
@@ -189,7 +164,6 @@ namespace Convnet.PageViewModels
                 else
                     Dispatcher.UIThread.Post(() => MessageBox.Show("No suitable storage provider found", "Information", MessageBoxButtons.OK));         
 
-//#endif
                 if (path != null)
                 {
                     if (path.EndsWith(".csv"))
