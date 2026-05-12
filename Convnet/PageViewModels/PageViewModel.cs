@@ -117,6 +117,7 @@ namespace Convnet.PageViewModels
                 var folder = DefinitionsDirectory;
                 if (Directory.Exists(Path.Combine(DefinitionsDirectory, Model.Name)))
                     folder = Path.Combine(DefinitionsDirectory, Model.Name);
+                /*
 #if Linux
                 var dialog = new Avalonia.Controls.OpenFileDialog
                 {
@@ -141,6 +142,7 @@ namespace Convnet.PageViewModels
                 if (files != null && files.Length > 0)
                     path = files[0];
 #else
+                */
 
                 var provider = App.MainWindow?.StorageProvider;
 
@@ -182,7 +184,7 @@ namespace Convnet.PageViewModels
 
                     path = file?.TryGetLocalPath();
                 }
-#endif
+//#endif
                 if (path != null)
                 {
                     if (path.EndsWith(".csv"))
