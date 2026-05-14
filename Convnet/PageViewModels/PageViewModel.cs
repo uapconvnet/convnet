@@ -1,4 +1,5 @@
 ﻿using Avalonia.Platform.Storage;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Convnet.Common;
 using Convnet.Properties;
@@ -12,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Float = System.Single;
 using UInt = System.UInt64;
 
@@ -31,6 +33,21 @@ namespace Convnet.PageViewModels
         public void DocumentationCommand()
         {
             ApplicationHelper.OpenBrowser("https://github.com/uapconvnet/convnet.git");
+        }
+
+        public void ExitCommand()
+        {
+            App.MainWindow?.Close();
+        }
+
+        public void OpenCommand()
+        {
+            PageVM_Open(this, new EventArgs());
+        }
+
+        public void SaveCommand()
+        {
+            PageVM_Save(this, new EventArgs());
         }
 
         //public void Cut()

@@ -26,11 +26,11 @@
   <DockPanel x:Name="dockPanelMain" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource BackgroundBrush}">
     <Menu DockPanel.Dock="Top" x:Name="menuMain" Background="{DynamicResource ToolBarBackgroundBrush}">
       <MenuItem Header="_File">
-        <MenuItem Header="_Open..." InputGesture="Ctrl+O"  />
-        <MenuItem Header="Save"/>
+        <MenuItem Header="_Open..." InputGesture="Ctrl+O" Command="{Binding OpenCommand}"/>
+        <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
         <MenuItem Header="Save As..."/>
         <Separator/>
-        <MenuItem Header="Exit..."/>
+        <MenuItem Header="Exit..." Command="{Binding ExitCommand}"/>
       </MenuItem>
       <MenuItem Header="_Edit">
         <MenuItem Header="_Cut"  />
