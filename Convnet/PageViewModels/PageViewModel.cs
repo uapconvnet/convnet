@@ -48,45 +48,50 @@ namespace Convnet.PageViewModels
             PageVM_Save(this, new EventArgs());
         }
 
+        public void SaveAsCommand()
+        {
+            PageVM_SaveAs(this, new EventArgs());
+        }
+
         //public void Cut()
         //{
-           
-            //if (PageVM != null && PageVM.Pages != null)
-            //{
-            //    //var epvm = MainView.PageViews.Items[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
 
-            //    var epvm = PageVM.Pages[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
-            //    if (epvm != null)
-            //    {
-            //        var topLevel = TopLevel.GetTopLevel(this);
-            //        if (FocusManager != null)
-            //        {
-            //            var elem = FocusManager.GetFocusedElement();
+        //if (PageVM != null && PageVM.Pages != null)
+        //{
+        //    //var epvm = MainView.PageViews.Items[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
 
-            //        }
-            //    }
-            //}
+        //    var epvm = PageVM.Pages[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
+        //    if (epvm != null)
+        //    {
+        //        var topLevel = TopLevel.GetTopLevel(this);
+        //        if (FocusManager != null)
+        //        {
+        //            var elem = FocusManager.GetFocusedElement();
+
+        //        }
+        //    }
+        //}
         //}
 
         //public bool CanCut()
         //{
-            //if (PageVM != null && PageVM.Pages != null)
-            //{
-            //    //var epvm = MainView.PageViews.Items[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
+        //if (PageVM != null && PageVM.Pages != null)
+        //{
+        //    //var epvm = MainView.PageViews.Items[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
 
-            //    var epvm = PageVM.Pages[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
-            //    if (epvm != null)
-            //    {
-            //        var topLevel = TopLevel.GetTopLevel(this);
-            //        if (FocusManager != null)
-            //        {
-            //            var elem = FocusManager.GetFocusedElement();
-            //            return true;
-            //        }
-            //    }
-            //}
+        //    var epvm = PageVM.Pages[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
+        //    if (epvm != null)
+        //    {
+        //        var topLevel = TopLevel.GetTopLevel(this);
+        //        if (FocusManager != null)
+        //        {
+        //            var elem = FocusManager.GetFocusedElement();
+        //            return true;
+        //        }
+        //    }
+        //}
 
-          //  return true;
+        //  return true;
         //}
 
         public PageViewModel(DNNModel model) : base(model)
