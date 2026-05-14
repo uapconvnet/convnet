@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using ReactiveUI.Avalonia;
 using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
 using AvaloniaEdit.Indentation.CSharp;
@@ -10,6 +9,7 @@ using AvaloniaEdit.TextMate;
 using Convnet.Common;
 using Convnet.PageViewModels;
 using Convnet.Properties;
+using ReactiveUI.Avalonia;
 using System;
 using System.IO;
 using System.Linq;

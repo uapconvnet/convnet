@@ -1,7 +1,4 @@
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using ReactiveUI;
-using ReactiveUI.Avalonia;
 using Avalonia.Threading;
 using AvaloniaEdit;
 using Convnet.Common;
@@ -9,6 +6,8 @@ using Convnet.PageViewModels;
 using Convnet.Properties;
 using CustomMessageBox.Avalonia;
 using Interop;
+using ReactiveUI;
+using ReactiveUI.Avalonia;
 using System;
 using System.IO;
 using System.Linq;

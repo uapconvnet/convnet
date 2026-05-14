@@ -1,5 +1,4 @@
 ﻿using Avalonia.Platform.Storage;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Convnet.Common;
 using Convnet.Properties;
@@ -13,7 +12,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Float = System.Single;
 using UInt = System.UInt64;
 
