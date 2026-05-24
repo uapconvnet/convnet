@@ -120,6 +120,7 @@ namespace Convnet.PageViewModels
         public TimeSpan EpochDuration { get; set; }
         public event EventHandler? Open;
         public event EventHandler? Save;
+        public event EventHandler? SaveAs;
         public event EventHandler<int> RefreshRateChanged;
 
         public bool IsUpdating = false;
@@ -342,7 +343,7 @@ namespace Convnet.PageViewModels
             if (Settings.Default.DisableLocking)
                 layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
              else
-                 layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
+                layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
             //layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value, namescope) => new TextBlock { [!TextBlock.TextProperty] = new Binding("Name"), [!TextBlock.FontWeightProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) } });
             //layersComboBox.ItemTemplate = new FuncDataTemplate<DNNLayerInfo>((value) => value is not null, (value, namescope) => new CheckBox {[!CheckBox.IsHitTestVisibleProperty] = new Binding { Path = "HasWeights", Mode = BindingMode.OneWay },[!CheckBox.IsCheckedProperty] = new Binding {Path = "LockUpdate", Mode = BindingMode.TwoWay}, [!CheckBox.ContentProperty] = new Binding("Name"), [!CheckBox.FontWeightProperty] = new Binding {Path = "HasWeights", Mode = BindingMode.OneWay, Converter = new Converters.BoolToFontWeightConverter(), ConverterParameter = typeof(FontWeight) }});
             //layersComboBox.ItemTemplate = GetLockTemplate();
@@ -896,12 +897,7 @@ namespace Convnet.PageViewModels
             int temp = e != null ? (int)Math.Round(e.NewValue) : (int)Settings.Default.PixelSize;
             
             if (pixelSizeSlider != null)
-            {
-                if (temp == 1)
-                    ToolTip.SetTip(pixelSizeSlider, "1 Pixel");
-                else
-                    ToolTip.SetTip(pixelSizeSlider, temp.ToString() + " Pixels");
-            }
+                ToolTip.SetTip(pixelSizeSlider, temp.ToString() + ((temp == 1) ? " Pixel" : " Pixels"));
 
             Settings.Default.PixelSize = temp;
             Settings.Default.Save();

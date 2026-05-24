@@ -108,7 +108,8 @@ namespace Convnet.PageViewModels
 
                 var EditPageVM = new EditPageViewModel(Model);
                 EditPageVM.Open += PageVM_Open;
-                EditPageVM.Save += PageVM_SaveAs;
+                EditPageVM.Save += PageVM_Save;
+                EditPageVM.SaveAs += PageVM_SaveAs;
                 EditPageVM.Modelhanged += EditPageVM_ModelChanged;
 
                 var TestPageVM = new TestPageViewModel(Model);
@@ -117,6 +118,7 @@ namespace Convnet.PageViewModels
                 var TrainPageVM = new TrainPageViewModel(Model);
                 TrainPageVM.Open += PageVM_Open;
                 TrainPageVM.Save += PageVM_Save;
+                TrainPageVM.SaveAs += PageVM_SaveAs;
 
                 Pages = new ReadOnlyCollection<PageViewModelBase?>([EditPageVM, TestPageVM, TrainPageVM]);
                 CurrentPage = Pages[Settings.Default.CurrentPage];
@@ -127,7 +129,7 @@ namespace Convnet.PageViewModels
         {
             Settings.Default.Save();
         }
-
+       
         private async void PageVM_Open(object? sender, EventArgs e)
         {
             var path = string.Empty;
@@ -311,8 +313,62 @@ namespace Convnet.PageViewModels
             }
         }
 
-        private void PageVM_SaveAs(object? sender, EventArgs e)
+        private async void PageVM_SaveAs(object? sender, EventArgs e)
         {
+            string? path = null;
+
+            if (Model != null)
+            {
+                var folder = DefinitionsDirectory;
+                if (Directory.Exists(Path.Combine(DefinitionsDirectory, Model.Name)))
+                    folder = Path.Combine(DefinitionsDirectory, Model.Name);
+               
+                var provider = App.MainWindow?.StorageProvider;
+
+                if (provider != null && provider.CanSave)
+                {
+                    var typeWeights = new FilePickerFileType("Weights")
+                    {
+                        Patterns = ["*.bin"]
+                    };
+                    var typeLog = new FilePickerFileType("Log")
+                    {
+                        Patterns = ["*.csv"]
+                    };
+
+                    var typeDefinition = new FilePickerFileType("Definition")
+                    {
+                        Patterns = ["*.txt"]
+                    };
+                    var typeCSharp = new FilePickerFileType("C#")
+                    {
+                        Patterns = ["*.cs"]
+                    };
+                    
+                    string? suggestedFileName = Model.Name + @"-" + @"(" + Model.Dataset.ToString().ToLower() + @")" + (Settings.Default.PersistOptimizer ? @"(" + Model.Optimizer.ToString().ToLower() + @").bin" : @".bin");
+                    var filterList = new List<FilePickerFileType>();
+                    if (CurrentPage is TrainPageViewModel)
+                        filterList?.AddRange([typeWeights, typeLog]);
+                    if (CurrentPage is EditPageViewModel)
+                        filterList?.AddRange([typeDefinition, typeCSharp]);
+
+                    IStorageFolder? startingLocation = null;
+                    startingLocation = await provider.TryGetFolderFromPathAsync(folder);
+
+                    var file = await provider.SaveFilePickerAsync(new FilePickerSaveOptions
+                    {
+                        SuggestedFileName = suggestedFileName,
+                        Title = "Save As",
+                        SuggestedStartLocation = startingLocation,
+                        FileTypeChoices = filterList,
+                        ShowOverwritePrompt = true
+                    }); 
+
+                    path = file?.TryGetLocalPath();
+                }
+                else
+                    Dispatcher.UIThread.Post(() => MessageBox.Show("No suitable storage provider found", "Information", MessageBoxButtons.OK));
+            }
         }
 
         private void TrainProgress(DNNOptimizers Optimizer, UInt BatchSize, UInt Cycle, UInt TotalCycles, UInt Epoch, UInt TotalEpochs, bool HorizontalMirror, bool VerticalMirror, Float InputDropOut, Float Cutout, bool CutMix, Float AutoAugment, Float ColorCast, UInt ColorRadius, Float Distortion, DNNInterpolations Interpolation, Float Scaling, Float Rotation, UInt SampleIndex, Float Rate, Float Momentum, Float Beta2, Float Gamma, Float L2Penalty, Float DropOut, Float AvgTrainLoss, Float TrainErrorPercentage, Float TrainAccuracy, UInt TrainErrors, Float AvgTestLoss, Float TestErrorPercentage, Float Accuracy, UInt64 TestErrors, DNNStates NetworkState, DNNTaskStates TaskState)
@@ -463,7 +519,7 @@ namespace Convnet.PageViewModels
             if (Settings.Default.CurrentPage == (int)ViewModels.Edit && Pages != null)
             {
                 var vm = Pages[(int)ViewModels.Edit] as EditPageViewModel;
-                vm?.CheckButtonClick(this, new Avalonia.Interactivity.RoutedEventArgs());
+                vm?.CheckCommand.Execute();
             }
 
             if (Settings.Default.CurrentPage == (int)ViewModels.Test)

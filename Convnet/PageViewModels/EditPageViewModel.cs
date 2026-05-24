@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -31,6 +32,8 @@ namespace Convnet.PageViewModels
 #endif
         public event EventHandler? Open;
         public event EventHandler? Save;
+        public event EventHandler? SaveAs;
+       
 
         private string modelName = Settings.Default.ModelNameActive;
         private string definition = Settings.Default.DefinitionEditing;
@@ -54,10 +57,20 @@ namespace Convnet.PageViewModels
         private static bool initAction = true;
         private readonly DispatcherTimer clickWaitTimer;
        
+        public ReactiveCommand<Unit, Unit> CheckCommand { get; }
+        public ReactiveCommand<Unit, Unit> SyncCommand { get; }
+        public ReactiveCommand<Unit, Unit> ScriptsCommand { get; }
+        public ReactiveCommand<Unit, Unit> VisualStudioCommand { get; }
+
         public EditPageViewModel(DNNModel model) : base(model)
         {
             initAction = true;
             clickWaitTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Background, MouseWaitTimer_Tick);
+
+            CheckCommand = ReactiveCommand.Create(() => { DefinitionStatus = CheckDefinition(); });
+            SyncCommand = ReactiveCommand.Create(() => { Synchronize(this, new RoutedEventArgs()); });
+            ScriptsCommand = ReactiveCommand.Create(() => { Scripts(this, new RoutedEventArgs()); });
+            VisualStudioCommand = ReactiveCommand.Create(() => { VisualStudio(this, new RoutedEventArgs()); });
 
             AddCommandButtons();
         }
@@ -68,37 +81,46 @@ namespace Convnet.PageViewModels
             {
                 Name = "ButtonOpen",
                 Content = ApplicationHelper.LoadFromResource("OpenFile.png"),
-                ClickMode = ClickMode.Release
+                ClickMode = ClickMode.Release,
+                Command = ReactiveCommand.Create(() => Open?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(openButton, "Open");
-            openButton.Click += OpenButtonClick;
-            
+                        
             var saveButton = new Button
             {
                 Name = "ButtonSave",
                 Content = ApplicationHelper.LoadFromResource("SaveAs.png"),
-                ClickMode = ClickMode.Release
+                ClickMode = ClickMode.Release,
+                Command = ReactiveCommand.Create(() => Save?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(saveButton, "Save");
-            saveButton.Click += SaveButtonClick;
+            
+            var saveAsButton = new Button
+            {
+                Name = "ButtonSaveAs",
+                Content = ApplicationHelper.LoadFromResource("SaveAs.png"),
+                ClickMode = ClickMode.Release,
+                Command = ReactiveCommand.Create(() => SaveAs?.Invoke(this, EventArgs.Empty))
+            };
+            ToolTip.SetTip(saveAsButton, "Save As");
 
             var checkButton = new Button
             {
                 Name = "ButtonCheck",
                 Content = ApplicationHelper.LoadFromResource("SpellCheck.png"),
-                ClickMode = ClickMode.Release
+                ClickMode = ClickMode.Release,
+                Command = CheckCommand
             };
             ToolTip.SetTip(checkButton, "Check");
-            checkButton.Click += CheckButtonClick;
-            
+                       
             var synchronizeButton = new Button
             {
                 Name = "ButtonSynchronize",
                 Content = ApplicationHelper.LoadFromResource("Sync.png"),
-                ClickMode = ClickMode.Release
+                ClickMode = ClickMode.Release,
+                Command = SyncCommand
             };
             ToolTip.SetTip(synchronizeButton, "Synchronize");
-            synchronizeButton.Click += SynchronizeButtonClick;
             var binding = new Avalonia.Data.Binding("CanSynchronize")
             {
                 Converter = new Converters.BooleanToVisibilityConverter(),
@@ -111,21 +133,22 @@ namespace Convnet.PageViewModels
                 Name = "ButtonScripts",
                 Content = ApplicationHelper.LoadFromResource("Calculator.png"),
                 ClickMode = ClickMode.Release,
+                Command = ScriptsCommand
             };
             ToolTip.SetTip(scriptsButton, "Run Script");
-            scriptsButton.Click += ScriptsButtonClick;
-           
+            
             var visualStudioButton = new Button
             {
                 Name = "ButtonVisualStudio",
                 Content = ApplicationHelper.LoadFromResource("VisualStudio.png"),
                 ClickMode = ClickMode.Release,
+                Command = VisualStudioCommand
             };
             ToolTip.SetTip(visualStudioButton, "Open in Visual Studio");
-            visualStudioButton.Click += VisualStudioButtonClick;
-
+            
             CommandToolBar.Add(openButton);
             CommandToolBar.Add(saveButton);
+            //CommandToolBar.Add(saveAsButton);
             CommandToolBar.Add(checkButton);
             CommandToolBar.Add(synchronizeButton);
             CommandToolBar.Add(scriptsButton);
@@ -347,23 +370,9 @@ namespace Convnet.PageViewModels
 
         private static readonly string[] separator = [Environment.NewLine];
 
-        private void OpenButtonClick(object? sender, RoutedEventArgs e)
-        {
-            Open?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void SaveButtonClick(object? sender, RoutedEventArgs e)
-        {
-            Save?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void CheckButtonClick(object? sender, RoutedEventArgs e)
-        {
-            DefinitionStatus = CheckDefinition();
-        }
-
+      
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-        private async void SynchronizeButtonClick(object? sender, RoutedEventArgs e)
+        private async void Synchronize(object? sender, RoutedEventArgs e)
         {
             try
             {
@@ -534,13 +543,13 @@ namespace Convnet.PageViewModels
                 Dispatcher.UIThread.Post(() => ScriptDialog());
         }
 
-        private void ScriptsButtonClick(object? sender, RoutedEventArgs e)
+        private void Scripts(object? sender, RoutedEventArgs e)
         {
             initAction = false;
             clickWaitTimer.Start();
         }
 
-        private void VisualStudioButtonClick(object? sender, RoutedEventArgs e)
+        private void VisualStudio(object? sender, RoutedEventArgs e)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
