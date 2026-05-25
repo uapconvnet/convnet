@@ -82,6 +82,7 @@ namespace Convnet.PageViewModels
                 Name = "ButtonOpen",
                 Content = ApplicationHelper.LoadFromResource("OpenFile.png"),
                 ClickMode = ClickMode.Release,
+                Focusable = false,
                 Command = ReactiveCommand.Create(() => Open?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(openButton, "Open");
@@ -91,6 +92,7 @@ namespace Convnet.PageViewModels
                 Name = "ButtonSave",
                 Content = ApplicationHelper.LoadFromResource("SaveAs.png"),
                 ClickMode = ClickMode.Release,
+                Focusable = false,
                 Command = ReactiveCommand.Create(() => Save?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(saveButton, "Save");
@@ -100,6 +102,7 @@ namespace Convnet.PageViewModels
                 Name = "ButtonSaveAs",
                 Content = ApplicationHelper.LoadFromResource("SaveAs.png"),
                 ClickMode = ClickMode.Release,
+                Focusable = false,
                 Command = ReactiveCommand.Create(() => SaveAs?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(saveAsButton, "Save As");
@@ -109,6 +112,7 @@ namespace Convnet.PageViewModels
                 Name = "ButtonCheck",
                 Content = ApplicationHelper.LoadFromResource("SpellCheck.png"),
                 ClickMode = ClickMode.Release,
+                Focusable = false,
                 Command = CheckCommand
             };
             ToolTip.SetTip(checkButton, "Check");
@@ -118,6 +122,7 @@ namespace Convnet.PageViewModels
                 Name = "ButtonSynchronize",
                 Content = ApplicationHelper.LoadFromResource("Sync.png"),
                 ClickMode = ClickMode.Release,
+                Focusable = false,
                 Command = SyncCommand
             };
             ToolTip.SetTip(synchronizeButton, "Synchronize");
@@ -133,6 +138,7 @@ namespace Convnet.PageViewModels
                 Name = "ButtonScripts",
                 Content = ApplicationHelper.LoadFromResource("Calculator.png"),
                 ClickMode = ClickMode.Release,
+                Focusable = false,
                 Command = ScriptsCommand
             };
             ToolTip.SetTip(scriptsButton, "Run Script");
@@ -142,6 +148,7 @@ namespace Convnet.PageViewModels
                 Name = "ButtonVisualStudio",
                 Content = ApplicationHelper.LoadFromResource("VisualStudio.png"),
                 ClickMode = ClickMode.Release,
+                Focusable = false,
                 Command = VisualStudioCommand
             };
             ToolTip.SetTip(visualStudioButton, "Open in Visual Studio");
