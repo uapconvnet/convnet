@@ -3,6 +3,7 @@
 	xmlns="https://github.com/avaloniaui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:local="using:CustomMessageBox.Avalonia"
+	Background="#FF1E1E1E"
 	CanResize="False"
 	Classes="MessageBoxWindow"
 	DataContext="{Binding $self}"
@@ -10,7 +11,7 @@
 	ShowInTaskbar="False"
 	SizeToContent="WidthAndHeight"
 	WindowStartupLocation="CenterOwner">
-
+	
 	<StackPanel Orientation="{Binding DialogContentOrientation}" Spacing="{Binding MessagePanelToButtonsPanelSpacing}">
 		<StackPanel
 			HorizontalAlignment="{Binding HorizontalMessagePanelAlignment}"
