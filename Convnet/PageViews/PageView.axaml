@@ -22,6 +22,14 @@
       <view:TrainPageView />
     </DataTemplate>
   </UserControl.DataTemplates>
+  
+  <UserControl.Styles>
+    <Style Selector="Separator">
+      <Setter Property="Height" Value="NaN"/>
+      <Setter Property="Width" Value="2"/>
+      <Setter Property="Margin" Value="4"/>
+    </Style>
+  </UserControl.Styles>
 
   <DockPanel x:Name="dockPanelMain" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource BackgroundBrush}">
     <Menu DockPanel.Dock="Top" x:Name="menuMain" Background="{DynamicResource ToolBarBackgroundBrush}">
@@ -29,7 +37,7 @@
         <MenuItem Header="_Open..." InputGesture="Ctrl+O" Command="{Binding OpenCommand}"/>
         <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
         <MenuItem Header="Save As..." Command="{Binding SaveAsCommand}"/>
-        <Separator/>
+        <Separator Height="1" Width="NaN" Margin="2"/>
         <MenuItem Header="Exit..." Command="{Binding ExitCommand}"/>
       </MenuItem>
       <MenuItem Header="_Edit">
@@ -37,9 +45,9 @@
         <MenuItem Header="Co_py"/>
         <MenuItem Header="_Paste"/>
         <MenuItem Header="_Delete"/>
-        <Separator />
+        <Separator Height="1" Width="NaN" Margin="2"/>
         <MenuItem Header="Select _All"/>
-        <Separator />
+        <Separator Height="1" Width="NaN" Margin="2"/>
         <MenuItem Header="_Undo"/>
         <MenuItem Header="_Redo"/>
       </MenuItem>
