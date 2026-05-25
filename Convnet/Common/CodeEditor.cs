@@ -68,13 +68,23 @@ namespace Convnet.Common
             undo.Click += (s, e) => { if (CanUndo) Dispatcher.UIThread.Post(() => Undo()); };
             redo.Click += (s, e) => { if (CanRedo) Dispatcher.UIThread.Post(() => Redo()); };
 
+            var sepA = new Avalonia.Controls.Separator();
+            sepA.Width = Double.NaN;
+            sepA.Height = 1;
+            sepA.Margin = new Avalonia.Thickness(2);
+
+            var sepB = new Avalonia.Controls.Separator();
+            sepB.Width = Double.NaN;
+            sepB.Height = 1;
+            sepB.Margin = new Avalonia.Thickness(2);
+
             cm.Items.Add(cut);
             cm.Items.Add(copy);
             cm.Items.Add(paste);
             cm.Items.Add(delete);
-            cm.Items.Add(new Avalonia.Controls.Separator());
+            cm.Items.Add(sepA);
             cm.Items.Add(selectall);
-            cm.Items.Add(new Avalonia.Controls.Separator());
+            cm.Items.Add(sepB);
             cm.Items.Add(undo);
             cm.Items.Add(redo);
 
