@@ -29,8 +29,8 @@ namespace Convnet.Common
                 AllowScrollBelowDocument = true,
                 HighlightCurrentLine = true,
             };
-            TextArea.RightClickMovesCaret = true;
             TextArea.IndentationStrategy = new AvaloniaEdit.Indentation.CSharp.CSharpIndentationStrategy(Options);
+            TextArea.RightClickMovesCaret = true;
 
             var cmdKey = ApplicationHelper.GetPlatformCommandKey();
 
@@ -68,15 +68,15 @@ namespace Convnet.Common
             undo.Click += (s, e) => { if (CanUndo) Dispatcher.UIThread.Post(() => Undo()); };
             redo.Click += (s, e) => { if (CanRedo) Dispatcher.UIThread.Post(() => Redo()); };
 
-            var sepA = new Avalonia.Controls.Separator();
+            var sepA = new Separator();
             sepA.Width = Double.NaN;
             sepA.Height = 1;
-            sepA.Margin = new Avalonia.Thickness(2);
+            sepA.Margin = new Thickness(2);
 
-            var sepB = new Avalonia.Controls.Separator();
+            var sepB = new Separator();
             sepB.Width = Double.NaN;
             sepB.Height = 1;
-            sepB.Margin = new Avalonia.Thickness(2);
+            sepB.Margin = new Thickness(2);
 
             cm.Items.Add(cut);
             cm.Items.Add(copy);

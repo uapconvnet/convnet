@@ -472,6 +472,8 @@ namespace Convnet.PageViewModels
                 SmallChange = 1,
                 Width = 106,
                 Height = 24,
+                TickPlacement = TickPlacement.TopLeft,
+                IsSnapToTickEnabled = false, 
                 Value = Settings.Default.PixelSize
             };
             ToolTip.SetTip(pixelSizeSlider, Math.Round(Settings.Default.PixelSize) == 1 ? "1 Pixel" : Math.Round(Settings.Default.PixelSize).ToString() + " Pixels");
