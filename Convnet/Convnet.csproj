@@ -102,7 +102,7 @@
 	  <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.27548.20260419" />
 	  <PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
     <PackageReference Include="AvaloniaEdit.TextMate" Version="12.0.0" />
-    <PackageReference Include="TextMateSharp.Grammars" Version="2.0.3" />
+    <!-- <PackageReference Include="TextMateSharp.Grammars" Version="2.0.3" /> -->
 	  <PackageReference Include="Avalonia.BuildServices" Version="11.3.2">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
