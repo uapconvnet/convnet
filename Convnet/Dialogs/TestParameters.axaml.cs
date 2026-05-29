@@ -73,7 +73,7 @@ namespace Convnet.Dialogs
                 if (strategy != null)
                     strategy.IsChecked = Settings.Default.UseTrainingStrategy;
 
-                var tbc = this.FindControl<TextBox>("textBoxCycles");
+                var tbc = this.FindControl<TextBox>("textBoxBatchSize");
                 if (tbc != null)
                 { 
                     tbc.Focus();
