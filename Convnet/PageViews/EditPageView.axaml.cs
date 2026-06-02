@@ -41,7 +41,7 @@ namespace Convnet.PageViews
             {
                 editorDefinition.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".txt");
                 //editorDefinition.TextChanged += EditorDefinition_TextChanged;
-                
+
                 //var line = editorDefinition.Document.GetLineByNumber(Settings.Default.TextLocationDefinition.Line);
                 //editorDefinition.CaretOffset = line.Offset + Settings.Default.TextLocationDefinition.Column;
                 //editorDefinition.TextArea.Caret.BringCaretToView(); // ← Try this call. 
@@ -118,12 +118,35 @@ namespace Convnet.PageViews
             {
                 var gr = this.FindControl<Grid>("grid");
                 if (gr != null)
-                { 
+                {
                     Settings.Default.EditSplitPosition = gr.ColumnDefinitions.First().ActualWidth;
                     Settings.Default.Save();
                     e.Handled = true;
                 }
             }
         }
+
+        private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            var editorDefinition = this.FindControl<CodeEditor>("EditorDefinition");
+            var editorScript = this.FindControl<CodeEditor>("EditorScript");
+                        
+            if (Settings.Default.FocusedEditor == 0)
+                editorDefinition?.Focus();
+            else
+                editorScript?.Focus();
+        }
+
+        private void EditorDefinition_GotFocus(object? sender, FocusChangedEventArgs e)
+        {
+            Settings.Default.FocusedEditor = 0;
+            Settings.Default.Save();
+        }
+
+         private void EditorScript_GotFocus(object? sender, FocusChangedEventArgs e)
+        {
+            Settings.Default.FocusedEditor = 1;
+            Settings.Default.Save();
+        }   
     }
 }
