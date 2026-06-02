@@ -12,7 +12,7 @@ namespace Convnet.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.6.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -478,7 +478,7 @@ namespace Convnet.Properties {
                 this["FocusedEditor"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
@@ -505,38 +505,35 @@ namespace Convnet.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[resnet-3-2-6-channelzeropad-relu]\r\nDataset=cifar10\r\nDim=3,32,32\r\nZeroPad=4,4\r\nRa" +
-            "ndomCrop=Yes\r\nWeightsFiller=HeNormal(In,1)\r\nBiases=No\r\nDropout=0\r\nDepthDrop=0\r\nF" +
-            "ixedDepthDrop=No\r\nScaling=No\r\nMomentum=0.995\r\nEps=0.0001\r\n\r\n[C1]\r\nType=Convoluti" +
-            "on\r\nInputs=Input\r\nChannels=96\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[B1]\r\nType=BatchNormRelu\r\n" +
-            "Inputs=C1\r\n\r\n[C2]\r\nType=Convolution\r\nInputs=B1\r\nChannels=96\r\nKernel=3,3\r\nPad=1,1" +
-            "\r\n\r\n[B2]\r\nType=BatchNormRelu\r\nInputs=C2\r\n\r\n[C3]\r\nType=Convolution\r\nInputs=B2\r\nCh" +
-            "annels=96\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[C4]\r\nType=Convolution\r\nInputs=B1\r\nChannels=96" +
-            "\r\nKernel=1,1\r\n\r\n[A1]\r\nType=Add\r\nInputs=C3,C4\r\n\r\n[B5]\r\nType=BatchNormRelu\r\nInputs" +
-            "=A1\r\n\r\n[C5]\r\nType=Convolution\r\nInputs=B5\r\nChannels=96\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[B" +
-            "6]\r\nType=BatchNormRelu\r\nInputs=C5\r\n\r\n[C6]\r\nType=Convolution\r\nInputs=B6\r\nChannels" +
-            "=96\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[A2]\r\nType=DropPathAdd\r\nInputs=C6,A1\r\n\r\n[B7]\r\nType=B" +
-            "atchNormRelu\r\nInputs=A2\r\n\r\n[C7]\r\nType=Convolution\r\nInputs=B7\r\nChannels=192\r\nKern" +
-            "el=3,3\r\nStride=2,2\r\nPad=1,1\r\n\r\n[B8]\r\nType=BatchNormRelu\r\nInputs=C7\r\n\r\n[C8]\r\nType" +
-            "=Convolution\r\nInputs=B8\r\nChannels=192\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[P1]\r\nType=AvgPool" +
-            "ing\r\nInputs=A2\r\nKernel=3,3\r\nStride=2,2\r\nPad=1,1\r\n\r\n[CZP1]\r\nType=ChannelZeroPad\r\n" +
-            "Inputs=P1\r\nChannels=192\r\n\r\n[A3]\r\nType=DropPathAdd\r\nInputs=C8,CZP1\r\n\r\n[B9]\r\nType=" +
-            "BatchNormRelu\r\nInputs=A3\r\n\r\n[C9]\r\nType=Convolution\r\nInputs=B9\r\nChannels=192\r\nKer" +
-            "nel=3,3\r\nPad=1,1\r\n\r\n[B10]\r\nType=BatchNormRelu\r\nInputs=C9\r\n\r\n[C10]\r\nType=Convolut" +
-            "ion\r\nInputs=B10\r\nChannels=192\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[A4]\r\nType=DropPathAdd\r\nIn" +
-            "puts=C10,A3\r\n\r\n[B11]\r\nType=BatchNormRelu\r\nInputs=A4\r\n\r\n[C11]\r\nType=Convolution\r\n" +
-            "Inputs=B11\r\nChannels=384\r\nKernel=3,3\r\nStride=2,2\r\nPad=1,1\r\n\r\n[B12]\r\nType=BatchNo" +
-            "rmRelu\r\nInputs=C11\r\n\r\n[C12]\r\nType=Convolution\r\nInputs=B12\r\nChannels=384\r\nKernel=" +
-            "3,3\r\nPad=1,1\r\n\r\n[P2]\r\nType=AvgPooling\r\nInputs=A4\r\nKernel=3,3\r\nStride=2,2\r\nPad=1," +
-            "1\r\n\r\n[CZP2]\r\nType=ChannelZeroPad\r\nInputs=P2\r\nChannels=384\r\n\r\n[A5]\r\nType=DropPath" +
-            "Add\r\nInputs=C12,CZP2\r\n\r\n[B13]\r\nType=BatchNormRelu\r\nInputs=A5\r\n\r\n[C13]\r\nType=Conv" +
-            "olution\r\nInputs=B13\r\nChannels=384\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[B14]\r\nType=BatchNormR" +
-            "elu\r\nInputs=C13\r\n\r\n[C14]\r\nType=Convolution\r\nInputs=B14\r\nChannels=384\r\nKernel=3,3" +
-            "\r\nPad=1,1\r\n\r\n[A6]\r\nType=DropPathAdd\r\nInputs=C14,A5\r\n\r\n[B15]\r\nType=BatchNormRelu\r" +
-            "\nInputs=A6\r\n\r\n[C16]\r\nType=Convolution\r\nInputs=B15\r\nChannels=10\r\nKernel=1,1\r\n\r\n[B" +
-            "16]\r\nType=BatchNorm\r\nInputs=C16\r\n\r\n[GAP]\r\nType=GlobalAvgPooling\r\nInputs=B16\r\n\r\n[" +
-            "LSM]\r\nType=LogSoftmax\r\nInputs=GAP\r\n\r\n[Cost]\r\nType=Cost\r\nInputs=LSM\r\nCost=Categor" +
-            "icalCrossEntropy\r\nLabelIndex=0\r\nChannels=10\r\nEps=0.125")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[resnet-3-2-6-channelzeropad-relu]\nDataset=cifar10\nDim=3,32,32\nZeroPad=4,4\nRandom" +
+            "Crop=Yes\nWeightsFiller=HeNormal(In,1)\nBiases=No\nDropout=0\nDepthDrop=0\nFixedDepth" +
+            "Drop=No\nScaling=No\nMomentum=0.995\nEps=0.0001\n\n[C1]\nType=Convolution\nInputs=Input" +
+            "\nChannels=96\nKernel=3,3\nPad=1,1\n\n[B1]\nType=BatchNormRelu\nInputs=C1\n\n[C2]\nType=Co" +
+            "nvolution\nInputs=B1\nChannels=96\nKernel=3,3\nPad=1,1\n\n[B2]\nType=BatchNormRelu\nInpu" +
+            "ts=C2\n\n[C3]\nType=Convolution\nInputs=B2\nChannels=96\nKernel=3,3\nPad=1,1\n\n[C4]\nType" +
+            "=Convolution\nInputs=B1\nChannels=96\nKernel=1,1\n\n[A1]\nType=Add\nInputs=C3,C4\n\n[B5]\n" +
+            "Type=BatchNormRelu\nInputs=A1\n\n[C5]\nType=Convolution\nInputs=B5\nChannels=96\nKernel" +
+            "=3,3\nPad=1,1\n\n[B6]\nType=BatchNormRelu\nInputs=C5\n\n[C6]\nType=Convolution\nInputs=B6" +
+            "\nChannels=96\nKernel=3,3\nPad=1,1\n\n[A2]\nType=DropPathAdd\nInputs=C6,A1\n\n[B7]\nType=B" +
+            "atchNormRelu\nInputs=A2\n\n[C7]\nType=Convolution\nInputs=B7\nChannels=192\nKernel=3,3\n" +
+            "Stride=2,2\nPad=1,1\n\n[B8]\nType=BatchNormRelu\nInputs=C7\n\n[C8]\nType=Convolution\nInp" +
+            "uts=B8\nChannels=192\nKernel=3,3\nPad=1,1\n\n[P1]\nType=AvgPooling\nInputs=A2\nKernel=3," +
+            "3\nStride=2,2\nPad=1,1\n\n[CZP1]\nType=ChannelZeroPad\nInputs=P1\nChannels=192\n\n[A3]\nTy" +
+            "pe=DropPathAdd\nInputs=C8,CZP1\n\n[B9]\nType=BatchNormRelu\nInputs=A3\n\n[C9]\nType=Conv" +
+            "olution\nInputs=B9\nChannels=192\nKernel=3,3\nPad=1,1\n\n[B10]\nType=BatchNormRelu\nInpu" +
+            "ts=C9\n\n[C10]\nType=Convolution\nInputs=B10\nChannels=192\nKernel=3,3\nPad=1,1\n\n[A4]\nT" +
+            "ype=DropPathAdd\nInputs=C10,A3\n\n[B11]\nType=BatchNormRelu\nInputs=A4\n\n[C11]\nType=Co" +
+            "nvolution\nInputs=B11\nChannels=384\nKernel=3,3\nStride=2,2\nPad=1,1\n\n[B12]\nType=Batc" +
+            "hNormRelu\nInputs=C11\n\n[C12]\nType=Convolution\nInputs=B12\nChannels=384\nKernel=3,3\n" +
+            "Pad=1,1\n\n[P2]\nType=AvgPooling\nInputs=A4\nKernel=3,3\nStride=2,2\nPad=1,1\n\n[CZP2]\nTy" +
+            "pe=ChannelZeroPad\nInputs=P2\nChannels=384\n\n[A5]\nType=DropPathAdd\nInputs=C12,CZP2\n" +
+            "\n[B13]\nType=BatchNormRelu\nInputs=A5\n\n[C13]\nType=Convolution\nInputs=B13\nChannels=" +
+            "384\nKernel=3,3\nPad=1,1\n\n[B14]\nType=BatchNormRelu\nInputs=C13\n\n[C14]\nType=Convolut" +
+            "ion\nInputs=B14\nChannels=384\nKernel=3,3\nPad=1,1\n\n[A6]\nType=DropPathAdd\nInputs=C14" +
+            ",A5\n\n[B15]\nType=BatchNormRelu\nInputs=A6\n\n[C16]\nType=Convolution\nInputs=B15\nChann" +
+            "els=10\nKernel=1,1\n\n[B16]\nType=BatchNorm\nInputs=C16\n\n[GAP]\nType=GlobalAvgPooling\n" +
+            "Inputs=B16\n\n[LSM]\nType=LogSoftmax\nInputs=GAP\n\n[Cost]\nType=Cost\nInputs=LSM\nCost=C" +
+            "ategoricalCrossEntropy\nLabelIndex=0\nChannels=10\nEps=0.125")]
         public string DefinitionEditing {
             get {
                 return ((string)(this["DefinitionEditing"]));
@@ -548,38 +545,35 @@ namespace Convnet.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[resnet-3-2-6-channelzeropad-relu]\r\nDataset=cifar10\r\nDim=3,32,32\r\nZeroPad=4,4\r\nRa" +
-            "ndomCrop=Yes\r\nWeightsFiller=HeNormal(In,1)\r\nBiases=No\r\nDropout=0\r\nDepthDrop=0\r\nF" +
-            "ixedDepthDrop=No\r\nScaling=No\r\nMomentum=0.995\r\nEps=0.0001\r\n\r\n[C1]\r\nType=Convoluti" +
-            "on\r\nInputs=Input\r\nChannels=96\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[B1]\r\nType=BatchNormRelu\r\n" +
-            "Inputs=C1\r\n\r\n[C2]\r\nType=Convolution\r\nInputs=B1\r\nChannels=96\r\nKernel=3,3\r\nPad=1,1" +
-            "\r\n\r\n[B2]\r\nType=BatchNormRelu\r\nInputs=C2\r\n\r\n[C3]\r\nType=Convolution\r\nInputs=B2\r\nCh" +
-            "annels=96\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[C4]\r\nType=Convolution\r\nInputs=B1\r\nChannels=96" +
-            "\r\nKernel=1,1\r\n\r\n[A1]\r\nType=Add\r\nInputs=C3,C4\r\n\r\n[B5]\r\nType=BatchNormRelu\r\nInputs" +
-            "=A1\r\n\r\n[C5]\r\nType=Convolution\r\nInputs=B5\r\nChannels=96\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[B" +
-            "6]\r\nType=BatchNormRelu\r\nInputs=C5\r\n\r\n[C6]\r\nType=Convolution\r\nInputs=B6\r\nChannels" +
-            "=96\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[A2]\r\nType=DropPathAdd\r\nInputs=C6,A1\r\n\r\n[B7]\r\nType=B" +
-            "atchNormRelu\r\nInputs=A2\r\n\r\n[C7]\r\nType=Convolution\r\nInputs=B7\r\nChannels=192\r\nKern" +
-            "el=3,3\r\nStride=2,2\r\nPad=1,1\r\n\r\n[B8]\r\nType=BatchNormRelu\r\nInputs=C7\r\n\r\n[C8]\r\nType" +
-            "=Convolution\r\nInputs=B8\r\nChannels=192\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[P1]\r\nType=AvgPool" +
-            "ing\r\nInputs=A2\r\nKernel=3,3\r\nStride=2,2\r\nPad=1,1\r\n\r\n[CZP1]\r\nType=ChannelZeroPad\r\n" +
-            "Inputs=P1\r\nChannels=192\r\n\r\n[A3]\r\nType=DropPathAdd\r\nInputs=C8,CZP1\r\n\r\n[B9]\r\nType=" +
-            "BatchNormRelu\r\nInputs=A3\r\n\r\n[C9]\r\nType=Convolution\r\nInputs=B9\r\nChannels=192\r\nKer" +
-            "nel=3,3\r\nPad=1,1\r\n\r\n[B10]\r\nType=BatchNormRelu\r\nInputs=C9\r\n\r\n[C10]\r\nType=Convolut" +
-            "ion\r\nInputs=B10\r\nChannels=192\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[A4]\r\nType=DropPathAdd\r\nIn" +
-            "puts=C10,A3\r\n\r\n[B11]\r\nType=BatchNormRelu\r\nInputs=A4\r\n\r\n[C11]\r\nType=Convolution\r\n" +
-            "Inputs=B11\r\nChannels=384\r\nKernel=3,3\r\nStride=2,2\r\nPad=1,1\r\n\r\n[B12]\r\nType=BatchNo" +
-            "rmRelu\r\nInputs=C11\r\n\r\n[C12]\r\nType=Convolution\r\nInputs=B12\r\nChannels=384\r\nKernel=" +
-            "3,3\r\nPad=1,1\r\n\r\n[P2]\r\nType=AvgPooling\r\nInputs=A4\r\nKernel=3,3\r\nStride=2,2\r\nPad=1," +
-            "1\r\n\r\n[CZP2]\r\nType=ChannelZeroPad\r\nInputs=P2\r\nChannels=384\r\n\r\n[A5]\r\nType=DropPath" +
-            "Add\r\nInputs=C12,CZP2\r\n\r\n[B13]\r\nType=BatchNormRelu\r\nInputs=A5\r\n\r\n[C13]\r\nType=Conv" +
-            "olution\r\nInputs=B13\r\nChannels=384\r\nKernel=3,3\r\nPad=1,1\r\n\r\n[B14]\r\nType=BatchNormR" +
-            "elu\r\nInputs=C13\r\n\r\n[C14]\r\nType=Convolution\r\nInputs=B14\r\nChannels=384\r\nKernel=3,3" +
-            "\r\nPad=1,1\r\n\r\n[A6]\r\nType=DropPathAdd\r\nInputs=C14,A5\r\n\r\n[B15]\r\nType=BatchNormRelu\r" +
-            "\nInputs=A6\r\n\r\n[C16]\r\nType=Convolution\r\nInputs=B15\r\nChannels=10\r\nKernel=1,1\r\n\r\n[B" +
-            "16]\r\nType=BatchNorm\r\nInputs=C16\r\n\r\n[GAP]\r\nType=GlobalAvgPooling\r\nInputs=B16\r\n\r\n[" +
-            "LSM]\r\nType=LogSoftmax\r\nInputs=GAP\r\n\r\n[Cost]\r\nType=Cost\r\nInputs=LSM\r\nCost=Categor" +
-            "icalCrossEntropy\r\nLabelIndex=0\r\nChannels=10\r\nEps=0.125\r\n")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[resnet-3-2-6-channelzeropad-relu]\nDataset=cifar10\nDim=3,32,32\nZeroPad=4,4\nRandom" +
+            "Crop=Yes\nWeightsFiller=HeNormal(In,1)\nBiases=No\nDropout=0\nDepthDrop=0\nFixedDepth" +
+            "Drop=No\nScaling=No\nMomentum=0.995\nEps=0.0001\n\n[C1]\nType=Convolution\nInputs=Input" +
+            "\nChannels=96\nKernel=3,3\nPad=1,1\n\n[B1]\nType=BatchNormRelu\nInputs=C1\n\n[C2]\nType=Co" +
+            "nvolution\nInputs=B1\nChannels=96\nKernel=3,3\nPad=1,1\n\n[B2]\nType=BatchNormRelu\nInpu" +
+            "ts=C2\n\n[C3]\nType=Convolution\nInputs=B2\nChannels=96\nKernel=3,3\nPad=1,1\n\n[C4]\nType" +
+            "=Convolution\nInputs=B1\nChannels=96\nKernel=1,1\n\n[A1]\nType=Add\nInputs=C3,C4\n\n[B5]\n" +
+            "Type=BatchNormRelu\nInputs=A1\n\n[C5]\nType=Convolution\nInputs=B5\nChannels=96\nKernel" +
+            "=3,3\nPad=1,1\n\n[B6]\nType=BatchNormRelu\nInputs=C5\n\n[C6]\nType=Convolution\nInputs=B6" +
+            "\nChannels=96\nKernel=3,3\nPad=1,1\n\n[A2]\nType=DropPathAdd\nInputs=C6,A1\n\n[B7]\nType=B" +
+            "atchNormRelu\nInputs=A2\n\n[C7]\nType=Convolution\nInputs=B7\nChannels=192\nKernel=3,3\n" +
+            "Stride=2,2\nPad=1,1\n\n[B8]\nType=BatchNormRelu\nInputs=C7\n\n[C8]\nType=Convolution\nInp" +
+            "uts=B8\nChannels=192\nKernel=3,3\nPad=1,1\n\n[P1]\nType=AvgPooling\nInputs=A2\nKernel=3," +
+            "3\nStride=2,2\nPad=1,1\n\n[CZP1]\nType=ChannelZeroPad\nInputs=P1\nChannels=192\n\n[A3]\nTy" +
+            "pe=DropPathAdd\nInputs=C8,CZP1\n\n[B9]\nType=BatchNormRelu\nInputs=A3\n\n[C9]\nType=Conv" +
+            "olution\nInputs=B9\nChannels=192\nKernel=3,3\nPad=1,1\n\n[B10]\nType=BatchNormRelu\nInpu" +
+            "ts=C9\n\n[C10]\nType=Convolution\nInputs=B10\nChannels=192\nKernel=3,3\nPad=1,1\n\n[A4]\nT" +
+            "ype=DropPathAdd\nInputs=C10,A3\n\n[B11]\nType=BatchNormRelu\nInputs=A4\n\n[C11]\nType=Co" +
+            "nvolution\nInputs=B11\nChannels=384\nKernel=3,3\nStride=2,2\nPad=1,1\n\n[B12]\nType=Batc" +
+            "hNormRelu\nInputs=C11\n\n[C12]\nType=Convolution\nInputs=B12\nChannels=384\nKernel=3,3\n" +
+            "Pad=1,1\n\n[P2]\nType=AvgPooling\nInputs=A4\nKernel=3,3\nStride=2,2\nPad=1,1\n\n[CZP2]\nTy" +
+            "pe=ChannelZeroPad\nInputs=P2\nChannels=384\n\n[A5]\nType=DropPathAdd\nInputs=C12,CZP2\n" +
+            "\n[B13]\nType=BatchNormRelu\nInputs=A5\n\n[C13]\nType=Convolution\nInputs=B13\nChannels=" +
+            "384\nKernel=3,3\nPad=1,1\n\n[B14]\nType=BatchNormRelu\nInputs=C13\n\n[C14]\nType=Convolut" +
+            "ion\nInputs=B14\nChannels=384\nKernel=3,3\nPad=1,1\n\n[A6]\nType=DropPathAdd\nInputs=C14" +
+            ",A5\n\n[B15]\nType=BatchNormRelu\nInputs=A6\n\n[C16]\nType=Convolution\nInputs=B15\nChann" +
+            "els=10\nKernel=1,1\n\n[B16]\nType=BatchNorm\nInputs=C16\n\n[GAP]\nType=GlobalAvgPooling\n" +
+            "Inputs=B16\n\n[LSM]\nType=LogSoftmax\nInputs=GAP\n\n[Cost]\nType=Cost\nInputs=LSM\nCost=C" +
+            "ategoricalCrossEntropy\nLabelIndex=0\nChannels=10\nEps=0.125\n")]
         public string DefinitionActive {
             get {
                 return ((string)(this["DefinitionActive"]));
