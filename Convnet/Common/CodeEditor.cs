@@ -21,7 +21,7 @@ namespace Convnet.Common
         public CodeEditor()
         {
             FontSize = 14;
-            FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo,Monospace");
+            FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo");
             Options = new TextEditorOptions
             {
                 IndentationSize = 4,
