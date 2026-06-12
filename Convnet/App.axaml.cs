@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 
-
 namespace Convnet
 {
     public partial class App : Application

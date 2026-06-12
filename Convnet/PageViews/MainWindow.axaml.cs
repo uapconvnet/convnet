@@ -6,11 +6,11 @@ using Convnet.PageViewModels;
 using Convnet.Properties;
 using CustomMessageBox.Avalonia;
 using Interop;
+using System.Linq;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using System;
 using System.IO;
-using System.Linq;
 using System.Reactive;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -21,7 +21,7 @@ namespace Convnet.PageViews
 {
     public partial class MainWindow : ReactiveWindow<PageViewModel>
     {
-        const string Framework = "net9.0";
+        const string Framework = "net10.0";
 #if DEBUG
         const string Mode = "Debug";
 #else
@@ -237,13 +237,13 @@ namespace Convnet.PageViews
                     ApplicationHelper.CopyDir(Path.Combine(ApplicationPath.Replace(Path.Combine("Convnet", "bin", (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "x64" : ""), Mode, Framework), ""), "Scripts"), ScriptsDirectory);
                 }
 
-                if (!File.Exists(Path.Combine(StateDirectory, backupModelName + ".txt")) || !File.ReadLines(Path.Combine(StateDirectory, backupModelName + ".txt")).SequenceEqual(File.ReadLines(Path.Combine(ApplicationPath, "Resources", "state", backupModelName + ".txt"))))
-                    File.Copy(Path.Combine(ApplicationPath, "Resources", "state", backupModelName + ".txt"), Path.Combine(StateDirectory, backupModelName + ".txt"), true);
+                if (!File.Exists(Path.Combine(StateDirectory, backupModelName + ".txt")) || !File.ReadLines(Path.Combine(StateDirectory, backupModelName + ".txt")).SequenceEqual(File.ReadLines(Path.Combine(ApplicationPath, "Assets", "state", backupModelName + ".txt"))))
+                    File.Copy(Path.Combine(ApplicationPath, "Assets", "state", backupModelName + ".txt"), Path.Combine(StateDirectory, backupModelName + ".txt"), true);
 
                 if (!File.Exists(fileName))
                 {
                     Directory.CreateDirectory(Path.Combine(DefinitionsDirectory, backupModelName));
-                    File.Copy(Path.Combine(ApplicationPath, "Resources", "state", backupModelName + ".txt"), Path.Combine(DefinitionsDirectory, backupModelName + ".txt"), true);
+                    File.Copy(Path.Combine(ApplicationPath, "Assets", "state", backupModelName + ".txt"), Path.Combine(DefinitionsDirectory, backupModelName + ".txt"), true);
 
                     fileName = Path.Combine(StateDirectory, backupModelName + ".txt");
                     Settings.Default.ModelNameActive = backupModelName;
@@ -334,7 +334,7 @@ namespace Convnet.PageViews
                 {
                     // try backup model
                     if (ApplicationPath != null)
-                        File.Copy(Path.Combine(ApplicationPath, "Resources", "state", backupModelName + ".txt"), Path.Combine(StateDirectory, backupModelName + ".txt"), true);
+                        File.Copy(Path.Combine(ApplicationPath, "Assets", "state", backupModelName + ".txt"), Path.Combine(StateDirectory, backupModelName + ".txt"), true);
                     fileName = Path.Combine(StateDirectory, backupModelName + ".txt");
                     Settings.Default.ModelNameActive = backupModelName;
                     Settings.Default.DefinitionActive = File.ReadAllText(fileName);

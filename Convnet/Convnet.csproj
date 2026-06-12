@@ -8,7 +8,7 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <StartupObject>Convnet.Program</StartupObject>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationIcon>Resources\App.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\App.ico</ApplicationIcon>
     <Platforms>x64</Platforms>
     <AssemblyName>Convnet</AssemblyName>
     <SignAssembly>True</SignAssembly>

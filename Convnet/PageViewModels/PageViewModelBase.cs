@@ -1,12 +1,10 @@
 ﻿using Avalonia.Controls;
-using DynamicData;
 using Interop;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;

@@ -1,28 +1,30 @@
-using Avalonia.Controls;
-using Avalonia.Controls.Templates;
-using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Media;
-using Avalonia.Platform.Storage;
-using Avalonia.Threading;
+using Avalonia.Controls;
 using Convnet.Common;
 using Convnet.Dialogs;
 using Convnet.Properties;
-using CustomMessageBox.Avalonia;
 using Interop;
 using OxyPlot;
-using OxyPlot.Axes;
 using OxyPlot.Legends;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Reactive;
-using System.Runtime;
 using System.Text;
 using System.Timers;
+using System.Linq;
+using Avalonia.Data;
+using Avalonia.Controls.Templates;
+using Avalonia.Media;
+using Avalonia.Threading;
+using CustomMessageBox.Avalonia;
+using System.IO;
+using System.Runtime;
+using OxyPlot.Avalonia;
+using OxyPlot.Axes;
+using Avalonia.Platform.Storage;
+using System.Collections.Generic;
+
 using Float = System.Single;
 using UInt = System.UInt64;
 
@@ -1045,7 +1047,7 @@ namespace Convnet.PageViewModels
             Dispatcher.UIThread.Invoke(() =>
             {
                 plotModel = new PlotModel();
-                var laLeft = new LinearAxis
+                var laLeft = new OxyPlot.Axes.LinearAxis
                 {
                     Title = "",
                     Position = AxisPosition.Left,
@@ -1055,7 +1057,7 @@ namespace Convnet.PageViewModels
                     IsPanEnabled = false,
                     IsZoomEnabled = false
                 };
-                var laBottomn = new LinearAxis
+                var laBottomn = new OxyPlot.Axes.LinearAxis
                 {
                     Title = "Epochs",
                     TitleFontSize = 14,
@@ -1084,7 +1086,7 @@ namespace Convnet.PageViewModels
                 };
                 plotModel.Series.Add(lsTrain);
                 plotModel.Series.Add(lsTest);
-                var legend = new Legend();
+                var legend = new OxyPlot.Legends.Legend();
                 legend.LegendFont = "Consolas";
                 legend.LegendPosition = CurrentLegendPosition;
                 legend.LegendTitleFontSize = 16;

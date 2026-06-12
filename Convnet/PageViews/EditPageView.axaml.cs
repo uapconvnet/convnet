@@ -5,7 +5,6 @@ using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
 using AvaloniaEdit.Indentation.CSharp;
 using AvaloniaEdit.TextMate;
-//using AvaloniaEdit.TextMate.Grammars;
 using Convnet.Common;
 using Convnet.PageViewModels;
 using Convnet.Properties;
