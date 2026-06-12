@@ -18,6 +18,6 @@ Type=Application
 Terminal=false
 Exec=${SCRIPT_DIR}/Convnet/bin/Release/net10.0/Convnet
 Name=Convnet
-Icon=${SCRIPT_DIR}/Convnet/Resources/App.ico
+Icon=${SCRIPT_DIR}/Convnet/Assets/App.ico
 Comment=
 NoDisplay=false" > ${HOME}/.local/share/applications/convnet.desktop
