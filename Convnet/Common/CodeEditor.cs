@@ -9,6 +9,7 @@ using AvaloniaEdit.Editing;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Convnet.Common
 {
@@ -21,7 +22,12 @@ namespace Convnet.Common
         public CodeEditor()
         {
             FontSize = 14;
-            FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo");
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo,Monospace");
+            else    
+                FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo");
+
             Options = new TextEditorOptions
             {
                 IndentationSize = 4,
