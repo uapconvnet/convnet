@@ -37,61 +37,61 @@
   </ItemGroup>
 	
   <ItemGroup>
-	<None Remove="Resources\Fonts\*" />
-	<None Remove="Resources\Calculator.png" />
-	<None Remove="Resources\Cancel.png" />
-	<None Remove="Resources\dark_vs.json" />
-	<None Remove="Resources\Delete.png" />
-	<None Remove="Resources\OpenFile.png" />
-	<None Remove="Resources\SaveAs.png" />
-	<None Remove="Resources\SelectAll.png" />
-	<None Remove="Resources\state\resnet-3-2-6-channelzeropad-relu.txt" />
-	<None Remove="Resources\Annotate_HighPriority.ico" />
-	<None Remove="Resources\App.ico" />
-	<None Remove="Resources\Bolt.png" />
-	<None Remove="Resources\Calculate.png" />
-	<None Remove="Resources\ClearContents.png" />
-	<None Remove="Resources\Collection.png" />
-	<None Remove="Resources\Copy.png" />
-	<None Remove="Resources\CPP-Mode.xshd" />
-	<None Remove="Resources\CSharp-Mode.xshd" />
-	<None Remove="Resources\Cut.png" />
-	<None Remove="Resources\Definition.xshd" />
-	<None Remove="Resources\F1Help.png" />
-	<None Remove="Resources\Favorites.png" />
-	<None Remove="Resources\Forget.png" />
-	<None Remove="Resources\Gear.png" />
-	<None Remove="Resources\Help.png" />
-	<None Remove="Resources\HTML-Mode.xshd" />
-	<None Remove="Resources\ImportOrLoad.png" />
-	<None Remove="Resources\Key.png" />
-	<None Remove="Resources\LightningBolt.png" />
-	<None Remove="Resources\Lock.png" />
-	<None Remove="Resources\ModeV1.xsd" />
-	<None Remove="Resources\ModeV2.xsd" />
-	<None Remove="Resources\Open.png" />
-	<None Remove="Resources\Paste.png" />
-	<None Remove="Resources\Pause.png" />
-	<None Remove="Resources\PerformanceLog.png" />
-	<None Remove="Resources\Play.png" />
-	<None Remove="Resources\PowerShell.xshd" />
-	<None Remove="Resources\Property.png" />
-	<None Remove="Resources\Redo.png" />
-	<None Remove="Resources\Refresh.png" />
-	<None Remove="Resources\Save.png" />
-	<None Remove="Resources\Saveall_6518.png" />
-	<None Remove="Resources\Schema.png" />
-	<None Remove="Resources\SpellCheck.png" />
-	<None Remove="Resources\StatusAlert.png" />
-	<None Remove="Resources\StatusOK.png" />
-	<None Remove="Resources\Stop.png" />
-	<None Remove="Resources\Sync.png" />
-	<None Remove="Resources\Synchronize.png" />
-	<None Remove="Resources\Undo.png" />
-	<None Remove="Resources\Unlock.png" />
-	<None Remove="Resources\VisualStudio.png" />
-	<None Remove="Resources\XML-Mode.xshd" />
-	<None Remove="Resources\XmlDoc.xshd" />
+	<None Remove="Assets\Fonts\*" />
+	<None Remove="Assets\Calculator.png" />
+	<None Remove="Assets\Cancel.png" />
+	<None Remove="Assets\dark_vs.json" />
+	<None Remove="Assets\Delete.png" />
+	<None Remove="Assets\OpenFile.png" />
+	<None Remove="Assets\SaveAs.png" />
+	<None Remove="Assets\SelectAll.png" />
+	<None Remove="Assets\state\resnet-3-2-6-channelzeropad-relu.txt" />
+	<None Remove="Assets\Annotate_HighPriority.ico" />
+	<None Remove="Assets\App.ico" />
+	<None Remove="Assets\Bolt.png" />
+	<None Remove="Assets\Calculate.png" />
+	<None Remove="Assets\ClearContents.png" />
+	<None Remove="Assets\Collection.png" />
+	<None Remove="Assets\Copy.png" />
+	<None Remove="Assets\CPP-Mode.xshd" />
+	<None Remove="Assets\CSharp-Mode.xshd" />
+	<None Remove="Assets\Cut.png" />
+	<None Remove="Assets\Definition.xshd" />
+	<None Remove="Assets\F1Help.png" />
+	<None Remove="Assets\Favorites.png" />
+	<None Remove="Assets\Forget.png" />
+	<None Remove="Assets\Gear.png" />
+	<None Remove="Assets\Help.png" />
+	<None Remove="Assets\HTML-Mode.xshd" />
+	<None Remove="Assets\ImportOrLoad.png" />
+	<None Remove="Assets\Key.png" />
+	<None Remove="Assets\LightningBolt.png" />
+	<None Remove="Assets\Lock.png" />
+	<None Remove="Assets\ModeV1.xsd" />
+	<None Remove="Assets\ModeV2.xsd" />
+	<None Remove="Assets\Open.png" />
+	<None Remove="Assets\Paste.png" />
+	<None Remove="Assets\Pause.png" />
+	<None Remove="Assets\PerformanceLog.png" />
+	<None Remove="Assets\Play.png" />
+	<None Remove="Assets\PowerShell.xshd" />
+	<None Remove="Assets\Property.png" />
+	<None Remove="Assets\Redo.png" />
+	<None Remove="Assets\Refresh.png" />
+	<None Remove="Assets\Save.png" />
+	<None Remove="Assets\Saveall_6518.png" />
+	<None Remove="Assets\Schema.png" />
+	<None Remove="Assets\SpellCheck.png" />
+	<None Remove="Assets\StatusAlert.png" />
+	<None Remove="Assets\StatusOK.png" />
+	<None Remove="Assets\Stop.png" />
+	<None Remove="Assets\Sync.png" />
+	<None Remove="Assets\Synchronize.png" />
+	<None Remove="Assets\Undo.png" />
+	<None Remove="Assets\Unlock.png" />
+	<None Remove="Assets\VisualStudio.png" />
+	<None Remove="Assets\XML-Mode.xshd" />
+	<None Remove="Assets\XmlDoc.xshd" />
   </ItemGroup>
 	
   <ItemGroup>
@@ -127,72 +127,72 @@
   </ItemGroup>
 
   <ItemGroup>
-	<AvaloniaResource Include="Resources\Annotate_HighPriority.ico" />
-	<AvaloniaResource Include="Resources\App.ico" />
-	<AvaloniaResource Include="Resources\Calculator.png" />
-	<AvaloniaResource Include="Resources\Cancel.png" />
-	<AvaloniaResource Include="Resources\Fonts\*" />
-	<AvaloniaResource Include="Resources\Delete.png" />
-	<AvaloniaResource Include="Resources\OpenFile.png" />
-	<AvaloniaResource Include="Resources\SaveAs.png" />
-	<AvaloniaResource Include="Resources\SelectAll.png" />
-	<AvaloniaResource Include="Resources\state\resnet-3-2-6-channelzeropad-relu.txt">
+	<AvaloniaResource Include="Assets\Annotate_HighPriority.ico" />
+	<AvaloniaResource Include="Assets\App.ico" />
+	<AvaloniaResource Include="Assets\Calculator.png" />
+	<AvaloniaResource Include="Assets\Cancel.png" />
+	<AvaloniaResource Include="Assets\Fonts\*" />
+	<AvaloniaResource Include="Assets\Delete.png" />
+	<AvaloniaResource Include="Assets\OpenFile.png" />
+	<AvaloniaResource Include="Assets\SaveAs.png" />
+	<AvaloniaResource Include="Assets\SelectAll.png" />
+	<AvaloniaResource Include="Assets\state\resnet-3-2-6-channelzeropad-relu.txt">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</AvaloniaResource>
-	<AvaloniaResource Include="Resources\Sync.png" />
-	<Content Include="Resources\state\resnet-3-2-6-channelzeropad-relu.txt">
+	<AvaloniaResource Include="Assets\Sync.png" />
+	<Content Include="Assets\state\resnet-3-2-6-channelzeropad-relu.txt">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
-	<AvaloniaResource Include="Resources\Bolt.png" />
-	<AvaloniaResource Include="Resources\Calculate.png" />
-	<AvaloniaResource Include="Resources\ClearContents.png" />
-	<AvaloniaResource Include="Resources\Collection.png" />
-	<AvaloniaResource Include="Resources\Copy.png" />
-	<EmbeddedResource Include="Resources\CPP-Mode.xshd" />
-	<EmbeddedResource Include="Resources\CSharp-Mode.xshd">
+	<AvaloniaResource Include="Assets\Bolt.png" />
+	<AvaloniaResource Include="Assets\Calculate.png" />
+	<AvaloniaResource Include="Assets\ClearContents.png" />
+	<AvaloniaResource Include="Assets\Collection.png" />
+	<AvaloniaResource Include="Assets\Copy.png" />
+	<EmbeddedResource Include="Assets\CPP-Mode.xshd" />
+	<EmbeddedResource Include="Assets\CSharp-Mode.xshd">
 	  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	</EmbeddedResource>
-	<AvaloniaResource Include="Resources\Cut.png" />
-	<Content Include="Resources\dark_vs.json">
+	<AvaloniaResource Include="Assets\Cut.png" />
+	<Content Include="Assets\dark_vs.json">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
-	<EmbeddedResource Include="Resources\Definition.xshd">
+	<EmbeddedResource Include="Assets\Definition.xshd">
 	  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	</EmbeddedResource>
-	<AvaloniaResource Include="Resources\F1Help.png" />
-	<AvaloniaResource Include="Resources\Favorites.png" />
-	<AvaloniaResource Include="Resources\Forget.png" />
-	<AvaloniaResource Include="Resources\Gear.png" />
-	<AvaloniaResource Include="Resources\Help.png" />
-	<AvaloniaResource Include="Resources\HTML-Mode.xshd" />
-	<AvaloniaResource Include="Resources\ImportOrLoad.png" />
-	<AvaloniaResource Include="Resources\Key.png" />
-	<AvaloniaResource Include="Resources\LightningBolt.png" />
-	<AvaloniaResource Include="Resources\Lock.png" />
-	<AvaloniaResource Include="Resources\ModeV1.xsd" />
-	<AvaloniaResource Include="Resources\ModeV2.xsd" />
-	<AvaloniaResource Include="Resources\Open.png" />
-	<AvaloniaResource Include="Resources\Paste.png" />
-	<AvaloniaResource Include="Resources\Pause.png" />
-	<AvaloniaResource Include="Resources\PerformanceLog.png" />
-	<AvaloniaResource Include="Resources\Play.png" />
-	<AvaloniaResource Include="Resources\PowerShell.xshd" />
-	<AvaloniaResource Include="Resources\Property.png" />
-	<AvaloniaResource Include="Resources\Redo.png" />
-	<AvaloniaResource Include="Resources\Refresh.png" />
-	<AvaloniaResource Include="Resources\Save.png" />
-	<AvaloniaResource Include="Resources\Saveall_6518.png" />
-	<AvaloniaResource Include="Resources\Schema.png" />
-	<AvaloniaResource Include="Resources\SpellCheck.png" />
-	<AvaloniaResource Include="Resources\StatusAlert.png" />
-	<AvaloniaResource Include="Resources\StatusOK.png" />
-	<AvaloniaResource Include="Resources\Stop.png" />
-	<AvaloniaResource Include="Resources\Synchronize.png" />
-	<AvaloniaResource Include="Resources\Undo.png" />
-	<AvaloniaResource Include="Resources\Unlock.png" />
-	<AvaloniaResource Include="Resources\VisualStudio.png" />
-	<AvaloniaResource Include="Resources\XML-Mode.xshd" />
-	<AvaloniaResource Include="Resources\XmlDoc.xshd" />
+	<AvaloniaResource Include="Assets\F1Help.png" />
+	<AvaloniaResource Include="Assets\Favorites.png" />
+	<AvaloniaResource Include="Assets\Forget.png" />
+	<AvaloniaResource Include="Assets\Gear.png" />
+	<AvaloniaResource Include="Assets\Help.png" />
+	<AvaloniaResource Include="Assets\HTML-Mode.xshd" />
+	<AvaloniaResource Include="Assets\ImportOrLoad.png" />
+	<AvaloniaResource Include="Assets\Key.png" />
+	<AvaloniaResource Include="Assets\LightningBolt.png" />
+	<AvaloniaResource Include="Assets\Lock.png" />
+	<AvaloniaResource Include="Assets\ModeV1.xsd" />
+	<AvaloniaResource Include="Assets\ModeV2.xsd" />
+	<AvaloniaResource Include="Assets\Open.png" />
+	<AvaloniaResource Include="Assets\Paste.png" />
+	<AvaloniaResource Include="Assets\Pause.png" />
+	<AvaloniaResource Include="Assets\PerformanceLog.png" />
+	<AvaloniaResource Include="Assets\Play.png" />
+	<AvaloniaResource Include="Assets\PowerShell.xshd" />
+	<AvaloniaResource Include="Assets\Property.png" />
+	<AvaloniaResource Include="Assets\Redo.png" />
+	<AvaloniaResource Include="Assets\Refresh.png" />
+	<AvaloniaResource Include="Assets\Save.png" />
+	<AvaloniaResource Include="Assets\Saveall_6518.png" />
+	<AvaloniaResource Include="Assets\Schema.png" />
+	<AvaloniaResource Include="Assets\SpellCheck.png" />
+	<AvaloniaResource Include="Assets\StatusAlert.png" />
+	<AvaloniaResource Include="Assets\StatusOK.png" />
+	<AvaloniaResource Include="Assets\Stop.png" />
+	<AvaloniaResource Include="Assets\Synchronize.png" />
+	<AvaloniaResource Include="Assets\Undo.png" />
+	<AvaloniaResource Include="Assets\Unlock.png" />
+	<AvaloniaResource Include="Assets\VisualStudio.png" />
+	<AvaloniaResource Include="Assets\XML-Mode.xshd" />
+	<AvaloniaResource Include="Assets\XmlDoc.xshd" />
   </ItemGroup>
 	
   <ItemGroup>

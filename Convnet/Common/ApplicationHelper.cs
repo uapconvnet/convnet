@@ -49,7 +49,7 @@ namespace Convnet.Common
         {
             var img = new Image
             {
-                Source = new Bitmap(AssetLoader.Open(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Resources/" + fileName)))
+                Source = new Bitmap(AssetLoader.Open(new Uri($"avares://{Assembly.GetExecutingAssembly().GetName().Name}/Assets/" + fileName)))
             };
             return img;
         }
