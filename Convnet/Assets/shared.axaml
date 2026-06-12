@@ -7,8 +7,8 @@
 
     <props:Settings x:Key="Settings"/>
 
-    <FontFamily x:Key="CascadiaCodeFontFamily">avares://Convnet/Resources/Fonts/CascadiaCode.ttf#Cascadia Code</FontFamily>
-    <FontFamily x:Key="CascadiaMonoFontFamily">avares://Convnet/Resources/Fonts/CascadiaMono.ttf#Cascadia Mono</FontFamily>
+    <FontFamily x:Key="CascadiaCodeFontFamily">avares://Convnet/Assets/Fonts/CascadiaCode.ttf#Cascadia Code</FontFamily>
+    <FontFamily x:Key="CascadiaMonoFontFamily">avares://Convnet/Assets/Fonts/CascadiaMono.ttf#Cascadia Mono</FontFamily>
     
     <converters:BooleanValueInverter x:Key="Inverter" />
     <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
@@ -20,17 +20,17 @@
     <!--<ContextMenu x:Key="MyContextMenu">
         <MenuItem Header="_Cut" >
             <MenuItem.Icon>
-                <Image Source="/Resources/Cut.png"/>
+                <Image Source="/Assets/Cut.png"/>
             </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="Co_py">
             <MenuItem.Icon>
-                <Image Source="/Resources/Copy.png"/>
+                <Image Source="/Assets/Copy.png"/>
             </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="_Paste">
             <MenuItem.Icon>
-                <Image Source="/Resources/Paste.png"/>
+                <Image Source="/Assets/Paste.png"/>
             </MenuItem.Icon>
         </MenuItem>
         <Separator />
@@ -38,12 +38,12 @@
         <Separator />
         <MenuItem Header="_Undo">
             <MenuItem.Icon>
-                <Image Source="/Resources/Undo.png"/>
+                <Image Source="/Assets/Undo.png"/>
             </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="_Redo">
             <MenuItem.Icon>
-                <Image Source="/Resources/Redo.png"/>
+                <Image Source="/Assets/Redo.png"/>
             </MenuItem.Icon>
         </MenuItem>
     </ContextMenu>-->

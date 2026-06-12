@@ -25,7 +25,7 @@ namespace Convnet.PageViews
             InitializeComponent();
 
             IHighlightingDefinition DefinitionHighlighting;
-            using (Stream? s = typeof(EditPageView).Assembly.GetManifestResourceStream("Convnet.Resources.Definition.xshd"))
+            using (Stream? s = typeof(EditPageView).Assembly.GetManifestResourceStream("Convnet.Assets.Definition.xshd"))
             {
                 if (s == null)
                     throw new InvalidOperationException("Could not find embedded resource");
@@ -48,7 +48,7 @@ namespace Convnet.PageViews
             }
 
             //IHighlightingDefinition CSharpHighlighting;
-            //using (Stream? s = typeof(EditPageView).Assembly.GetManifestResourceStream("Convnet.Resources.CSharp-Mode.xshd"))
+            //using (Stream? s = typeof(EditPageView).Assembly.GetManifestResourceStream("Convnet.Assets.CSharp-Mode.xshd"))
             //{
             //    if (s == null)
             //        throw new InvalidOperationException("Could not find embedded resource");
