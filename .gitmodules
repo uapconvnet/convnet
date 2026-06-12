@@ -19,3 +19,6 @@
 [submodule "dnn/deps/magic_enum"]
 	path = dnn/deps/magic_enum
 	url = https://github.com/Neargye/magic_enum
+[submodule "dnn/deps/oneDNN"]
+	path = dnn/deps/oneDNN
+	url = https://github.com/uxlfoundation/oneDNN
