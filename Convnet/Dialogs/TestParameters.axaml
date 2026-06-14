@@ -71,8 +71,8 @@
             <RowDefinition Height="30" MaxHeight="30"/>
             <RowDefinition Height="30" MaxHeight="30"/>
             <RowDefinition Height="30" MaxHeight="30"/>
-            <RowDefinition Height="10" MaxHeight="10"/>
-            <RowDefinition Height="30" MaxHeight="30"/>
+            <RowDefinition Height="1" MaxHeight="1"/>
+            <RowDefinition Height="40" MaxHeight="40"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2" />
@@ -186,7 +186,7 @@
             </TextBox.Text>
         </TextBox>
 
-        <Button Content="Test" Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="19" Margin="1,0,1,0" Name="buttonTest" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center" TabIndex="39" ClickMode="Release" Click="ButtonTest_Click"/>
-        <Button Content="Cancel" Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" Grid.Column="2" Grid.ColumnSpan="1" Grid.Row="19" Margin="1,0,1,0" Name="buttonCancel" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center" TabIndex="40" ClickMode="Release" IsCancel="True" IsDefault="True" Click="ButtonCancel_Click" />
+        <Button FontSize="16" Content="Test" Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="19" Margin="1,0,3,0" Name="buttonTest" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" VerticalAlignment="Stretch" TabIndex="39" ClickMode="Release" Click="ButtonTest_Click"/>
+        <Button FontSize="16" Content="Cancel" Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" Grid.Column="2" Grid.ColumnSpan="1" Grid.Row="19" Margin="3,0,1,0" Name="buttonCancel" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" VerticalAlignment="Stretch" TabIndex="40" ClickMode="Release" IsCancel="True" IsDefault="True" Click="ButtonCancel_Click" />
      </Grid>
 </Window>
