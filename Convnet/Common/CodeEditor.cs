@@ -6,18 +6,66 @@ using Avalonia.Threading;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Editing;
+using AvaloniaEdit.Folding;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Convnet.Common
 {
+     public class CSharpFoldingStrategy
+     {
+        public void UpdateFoldings(FoldingManager manager, TextDocument document)
+        {
+            var foldings = CreateNewFoldings(document, out var firstErrorOffset);
+            manager.UpdateFoldings(foldings, firstErrorOffset);
+        }
+
+        public IEnumerable<NewFolding> CreateNewFoldings(TextDocument document, out int firstErrorOffset)
+        {
+            firstErrorOffset = -1;
+            var newFoldings = new List<NewFolding>();
+            var startOffsets = new Stack<int>();
+
+            for (int offset = 0; offset < document.TextLength; offset++)
+            {
+                char c = document.GetCharAt(offset);
+                switch (c)
+                {
+                    case '{':
+                        startOffsets.Push(offset);
+                        break;
+                    case '}':
+                        if (startOffsets.Count > 0)
+                        {
+                            int startOffset = startOffsets.Pop();
+                            // Add a folding if the block spans more than one line
+                            int startLine = document.GetLineByOffset(startOffset).LineNumber;
+                            int endLine = document.GetLineByOffset(offset).LineNumber;
+                            if (startLine < endLine)
+                            {
+                                newFoldings.Add(new NewFolding(startOffset, offset + 1));
+                            }
+                        }
+                        break;
+                }
+            }
+
+            newFoldings.Sort((a, b) => a.StartOffset.CompareTo(b.StartOffset));
+            return newFoldings;
+        }
+    }
+ 
     public class CodeEditor : TextEditor, INotifyPropertyChanged
     {
         protected override Type StyleKeyOverride => typeof(TextEditor);
 
         public new event PropertyChangedEventHandler? PropertyChanged;
+
+        private readonly FoldingManager foldingManager;
+        private readonly CSharpFoldingStrategy foldingStrategy;
 
         public CodeEditor()
         {
@@ -28,16 +76,22 @@ namespace Convnet.Common
             else    
                 FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo");
 
+            foldingStrategy = new CSharpFoldingStrategy();
+
             Options = new TextEditorOptions
             {
                 IndentationSize = 4,
                 ConvertTabsToSpaces = false,
                 AllowScrollBelowDocument = true,
-                HighlightCurrentLine = true,
+                HighlightCurrentLine = true
             };
             TextArea.IndentationStrategy = new AvaloniaEdit.Indentation.CSharp.CSharpIndentationStrategy(Options);
             TextArea.RightClickMovesCaret = true;
-
+            
+            foldingManager = FoldingManager.Install(TextArea);
+            foldingStrategy.UpdateFoldings(foldingManager, Document);
+            TextChanged += (sender, args) => foldingStrategy.UpdateFoldings(foldingManager, Document);
+            
             var cmdKey = ApplicationHelper.GetPlatformCommandKey();
 
             var cm = new ContextMenu();
