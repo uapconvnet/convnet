@@ -7,7 +7,7 @@
         xmlns:cl="clr-namespace:Interop"
         xmlns:pvm="clr-namespace:Convnet.PageViewModels"
         x:DataType="cl:DNNTrainingRate"
-        Title="Test Parameters" Height="512" Width="500" WindowStartupLocation="CenterOwner" Background="{DynamicResource BackgroundBrush}" ShowInTaskbar="False" UseLayoutRounding="True"  IsTabStop="False" Opened="OnOpened">
+        Title="Test Parameters" Height="512" Width="500" WindowStartupLocation="CenterOwner" Background="{DynamicResource BackgroundBrush}" ShowInTaskbar="False" CanResize="False" UseLayoutRounding="True"  IsTabStop="False" Opened="OnOpened">
 
   <Window.Styles>
     <Style Selector="DataValidationErrors">
