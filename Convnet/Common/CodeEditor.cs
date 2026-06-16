@@ -83,7 +83,11 @@ namespace Convnet.Common
                 IndentationSize = 4,
                 ConvertTabsToSpaces = false,
                 AllowScrollBelowDocument = true,
-                HighlightCurrentLine = true
+                HighlightCurrentLine = true,
+                EnableHyperlinks = true,
+                EnableEmailHyperlinks = true,
+                AcceptsTab = true
+                
             };
             TextArea.IndentationStrategy = new AvaloniaEdit.Indentation.CSharp.CSharpIndentationStrategy(Options);
             TextArea.RightClickMovesCaret = true;
@@ -100,7 +104,7 @@ namespace Convnet.Common
             var copy = new MenuItem { Header = "Copy", InputGesture = new KeyGesture(Key.C, cmdKey) };
             var paste = new MenuItem { Header = "Paste", InputGesture = new KeyGesture(Key.V, cmdKey) };
             var delete = new MenuItem { Header = "Delete", InputGesture = new KeyGesture(Key.Delete) };
-            var selectall = new MenuItem { Header = "Select All", InputGesture = new KeyGesture(Key.A, cmdKey) };
+            var selectAll = new MenuItem { Header = "Select All", InputGesture = new KeyGesture(Key.A, cmdKey) };
             var undo = new MenuItem { Header = "Undo", InputGesture = new KeyGesture(Key.Z, cmdKey) };
             var redo = new MenuItem { Header = "Redo", InputGesture = new KeyGesture(Key.Y, cmdKey) };
 
@@ -108,7 +112,7 @@ namespace Convnet.Common
             paste.Icon = ApplicationHelper.LoadFromResource("Paste.png");
             copy.Icon = ApplicationHelper.LoadFromResource("Copy.png");
             delete.Icon = ApplicationHelper.LoadFromResource("Cancel.png");
-            selectall.Icon = ApplicationHelper.LoadFromResource("SelectAll.png");
+            selectAll.Icon = ApplicationHelper.LoadFromResource("SelectAll.png");
             undo.Icon = ApplicationHelper.LoadFromResource("Undo.png");
             redo.Icon = ApplicationHelper.LoadFromResource("Redo.png");
 
@@ -116,7 +120,7 @@ namespace Convnet.Common
             paste.Command = ApplicationCommands.Paste;
             copy.Command = ApplicationCommands.Copy;
             delete.Command = ApplicationCommands.Delete;
-            selectall.Command = ApplicationCommands.SelectAll;
+            selectAll.Command = ApplicationCommands.SelectAll;
             undo.Command = ApplicationCommands.Undo;
             redo.Command = ApplicationCommands.Redo;
 
@@ -124,7 +128,7 @@ namespace Convnet.Common
             paste.Click += (s, e) => { if (CanPaste) Dispatcher.UIThread.Post(() => Paste()); };
             copy.Click += (s, e) => { if (CanCopy) Dispatcher.UIThread.Post(() => Copy()); };
             delete.Click += (s, e) => { if (CanDelete) Dispatcher.UIThread.Post(() => Delete()); };
-            selectall.Click += (s, e) => { Dispatcher.UIThread.Post(() => SelectAll()); };
+            selectAll.Click += (s, e) => { if (CanSelectAll) Dispatcher.UIThread.Post(() => SelectAll()); };
             undo.Click += (s, e) => { if (CanUndo) Dispatcher.UIThread.Post(() => Undo()); };
             redo.Click += (s, e) => { if (CanRedo) Dispatcher.UIThread.Post(() => Redo()); };
 
@@ -138,7 +142,7 @@ namespace Convnet.Common
                 Height = 1,
                 Margin = new Thickness(1)
             });
-            cm.Items.Add(selectall);
+            cm.Items.Add(selectAll);
             cm.Items.Add(new Separator
             {
                 Width = Double.NaN,
@@ -149,24 +153,7 @@ namespace Convnet.Common
             cm.Items.Add(redo);
 
             ContextMenu = cm;
-
-            //TextChanged += CodeEditor_TextChanged;
-            //LostFocus += CodeEditor_LostFocus;
         }
-
-        //private void CodeEditor_LostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        //{
-        //    Code = base.Text;
-        //    SetValue(CodeProperty, Code);
-        //    OnPropertyChanged(nameof(Code));
-        //}
-
-        //private void CodeEditor_TextChanged(object? sender, EventArgs e)
-        //{
-        //    Code = base.Text;
-        //    SetValue(CodeProperty, Code);
-        //    OnPropertyChanged(nameof(Code));
-        //}
 
         public static readonly DirectProperty<CodeEditor, string> CodeProperty = AvaloniaProperty.RegisterDirect<CodeEditor, string>(
             nameof(Code),
