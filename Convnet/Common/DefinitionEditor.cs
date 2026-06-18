@@ -21,7 +21,7 @@ namespace Convnet.Common
 
         public DefinitionEditor()
         {
-            LineNumbersMargin = new Thickness(4,0,20,0); 
+            LineNumbersMargin = new Thickness(4,0,18,0); 
 
             FontSize = 14;
 
