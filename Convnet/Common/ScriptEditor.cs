@@ -184,7 +184,7 @@ namespace Convnet.Common
         }
     }
  
-    public class CodeEditor : TextEditor, INotifyPropertyChanged
+    public class ScriptEditor : TextEditor, INotifyPropertyChanged
     {
         protected override Type StyleKeyOverride => typeof(TextEditor);
 
@@ -193,7 +193,7 @@ namespace Convnet.Common
         private readonly FoldingManager foldingManager;
         private readonly CSharpFoldingStrategy foldingStrategy;
 
-        public CodeEditor()
+        public ScriptEditor()
         {
             LineNumbersMargin = new Thickness(4,0,0,0); 
 
@@ -283,18 +283,18 @@ namespace Convnet.Common
             ContextMenu = cm;
         }
 
-        public static readonly DirectProperty<CodeEditor, string> CodeProperty = AvaloniaProperty.RegisterDirect<CodeEditor, string>(
-            nameof(Code),
-            o => o.Code,
+        public static readonly DirectProperty<ScriptEditor, string> ScriptProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, string>(
+            nameof(Script),
+            o => o.Script,
             (o, v) =>
             {
-                if (string.Compare(o.Code, v) != 0)
-                    o.Code = v;
+                if (string.Compare(o.Script, v) != 0)
+                    o.Script = v;
             },
             "",
             Avalonia.Data.BindingMode.TwoWay);
 
-        public string Code
+        public string Script
         {
             get { return base.Text; }
             set
@@ -302,15 +302,15 @@ namespace Convnet.Common
                 if (value != base.Text)
                 {
                     base.Text = value;
-                    SetValue(CodeProperty, value);
-                    OnPropertyChanged(nameof(Code));
+                    SetValue(ScriptProperty, value);
+                    OnPropertyChanged(nameof(Script));
                 }
             }
         }
 
         protected override void OnTextChanged(EventArgs e)
         {
-            //SetCurrentValue(CodeProperty, base.Text);
+            //SetCurrentValue(ScriptProperty, base.Text);
             base.OnTextChanged(e);
             OnPropertyChanged(nameof(Length));
         }
@@ -320,7 +320,7 @@ namespace Convnet.Common
             get { return base.Text.Length; }
         }
 
-        public static readonly DirectProperty<CodeEditor, TextLocation> TextLocationProperty = AvaloniaProperty.RegisterDirect<CodeEditor, TextLocation>(
+        public static readonly DirectProperty<ScriptEditor, TextLocation> TextLocationProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, TextLocation>(
            nameof(TextLocation),
            o => o.TextLocation,
            (o, v) =>
@@ -341,7 +341,7 @@ namespace Convnet.Common
             }
         }
 
-        public static readonly DirectProperty<CodeEditor, double> VerticalOffsetProperty = AvaloniaProperty.RegisterDirect<CodeEditor, double>(
+        public static readonly DirectProperty<ScriptEditor, double> VerticalOffsetProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, double>(
                 nameof(VerticalOffset),
                 o => o.VerticalOffset,
                 (o, v) =>
@@ -362,7 +362,7 @@ namespace Convnet.Common
             }
         }
 
-        public static readonly DirectProperty<CodeEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        public static readonly DirectProperty<ScriptEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, int>(
             nameof(CaretOffset),
             o => o.CaretOffset,
             (o, v) =>
@@ -386,7 +386,7 @@ namespace Convnet.Common
             }
         }
 
-        public static readonly DirectProperty<CodeEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        public static readonly DirectProperty<ScriptEditor, int> SelectionLengthProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, int>(
             nameof(SelectionLength),
             o => o.SelectionLength,
             (o, v) =>
@@ -410,7 +410,7 @@ namespace Convnet.Common
             }
         }
 
-        public static readonly DirectProperty<CodeEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<CodeEditor, int>(
+        public static readonly DirectProperty<ScriptEditor, int> SelectionStartProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, int>(
             nameof(SelectionStart),
             o => o.SelectionStart,
             (o, v) =>

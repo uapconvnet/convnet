@@ -65,7 +65,7 @@ namespace Convnet.PageViews
             //    //editorScript.TextChanged += EditorScript_TextChanged;
             //}
 
-            var editorScript = this.FindControl<CodeEditor>("EditorScript");
+            var editorScript = this.FindControl<ScriptEditor>("EditorScript");
             if (editorScript != null)
             {
                 editorScript.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".cs");
@@ -108,7 +108,7 @@ namespace Convnet.PageViews
         private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             var editorDefinition = this.FindControl<DefinitionEditor>("EditorDefinition");
-            var editorScript = this.FindControl<CodeEditor>("EditorScript");
+            var editorScript = this.FindControl<ScriptEditor>("EditorScript");
                         
             if (Settings.Default.FocusedEditor == 0)
                 editorDefinition?.Focus();
