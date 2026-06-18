@@ -21,6 +21,8 @@ namespace Convnet.Common
 
         public DefinitionEditor()
         {
+            LineNumbersMargin = new Thickness(4,0,20,0); 
+
             FontSize = 14;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -34,14 +36,17 @@ namespace Convnet.Common
                 ConvertTabsToSpaces = false,
                 AllowScrollBelowDocument = true,
                 HighlightCurrentLine = true,
-                EnableHyperlinks = true,
-                EnableEmailHyperlinks = true,
-                AcceptsTab = true
-                
+                //EnableHyperlinks = true,
+                //EnableEmailHyperlinks = true,
+                AcceptsTab = true,
+                //ShowSpaces = false,
+                //ShowTabs = false,
+                //ShowEndOfLine = false
             };
             TextArea.IndentationStrategy = new AvaloniaEdit.Indentation.CSharp.CSharpIndentationStrategy(Options);
             TextArea.RightClickMovesCaret = true;
-            
+        
+                
             var cmdKey = ApplicationHelper.GetPlatformCommandKey();
 
             var cm = new ContextMenu();
