@@ -1437,6 +1437,8 @@ namespace dnn
 					{
 						auto survivalProb = Float(1);
 
+                        DropPathAdd* dropPathAddLayer = dynamic_cast<DropPathAdd*>(layer.get());
+
 						for (auto inputLayer = 0ull; inputLayer < layer->Inputs.size(); inputLayer++)
 						{
 							if (!IsSkippable(*layer->Inputs[inputLayer]))
@@ -1444,14 +1446,7 @@ namespace dnn
 							else
 								survivalProb = Float(1);
 							
-							switch (layer->LayerType)
-							{
-							case LayerTypes::DropPathAdd:
-								dynamic_cast<DropPathAdd*>(layer.get())->SurvivalProbability[inputLayer] = survivalProb;
-								break;
-							default:
-								break;
-							}
+							dropPathAddLayer->SurvivalProbability[inputLayer] = survivalProb;	
 						}
 					}
 					
