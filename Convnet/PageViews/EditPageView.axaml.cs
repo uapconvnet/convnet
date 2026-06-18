@@ -35,7 +35,7 @@ namespace Convnet.PageViews
                 }
             }
             HighlightingManager.Instance.RegisterHighlighting("Definition", [".txt"], DefinitionHighlighting);
-            var editorDefinition = this.FindControl<CodeEditor>("EditorDefinition");
+            var editorDefinition = this.FindControl<DefinitionEditor>("EditorDefinition");
             if (editorDefinition != null)
             {
                 editorDefinition.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(".txt");
@@ -91,26 +91,6 @@ namespace Convnet.PageViews
             AvaloniaXamlLoader.Load(this);
         }
 
-        //private void EditorDefinition_TextChanged(object? sender, EventArgs e)
-        //{
-        //    if (DataContext != null && sender != null)
-        //    {
-        //        var epvm = DataContext as EditPageViewModel;
-        //        if (epvm != null)
-        //            epvm.Definition = ((CodeEditor)sender).Text;
-        //    }
-        //}
-
-        //private void EditorScript_TextChanged(object? sender, EventArgs e)
-        //{
-        //    if (DataContext != null && sender != null)
-        //    {
-        //        var epvm = DataContext as EditPageViewModel;
-        //        if (epvm != null)
-        //            epvm.Script = ((CodeEditor)sender).Text;
-        //    }
-        //}
-
         public void GridSplitter_DragCompleted(object? sender, VectorEventArgs e)
         {
             if (!e.Handled)
@@ -127,7 +107,7 @@ namespace Convnet.PageViews
 
         private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            var editorDefinition = this.FindControl<CodeEditor>("EditorDefinition");
+            var editorDefinition = this.FindControl<DefinitionEditor>("EditorDefinition");
             var editorScript = this.FindControl<CodeEditor>("EditorScript");
                         
             if (Settings.Default.FocusedEditor == 0)
