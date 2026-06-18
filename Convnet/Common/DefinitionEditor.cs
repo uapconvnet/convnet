@@ -9,6 +9,7 @@ using AvaloniaEdit.Editing;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Convnet.Common
@@ -160,7 +161,14 @@ namespace Convnet.Common
             set
             {
                 if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
-                    Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => { TextArea.Caret.Line = value.Line; TextArea.Caret.Column = value.Column; TextArea.Caret.BringCaretToView(); TextArea.Caret.Show(); ScrollTo(value.Line, value.Column); OnPropertyChanged(nameof(TextLocation)); }, DispatcherPriority.ContextIdle);
+                    Dispatcher.UIThread.InvokeAsync(() => 
+                    { 
+                        TextArea.Caret.Line = value.Line; 
+                        TextArea.Caret.Column = value.Column; 
+                        TextArea.Caret.BringCaretToView(); 
+                        TextArea.Caret.Show(); ScrollTo(value.Line, value.Column); 
+                        OnPropertyChanged(nameof(TextLocation)); 
+                    }, DispatcherPriority.ContextIdle);
             }
         }
 
@@ -181,7 +189,11 @@ namespace Convnet.Common
             set
             {
                 if (base.VerticalOffset != value)
-                    Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => { this.ScrollToVerticalOffset(value); OnPropertyChanged(nameof(VerticalOffset));}, DispatcherPriority.ContextIdle);
+                    Dispatcher.UIThread.InvokeAsync(() => 
+                    { 
+                        this.ScrollToVerticalOffset(value); 
+                        OnPropertyChanged(nameof(VerticalOffset));
+                    }, DispatcherPriority.ContextIdle);
             }
         }
 
@@ -274,7 +286,7 @@ namespace Convnet.Common
 
         #region INotifyPropertyChanged Members
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             this.VerifyPropertyName(propertyName);
 
@@ -290,7 +302,7 @@ namespace Convnet.Common
         /// </summary>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public void VerifyPropertyName(string propertyName)
+        public void VerifyPropertyName([CallerMemberName] string? propertyName = null)
         {
             // If you raise PropertyChanged and do not specify a property name,
             // all properties on the object are considered to be changed by the binding system.

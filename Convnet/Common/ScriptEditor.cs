@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Convnet.Common
@@ -192,6 +193,7 @@ namespace Convnet.Common
 
         private readonly FoldingManager foldingManager;
         private readonly CSharpFoldingStrategy foldingStrategy;
+        //private CustomMargin customMargin;
 
         public ScriptEditor()
         {
@@ -220,6 +222,9 @@ namespace Convnet.Common
             TextArea.IndentationStrategy = new AvaloniaEdit.Indentation.CSharp.CSharpIndentationStrategy(Options);
             TextArea.RightClickMovesCaret = true;
             
+            //customMargin = new CustomMargin();
+            //TextArea.LeftMargins.Insert(0, customMargin);
+
             foldingManager = FoldingManager.Install(TextArea);
             foldingStrategy.UpdateFoldings(foldingManager, Document);
             TextChanged += (sender, args) => foldingStrategy.UpdateFoldings(foldingManager, Document);
@@ -436,7 +441,7 @@ namespace Convnet.Common
 
         public static object? VisualLine { get; private set; }
 
-        //public static readonly StyledProperty<string> FilePathProperty = AvaloniaProperty.Register<CodeEditor, string>(nameof(FilePath), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
+        //public static readonly StyledProperty<string> FilePathProperty = AvaloniaProperty.Register<ScriptEditor, string>(nameof(FilePath), defaultValue: string.Empty, false, Avalonia.Data.BindingMode.TwoWay);
 
         //public string FilePath
         //{
@@ -451,7 +456,7 @@ namespace Convnet.Common
 
         #region INotifyPropertyChanged Members
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             this.VerifyPropertyName(propertyName);
 
@@ -467,7 +472,7 @@ namespace Convnet.Common
         /// </summary>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
-        public void VerifyPropertyName(string propertyName)
+        public void VerifyPropertyName([CallerMemberName] string? propertyName = null)
         {
             // If you raise PropertyChanged and do not specify a property name,
             // all properties on the object are considered to be changed by the binding system.
