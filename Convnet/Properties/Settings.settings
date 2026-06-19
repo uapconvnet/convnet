@@ -2066,5 +2066,8 @@ namespace Scripts
 }
 </Value>
     </Setting>
+    <Setting Name="Output" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

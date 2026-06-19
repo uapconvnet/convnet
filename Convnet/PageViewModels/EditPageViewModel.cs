@@ -53,6 +53,7 @@ namespace Convnet.PageViewModels
         private bool wordWrap = false;
         private bool showLineNumbers = true;
         private string script = Settings.Default.Script;
+        private string output = Settings.Default.Output;
         private bool dirty = true;
         private static bool initAction = true;
         private readonly DispatcherTimer clickWaitTimer;
@@ -375,6 +376,19 @@ namespace Convnet.PageViewModels
             }
         }
 
+        public string Output
+        {
+            get => output;
+            set
+            {
+                if (value.Equals(output))
+                    return;
+
+                this.RaiseAndSetIfChanged(ref output, value);
+                Settings.Default.Output = output;
+            }
+        }
+
         private static readonly string[] separator = [Environment.NewLine];
 
       
@@ -682,7 +696,10 @@ namespace Convnet.PageViewModels
                     IsValid = true;
                     dirty = log.Length > 0;
                     if (dirty)
-                        Dispatcher.UIThread.Post(() => MessageBox.Show(log, "Build error", MessageBoxButtons.OK));
+                    {
+                        Output = log;
+                        //Dispatcher.UIThread.Post(() => MessageBox.Show(log, "Build error", MessageBoxButtons.OK));
+                    }
                 }
                 catch (Exception ex)
                 {
