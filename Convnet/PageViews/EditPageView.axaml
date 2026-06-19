@@ -18,7 +18,7 @@
       <ColumnDefinition Width="*" MinWidth="200"/>
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
-      <RowDefinition Height="30" MinHeight="30"/>
+      <RowDefinition Height="28" MinHeight="28"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <!-- <Image x:Name="ImageStatusDefinition" Grid.Column="0" Grid.Row="0" /> -->
@@ -28,8 +28,8 @@
     <GridSplitter DragCompleted="GridSplitter_DragCompleted" Grid.Column="0" HorizontalAlignment="Right" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Stretch" IsTabStop="False" Focusable="False" Width="0" Background="{DynamicResource BackgroundBrushLight}" Margin="0,28,0,0" ResizeDirection="Columns"/>
      <Grid x:Name="subgrid" Background="{DynamicResource BackgroundBrush}" Grid.Column="1" Grid.Row="1">
       <Grid.RowDefinitions>
-        <RowDefinition Height="*" MinHeight="30"/>
-        <RowDefinition Height="60" MinHeight="30" MaxHeight="60"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="56" MinHeight="28" MaxHeight="56"/>
       </Grid.RowDefinitions>
       <c:ScriptEditor x:Name="EditorScript" IsTabStop="True" TabIndex="1" Focusable="True" Script="{Binding Script, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowLineNumbers="True" TextLocation="{Binding TextLocationScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" VerticalOffset="{Binding VerticalOffsetScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" CaretOffset="{Binding CaretOffsetScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" SelectionStart="{Binding SelectionStartScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" SelectionLength="{Binding SelectionLengthScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Padding="2" Margin="0,0,4,0"/>
       <GridSplitter DragCompleted="GridSplitterOutput_DragCompleted" Grid.Column="0" HorizontalAlignment="Stretch" Grid.Row="0" Grid.RowSpan="1" VerticalAlignment="Bottom" IsTabStop="False" Focusable="False" Height="0" Background="{DynamicResource BackgroundBrushLight}" Margin="0,28,0,0" ResizeDirection="Rows"/>
