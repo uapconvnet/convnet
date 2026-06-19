@@ -696,10 +696,11 @@ namespace Convnet.PageViewModels
                     IsValid = true;
                     dirty = log.Length > 0;
                     if (dirty)
-                    {
                         Output = log;
                         //Dispatcher.UIThread.Post(() => MessageBox.Show(log, "Build error", MessageBoxButtons.OK));
-                    }
+                    else
+                        Output = "Build successful";
+                    
                 }
                 catch (Exception ex)
                 {
