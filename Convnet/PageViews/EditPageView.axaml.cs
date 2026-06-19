@@ -5,6 +5,7 @@ using AvaloniaEdit.Highlighting;
 using AvaloniaEdit.Highlighting.Xshd;
 using AvaloniaEdit.Indentation.CSharp;
 using AvaloniaEdit.TextMate;
+using CustomMessageBox.Avalonia;
 using Convnet.Common;
 using Convnet.PageViewModels;
 using Convnet.Properties;
@@ -45,6 +46,8 @@ namespace Convnet.PageViews
                 //editorDefinition.CaretOffset = line.Offset + Settings.Default.TextLocationDefinition.Column;
                 //editorDefinition.TextArea.Caret.BringCaretToView(); // ← Try this call. 
                 //editorDefinition.ScrollToLine(Settings.Default.TextLocationDefinition.Line);
+
+                editorDefinition.GettingFocus += EditorDefinition_GettingFocus;
             }
 
             //IHighlightingDefinition CSharpHighlighting;
@@ -80,12 +83,37 @@ namespace Convnet.PageViews
                 //var line = editorScript.Document.GetLineByNumber(Settings.Default.LineScript);
                 //editorScript.CaretOffset = line.Offset + Settings.Default.ColumnScript;
                 //editorScript.TextArea.Caret.BringCaretToView(); // ← Try this call. 
+
+                
+                editorScript.GettingFocus += EditorScript_GettingFocus;
             }
 
             var gr = this.FindControl<Grid>("grid");
             if (gr != null)
                 gr.ColumnDefinitions.First().Width = new GridLength(Settings.Default.EditSplitPosition, GridUnitType.Pixel);
         }
+
+        private void EditorDefinition_GettingFocus(object? sender, FocusChangingEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                Settings.Default.FocusedEditor = 0;
+                Settings.Default.Save();
+                e.Handled = true;
+            }
+        }
+
+
+        private void EditorScript_GettingFocus(object? sender, FocusChangingEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                Settings.Default.FocusedEditor = 1;
+                Settings.Default.Save();
+                e.Handled = true;
+            }
+        }
+
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
@@ -109,23 +137,11 @@ namespace Convnet.PageViews
         {
             var editorDefinition = this.FindControl<DefinitionEditor>("EditorDefinition");
             var editorScript = this.FindControl<ScriptEditor>("EditorScript");
-                        
+
             if (Settings.Default.FocusedEditor == 0)
                 editorDefinition?.Focus();
             else
                 editorScript?.Focus();
         }
-
-        private void EditorDefinition_GotFocus(object? sender, FocusChangedEventArgs e)
-        {
-            Settings.Default.FocusedEditor = 0;
-            Settings.Default.Save();
-        }
-
-         private void EditorScript_GotFocus(object? sender, FocusChangedEventArgs e)
-        {
-            Settings.Default.FocusedEditor = 1;
-            Settings.Default.Save();
-        }   
     }
 }
