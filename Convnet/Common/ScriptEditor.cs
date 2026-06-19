@@ -221,7 +221,7 @@ namespace Convnet.Common
             };
             TextArea.IndentationStrategy = new AvaloniaEdit.Indentation.CSharp.CSharpIndentationStrategy(Options);
             TextArea.RightClickMovesCaret = true;
-            
+          
             //customMargin = new CustomMargin();
             //TextArea.LeftMargins.Insert(0, customMargin);
 

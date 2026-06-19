@@ -47,7 +47,6 @@ namespace Convnet.Common
             TextArea.IndentationStrategy = new AvaloniaEdit.Indentation.CSharp.CSharpIndentationStrategy(Options);
             TextArea.RightClickMovesCaret = true;
         
-                
             var cmdKey = ApplicationHelper.GetPlatformCommandKey();
 
             var cm = new ContextMenu();

@@ -83,7 +83,6 @@ namespace Convnet.PageViews
                 //var line = editorScript.Document.GetLineByNumber(Settings.Default.LineScript);
                 //editorScript.CaretOffset = line.Offset + Settings.Default.ColumnScript;
                 //editorScript.TextArea.Caret.BringCaretToView(); // ← Try this call. 
-
                 
                 editorScript.GettingFocus += EditorScript_GettingFocus;
             }
