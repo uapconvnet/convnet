@@ -131,6 +131,19 @@ namespace Convnet.PageViews
                 }
             }
         }
+        public void GridSplitterOutput_DragCompleted(object? sender, VectorEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                var gr = this.FindControl<Grid>("subgrid");
+                if (gr != null)
+                {
+                    Settings.Default.OutputSplitPosition = gr.RowDefinitions.First().ActualHeight;
+                    Settings.Default.Save();
+                    e.Handled = true;
+                }
+            }
+        }
 
         private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {

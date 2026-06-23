@@ -95,11 +95,11 @@
   </ItemGroup>
 	
   <ItemGroup>
-	<PackageReference Include="Avalonia" Version="12.0.4" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
-	  <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.0.4" />
-	  <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
-	  <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.4" />
+	<PackageReference Include="Avalonia" Version="12.0.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.5" />
+	  <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.0.5" />
+	  <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.5" />
+	  <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.5" />
 	  <PackageReference Include="Avalonia.Angle.Windows.Natives" Version="2.1.27548.20260419" />
 	  <PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
     <PackageReference Include="AvaloniaEdit.TextMate" Version="12.0.0" />
@@ -108,8 +108,8 @@
 		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
 	  <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-	<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1" />
-	<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
+	<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3" />
+	<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.1" />
 	<PackageReference Include="ReactiveUI.Avalonia" Version="12.0.3" />
 	<PackageReference Include="CsvHelper" Version="33.1.0" />
 	<PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="8.3.1.5" />
