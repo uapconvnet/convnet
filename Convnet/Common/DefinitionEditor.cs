@@ -25,11 +25,7 @@ namespace Convnet.Common
             LineNumbersMargin = new Thickness(4,0,18,0); 
 
             FontSize = 14;
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo,Monospace");
-            else    
-                FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo");
+            FontFamily = new FontFamily("Cascadia Code,Consolas,Menlo,Monospace");
 
             Options = new TextEditorOptions
             {
