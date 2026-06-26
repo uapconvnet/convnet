@@ -90,6 +90,10 @@ namespace Convnet.PageViews
             var gr = this.FindControl<Grid>("grid");
             if (gr != null)
                 gr.ColumnDefinitions.First().Width = new GridLength(Settings.Default.EditSplitPosition, GridUnitType.Pixel);
+
+            var subgr = this.FindControl<Grid>("subgrid");
+            if (subgr != null)
+                subgr.RowDefinitions[1].Height = new GridLength(Settings.Default.OutputSplitPosition, GridUnitType.Pixel);
         }
 
         private void EditorDefinition_GettingFocus(object? sender, FocusChangingEventArgs e)
@@ -138,7 +142,7 @@ namespace Convnet.PageViews
                 var gr = this.FindControl<Grid>("subgrid");
                 if (gr != null)
                 {
-                    Settings.Default.OutputSplitPosition = gr.RowDefinitions.First().ActualHeight;
+                    Settings.Default.OutputSplitPosition = gr.RowDefinitions[1].ActualHeight;
                     Settings.Default.Save();
                     e.Handled = true;
                 }
@@ -147,13 +151,10 @@ namespace Convnet.PageViews
 
         private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            var editorDefinition = this.FindControl<DefinitionEditor>("EditorDefinition");
-            var editorScript = this.FindControl<ScriptEditor>("EditorScript");
-
             if (Settings.Default.FocusedEditor == 0)
-                editorDefinition?.Focus();
+                this.FindControl<DefinitionEditor>("EditorDefinition")?.Focus();
             else
-                editorScript?.Focus();
+                this.FindControl<ScriptEditor>("EditorScript")?.Focus();
         }
     }
 }
