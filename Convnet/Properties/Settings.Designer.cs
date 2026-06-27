@@ -229,30 +229,6 @@ namespace Convnet.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("24")]
-        public double CheckSplitPosition {
-            get {
-                return ((double)(this["CheckSplitPosition"]));
-            }
-            set {
-                this["CheckSplitPosition"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("24")]
-        public double OutputSplitPosition {
-            get {
-                return ((double)(this["OutputSplitPosition"]));
-            }
-            set {
-                this["OutputSplitPosition"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int SelectedLayer {
             get {
@@ -1567,12 +1543,12 @@ namespace Convnet.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Output {
+        public string DebugInfo {
             get {
-                return ((string)(this["Output"]));
+                return ((string)(this["DebugInfo"]));
             }
             set {
-                this["Output"] = value;
+                this["DebugInfo"] = value;
             }
         }
     }

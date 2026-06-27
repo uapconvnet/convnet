@@ -54,7 +54,7 @@ namespace Convnet.PageViewModels
         private bool showLineNumbers = true;
         private string script = Settings.Default.Script;
         private string checkinfo = Settings.Default.CheckInfo;
-        private string output = Settings.Default.Output;
+        private string debuginfo = Settings.Default.DebugInfo;
         private bool dirty = true;
         private static bool initAction = true;
         private readonly DispatcherTimer clickWaitTimer;
@@ -390,16 +390,16 @@ namespace Convnet.PageViewModels
             }
         }
 
-        public string Output
+        public string DebugInfo
         {
-            get => output;
+            get => debuginfo;
             set
             {
-                if (value.Equals(output))
+                if (value.Equals(debuginfo))
                     return;
 
-                this.RaiseAndSetIfChanged(ref output, value);
-                Settings.Default.Output = output;
+                this.RaiseAndSetIfChanged(ref debuginfo, value);
+                Settings.Default.DebugInfo = debuginfo;
             }
         }
 
@@ -684,6 +684,8 @@ namespace Convnet.PageViewModels
 
                 try
                 {
+                    DebugInfo = "Building script...";
+
                     var csproj = "<Project Sdk=\"Microsoft.NET.Sdk\">\r\n\r\n  <PropertyGroup>\r\n    <OutputType>Exe</OutputType>\r\n    <TargetFramework>net10.0</TargetFramework>\r\n    <ImplicitUsings>enable</ImplicitUsings>\r\n    <Nullable>enable</Nullable>\r\n  </PropertyGroup>\r\n\r\n</Project>";
                     File.WriteAllText(Path.Combine(ScriptsDirectory, "Scripts.csproj"), csproj);
                     File.WriteAllText(Path.Combine(ScriptsDirectory, "Program.cs"), Script);
@@ -705,16 +707,10 @@ namespace Convnet.PageViewModels
                     }
 
                     var log = File.ReadAllText(Path.Combine(ScriptsDirectory, "msbuild.log"));
-
-                    
-                    IsValid = true;
                     dirty = log.Length > 0;
-                    if (dirty)
-                        Output = log;
-                        //Dispatcher.UIThread.Post(() => MessageBox.Show(log, "Build error", MessageBoxButtons.OK));
-                    else
-                        Output = "Build successful";
-                    
+                    DebugInfo = dirty ? log : "Build successful";
+
+                    IsValid = true;
                 }
                 catch (Exception ex)
                 {

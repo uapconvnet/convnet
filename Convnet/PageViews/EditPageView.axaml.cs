@@ -90,14 +90,6 @@ namespace Convnet.PageViews
             var gr = this.FindControl<Grid>("grid");
             if (gr != null)
                 gr.ColumnDefinitions.First().Width = new GridLength(Settings.Default.EditSplitPosition, GridUnitType.Pixel);
-
-            var subgrLeft = this.FindControl<Grid>("subgridLeft");
-            if (subgrLeft != null)
-                subgrLeft.RowDefinitions[1].Height = new GridLength(Settings.Default.CheckSplitPosition, GridUnitType.Pixel);
-
-            var subgr = this.FindControl<Grid>("subgrid");
-            if (subgr != null)
-                subgr.RowDefinitions[1].Height = new GridLength(Settings.Default.OutputSplitPosition, GridUnitType.Pixel);
         }
 
         private void EditorDefinition_GettingFocus(object? sender, FocusChangingEventArgs e)
@@ -108,8 +100,7 @@ namespace Convnet.PageViews
                 Settings.Default.Save();
                 e.Handled = true;
             }
-        }
-
+        } 
 
         private void EditorScript_GettingFocus(object? sender, FocusChangingEventArgs e)
         {
@@ -134,34 +125,6 @@ namespace Convnet.PageViews
                 if (gr != null)
                 {
                     Settings.Default.EditSplitPosition = gr.ColumnDefinitions.First().ActualWidth;
-                    Settings.Default.Save();
-                    e.Handled = true;
-                }
-            }
-        }
-
-        public void GridSplitterDefinition_DragCompleted(object? sender, VectorEventArgs e)
-        {
-            if (!e.Handled)
-            {
-                var gr = this.FindControl<Grid>("subgridLeft");
-                if (gr != null)
-                {
-                    Settings.Default.CheckSplitPosition = gr.RowDefinitions[1].ActualHeight;
-                    Settings.Default.Save();
-                    e.Handled = true;
-                }
-            }
-        }
-
-        public void GridSplitterOutput_DragCompleted(object? sender, VectorEventArgs e)
-        {
-            if (!e.Handled)
-            {
-                var gr = this.FindControl<Grid>("subgrid");
-                if (gr != null)
-                {
-                    Settings.Default.OutputSplitPosition = gr.RowDefinitions[1].ActualHeight;
                     Settings.Default.Save();
                     e.Handled = true;
                 }

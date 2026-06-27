@@ -25,24 +25,24 @@
     <!-- <Image x:Name="ImageStatusDefinition" Grid.Column="0" Grid.Row="0" /> -->
     <TextBlock Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" FontSize="17" FontWeight="DemiBold" Text="Definition" TextAlignment="Center" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="4" Margin="2,2,0,2"/>
     <TextBlock Background="{DynamicResource BackgroundBrushLight}" Foreground="{DynamicResource TextBrush}" FontSize="17" FontWeight="DemiBold" Text="Scripts" TextAlignment="Center" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="4" Margin="0,2,2,2"/>
-    <Grid x:Name="subgridLeft" Background="{DynamicResource BackgroundBrush}" Grid.Column="0" Grid.Row="1">
+    <Grid x:Name="subgridLeft" Background="{DynamicResource BackgroundBrushLight}" Grid.Column="0" Grid.Row="1">
       <Grid.RowDefinitions>
         <RowDefinition Height="*"/>
-        <RowDefinition Height="24" MinHeight="24" MaxHeight="48"/>
+        <RowDefinition Height="4" MinHeight="4" MaxHeight="4" />
+        <RowDefinition Height="24" MinHeight="24" MaxHeight="24"/>
       </Grid.RowDefinitions>
       <c:DefinitionEditor x:Name="EditorDefinition" Grid.Row="0" IsTabStop="True" TabIndex="0" Focusable="True" Definition="{Binding Definition, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowLineNumbers="True" TextLocation="{Binding TextLocationDefinition, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" VerticalOffset="{Binding VerticalOffsetDefinition, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" CaretOffset="{Binding CaretOffsetDefinition, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" SelectionStart="{Binding SelectionStartDefinition, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" SelectionLength="{Binding SelectionLengthDefinition, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Padding="2"/>
-      <GridSplitter DragCompleted="GridSplitterDefinition_DragCompleted" Grid.Column="0" HorizontalAlignment="Stretch" Grid.Row="0" Grid.RowSpan="1" VerticalAlignment="Bottom" IsTabStop="False" Focusable="False" Height="0" Background="{DynamicResource BackgroundBrushLight}"  ResizeDirection="Rows"/>
-      <SelectableTextBlock x:Name="DefinitionOutput" Focusable="False" Text="{Binding CheckInfo, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="2"  />
+      <SelectableTextBlock x:Name="DefinitionOutput" Focusable="False" Text="{Binding CheckInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="2"  />
     </Grid>
     <GridSplitter DragCompleted="GridSplitter_DragCompleted" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" Grid.RowSpan="1" VerticalAlignment="Stretch" IsTabStop="False" Focusable="False" Width="0" Background="{DynamicResource BackgroundBrushLight}" ResizeDirection="Columns"/>
-     <Grid x:Name="subgrid" Background="{DynamicResource BackgroundBrush}" Grid.Column="2" Grid.Row="1">
+     <Grid x:Name="subgrid" Background="{DynamicResource BackgroundBrushLight}" Grid.Column="2" Grid.Row="1">
       <Grid.RowDefinitions>
         <RowDefinition Height="*"/>
-        <RowDefinition Height="24" MinHeight="24" MaxHeight="48"/>
+        <RowDefinition Height="4" MinHeight="4" MaxHeight="4"/>
+        <RowDefinition Height="24" MinHeight="24" MaxHeight="24"/>
       </Grid.RowDefinitions>
       <c:ScriptEditor x:Name="EditorScript" IsTabStop="True" TabIndex="1" Focusable="True" Script="{Binding Script, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowLineNumbers="True" TextLocation="{Binding TextLocationScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" VerticalOffset="{Binding VerticalOffsetScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" CaretOffset="{Binding CaretOffsetScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" SelectionStart="{Binding SelectionStartScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" SelectionLength="{Binding SelectionLengthScript, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Padding="2"/>
-      <GridSplitter DragCompleted="GridSplitterOutput_DragCompleted" Grid.Column="0" HorizontalAlignment="Stretch" Grid.Row="0" Grid.RowSpan="1" VerticalAlignment="Bottom" IsTabStop="False" Focusable="False" Height="0" Background="{DynamicResource BackgroundBrushLight}"  ResizeDirection="Rows"/>
-      <SelectableTextBlock x:Name="EditorOutput"  TabIndex="2" Focusable="False" Text="{Binding Output, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="2"  />
+      <SelectableTextBlock x:Name="EditorOutput"  TabIndex="2" Focusable="False" Text="{Binding DebugInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsVisible="True" Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="2"  />
     </Grid>
   </Grid>
 </UserControl>

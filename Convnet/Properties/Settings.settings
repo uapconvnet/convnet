@@ -53,12 +53,6 @@
     <Setting Name="EditSplitPosition" Type="System.Double" Scope="User">
       <Value Profile="(Default)">420</Value>
     </Setting>
-    <Setting Name="CheckSplitPosition" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">24</Value>
-    </Setting>
-    <Setting Name="OutputSplitPosition" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">24</Value>
-    </Setting>
     <Setting Name="SelectedLayer" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
@@ -2075,7 +2069,7 @@ namespace Scripts
     <Setting Name="CheckInfo" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Output" Type="System.String" Scope="User">
+    <Setting Name="DebugInfo" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
