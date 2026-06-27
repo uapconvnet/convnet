@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
@@ -140,6 +142,13 @@ namespace Convnet.PageViews
                     e.Handled = true;
                 }
             }
+        }
+
+        private void DataGrid_HorizontalScroll(object sender, ScrollEventArgs e)
+        {
+            var scrollviewer = this.FindControl<ScrollViewer>("ScrollViewerHeader");
+            if (scrollviewer != null)
+                scrollviewer.Offset = new Vector(e.NewValue, 0);
         }
 
         private async void DataGrid_KeyDown(object sender, KeyEventArgs e)
