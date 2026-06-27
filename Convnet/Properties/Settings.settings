@@ -53,6 +53,9 @@
     <Setting Name="EditSplitPosition" Type="System.Double" Scope="User">
       <Value Profile="(Default)">420</Value>
     </Setting>
+    <Setting Name="CheckSplitPosition" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">24</Value>
+    </Setting>
     <Setting Name="OutputSplitPosition" Type="System.Double" Scope="User">
       <Value Profile="(Default)">24</Value>
     </Setting>
@@ -2068,6 +2071,9 @@ namespace Scripts
     }
 }
 </Value>
+    </Setting>
+    <Setting Name="CheckInfo" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Output" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

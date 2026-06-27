@@ -230,6 +230,18 @@ namespace Convnet.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("24")]
+        public double CheckSplitPosition {
+            get {
+                return ((double)(this["CheckSplitPosition"]));
+            }
+            set {
+                this["CheckSplitPosition"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("24")]
         public double OutputSplitPosition {
             get {
                 return ((double)(this["OutputSplitPosition"]));
@@ -1540,6 +1552,18 @@ namespace Convnet.Properties {
             }
         }
         
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CheckInfo {
+            get {
+                return ((string)(this["CheckInfo"]));
+            }
+            set {
+                this["CheckInfo"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]

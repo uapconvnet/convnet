@@ -53,6 +53,7 @@ namespace Convnet.PageViewModels
         private bool wordWrap = false;
         private bool showLineNumbers = true;
         private string script = Settings.Default.Script;
+        private string checkinfo = Settings.Default.CheckInfo;
         private string output = Settings.Default.Output;
         private bool dirty = true;
         private static bool initAction = true;
@@ -373,6 +374,19 @@ namespace Convnet.PageViewModels
                 this.RaiseAndSetIfChanged(ref script, value);
                 Settings.Default.Script = script;
                 dirty = true;
+            }
+        }
+
+        public string CheckInfo
+        {
+            get => checkinfo;
+            set
+            {
+                if (value.Equals(checkinfo))
+                    return;
+
+                this.RaiseAndSetIfChanged(ref checkinfo, value);
+                Settings.Default.CheckInfo = checkinfo;
             }
         }
 
@@ -735,11 +749,16 @@ namespace Convnet.PageViewModels
 
                 if (msg.Error)
                 {
-                    TextLocationDefinition = new TextLocation(1, 1);
+                    //TextLocationDefinition = new TextLocation(1, 1);
                     TextLocationDefinition = new TextLocation((int)msg.Row, (int)msg.Column);
-                    Dispatcher.UIThread.Invoke(() => MessageBox.Show(msg.Message, "Check", MessageBoxButtons.OK, icon: MessageBoxIcon.Information));
+                    CheckInfo = msg.Row.ToString() + ":" + msg.Column.ToString() + "  " + msg.Message;
+                    //Dispatcher.UIThread.Invoke(() => MessageBox.Show(msg.Message, "Check", MessageBoxButtons.OK, icon: MessageBoxIcon.Information));
                 }
-                
+                else
+                {
+                    CheckInfo = "Definition is valid";
+                    //Dispatcher.UIThread.Invoke(() => MessageBox.Show("Definition is valid", "Check", MessageBoxButtons.OK, icon: MessageBoxIcon.Information));
+                }
                 return !msg.Error;
             }
 
