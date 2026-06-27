@@ -575,7 +575,13 @@ namespace Convnet.PageViewModels
             clickWaitTimer.Stop();
 
             if (!initAction)
+            {
+                if (dirty)
+                {
+                    DebugInfo = "Building script...";
+                }
                 Dispatcher.UIThread.Post(() => ScriptDialog());
+            }
         }
 
         private void Scripts(object? sender, RoutedEventArgs e)
@@ -684,8 +690,6 @@ namespace Convnet.PageViewModels
 
                 try
                 {
-                    DebugInfo = "Building script...";
-
                     var csproj = "<Project Sdk=\"Microsoft.NET.Sdk\">\r\n\r\n  <PropertyGroup>\r\n    <OutputType>Exe</OutputType>\r\n    <TargetFramework>net10.0</TargetFramework>\r\n    <ImplicitUsings>enable</ImplicitUsings>\r\n    <Nullable>enable</Nullable>\r\n  </PropertyGroup>\r\n\r\n</Project>";
                     File.WriteAllText(Path.Combine(ScriptsDirectory, "Scripts.csproj"), csproj);
                     File.WriteAllText(Path.Combine(ScriptsDirectory, "Program.cs"), Script);
