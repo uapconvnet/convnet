@@ -35,22 +35,22 @@
     <Menu DockPanel.Dock="Top" x:Name="menuMain" Background="{DynamicResource ToolBarBackgroundBrush}">
       <MenuItem Header="_File">
         <MenuItem Header="_Open..." InputGesture="Ctrl+O" Command="{Binding OpenCommand}"/>
-        <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
-        <MenuItem Header="Save As..." Command="{Binding SaveAsCommand}"/>
+        <MenuItem Header="Save" InputGesture="Ctrl+S" Command="{Binding SaveCommand}"/>
+        <MenuItem Header="Save As..." InputGesture="Ctrl+Shift+S" Command="{Binding SaveAsCommand}"/>
         <Separator Height="1" Width="NaN" Margin="2"/>
-        <MenuItem Header="Exit..." Command="{Binding ExitCommand}"/>
+        <MenuItem Header="Exit..." InputGesture="Ctrl+X" Command="{Binding ExitCommand}"/>
       </MenuItem>
-      <MenuItem Header="_Edit">
-        <MenuItem Header="_Cut"  />
-        <MenuItem Header="Co_py"/>
-        <MenuItem Header="_Paste"/>
-        <MenuItem Header="_Delete"/>
+      <!-- <MenuItem Header="_Edit">
+        <MenuItem Header="_Cut" InputGesture="Ctrl+O" />
+        <MenuItem Header="Co_py" InputGesture="Ctrl+C"/>
+        <MenuItem Header="_Paste" InputGesture="Ctrl+V"/>
+        <MenuItem Header="_Delete" InputGesture="Ctrl+X"/>
         <Separator Height="1" Width="NaN" Margin="2"/>
-        <MenuItem Header="Select _All"/>
+        <MenuItem Header="Select _All" InputGesture="Ctrl+A"/>
         <Separator Height="1" Width="NaN" Margin="2"/>
-        <MenuItem Header="_Undo"/>
-        <MenuItem Header="_Redo"/>
-      </MenuItem>
+        <MenuItem Header="_Undo" InputGesture="Ctrl+Z"/>
+        <MenuItem Header="_Redo" InputGesture="Ctrl+Y"/>
+      </MenuItem> -->
       <MenuItem Header="_Settings">
         <MenuItem Header="_Format"/>
         <MenuItem Header="_Locking"/>
@@ -73,7 +73,7 @@
             </ComboBox.ItemTemplate>
           </ComboBox>
         </controls:ToolBar>
-        <controls:ToolBar Name="CmdToolBar" Margin="2" Background="{DynamicResource ToolBarBackgroundBrush}" Foreground="{DynamicResource TextBrush}"  ItemsSource="{Binding CommandToolBar, Mode=TwoWay}" IsVisible="{Binding Path=CommandToolBarVisibility}" />
+        <controls:ToolBar Name="CmdToolBar" Margin="2" Background="{DynamicResource ToolBarBackgroundBrush}" Foreground="{DynamicResource TextBrush}"  ItemsSource="{Binding CommandToolBar, Mode=TwoWay}" IsVisible="{Binding Path=CommandToolBarVisibility}" GotFocus="CmdToolBar_GotFocus" />
       </controls:ToolBarTray>
       <Border Grid.Row="1">
         <ContentControl Name="PageContentControl" Content="{Binding CurrentPage}"/>
