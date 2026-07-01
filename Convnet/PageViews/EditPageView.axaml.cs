@@ -97,7 +97,6 @@ namespace Convnet.PageViews
             if (!e.Handled)
             {
                 Settings.Default.FocusedEditor = 0;
-                Settings.Default.Save();
                 e.Handled = true;
             }
         } 
@@ -107,7 +106,6 @@ namespace Convnet.PageViews
             if (!e.Handled)
             {
                 Settings.Default.FocusedEditor = 1;
-                Settings.Default.Save();
                 e.Handled = true;
             }
         }
