@@ -9,6 +9,7 @@ using AvaloniaEdit.Document;
 using AvaloniaEdit.Editing;
 using AvaloniaEdit.Folding;
 using AvaloniaEdit.Rendering;
+using Convnet.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -338,7 +339,16 @@ namespace Convnet.Common
             set
             {
                 if (value.Line <= Document.LineCount && GetValue<TextLocation>(TextLocationProperty) != value)
-                    Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => { TextArea.Caret.Line = value.Line; TextArea.Caret.Column = value.Column; TextArea.Caret.BringCaretToView(); TextArea.Caret.Show(); ScrollTo(value.Line, value.Column); OnPropertyChanged(nameof(TextLocation)); }, DispatcherPriority.ContextIdle);
+                    Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => { 
+                        TextArea.Caret.Line = value.Line; 
+                        TextArea.Caret.Column = value.Column; 
+                        TextArea.Caret.BringCaretToView();
+                        if (Settings.Default.FocusedEditor == 1)
+                        {
+                            TextArea.Caret.Show();
+                        }
+                        ScrollTo(value.Line, value.Column); 
+                        OnPropertyChanged(nameof(TextLocation)); }, DispatcherPriority.ContextIdle);
             }
         }
 
