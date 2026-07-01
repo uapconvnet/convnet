@@ -123,7 +123,6 @@ namespace Convnet.PageViews
                 if (gr != null)
                 {
                     Settings.Default.EditSplitPosition = gr.ColumnDefinitions.First().ActualWidth;
-                    Settings.Default.Save();
                     e.Handled = true;
                 }
             }
