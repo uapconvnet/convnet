@@ -73,13 +73,13 @@
             </ComboBox.ItemTemplate>
           </ComboBox>
         </controls:ToolBar>
-        <controls:ToolBar Name="CmdToolBar" Margin="2" Background="{DynamicResource ToolBarBackgroundBrush}" Foreground="{DynamicResource TextBrush}"  ItemsSource="{Binding CommandToolBar, Mode=TwoWay}" IsVisible="{Binding Path=CommandToolBarVisibility}" GotFocus="CmdToolBar_GotFocus" />
+        <controls:ToolBar Name="CmdToolBar" Margin="2" Background="{DynamicResource ToolBarBackgroundBrush}" Foreground="{DynamicResource TextBrush}"  ItemsSource="{Binding CommandToolBar, Mode=TwoWay}" IsVisible="{Binding Path=CommandToolBarVisibility}" GotFocus="CmdToolBar_GotFocus"/>
       </controls:ToolBarTray>
       <Border Grid.Row="1">
         <ContentControl Name="PageContentControl" Content="{Binding CurrentPage}"/>
       </Border>
       <Grid ColumnDefinitions="Auto,Auto,*" Grid.Row="2">
-        <TextBlock x:Name="SampleRate" Grid.Column="0" Margin="4,2,10,2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Path=SampleRate}" ToolTip.Tip="Sample Rate" Foreground="{DynamicResource TextBrush}" />
+        <TextBlock x:Name="SampleRate" Grid.Column="0" Margin="4,2,10,2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Path=SampleRate}" ToolTip.Tip="Sample Rate" Foreground="{DynamicResource TextBrush}"/>
         <TextBlock x:Name="Time" Grid.Column="1" Margin="10,2,10,2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Path=Duration}" ToolTip.Tip="Duration" Foreground="{DynamicResource TextBrush}"/>
         <ProgressBar x:Name="ProgressBar" Grid.Column="2" Height="24" ShowProgressText="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2,0,2,0" Orientation="Horizontal" Foreground="Green" Minimum="{Binding Path=ProgressBarMinimum}" Maximum="{Binding Path=ProgressBarMaximum}" Value="{Binding Path=ProgressBarValue}" SmallChange="1" IsTabStop="False"/>
       </Grid>

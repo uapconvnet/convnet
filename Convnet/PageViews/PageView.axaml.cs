@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -19,7 +20,11 @@ namespace Convnet.PageViews
 
         private void CmdToolBar_GotFocus(object? sender, Avalonia.Input.FocusChangedEventArgs e)
         {
-            Dispatcher.UIThread.Post(() => e.OldFocusedElement?.Focus());
+            var view =  this.FindControl<ComboBox>("PageViews");
+            if (view?.SelectedIndex == 0)
+            {
+                Dispatcher.UIThread.Post(() => e.OldFocusedElement?.Focus());
+            }
         }
     }
 }
