@@ -163,19 +163,40 @@ namespace Convnet.PageViewModels
                         Patterns = ["*.cs"]
                     };
 
+                    FilePickerFileType? defaultFileType = null;
+                    
+                    var title = "Load";
+
                     var filterList = new List<FilePickerFileType>();
                     if (CurrentPage is TrainPageViewModel)
+                    {
                         filterList?.AddRange([typeWeights, typeLog]);
-                    if (CurrentPage is EditPageViewModel)
-                        filterList?.AddRange([typeDefinition, typeCSharp]);
 
+                        defaultFileType = typeWeights;
+
+                        title = "Load";
+                    }
+
+                    if (CurrentPage is EditPageViewModel)
+                    {
+                        filterList?.AddRange([typeDefinition, typeCSharp]);
+                                               
+                        if (Settings.Default.FocusedEditor == 0)
+                            defaultFileType = typeDefinition;
+                        else
+                            defaultFileType = typeCSharp;
+
+                        title = "Open";
+                    }
+                    
                     IStorageFolder? startingLocation = null;
                     startingLocation = await provider.TryGetFolderFromPathAsync(folder);
 
                     var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
                     {
                         AllowMultiple = false,
-                        Title = "Load",
+                        Title = title,
+                        SuggestedFileType = defaultFileType,
                         SuggestedStartLocation = startingLocation,
                         FileTypeFilter = filterList
                     }); 
