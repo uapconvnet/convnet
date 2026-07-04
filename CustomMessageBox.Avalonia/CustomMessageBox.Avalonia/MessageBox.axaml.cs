@@ -276,6 +276,7 @@ public partial class MessageBox : Window, INotifyPropertyChanged
 
 	#region Public properties
 
+	/// <inheritdoc/>
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
 	private void RaisePropertyChanged(string propertyName)
@@ -555,6 +556,11 @@ public partial class MessageBox : Window, INotifyPropertyChanged
 		Padding = DefaultPadding;
 	}
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="MessageBox"/> class with the specified message and optional caption.
+	/// </summary>
+	/// <param name="message">The message content to display in the message box.</param>
+	/// <param name="caption">The optional caption for the message box window title.</param>
 	public MessageBox(object message, string? caption = null) : this()
 	{
 		Title = caption;
@@ -563,9 +569,21 @@ public partial class MessageBox : Window, INotifyPropertyChanged
 		SetMessageIcon(null);
 	}
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="MessageBox"/> class with the specified message, caption, and icon.
+	/// </summary>
+	/// <param name="message">The message content to display in the message box.</param>
+	/// <param name="caption">The optional caption for the message box window title.</param>
+	/// <param name="icon">The icon to display in the message box.</param>
 	public MessageBox(object message, string? caption = null, MessageBoxIcon icon = MessageBoxIcon.None) : this(message, caption)
 		=> SetMessageIcon(icon);
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="MessageBox"/> class with the specified message, caption, and custom icon bitmap.
+	/// </summary>
+	/// <param name="message">The message content to display in the message box.</param>
+	/// <param name="caption">The optional caption for the message box window title.</param>
+	/// <param name="icon">The custom icon bitmap to display in the message box.</param>
 	public MessageBox(object message, string? caption = null, Bitmap? icon = null) : this(message, caption)
 		=> SetMessageIcon(icon);
 
@@ -705,6 +723,7 @@ public partial class MessageBox : Window, INotifyPropertyChanged
 	/// The classic way of showing a message box.
 	/// <para>You can additionally pass custom style classes for the default button to make it stand out.</para>
 	/// </summary>
+	/// <param name="owner">The window that owns the <see cref="MessageBox" />.</param>
 	/// <param name="message">Custom content of the <see cref="MessageBox" />. This doesn't have to be just text, but may also be a custom control.</param>
 	/// <param name="caption">The title of the <see cref="MessageBox" /> dialog.</param>
 	/// <param name="buttons">An enum of preset buttons which should appear in the <see cref="MessageBox" />.</param>
@@ -720,6 +739,7 @@ public partial class MessageBox : Window, INotifyPropertyChanged
 	/// <summary>
 	/// The classic way of showing a message box.
 	/// </summary>
+	/// <param name="owner">The window that owns the <see cref="MessageBox" />.</param>
 	/// <param name="message">Custom content of the <see cref="MessageBox" />. This doesn't have to be just text, but may also be a custom control.</param>
 	/// <param name="caption">The title of the <see cref="MessageBox" /> dialog.</param>
 	/// <param name="buttons">An enum of preset buttons which should appear in the <see cref="MessageBox" />.</param>
@@ -735,6 +755,7 @@ public partial class MessageBox : Window, INotifyPropertyChanged
 	/// <summary>
 	/// Opens a message box with the specified content.
 	/// </summary>
+	/// <param name="owner">The window that owns the <see cref="MessageBox" />.</param>
 	/// <param name="message">Custom content of the <see cref="MessageBox" />. This doesn't have to be just text, but may also be a custom control.</param>
 	/// <param name="caption">The title of the <see cref="MessageBox" /> dialog.</param>
 	/// <param name="icon">Determines the preset icon which should appear inside the Message Panel.</param>
@@ -749,6 +770,7 @@ public partial class MessageBox : Window, INotifyPropertyChanged
 	/// <summary>
 	/// Opens a message box with the specified custom icon and message.
 	/// </summary>
+	/// <param name="owner">The window that owns the <see cref="MessageBox" />.</param>
 	/// <param name="message">Custom content of the <see cref="MessageBox" />. This doesn't have to be just text, but may also be a custom control.</param>
 	/// <param name="caption">The title of the <see cref="MessageBox" /> dialog.</param>
 	/// <param name="icon">The custom icon which should appear inside the Message Panel.</param>
