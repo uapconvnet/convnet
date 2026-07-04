@@ -761,6 +761,7 @@ namespace Convnet.PageViewModels
                                 CommandToolBar[6].IsVisible = true;
                                 CommandToolBar[7].IsVisible = true;
                                 CommandToolBar[8].IsVisible = true;
+                                CommandToolBar[9].IsVisible = true;
 
                                 if (layersComboBox != null && Model.Layers != null && (Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0 || Model.Layers[layersComboBox.SelectedIndex].IsNormLayer))
                                 {
@@ -1531,7 +1532,7 @@ namespace Convnet.PageViewModels
                     CommandToolBar[6].IsVisible = true;
                     CommandToolBar[7].IsVisible = true;
                     CommandToolBar[8].IsVisible = true;
-
+                    CommandToolBar[9].IsVisible = true;
 
                     CommandToolBar[18].IsVisible = false;
                     CommandToolBar[19].IsVisible = false;
