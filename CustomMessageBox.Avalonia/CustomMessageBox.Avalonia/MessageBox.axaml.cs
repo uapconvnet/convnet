@@ -546,7 +546,10 @@ public partial class MessageBox : Window, INotifyPropertyChanged
 
 	#region Construction
 
-	private MessageBox()
+	/// <summary>
+	/// Initializes a new instance of the <see cref="MessageBox"/> class.
+	/// </summary>
+	public MessageBox()
 	{
 		InitializeComponent();
 
