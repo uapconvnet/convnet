@@ -189,9 +189,9 @@ namespace Convnet.Common
             set
             {
                 if (base.VerticalOffset != value)
-                    Dispatcher.UIThread.InvokeAsync(() => 
-                    { 
-                        this.ScrollToVerticalOffset(value); 
+                    Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        this.ScrollToVerticalOffset(value);
                         OnPropertyChanged(nameof(VerticalOffset));
                     }, DispatcherPriority.ContextIdle);
             }
