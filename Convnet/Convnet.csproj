@@ -28,7 +28,6 @@
 	
   <ItemGroup>
     <Compile Remove="Common\RangeRule.cs" />
-    <Compile Remove="PageViewModels\MainWindowViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -215,8 +214,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Common\RangeRule.cs" />
-    <None Include="PageViewModels\MainWindowViewModel.cs" />
+	<None Include="Common\RangeRule.cs" />
   </ItemGroup>
 
   <ItemGroup>
