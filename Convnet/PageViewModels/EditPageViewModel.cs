@@ -197,8 +197,11 @@ namespace Convnet.PageViewModels
         {
             get => caretOffsetScript;
             set 
-            {   this.RaiseAndSetIfChanged(ref caretOffsetScript, value);
-                Settings.Default.CaretOffsetScript = value;
+            {   if (caretOffsetScript != value) 
+                {
+                    Settings.Default.CaretOffsetScript = value;
+                    this.RaiseAndSetIfChanged(ref caretOffsetScript, value);
+                }
             }
         }
 
@@ -207,8 +210,11 @@ namespace Convnet.PageViewModels
             get => caretOffsetDefinition;
             set 
             { 
-                this.RaiseAndSetIfChanged(ref caretOffsetDefinition, value);
-                Settings.Default.CaretOffsetDefinition = value;
+                if (caretOffsetDefinition != value)
+                {
+                    Settings.Default.CaretOffsetDefinition = value;
+                    this.RaiseAndSetIfChanged(ref caretOffsetDefinition, value);
+                }
             }
         }
 
@@ -231,8 +237,8 @@ namespace Convnet.PageViewModels
             {
                 if (selectionStartDefinition != value)
                 {
-                    this.RaiseAndSetIfChanged(ref selectionStartDefinition, value);
                     Settings.Default.SelectionStartDefinition = value;
+                    this.RaiseAndSetIfChanged(ref selectionStartDefinition, value);
                 }
             }
         }
@@ -244,8 +250,8 @@ namespace Convnet.PageViewModels
             {
                 if (selectionLengthDefinition != value)
                 {
-                    this.RaiseAndSetIfChanged(ref selectionLengthDefinition, value);
                     Settings.Default.SelectionLengthDefinition = value;
+                    this.RaiseAndSetIfChanged(ref selectionLengthDefinition, value);
                 }
             }
         }
@@ -257,8 +263,8 @@ namespace Convnet.PageViewModels
             {
                 if (selectionStartScript != value)
                 {
-                    this.RaiseAndSetIfChanged(ref selectionStartScript, value);
                     Settings.Default.SelectionStartScript = value;
+                    this.RaiseAndSetIfChanged(ref selectionStartScript, value);
                 }
             }
         }
@@ -270,8 +276,8 @@ namespace Convnet.PageViewModels
             {
                 if (selectionLengthScript != value)
                 {
-                    this.RaiseAndSetIfChanged(ref selectionLengthScript, value);
                     Settings.Default.SelectionLengthScript = value;
+                    this.RaiseAndSetIfChanged(ref selectionLengthScript, value);
                 }
             }
         }
@@ -283,9 +289,9 @@ namespace Convnet.PageViewModels
             {
                 if (value != verticalOffsetDefinition)
                 {
-                    this.RaiseAndSetIfChanged(ref verticalOffsetDefinition, value);
                     Settings.Default.DefinitionOffset = value;
-                }
+                    this.RaiseAndSetIfChanged(ref verticalOffsetDefinition, value);
+                }    
             }
         }
 
@@ -296,8 +302,8 @@ namespace Convnet.PageViewModels
             {
                 if (value != verticalOffsetScript)
                 {
-                    this.RaiseAndSetIfChanged(ref verticalOffsetScript, value);
                     Settings.Default.ScriptOffset = value;
+                    this.RaiseAndSetIfChanged(ref verticalOffsetScript, value);
                 }
             }
         }
@@ -309,9 +315,10 @@ namespace Convnet.PageViewModels
             {
                 if (value != textLocationDefinition)
                 {
-                    this.RaiseAndSetIfChanged(ref textLocationDefinition, value);
                     Settings.Default.ColumnDefinition = value.Column;
                     Settings.Default.LineDefinition = value.Line;
+                    this.RaiseAndSetIfChanged(ref textLocationDefinition, value);
+                    
                 }
             }
         }
@@ -323,9 +330,9 @@ namespace Convnet.PageViewModels
             {
                 if (value != textLocationScript)
                 {
-                    this.RaiseAndSetIfChanged(ref textLocationScript, value);
                     Settings.Default.ColumnScript = value.Column;
                     Settings.Default.LineScript = value.Line;
+                    this.RaiseAndSetIfChanged(ref textLocationScript, value);
                 }
             }
         }
@@ -371,8 +378,9 @@ namespace Convnet.PageViewModels
                 if (value.Equals(script))
                     return;
 
-                this.RaiseAndSetIfChanged(ref script, value);
                 Settings.Default.Script = script;
+                this.RaiseAndSetIfChanged(ref script, value);
+                
                 dirty = true;
             }
         }
@@ -385,8 +393,8 @@ namespace Convnet.PageViewModels
                 if (value.Equals(checkinfo))
                     return;
 
-                this.RaiseAndSetIfChanged(ref checkinfo, value);
                 Settings.Default.CheckInfo = checkinfo;
+                this.RaiseAndSetIfChanged(ref checkinfo, value);
             }
         }
 
@@ -398,8 +406,8 @@ namespace Convnet.PageViewModels
                 if (value.Equals(debuginfo))
                     return;
 
-                this.RaiseAndSetIfChanged(ref debuginfo, value);
                 Settings.Default.DebugInfo = debuginfo;
+                this.RaiseAndSetIfChanged(ref debuginfo, value);
             }
         }
 

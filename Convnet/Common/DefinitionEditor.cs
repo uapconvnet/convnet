@@ -166,6 +166,7 @@ namespace Convnet.Common
                         {
                             TextArea.Caret.Show();
                         }
+                        ScrollTo(0, 0);
                         ScrollTo(value.Line, value.Column); 
                         OnPropertyChanged(nameof(TextLocation)); 
                     }, DispatcherPriority.ContextIdle);
