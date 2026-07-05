@@ -370,6 +370,30 @@ namespace Convnet.Properties {
                 this["DefinitionOffset"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double DefinitionOffsetX {
+            get {
+                return ((double)(this["DefinitionOffsetX"]));
+            }
+            set {
+                this["DefinitionOffsetX"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double DefinitionOffsetY {
+            get {
+                return ((double)(this["DefinitionOffsetY"]));
+            }
+            set {
+                this["DefinitionOffsetY"] = value;
+            }
+        }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -380,6 +404,30 @@ namespace Convnet.Properties {
             }
             set {
                 this["ScriptOffset"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double ScriptOffsetX {
+            get {
+                return ((double)(this["ScriptOffsetX"]));
+            }
+            set {
+                this["ScriptOffsetX"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double ScriptOffsetY {
+            get {
+                return ((double)(this["ScriptOffsetY"]));
+            }
+            set {
+                this["ScriptOffsetY"] = value;
             }
         }
         
