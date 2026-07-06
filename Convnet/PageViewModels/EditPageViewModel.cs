@@ -179,9 +179,9 @@ namespace Convnet.PageViewModels
                 if (value.Equals(definition) || value.Trim().Length < 3)
                     return;
 
+                Settings.Default.DefinitionEditing = value;
                 this.RaiseAndSetIfChanged(ref definition, value);
-
-                Settings.Default.DefinitionEditing = definition;
+                
                 ModelName = definition.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0].Trim().Replace("[", "").Replace("]", "").Trim();
                 DefinitionStatus = false;
             }
@@ -378,7 +378,7 @@ namespace Convnet.PageViewModels
                 if (value.Equals(script))
                     return;
 
-                Settings.Default.Script = script;
+                Settings.Default.Script = value;
                 this.RaiseAndSetIfChanged(ref script, value);
                 
                 dirty = true;
@@ -393,7 +393,7 @@ namespace Convnet.PageViewModels
                 if (value.Equals(checkinfo))
                     return;
 
-                Settings.Default.CheckInfo = checkinfo;
+                Settings.Default.CheckInfo = value;
                 this.RaiseAndSetIfChanged(ref checkinfo, value);
             }
         }
@@ -406,7 +406,7 @@ namespace Convnet.PageViewModels
                 if (value.Equals(debuginfo))
                     return;
 
-                Settings.Default.DebugInfo = debuginfo;
+                Settings.Default.DebugInfo = value;
                 this.RaiseAndSetIfChanged(ref debuginfo, value);
             }
         }
