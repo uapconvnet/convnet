@@ -372,7 +372,7 @@ namespace Convnet.Common
                     Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => { this.ScrollToVerticalOffset(value); OnPropertyChanged(nameof(VerticalOffset));}, DispatcherPriority.ContextIdle);
             }
         }
-
+        
         public static readonly DirectProperty<ScriptEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, int>(
             nameof(CaretOffset),
             o => o.CaretOffset,

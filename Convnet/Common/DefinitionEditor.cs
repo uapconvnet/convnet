@@ -197,6 +197,7 @@ namespace Convnet.Common
                     }, DispatcherPriority.ContextIdle);
             }
         }
+                
 
         public static readonly DirectProperty<DefinitionEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
             nameof(CaretOffset),
