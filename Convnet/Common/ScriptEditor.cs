@@ -9,7 +9,6 @@ using AvaloniaEdit.Document;
 using AvaloniaEdit.Editing;
 using AvaloniaEdit.Folding;
 using AvaloniaEdit.Rendering;
-using Convnet.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -343,7 +342,7 @@ namespace Convnet.Common
                         TextArea.Caret.Line = value.Line; 
                         TextArea.Caret.Column = value.Column; 
                         TextArea.Caret.BringCaretToView();
-                        if (Settings.Default.FocusedEditor == 1)
+                        if (this.IsFocused)
                         {
                             TextArea.Caret.Show();
                         }
@@ -372,7 +371,7 @@ namespace Convnet.Common
                     Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() => { this.ScrollToVerticalOffset(value); OnPropertyChanged(nameof(VerticalOffset));}, DispatcherPriority.ContextIdle);
             }
         }
-        
+
         public static readonly DirectProperty<ScriptEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<ScriptEditor, int>(
             nameof(CaretOffset),
             o => o.CaretOffset,

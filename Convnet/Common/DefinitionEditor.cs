@@ -6,7 +6,6 @@ using Avalonia.Threading;
 using AvaloniaEdit;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Editing;
-using Convnet.Properties;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -162,11 +161,11 @@ namespace Convnet.Common
                         TextArea.Caret.Line = value.Line; 
                         TextArea.Caret.Column = value.Column; 
                         TextArea.Caret.BringCaretToView();
-                        if (Settings.Default.FocusedEditor == 0)
+                        if (this.IsFocused)
                         {
                             TextArea.Caret.Show();
                         }
-                        ScrollTo(1, 1);
+                        ScrollTo(0, 0);
                         ScrollTo(value.Line, value.Column); 
                         OnPropertyChanged(nameof(TextLocation)); 
                     }, DispatcherPriority.ContextIdle);
@@ -197,7 +196,6 @@ namespace Convnet.Common
                     }, DispatcherPriority.ContextIdle);
             }
         }
-                
 
         public static readonly DirectProperty<DefinitionEditor, int> CaretOffsetProperty = AvaloniaProperty.RegisterDirect<DefinitionEditor, int>(
             nameof(CaretOffset),
