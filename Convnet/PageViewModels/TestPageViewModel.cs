@@ -51,7 +51,8 @@ namespace Convnet.PageViewModels
             showSample = false;
             if (Model != null)
                 Model.TestProgress += TestProgress;
-            Modelhanged += TestPageViewModel_ModelChanged;
+
+            ModelChanged += TestPageViewModel_ModelChanged;
 
             //Dispatcher.UIThread.Post(() => LayerIndexChanged(this, null), DispatcherPriority.Render);
         }

@@ -137,7 +137,7 @@ namespace Convnet.PageViewModels
             var visualStudioButton = new Button
             {
                 Name = "ButtonVisualStudio",
-                Content = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? ApplicationHelper.LoadFromResource("vsCode.png") : ApplicationHelper.LoadFromResource("VisualStudio.png"),
+                Content = (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? ApplicationHelper.LoadFromResource("vsCode.png") : ApplicationHelper.LoadFromResource("VisualStudio.png")),
                 ClickMode = ClickMode.Release,
                 Focusable = false,
                 Command = VisualStudioCommand

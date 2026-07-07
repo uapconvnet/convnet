@@ -29,6 +29,34 @@ namespace Convnet.PageViewModels
     {
         public event EventHandler? PageChange;
         
+        private bool openCommandVisible = false;
+        public bool OpenCommandVisible
+        {
+            get => ((CurrentPage is TrainPageViewModel) && (CurrentPage?.Model?.State == DNNStates.Idle)) || ((CurrentPage is TestPageViewModel) && (CurrentPage?.Model?.State == DNNStates.Idle)) || (CurrentPage is EditPageViewModel);
+            set 
+            { 
+                this.RaiseAndSetIfChanged(ref openCommandVisible, value); 
+            }
+        }
+        private bool saveCommandVisible = false;
+        public bool SaveCommandVisible
+        {
+            get => CurrentPage is TrainPageViewModel;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref saveCommandVisible, value);
+            }
+        }
+        private bool saveAsCommandVisible = false;
+        public bool SaveAsCommandVisible 
+        {
+            get => (CurrentPage is TrainPageViewModel) || (CurrentPage is EditPageViewModel);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref saveAsCommandVisible, value);
+            }
+        }
+
         public void DocumentationCommand()
         {
             ApplicationHelper.OpenBrowser("https://github.com/uapconvnet/convnet.git");
@@ -108,9 +136,8 @@ namespace Convnet.PageViewModels
                 Model.TestProgress += TestProgress;
 
                 var EditPageVM = new EditPageViewModel(Model);
-                EditPageVM.Open += PageVM_Open;
                 EditPageVM.SaveAs += PageVM_SaveAs;
-                EditPageVM.Modelhanged += EditPageVM_ModelChanged;
+                EditPageVM.ModelChanged += EditPageVM_ModelChanged;
 
                 var TestPageVM = new TestPageViewModel(Model);
                 TestPageVM.Open += PageVM_Open;
@@ -635,8 +662,16 @@ namespace Convnet.PageViewModels
 
             if (Settings.Default.CurrentPage == (int)ViewModels.Train && CostLayers?.Count > 1)
                 (Pages?[(int)ViewModels.Train] as TrainPageViewModel)?.CostLayersComboBox_SelectionChanged(this, null);
+            
+            OpenCommandVisible = ((CurrentPage is TrainPageViewModel) && (CurrentPage?.Model?.TaskState == DNNTaskStates.Stopped)) || ((CurrentPage is TestPageViewModel) && (CurrentPage?.Model?.TaskState == DNNTaskStates.Stopped)) || (CurrentPage is EditPageViewModel);
+            SaveCommandVisible = CurrentPage is TrainPageViewModel;
+            SaveAsCommandVisible = (CurrentPage is TrainPageViewModel) || (CurrentPage is EditPageViewModel);
         }
-
+        
+        public void OnPageTaskStatusChange()
+        {
+            
+        }
         public override void Reset()
         {
             if (Pages != null)

@@ -185,7 +185,7 @@ namespace Convnet.PageViewModels
             
             AddCommandButtons();
 
-            Modelhanged += TrainPageViewModel_ModelChanged;
+            ModelChanged += TrainPageViewModel_ModelChanged;
             RefreshRateChanged += TrainPageViewModel_RefreshRateChanged;
 
             PixelSizeSlider_ValueChanged(this, null);

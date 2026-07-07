@@ -21,9 +21,12 @@ namespace Convnet.PageViews
         private void CmdToolBar_GotFocus(object? sender, Avalonia.Input.FocusChangedEventArgs e)
         {
             var view =  this.FindControl<ComboBox>("PageViews");
-            if (view?.SelectedIndex == 0)
+            if (view != null) 
             {
-                Dispatcher.UIThread.Post(() => e.OldFocusedElement?.Focus());
+                if (view.SelectedIndex == 0) // EditPageView
+                {
+                    Dispatcher.UIThread.Post(() => e.OldFocusedElement?.Focus());
+                }
             }
         }
     }

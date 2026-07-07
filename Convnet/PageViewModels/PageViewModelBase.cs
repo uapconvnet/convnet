@@ -30,7 +30,7 @@ namespace Convnet.PageViewModels
         public static IEnumerable<DNNOptimizers> GetOptimizers => Enum.GetValues<DNNOptimizers>().Cast<DNNOptimizers>();
         public static IEnumerable<DNNInterpolations> GetInterpolations => Enum.GetValues<DNNInterpolations>().Cast<DNNInterpolations>();
 
-        public event EventHandler? Modelhanged;
+        public event EventHandler? ModelChanged;
 
 
         public abstract string DisplayName { get; }
@@ -82,7 +82,7 @@ namespace Convnet.PageViewModels
 
         private void OnModelChanged()
         {
-            Modelhanged?.Invoke(this, EventArgs.Empty);
+            ModelChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private DNNModel? model;

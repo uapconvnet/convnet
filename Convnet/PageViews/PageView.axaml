@@ -34,9 +34,9 @@
   <DockPanel x:Name="dockPanelMain" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{DynamicResource BackgroundBrush}">
     <Menu DockPanel.Dock="Top" x:Name="menuMain" Background="{DynamicResource ToolBarBackgroundBrush}">
       <MenuItem Header="_File">
-        <MenuItem Header="_Open..." InputGesture="Ctrl+O" Command="{Binding OpenCommand}"/>
-        <MenuItem Header="Save" InputGesture="Ctrl+S" Command="{Binding SaveCommand}"/>
-        <MenuItem Header="Save As..." InputGesture="Ctrl+Shift+S" Command="{Binding SaveAsCommand}"/>
+        <MenuItem Header="_Open..." InputGesture="Ctrl+O" Command="{Binding OpenCommand}" IsEnabled="{Binding OpenCommandVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <MenuItem Header="Save" InputGesture="Ctrl+S" Command="{Binding SaveCommand}" IsEnabled="{Binding SaveCommandVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <MenuItem Header="Save As..." InputGesture="Ctrl+Shift+S" Command="{Binding SaveAsCommand}" IsEnabled="{Binding SaveAsCommandVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Separator Height="1" Width="NaN" Margin="2"/>
         <MenuItem Header="Exit..." InputGesture="Ctrl+X" Command="{Binding ExitCommand}"/>
       </MenuItem>
