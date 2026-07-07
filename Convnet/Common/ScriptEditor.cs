@@ -9,6 +9,7 @@ using AvaloniaEdit.Document;
 using AvaloniaEdit.Editing;
 using AvaloniaEdit.Folding;
 using AvaloniaEdit.Rendering;
+using Convnet.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -342,7 +343,7 @@ namespace Convnet.Common
                         TextArea.Caret.Line = value.Line; 
                         TextArea.Caret.Column = value.Column; 
                         TextArea.Caret.BringCaretToView();
-                        if (this.IsFocused)
+                        if (Settings.Default.FocusedEditor == 1)
                         {
                             TextArea.Caret.Show();
                         }
