@@ -757,9 +757,9 @@ namespace Convnet.PageViewModels
 
                 if (msg.Error)
                 {
-                    //TextLocationDefinition = new TextLocation(1, 1);
+                    TextLocationDefinition = new TextLocation(1, 1);
                     TextLocationDefinition = new TextLocation((int)msg.Row, (int)msg.Column);
-                    CheckInfo = msg.Row.ToString() + ":" + msg.Column.ToString() + "  " + msg.Message;
+                    CheckInfo = "(" + msg.Row.ToString() + "," + msg.Column.ToString() + ") " + msg.Message;
                     //Dispatcher.UIThread.Invoke(() => MessageBox.Show(msg.Message, "Check", MessageBoxButtons.OK, icon: MessageBoxIcon.Information));
                 }
                 else
