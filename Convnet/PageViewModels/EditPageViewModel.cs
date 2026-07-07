@@ -137,13 +137,16 @@ namespace Convnet.PageViewModels
             var visualStudioButton = new Button
             {
                 Name = "ButtonVisualStudio",
-                Content = ApplicationHelper.LoadFromResource("VisualStudio.png"),
+                Content = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? ApplicationHelper.LoadFromResource("vsCode.png") : ApplicationHelper.LoadFromResource("VisualStudio.png"),
                 ClickMode = ClickMode.Release,
                 Focusable = false,
                 Command = VisualStudioCommand
             };
-            ToolTip.SetTip(visualStudioButton, "Open in Visual Studio");
-            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                ToolTip.SetTip(visualStudioButton, "Open in VS Code");
+            else
+                ToolTip.SetTip(visualStudioButton, "Open in Visual Studio");
+
             CommandToolBar.Add(openButton);
             CommandToolBar.Add(saveAsButton);
             CommandToolBar.Add(checkButton);
