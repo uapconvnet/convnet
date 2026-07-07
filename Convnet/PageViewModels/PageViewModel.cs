@@ -109,7 +109,6 @@ namespace Convnet.PageViewModels
 
                 var EditPageVM = new EditPageViewModel(Model);
                 EditPageVM.Open += PageVM_Open;
-                EditPageVM.Save += PageVM_Save;
                 EditPageVM.SaveAs += PageVM_SaveAs;
                 EditPageVM.Modelhanged += EditPageVM_ModelChanged;
 
@@ -325,7 +324,7 @@ namespace Convnet.PageViewModels
                 MessageBoxResult result = MessageBoxResult.Yes;
                 if (File.Exists(Path.Combine(StateDirectory, fileName)))
                     result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you want to overwrite the existing file?", "File already exists", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
-               
+                //public event EventHandler? Save;
                 if (result == MessageBoxResult.Yes)
                     if (Model.SaveWeights(Path.Combine(StateDirectory, fileName), Settings.Default.PersistOptimizer) == 0)
                     {

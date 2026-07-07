@@ -31,7 +31,6 @@ namespace Convnet.PageViewModels
         const string Mode = "Release";
 #endif
         public event EventHandler? Open;
-        public event EventHandler? Save;
         public event EventHandler? SaveAs;
        
 
@@ -89,16 +88,6 @@ namespace Convnet.PageViewModels
             };
             ToolTip.SetTip(openButton, "Open");
                         
-            /* var saveButton = new Button
-            {
-                Name = "ButtonSave",
-                Content = ApplicationHelper.LoadFromResource("SaveAs.png"),
-                ClickMode = ClickMode.Release,
-                Focusable = false,
-                Command = ReactiveCommand.Create(() => Save?.Invoke(this, EventArgs.Empty))
-            };
-            ToolTip.SetTip(saveButton, "Save"); */
-            
             var saveAsButton = new Button
             {
                 Name = "ButtonSaveAs",
@@ -156,7 +145,6 @@ namespace Convnet.PageViewModels
             ToolTip.SetTip(visualStudioButton, "Open in Visual Studio");
             
             CommandToolBar.Add(openButton);
-            //CommandToolBar.Add(saveButton);
             CommandToolBar.Add(saveAsButton);
             CommandToolBar.Add(checkButton);
             CommandToolBar.Add(synchronizeButton);
