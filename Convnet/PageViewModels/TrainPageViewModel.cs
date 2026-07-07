@@ -401,7 +401,7 @@ namespace Convnet.PageViewModels
                 Content = ApplicationHelper.LoadFromResource("Open.png"),
                 ClickMode = ClickMode.Release
             };
-            ToolTip.SetTip(openLayerWeightsButton, "Load Weights");
+            ToolTip.SetTip(openLayerWeightsButton, "Load Layer Weights");
             openLayerWeightsButton.Click += OpenLayerWeightsButtonClick;
 
             Button saveLayerWeightsButton = new Button
@@ -410,7 +410,7 @@ namespace Convnet.PageViewModels
                 Content = ApplicationHelper.LoadFromResource("Save.png"),
                 ClickMode = ClickMode.Release
             };
-            ToolTip.SetTip(saveLayerWeightsButton, "Save Weights");
+            ToolTip.SetTip(saveLayerWeightsButton, "Save Layer Weights");
             saveLayerWeightsButton.Click += SaveLayerWeightsButtonClick;
 
             Button resetLayerWeightsButton = new Button
