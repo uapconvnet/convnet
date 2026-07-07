@@ -269,15 +269,14 @@ namespace Convnet.PageViewModels
             ToolTip.SetTip(saveAsButton, "Save As");
             saveAsButton.Click += SaveAsButtonClick;
 
-
             Button forgetButton = new Button
             {
                 Name = "ButtonForgetWeights",
                 Content = ApplicationHelper.LoadFromResource("Bolt.png"),
                 ClickMode = ClickMode.Release
             };
-            ToolTip.SetTip(forgetButton, "Forget Model Weights");
-            forgetButton.Click += ForgetButtonClick;
+            ToolTip.SetTip(forgetButton, "Reset Model Weights");
+            forgetButton.Click += ResetButtonClick;
 
             Button clearButton = new Button
             {
@@ -1739,9 +1738,9 @@ namespace Convnet.PageViewModels
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-        private async void ForgetButtonClick(object? sender, RoutedEventArgs e)
+        private async void ResetButtonClick(object? sender, RoutedEventArgs e)
         {
-            var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to forget all weights?", "Forget Model Weights", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+            var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Reset all weights?", "Reset Model Weights", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
 
             if (result == MessageBoxResult.Yes)                
             {
