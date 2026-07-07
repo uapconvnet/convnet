@@ -590,7 +590,7 @@ namespace Convnet.PageViewModels
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var vspath = @"C:\Program Files\Microsoft Visual Studio\2026\";
+                var vspath = @"C:\Program Files\Microsoft Visual Studio\18\";
                 var version = @"Community";
                 const string common = @"\Common7\IDE\";
 
