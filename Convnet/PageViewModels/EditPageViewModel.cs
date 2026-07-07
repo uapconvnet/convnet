@@ -89,7 +89,7 @@ namespace Convnet.PageViewModels
             };
             ToolTip.SetTip(openButton, "Open");
                         
-            var saveButton = new Button
+            /* var saveButton = new Button
             {
                 Name = "ButtonSave",
                 Content = ApplicationHelper.LoadFromResource("SaveAs.png"),
@@ -97,7 +97,7 @@ namespace Convnet.PageViewModels
                 Focusable = false,
                 Command = ReactiveCommand.Create(() => Save?.Invoke(this, EventArgs.Empty))
             };
-            ToolTip.SetTip(saveButton, "Save");
+            ToolTip.SetTip(saveButton, "Save"); */
             
             var saveAsButton = new Button
             {
@@ -117,7 +117,7 @@ namespace Convnet.PageViewModels
                 Focusable = false,
                 Command = CheckCommand
             };
-            ToolTip.SetTip(checkButton, "Check");
+            ToolTip.SetTip(checkButton, "Check Definition");
                        
             var synchronizeButton = new Button
             {
