@@ -156,8 +156,8 @@ namespace Convnet.PageViewModels
             ToolTip.SetTip(visualStudioButton, "Open in Visual Studio");
             
             CommandToolBar.Add(openButton);
-            CommandToolBar.Add(saveButton);
-            //CommandToolBar.Add(saveAsButton);
+            //CommandToolBar.Add(saveButton);
+            CommandToolBar.Add(saveAsButton);
             CommandToolBar.Add(checkButton);
             CommandToolBar.Add(synchronizeButton);
             CommandToolBar.Add(scriptsButton);

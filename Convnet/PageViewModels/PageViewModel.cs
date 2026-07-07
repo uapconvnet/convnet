@@ -372,8 +372,13 @@ namespace Convnet.PageViewModels
                     if (CurrentPage is TrainPageViewModel)
                         filterList?.AddRange([typeWeights, typeLog]);
                     if (CurrentPage is EditPageViewModel)
+                    {
                         filterList?.AddRange([typeDefinition, typeCSharp]);
-
+                        if (Settings.Default.FocusedEditor == 0)
+                            suggestedFileName = Model.Name + @".txt";
+                        else
+                            suggestedFileName = @"script.cs";
+                    }
                     IStorageFolder? startingLocation = null;
                     startingLocation = await provider.TryGetFolderFromPathAsync(folder);
 
@@ -387,6 +392,76 @@ namespace Convnet.PageViewModels
                     }); 
 
                     path = file?.TryGetLocalPath();
+
+                    MessageBoxResult result = MessageBoxResult.Yes;
+                    if (File.Exists(path))
+                        result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you want to overwrite the existing file?", "File already exists", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+        
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        if (CurrentPage is TrainPageViewModel)
+                        {
+                            if (path != null)
+                            {
+                                if (path.EndsWith(".bin"))
+                                {
+                                    if (Model.SaveWeights(path, Settings.Default.PersistOptimizer) == 0)
+                                        Dispatcher.UIThread.Post(() => MessageBox.Show("Weights are saved", "Information", MessageBoxButtons.OK));
+                                }
+
+                                if (path.EndsWith(".csv"))
+                                {
+                                    if (Model.SaveLog(path))
+                                        Dispatcher.UIThread.Post(() => MessageBox.Show("Log is saved", "Information", MessageBoxButtons.OK));
+                                }
+                            }
+                        }
+                    
+                        if (CurrentPage is EditPageViewModel)
+                        {
+                            if (path != null)
+                            {
+                                if (path.EndsWith(".txt"))
+                                {
+                                    try
+                                    {
+                                        File.WriteAllText(path, Settings.Default.DefinitionEditing);
+                                        Dispatcher.UIThread.Post(() => MessageBox.Show("Definition is saved", "Information", MessageBoxButtons.OK));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Dispatcher.UIThread.Post(() => MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK));
+                                    }
+                                }
+
+                                if (path.EndsWith(".cs"))
+                                {
+                                    try
+                                    {
+                                        File.WriteAllText(path, Settings.Default.Script);
+                                        Dispatcher.UIThread.Post(() => MessageBox.Show("Script is saved", "Information", MessageBoxButtons.OK));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Dispatcher.UIThread.Post(() => MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK));
+                                    }
+                                }
+
+                                if (path.EndsWith(".cs"))
+                                {
+                                    try
+                                    {
+                                        File.WriteAllText(path, Settings.Default.Script);
+                                        Dispatcher.UIThread.Post(() => MessageBox.Show("Script is saved", "Information", MessageBoxButtons.OK));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Dispatcher.UIThread.Post(() => MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK));
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 else
                     Dispatcher.UIThread.Post(() => MessageBox.Show("No suitable storage provider found", "Information", MessageBoxButtons.OK));
