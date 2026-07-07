@@ -89,6 +89,7 @@
 	<None Remove="Assets\Undo.png" />
 	<None Remove="Assets\Unlock.png" />
 	<None Remove="Assets\VisualStudio.png" />
+	<None Remove="Assets\vsCode.png" />
 	<None Remove="Assets\XML-Mode.xshd" />
 	<None Remove="Assets\XmlDoc.xshd" />
   </ItemGroup>
@@ -190,6 +191,7 @@
 	<AvaloniaResource Include="Assets\Undo.png" />
 	<AvaloniaResource Include="Assets\Unlock.png" />
 	<AvaloniaResource Include="Assets\VisualStudio.png" />
+	<AvaloniaResource Include="Assets\vsCode.png" />
 	<AvaloniaResource Include="Assets\XML-Mode.xshd" />
 	<AvaloniaResource Include="Assets\XmlDoc.xshd" />
   </ItemGroup>
