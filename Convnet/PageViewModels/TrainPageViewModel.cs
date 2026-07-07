@@ -269,14 +269,14 @@ namespace Convnet.PageViewModels
             ToolTip.SetTip(saveAsButton, "Save As");
             saveAsButton.Click += SaveAsButtonClick;
 
-            Button forgetButton = new Button
+            Button resetButton = new Button
             {
-                Name = "ButtonForgetWeights",
+                Name = "ButtonResetWeights",
                 Content = ApplicationHelper.LoadFromResource("Bolt.png"),
                 ClickMode = ClickMode.Release
             };
-            ToolTip.SetTip(forgetButton, "Reset Model Weights");
-            forgetButton.Click += ResetButtonClick;
+            ToolTip.SetTip(resetButton, "Reset Model Weights");
+            resetButton.Click += ResetButtonClick;
 
             Button clearButton = new Button
             {
@@ -413,14 +413,14 @@ namespace Convnet.PageViewModels
             ToolTip.SetTip(saveLayerWeightsButton, "Save Weights");
             saveLayerWeightsButton.Click += SaveLayerWeightsButtonClick;
 
-            Button forgetLayerWeightsButton = new Button
+            Button resetLayerWeightsButton = new Button
             {
-                Name = "ButtonForgetWeightsLayer",
+                Name = "ButtonResetWeightsLayer",
                 Content = ApplicationHelper.LoadFromResource("LightningBolt.png"),
                 ClickMode = ClickMode.Release
             };
-            ToolTip.SetTip(forgetLayerWeightsButton, "Forget Weights");
-            forgetLayerWeightsButton.Click += ForgetLayerWeightsButtonClick;
+            ToolTip.SetTip(resetLayerWeightsButton, "Reset Layer Weights");
+            resetLayerWeightsButton.Click += ResetLayerWeightsButtonClick;
 
             trainingPlotCheckBox = new CheckBox
             {
@@ -527,7 +527,7 @@ namespace Convnet.PageViewModels
             CommandToolBar.Add(openButton);                         // 6
             CommandToolBar.Add(saveButton);                         // 7
             CommandToolBar.Add(saveAsButton);                       // 8
-            CommandToolBar.Add(forgetButton);                       // 9
+            CommandToolBar.Add(resetButton);                       // 9
             CommandToolBar.Add(clearButton);                        // 10
             CommandToolBar.Add(new Separator());                    // 11
             CommandToolBar.Add(dataProviderComboBox);               // 12
@@ -540,7 +540,7 @@ namespace Convnet.PageViewModels
             CommandToolBar.Add(lockAllButton);                      // 19
             CommandToolBar.Add(openLayerWeightsButton);             // 20
             CommandToolBar.Add(saveLayerWeightsButton);             // 21
-            CommandToolBar.Add(forgetLayerWeightsButton);           // 22
+            CommandToolBar.Add(resetLayerWeightsButton);           // 22
             CommandToolBar.Add(new Separator());                    // 23
             CommandToolBar.Add(trainingPlotCheckBox);               // 24
             CommandToolBar.Add(plotTypeComboBox);                   // 25
@@ -1371,7 +1371,6 @@ namespace Convnet.PageViewModels
 
                 this.RaiseAndSetIfChanged(ref optimizer, value);
                 Settings.Default.Optimizer = (int)optimizer;
-                Settings.Default.Save();
             }
         }
 
@@ -1388,7 +1387,6 @@ namespace Convnet.PageViewModels
                 this.RaiseAndSetIfChanged(ref refreshRate, value);
 
                 Settings.Default.RefreshInterval = refreshRate;
-                Settings.Default.Save();
                 EventHandler<int> handler = RefreshRateChanged;
                 handler.Invoke(this, refreshRate);
             }
@@ -1886,9 +1884,9 @@ namespace Convnet.PageViewModels
             }
         }
 
-        private async void ForgetLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
+        private async void ResetLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
         {
-            var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to forget layer weights?", "Forget Layer Weights", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+            var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Reset layer weights?", "Reset Layer Weights", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
             if (result == MessageBoxResult.Yes && layersComboBox != null)
             {
                 uint index = (uint)layersComboBox.SelectedIndex;
