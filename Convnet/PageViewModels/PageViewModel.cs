@@ -29,6 +29,8 @@ namespace Convnet.PageViewModels
     {
         public event EventHandler? PageChange;
         
+        public event EventHandler? TaskStatusChange;
+
         private bool openCommandVisible = false;
         public bool OpenCommandVisible
         {
@@ -82,47 +84,7 @@ namespace Convnet.PageViewModels
             PageVM_SaveAs(this, new EventArgs());
         }
 
-        //public void Cut()
-        //{
-
-        //if (PageVM != null && PageVM.Pages != null)
-        //{
-        //    //var epvm = MainView.PageViews.Items[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
-
-        //    var epvm = PageVM.Pages[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
-        //    if (epvm != null)
-        //    {
-        //        var topLevel = TopLevel.GetTopLevel(this);
-        //        if (FocusManager != null)
-        //        {
-        //            var elem = FocusManager.GetFocusedElement();
-
-        //        }
-        //    }
-        //}
-        //}
-
-        //public bool CanCut()
-        //{
-        //if (PageVM != null && PageVM.Pages != null)
-        //{
-        //    //var epvm = MainView.PageViews.Items[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
-
-        //    var epvm = PageVM.Pages[(int)PageViewModels.ViewModels.Edit] as EditPageViewModel;
-        //    if (epvm != null)
-        //    {
-        //        var topLevel = TopLevel.GetTopLevel(this);
-        //        if (FocusManager != null)
-        //        {
-        //            var elem = FocusManager.GetFocusedElement();
-        //            return true;
-        //        }
-        //    }
-        //}
-
-        //  return true;
-        //}
-
+       
         public PageViewModel(DNNModel model) : base(model)
         {
             Settings.Default.PropertyChanged += Default_PropertyChanged;
@@ -138,14 +100,17 @@ namespace Convnet.PageViewModels
                 var EditPageVM = new EditPageViewModel(Model);
                 EditPageVM.SaveAs += PageVM_SaveAs;
                 EditPageVM.ModelChanged += EditPageVM_ModelChanged;
+                EditPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
 
                 var TestPageVM = new TestPageViewModel(Model);
                 TestPageVM.Open += PageVM_Open;
+                TestPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
 
                 var TrainPageVM = new TrainPageViewModel(Model);
                 TrainPageVM.Open += PageVM_Open;
                 TrainPageVM.Save += PageVM_Save;
                 TrainPageVM.SaveAs += PageVM_SaveAs;
+                TrainPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
 
                 Pages = new ReadOnlyCollection<PageViewModelBase?>([EditPageVM, TestPageVM, TrainPageVM]);
                 CurrentPage = Pages[Settings.Default.CurrentPage];
@@ -567,6 +532,11 @@ namespace Convnet.PageViewModels
             get => (Pages != null && CurrentPage != null) ? (ViewModels?)Pages.IndexOf(CurrentPage) : null;  
         }
 
+        public bool IsBusy
+        {
+            get => CurrentPage?.Model?.TaskState != DNNTaskStates.Stopped;
+        }
+
         public override string DisplayName => "Main";
                 
         private string? sampleRate;
@@ -645,9 +615,9 @@ namespace Convnet.PageViewModels
                 vm?.CheckCommand.Execute();
             }
 
-            if (Settings.Default.CurrentPage == (int)ViewModels.Test)
+            if (Settings.Default.CurrentPage == (int)ViewModels.Test && Pages != null)
             {
-                var testPVM = Pages?[(int)ViewModels.Test] as TestPageViewModel;
+                var testPVM = Pages[(int)ViewModels.Test] as TestPageViewModel;
 
                 if (testPVM?.Model != null)
                 {
@@ -663,15 +633,18 @@ namespace Convnet.PageViewModels
             if (Settings.Default.CurrentPage == (int)ViewModels.Train && CostLayers?.Count > 1)
                 (Pages?[(int)ViewModels.Train] as TrainPageViewModel)?.CostLayersComboBox_SelectionChanged(this, null);
             
-            OpenCommandVisible = ((CurrentPage is TrainPageViewModel) && (CurrentPage?.Model?.TaskState == DNNTaskStates.Stopped)) || ((CurrentPage is TestPageViewModel) && (CurrentPage?.Model?.TaskState == DNNTaskStates.Stopped)) || (CurrentPage is EditPageViewModel);
-            SaveCommandVisible = CurrentPage is TrainPageViewModel;
-            SaveAsCommandVisible = (CurrentPage is TrainPageViewModel) || (CurrentPage is EditPageViewModel);
+            OnPageTaskStatusChange();
         }
         
         public void OnPageTaskStatusChange()
         {
-            
+            TaskStatusChange?.Invoke(this, EventArgs.Empty);
+
+            OpenCommandVisible = ((CurrentPage is TrainPageViewModel) && (!IsBusy)) || ((CurrentPage is TestPageViewModel) && (!IsBusy)) || (CurrentPage is EditPageViewModel);
+            SaveCommandVisible = CurrentPage is TrainPageViewModel;
+            SaveAsCommandVisible = (CurrentPage is TrainPageViewModel) || (CurrentPage is EditPageViewModel);
         }
+
         public override void Reset()
         {
             if (Pages != null)

@@ -186,12 +186,14 @@ namespace Convnet.PageViewModels
             AddCommandButtons();
 
             ModelChanged += TrainPageViewModel_ModelChanged;
+            
             RefreshRateChanged += TrainPageViewModel_RefreshRateChanged;
 
             PixelSizeSlider_ValueChanged(this, null);
             LayersComboBox_SelectionChanged(this, null);
             RefreshTrainingPlot();
         }
+
 
         private void AddCommandButtons()
         {

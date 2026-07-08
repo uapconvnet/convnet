@@ -15,6 +15,10 @@
       <view:PageView />
     </DataTemplate>
   </Window.DataTemplates>
+  
+  <Design.DataContext>
+    <vm:PageViewModel/>
+  </Design.DataContext>
 
   <view:PageView x:Name="MainView"/>
 </Window>
