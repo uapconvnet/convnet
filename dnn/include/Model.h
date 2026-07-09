@@ -3128,7 +3128,7 @@ namespace dnn
 			return -1;
 		}
 
-		int LoadWeights(const std::string& fileName, const bool persistOptimizer = false)
+		int LoadWeights(const std::string& fileName, const bool persistOptimizer = false, const bool skipCheck = false)
 		{
 			const auto& optimizers = magic_enum::enum_entries<Optimizers>();
 			
@@ -3140,7 +3140,9 @@ namespace dnn
 					optimizer = opt.first;
 			}
 			
-			if (GetFileSize(fileName) == GetWeightsSize(persistOptimizer, optimizer))
+            const auto same = (GetFileSize(fileName) == GetWeightsSize(persistOptimizer, optimizer));
+           
+			if (same || skipCheck)
 			{
 				SetOptimizer(optimizer);
 
@@ -3148,7 +3150,7 @@ namespace dnn
 
 				if (!is.bad() && is.is_open())
 				{
-					for (auto& layer : Layers)
+                    for (auto& layer : Layers)
 						layer->Load(is, persistOptimizer, Optimizer);
 
 					is.close();

@@ -3451,7 +3451,7 @@ namespace Interop
         [DllImport(library, BestFitMapping = true, CallingConvention = CC, CharSet = charSet, ExactSpelling = true)]
         private static extern bool DNNSaveLog([MarshalAs(stringType)] string fileName);
         [DllImport(library, BestFitMapping = true, CallingConvention = CC, CharSet = charSet, ExactSpelling = true)]
-        private static extern int DNNLoadWeights([MarshalAs(stringType)] string fileName, bool persistOptimizer);
+        private static extern int DNNLoadWeights([MarshalAs(stringType)] string fileName, bool persistOptimizer, bool skipCheck);
         [DllImport(library, BestFitMapping = true, CallingConvention = CC, CharSet = charSet, ExactSpelling = true)]
         private static extern int DNNSaveWeights([MarshalAs(stringType)] string fileName, bool persistOptimizer);
         [DllImport(library, BestFitMapping = true, CallingConvention = CC, CharSet = charSet, ExactSpelling = true)]
@@ -4482,9 +4482,9 @@ namespace Interop
             return DNNSaveLog(fileName);
         }
 
-        public int LoadWeights(string fileName, bool persist)
+        public int LoadWeights(string fileName, bool persist, bool skipCheck)
         {
-            var ret = DNNLoadWeights(fileName, persist);
+            var ret = DNNLoadWeights(fileName, persist, skipCheck);
 
             Optimizer = (DNNOptimizers)GetOptimizer();
 

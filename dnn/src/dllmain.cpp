@@ -999,10 +999,10 @@ extern "C" DNN_API Optimizers GetOptimizer()
 	return Optimizers::SGD;
 }
 
-extern "C" DNN_API int DNNLoadWeights(const char* fileName, const bool persistOptimizer)
+extern "C" DNN_API int DNNLoadWeights(const char* fileName, const bool persistOptimizer, const bool skipCheck)
 {
 	if (model)
-		return model->LoadWeights(std::string(fileName), persistOptimizer);
+		return model->LoadWeights(std::string(fileName), persistOptimizer, skipCheck);
 	
 	return -10;
 }

@@ -254,7 +254,7 @@ namespace Convnet.PageViewModels
                         {
                             if (tpvm.Model != null)
                             {
-                                if (tpvm.Model.LoadWeights(path, Settings.Default.PersistOptimizer) == 0)
+                                if (tpvm.Model.LoadWeights(path, Settings.Default.PersistOptimizer, true) == 0)
                                 {
                                     Dispatcher.UIThread.Post(() =>
                                     {
