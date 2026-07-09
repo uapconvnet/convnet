@@ -29,7 +29,7 @@ namespace Convnet.PageViewModels
     {
         public event EventHandler? PageChange;
         
-        public event EventHandler? TaskStatusChange;
+        //public event EventHandler? TaskStatusChange;
 
         private bool openCommandVisible = false;
         public bool OpenCommandVisible
@@ -98,19 +98,20 @@ namespace Convnet.PageViewModels
                 Model.TestProgress += TestProgress;
 
                 var EditPageVM = new EditPageViewModel(Model);
+                EditPageVM.Open += PageVM_Open;
                 EditPageVM.SaveAs += PageVM_SaveAs;
                 EditPageVM.ModelChanged += EditPageVM_ModelChanged;
-                EditPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
+                //EditPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
 
                 var TestPageVM = new TestPageViewModel(Model);
                 TestPageVM.Open += PageVM_Open;
-                TestPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
+                //TestPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
 
                 var TrainPageVM = new TrainPageViewModel(Model);
                 TrainPageVM.Open += PageVM_Open;
                 TrainPageVM.Save += PageVM_Save;
                 TrainPageVM.SaveAs += PageVM_SaveAs;
-                TrainPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
+                //TrainPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
 
                 Pages = new ReadOnlyCollection<PageViewModelBase?>([EditPageVM, TestPageVM, TrainPageVM]);
                 CurrentPage = Pages[Settings.Default.CurrentPage];
@@ -638,7 +639,7 @@ namespace Convnet.PageViewModels
         
         public void OnPageTaskStatusChange()
         {
-            TaskStatusChange?.Invoke(this, EventArgs.Empty);
+            //TaskStatusChange?.Invoke(this, EventArgs.Empty);
 
             OpenCommandVisible = ((CurrentPage is TrainPageViewModel) && (!IsBusy)) || ((CurrentPage is TestPageViewModel) && (!IsBusy)) || (CurrentPage is EditPageViewModel);
             SaveCommandVisible = CurrentPage is TrainPageViewModel;

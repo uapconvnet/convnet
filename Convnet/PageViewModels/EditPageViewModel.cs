@@ -76,6 +76,7 @@ namespace Convnet.PageViewModels
             AddCommandButtons();
         }
       
+       
         private void AddCommandButtons()
         {
             var openButton = new Button
@@ -87,7 +88,7 @@ namespace Convnet.PageViewModels
                 Command = ReactiveCommand.Create(() => Open?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(openButton, "Open");
-                        
+            
             var saveAsButton = new Button
             {
                 Name = "ButtonSaveAs",
@@ -97,7 +98,7 @@ namespace Convnet.PageViewModels
                 Command = ReactiveCommand.Create(() => SaveAs?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(saveAsButton, "Save As");
-
+            
             var checkButton = new Button
             {
                 Name = "ButtonCheck",

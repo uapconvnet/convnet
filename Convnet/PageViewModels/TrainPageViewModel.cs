@@ -248,29 +248,29 @@ namespace Convnet.PageViewModels
             {
                 Name = "ButtonOpen",
                 Content = ApplicationHelper.LoadFromResource("Open.png"),
-                ClickMode = ClickMode.Release
+                ClickMode = ClickMode.Release,
+                Command = ReactiveCommand.Create(() => Open?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(openButton, "Load Model Weights");
-            openButton.Click += OpenButtonClick;
 
             Button saveButton = new Button
             {
                 Name = "ButtonSave",
                 Content = ApplicationHelper.LoadFromResource("Save.png"),
-                ClickMode = ClickMode.Release
+                ClickMode = ClickMode.Release,
+                Command = ReactiveCommand.Create(() => Save?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(saveButton, "Save Model Weights");
-            saveButton.Click += SaveButtonClick;
-
+           
             Button saveAsButton = new Button
             {
                 Name = "ButtonSaveAs",
                 Content = ApplicationHelper.LoadFromResource("SaveAs.png"),
-                ClickMode = ClickMode.Release
+                ClickMode = ClickMode.Release,
+                Command = ReactiveCommand.Create(() => SaveAs?.Invoke(this, EventArgs.Empty))
             };
             ToolTip.SetTip(saveAsButton, "Save As");
-            saveAsButton.Click += SaveAsButtonClick;
-
+            
             Button resetButton = new Button
             {
                 Name = "ButtonResetWeights",
@@ -1576,23 +1576,6 @@ namespace Convnet.PageViewModels
                 }
             }, DispatcherPriority.Normal);
         }
-
-        private void OpenButtonClick(object? sender, RoutedEventArgs e)
-        {
-            Open?.Invoke(this,  EventArgs.Empty);
-        }
-
-        private void SaveButtonClick(object? sender, RoutedEventArgs e)
-        {
-            Save?.Invoke(this, EventArgs.Empty);
-        }
-
-
-        private void SaveAsButtonClick(object? sender, RoutedEventArgs e)
-        {
-            SaveAs?.Invoke(this, EventArgs.Empty);
-        }
-
 
         private void EditorButtonClick(object? sender, RoutedEventArgs e)
         {
