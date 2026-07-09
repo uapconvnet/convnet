@@ -39,12 +39,15 @@ namespace Convnet.PageViewModels
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private ComboBox? dataProviderComboBox;
         private ComboBox? costLayersComboBox;
+        private PageViewModel? pageViewModel;
+
         public Timer? RefreshTimer;
         public event EventHandler? Open;
       
         
-        public TestPageViewModel(DNNModel model) : base(model)
+        public TestPageViewModel(PageViewModel pvm, DNNModel model) : base(model)
         {
+            pageViewModel = pvm;
             AddCommandButtons();
 
             showProgress = false;
@@ -378,6 +381,8 @@ namespace Convnet.PageViewModels
 
                         ShowProgress = true;
                         ShowSample = true;
+
+                            
                     }
                 }
                 else
@@ -419,6 +424,8 @@ namespace Convnet.PageViewModels
                     IsValid = true;
                     ShowProgress = false;
                     ShowSample = false;
+                    
+                    pageViewModel?.OnPageTaskStatusChange();
                 }
             }
         }

@@ -118,6 +118,9 @@ namespace Convnet.PageViewModels
         private Avalonia.Media.Imaging.WriteableBitmap? weightsSnapshot;
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private StringBuilder sb = new StringBuilder();
+        private PageViewModel? pageViewModel;
+
+
         public Timer? RefreshTimer;
         public TimeSpan EpochDuration { get; set; }
         public event EventHandler? Open;
@@ -152,8 +155,9 @@ namespace Convnet.PageViewModels
             }
         }
 
-        public TrainPageViewModel(DNNModel model) : base(model)
+        public TrainPageViewModel(PageViewModel pvm, DNNModel model) : base(model)
         {
+            pageViewModel = pvm;
             showProgress = false;
             showSample = false;
             showWeights = false;
@@ -1486,6 +1490,8 @@ namespace Convnet.PageViewModels
                             }
 
                             ShowProgress = true;
+
+                            pageViewModel?.OnPageTaskStatusChange();
                         }
                     }
                 }
@@ -1552,6 +1558,8 @@ namespace Convnet.PageViewModels
                     }
 
                     ShowProgress = false;
+                    
+                    pageViewModel?.OnPageTaskStatusChange();
                 }
             }
         }
@@ -1673,7 +1681,8 @@ namespace Convnet.PageViewModels
             //else
             //{
             //    if (Settings.Default.TrainingRates == null)
-            //        Settings.Default.TrainingRates = new ObservableCollection<DNNTrainingRate> { TrainRate };
+         
+             //        Settings.Default.TrainingRates = new ObservableCollection<DNNTrainingRate> { TrainRate };
                 
             //    TrainRates = Settings.Default.TrainingRates;
 
@@ -1764,7 +1773,7 @@ namespace Convnet.PageViewModels
                 var folder = Path.Combine(DefinitionsDirectory, Model.Name);
 
                 IStorageFolder? startingLocation = null;
-                startingLocation = await provider.TryGetFolderFromPathAsync(folder);
+                startingLocation = await provider.TryGetFolderFromPathAsync(folder).ConfigureAwait(false);
 
                 var typeWeights = new FilePickerFileType("Weights")
                 {
@@ -1785,7 +1794,7 @@ namespace Convnet.PageViewModels
                         Title = "Load layer weights",
                         SuggestedStartLocation = startingLocation,
                         FileTypeFilter = filterList
-                    });
+                    }).ConfigureAwait(false);
 
                     if (files != null)
                     {

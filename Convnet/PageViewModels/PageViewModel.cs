@@ -29,12 +29,11 @@ namespace Convnet.PageViewModels
     {
         public event EventHandler? PageChange;
         
-        //public event EventHandler? TaskStatusChange;
-
+       
         private bool openCommandVisible = false;
         public bool OpenCommandVisible
         {
-            get => ((CurrentPage is TrainPageViewModel) && (CurrentPage?.Model?.State == DNNStates.Idle)) || ((CurrentPage is TestPageViewModel) && (CurrentPage?.Model?.State == DNNStates.Idle)) || (CurrentPage is EditPageViewModel);
+            get => openCommandVisible;
             set 
             { 
                 this.RaiseAndSetIfChanged(ref openCommandVisible, value); 
@@ -43,7 +42,7 @@ namespace Convnet.PageViewModels
         private bool saveCommandVisible = false;
         public bool SaveCommandVisible
         {
-            get => CurrentPage is TrainPageViewModel;
+            get => saveCommandVisible;
             set
             {
                 this.RaiseAndSetIfChanged(ref saveCommandVisible, value);
@@ -52,7 +51,7 @@ namespace Convnet.PageViewModels
         private bool saveAsCommandVisible = false;
         public bool SaveAsCommandVisible 
         {
-            get => (CurrentPage is TrainPageViewModel) || (CurrentPage is EditPageViewModel);
+            get => saveAsCommandVisible;
             set
             {
                 this.RaiseAndSetIfChanged(ref saveAsCommandVisible, value);
@@ -97,22 +96,19 @@ namespace Convnet.PageViewModels
                 Model.TrainProgress += TrainProgress;
                 Model.TestProgress += TestProgress;
 
-                var EditPageVM = new EditPageViewModel(Model);
+                var EditPageVM = new EditPageViewModel(this, Model);
                 EditPageVM.Open += PageVM_Open;
                 EditPageVM.SaveAs += PageVM_SaveAs;
                 EditPageVM.ModelChanged += EditPageVM_ModelChanged;
-                //EditPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
-
-                var TestPageVM = new TestPageViewModel(Model);
+               
+                var TestPageVM = new TestPageViewModel(this, Model);
                 TestPageVM.Open += PageVM_Open;
-                //TestPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
-
-                var TrainPageVM = new TrainPageViewModel(Model);
+               
+                var TrainPageVM = new TrainPageViewModel(this, Model);
                 TrainPageVM.Open += PageVM_Open;
                 TrainPageVM.Save += PageVM_Save;
                 TrainPageVM.SaveAs += PageVM_SaveAs;
-                //TrainPageVM.TaskStatusChanged += (s, e) => OnPageTaskStatusChange();
-
+               
                 Pages = new ReadOnlyCollection<PageViewModelBase?>([EditPageVM, TestPageVM, TrainPageVM]);
                 CurrentPage = Pages[Settings.Default.CurrentPage];
             }
@@ -182,7 +178,7 @@ namespace Convnet.PageViewModels
                     }
                     
                     IStorageFolder? startingLocation = null;
-                    startingLocation = await provider.TryGetFolderFromPathAsync(folder);
+                    startingLocation = await provider.TryGetFolderFromPathAsync(folder).ConfigureAwait(false);
 
                     var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
                     {
@@ -191,7 +187,7 @@ namespace Convnet.PageViewModels
                         SuggestedFileType = defaultFileType,
                         SuggestedStartLocation = startingLocation,
                         FileTypeFilter = filterList
-                    }); 
+                    }).ConfigureAwait(false); 
 
                     var file = files?.SingleOrDefault();
 
@@ -225,7 +221,7 @@ namespace Convnet.PageViewModels
 
                                     if (Settings.Default.TrainingLog?.Count > 0)
                                     {
-                                        var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to clear the log?", "Clear Log", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+                                        var result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to clear the log?", "Clear Log", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2)).ConfigureAwait(false);
 
                                         if (result == MessageBoxResult.Yes)
                                         {
@@ -316,7 +312,7 @@ namespace Convnet.PageViewModels
                                
                 MessageBoxResult result = MessageBoxResult.Yes;
                 if (File.Exists(Path.Combine(StateDirectory, fileName)))
-                    result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you want to overwrite the existing file?", "File already exists", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+                    result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you want to overwrite the existing file?", "File already exists", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2)).ConfigureAwait(false);
                 //public event EventHandler? Save;
                 if (result == MessageBoxResult.Yes)
                     if (Model.SaveWeights(Path.Combine(StateDirectory, fileName), Settings.Default.PersistOptimizer) == 0)
@@ -372,7 +368,7 @@ namespace Convnet.PageViewModels
                             suggestedFileName = @"script.cs";
                     }
                     IStorageFolder? startingLocation = null;
-                    startingLocation = await provider.TryGetFolderFromPathAsync(folder);
+                    startingLocation = await provider.TryGetFolderFromPathAsync(folder).ConfigureAwait(false);
 
                     var file = await provider.SaveFilePickerAsync(new FilePickerSaveOptions
                     {
@@ -381,13 +377,13 @@ namespace Convnet.PageViewModels
                         SuggestedStartLocation = startingLocation,
                         FileTypeChoices = filterList,
                         ShowOverwritePrompt = true
-                    }); 
+                    }).ConfigureAwait(false); 
 
                     path = file?.TryGetLocalPath();
 
                     MessageBoxResult result = MessageBoxResult.Yes;
                     if (File.Exists(path))
-                        result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you want to overwrite the existing file?", "File already exists", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
+                        result = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you want to overwrite the existing file?", "File already exists", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2)).ConfigureAwait(false);
         
                     if (result == MessageBoxResult.Yes)
                     {
@@ -533,11 +529,7 @@ namespace Convnet.PageViewModels
             get => (Pages != null && CurrentPage != null) ? (ViewModels?)Pages.IndexOf(CurrentPage) : null;  
         }
 
-        public bool IsBusy
-        {
-            get => CurrentPage?.Model?.TaskState != DNNTaskStates.Stopped;
-        }
-
+       
         public override string DisplayName => "Main";
                 
         private string? sampleRate;
@@ -639,11 +631,26 @@ namespace Convnet.PageViewModels
         
         public void OnPageTaskStatusChange()
         {
-            //TaskStatusChange?.Invoke(this, EventArgs.Empty);
+            switch (Settings.Default.CurrentPage)
+            {
+                case (int)ViewModels.Edit:
+                    OpenCommandVisible = true;
+                    SaveCommandVisible = false;
+                    SaveAsCommandVisible = true;
+                    break;
 
-            OpenCommandVisible = ((CurrentPage is TrainPageViewModel) && (!IsBusy)) || ((CurrentPage is TestPageViewModel) && (!IsBusy)) || (CurrentPage is EditPageViewModel);
-            SaveCommandVisible = CurrentPage is TrainPageViewModel;
-            SaveAsCommandVisible = (CurrentPage is TrainPageViewModel) || (CurrentPage is EditPageViewModel);
+                case (int)ViewModels.Test:
+                    OpenCommandVisible = ((Pages?[(int)ViewModels.Train] as TrainPageViewModel)?.Model?.TaskState == DNNTaskStates.Stopped) && ((Pages?[(int)ViewModels.Test] as TestPageViewModel)?.Model?.TaskState == DNNTaskStates.Stopped);
+                    SaveCommandVisible = false;
+                    SaveAsCommandVisible = false;
+                    break;
+
+                case (int)ViewModels.Train:
+                    OpenCommandVisible = ((Pages?[(int)ViewModels.Train] as TrainPageViewModel)?.Model?.TaskState == DNNTaskStates.Stopped) && ((Pages?[(int)ViewModels.Test] as TestPageViewModel)?.Model?.TaskState == DNNTaskStates.Stopped);
+                    SaveCommandVisible = true;
+                    SaveAsCommandVisible = true;
+                    break;
+            }
         }
 
         public override void Reset()

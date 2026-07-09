@@ -57,14 +57,16 @@ namespace Convnet.PageViewModels
         private bool dirty = true;
         private static bool initAction = true;
         private readonly DispatcherTimer clickWaitTimer;
-       
+        private PageViewModel? pageViewModel;
+
         public ReactiveCommand<Unit, Unit> CheckCommand { get; }
         public ReactiveCommand<Unit, Unit> SyncCommand { get; }
         public ReactiveCommand<Unit, Unit> ScriptsCommand { get; }
         public ReactiveCommand<Unit, Unit> VisualStudioCommand { get; }
 
-        public EditPageViewModel(DNNModel model) : base(model)
+        public EditPageViewModel(PageViewModel pvm, DNNModel model) : base(model)
         {
+            pageViewModel = pvm;
             initAction = true;
             clickWaitTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Background, MouseWaitTimer_Tick);
 

@@ -32,8 +32,7 @@ namespace Convnet.PageViewModels
 
         public event EventHandler? ModelChanged;
 
-        //public event EventHandler? TaskStatusChanged;
-
+      
         public abstract string DisplayName { get; }
 
         public abstract void Reset();
@@ -85,11 +84,6 @@ namespace Convnet.PageViewModels
         {
             ModelChanged?.Invoke(this, EventArgs.Empty);
         }
-
-       /*  private void OnTaskStatusChanged()
-        {
-            TaskStatusChanged?.Invoke(this, EventArgs.Empty);
-        } */
 
         private DNNModel? model;
         public DNNModel? Model
