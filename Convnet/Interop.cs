@@ -4482,7 +4482,7 @@ namespace Interop
             return DNNSaveLog(fileName);
         }
 
-        public int LoadWeights(string fileName, bool persist, bool skipCheck)
+        public int LoadWeights(string fileName, bool persist, bool skipCheck = false)
         {
             var ret = DNNLoadWeights(fileName, persist, skipCheck);
 
