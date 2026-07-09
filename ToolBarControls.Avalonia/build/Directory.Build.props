@@ -1,6 +1,0 @@
-<Project>
-    <PropertyGroup>
-        <AvaloniaVersion>12.1.0</AvaloniaVersion>
-        <OxyPlotCoreVersion>2.2.0</OxyPlotCoreVersion>
-    </PropertyGroup>
-</Project>
