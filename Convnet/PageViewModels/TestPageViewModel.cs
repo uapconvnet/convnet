@@ -39,23 +39,28 @@ namespace Convnet.PageViewModels
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private ComboBox? dataProviderComboBox;
         private ComboBox? costLayersComboBox;
-        private PageViewModel? pageViewModel;
-
+       
         public Timer? RefreshTimer;
         public event EventHandler? Open;
-      
-        
-        public TestPageViewModel(PageViewModel pvm, DNNModel model) : base(model)
+
+        private PageViewModel? pageViewModel;
+        public PageViewModel? PageVM
         {
-            pageViewModel = pvm;
+            get => pageViewModel;
+            set => this.RaiseAndSetIfChanged(ref pageViewModel, value);
+        }
+
+        public TestPageViewModel(PageViewModel pvm) : base()
+        {
+            PageVM = pvm;
+
             AddCommandButtons();
 
             showProgress = false;
             showSample = false;
-            if (Model != null)
-                Model.TestProgress += TestProgress;
-
-            ModelChanged += TestPageViewModel_ModelChanged;
+            
+            PageVM?.Model?.TestProgress += TestProgress;
+            PageVM?.ModelChanged += TestPageVM_ModelChanged;
 
             //Dispatcher.UIThread.Post(() => LayerIndexChanged(this, null), DispatcherPriority.Render);
         }
@@ -95,7 +100,7 @@ namespace Convnet.PageViewModels
             {
                 Name = "ComboBoxDataSet",
                 ItemsSource = Enum.GetValues(typeof(DNNDatasets)).Cast<Enum>().ToList(),
-                SelectedIndex = (int)Dataset,
+                SelectedIndex = (int)(PageVM != null ? PageVM.Dataset : 0),
                 IsEnabled = false
             };
             ToolTip.SetTip(dataProviderComboBox, "Dataset");
@@ -106,29 +111,28 @@ namespace Convnet.PageViewModels
             CommandToolBar.Add(new Separator());
             CommandToolBar.Add(dataProviderComboBox);
 
-            if (Model != null && Model.CostLayers != null)
+            if (PageVM != null && PageVM.Model != null && PageVM.Model.CostLayers != null)
             {
                 costLayersComboBox = new ComboBox
                 {
                     Name = "ComboBoxCostLayers"
                 };
                 costLayersComboBox.Items.Clear();
-                for (uint layer = 0u; layer < Model?.CostLayerCount; layer++)
+                for (uint layer = 0u; layer < PageVM.Model?.CostLayerCount; layer++)
                 {
                     ComboBoxItem item = new ComboBoxItem
                     {
                         Name = "CostLayer" + layer.ToString(),
-                        Content = Model.CostLayers[layer].Name,
+                        Content = PageVM.Model.CostLayers[layer].Name,
                         Tag = layer
                     };
                     costLayersComboBox.Items.Add(item);
                 }
                 ToolTip.SetTip(costLayersComboBox, "Cost Layer");
-                if (Model != null)
-                {
-                    costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
-                    costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
-                }
+               
+                costLayersComboBox.SelectedIndex = (int)PageVM.Model.CostIndex;
+                costLayersComboBox.IsEnabled = PageVM.Model.CostLayerCount > 1;
+               
                 costLayersComboBox.SelectionChanged += CostLayersComboBox_SelectionChanged;
 
                 CommandToolBar.Add(costLayersComboBox);
@@ -137,25 +141,25 @@ namespace Convnet.PageViewModels
 
         public void CostLayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
-            if (Model != null && Model.CostLayers != null && costLayersComboBox?.SelectedIndex >= 0)
+            if (PageVM != null && PageVM.Model != null && PageVM.Model.CostLayers != null && costLayersComboBox?.SelectedIndex >= 0)
             {
                 var costIndex = (uint)costLayersComboBox.SelectedIndex;
-                Model?.SetCostIndex(costIndex);
-                if (Model?.TaskState != DNNTaskStates.Running && ConfusionDataTable != null)
+                PageVM.Model?.SetCostIndex(costIndex);
+                if (PageVM.Model?.TaskState != DNNTaskStates.Running && ConfusionDataTable != null)
                 {
-                    Model?.GetConfusionMatrix();
+                    PageVM.Model?.GetConfusionMatrix();
                     ConfusionDataTable = GetConfusionDataTable();
-                    Model?.UpdateCostInfo(costIndex);
-                    ProgressText = string.Format(stringTesting, 0, Model?.BatchSize, Model?.CostLayers[costIndex].AvgTestLoss, Model?.CostLayers[costIndex].TestErrors, Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - Model?.CostLayers[costIndex].TestErrorPercentage);
+                    PageVM.Model?.UpdateCostInfo(costIndex);
+                    ProgressText = string.Format(stringTesting, 0, PageVM.Model?.BatchSize, PageVM.Model?.CostLayers[costIndex].AvgTestLoss, PageVM.Model?.CostLayers[costIndex].TestErrors, PageVM.Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - PageVM.Model?.CostLayers[costIndex].TestErrorPercentage);
                 }
             }
         }
 
-        private async void TestPageViewModel_ModelChanged(object? sender, EventArgs e)
+        private async void TestPageVM_ModelChanged(object? sender, EventArgs e)
         {
-            if (Model != null && Model.CostLayers != null)
+            if (PageVM != null && PageVM.Model != null && PageVM.Model.CostLayers != null)
             {
-                Model.TestProgress += TestProgress;
+                PageVM.Model.TestProgress += TestProgress;
                 ShowProgress = false;
                 ShowSample = false;
                 ConfusionDataTable = null;
@@ -163,20 +167,20 @@ namespace Convnet.PageViewModels
                 if (costLayersComboBox != null && dataProviderComboBox != null)
                 { 
                     costLayersComboBox.Items.Clear();
-                    for (uint layer = 0u; layer < Model.CostLayerCount; layer++)
+                    for (uint layer = 0u; layer < PageVM.Model.CostLayerCount; layer++)
                     {
                         ComboBoxItem item = new ComboBoxItem
                         {
                             Name = "CostLayer" + layer.ToString(),
-                            Content = Model.CostLayers[layer].Name,
+                            Content = PageVM.Model.CostLayers[layer].Name,
                             Tag = layer
                         };
                         costLayersComboBox.Items.Add(item);
                     }
-                    costLayersComboBox.SelectedIndex = (int)Model.CostIndex;
-                    costLayersComboBox.IsEnabled = Model.CostLayerCount > 1;
+                    costLayersComboBox.SelectedIndex = (int)PageVM.Model.CostIndex;
+                    costLayersComboBox.IsEnabled = PageVM.Model.CostLayerCount > 1;
 
-                    dataProviderComboBox.SelectedIndex = (int)Dataset;
+                    dataProviderComboBox.SelectedIndex = (int)PageVM.Dataset;
                 }
             }
             //Dispatcher.UIThread.Post(() => LayerIndexChanged(this, null), DispatcherPriority.Render);
@@ -188,13 +192,13 @@ namespace Convnet.PageViewModels
             {
                 Dispatcher.UIThread.Invoke(() =>
                 {
-                    if (Model != null)
+                    if (PageVM != null && PageVM.Model != null)
                     {
-                        ProgressText = string.Format(stringTesting, SampleIndex, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
+                        ProgressText = string.Format(stringTesting, SampleIndex, PageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
 
-                        Model.UpdateLayerInfo(0ul, true);
-                        InputSnapshot = Model.InputSnapshot;
-                        Label = Model.Label;
+                        PageVM.Model.UpdateLayerInfo(0ul, true);
+                        InputSnapshot = PageVM.Model.InputSnapshot;
+                        Label = PageVM.Model.Label;
                     }
                 });
             }
@@ -202,8 +206,8 @@ namespace Convnet.PageViewModels
             {
                 Dispatcher.UIThread.Invoke(() =>
                 {
-                    if (Model != null)
-                        ProgressText = string.Format(stringTesting, SampleIndex, Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
+                    if (PageVM != null && PageVM.Model != null)
+                        ProgressText = string.Format(stringTesting, SampleIndex, PageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
 
 
                     if (RefreshTimer != null)
@@ -214,11 +218,11 @@ namespace Convnet.PageViewModels
                     }
 
 
-                    if (Model != null && costLayersComboBox != null)
+                    if (PageVM != null && PageVM.Model != null && costLayersComboBox != null)
                     {
-                        Model.Stop();
-                        Model.SetCostIndex((UInt)costLayersComboBox.SelectedIndex);
-                        Model.GetConfusionMatrix();
+                        PageVM.Model.Stop();
+                        PageVM.Model.SetCostIndex((UInt)costLayersComboBox.SelectedIndex);
+                        PageVM.Model.GetConfusionMatrix();
                     }
                     ConfusionDataTable = GetConfusionDataTable();
 
@@ -257,17 +261,17 @@ namespace Convnet.PageViewModels
         {
             DataTable? table = null;
 
-            if (Model != null && Model?.ConfusionMatrix != null && Model.LabelsCollection != null)
+            if (PageVM != null && PageVM.Model != null && PageVM.Model?.ConfusionMatrix != null && PageVM.Model.LabelsCollection != null)
             {
                 table = new DataTable("ConfusionTable");
-                uint classCount = (uint)Model.ClassCount;
-                uint labelIndex = (uint)Model.LabelIndex;
+                uint classCount = (uint)PageVM.Model.ClassCount;
+                uint labelIndex = (uint)PageVM.Model.LabelIndex;
 
                 table.BeginInit();
                 table.Columns.Add("RowHeader", typeof(string));
                 for (uint c = 0; c < classCount; c++)
                 {
-                    table.Columns.Add(Model.LabelsCollection[labelIndex][c], typeof(uint));
+                    table.Columns.Add(PageVM.Model.LabelsCollection[labelIndex][c], typeof(uint));
                 }
                 table.EndInit();
 
@@ -277,10 +281,10 @@ namespace Convnet.PageViewModels
                     DataRow row = table.NewRow();
                     row.BeginEdit();
                     object[] rowCollection = new object[classCount + 1];
-                    rowCollection[0] = Model.LabelsCollection[labelIndex][r].ToString().Replace("_", "__");
+                    rowCollection[0] = PageVM.Model.LabelsCollection[labelIndex][r].ToString().Replace("_", "__");
                     for (uint c = 0; c < classCount; c++)
                     {
-                        rowCollection[c + 1] = Model.ConfusionMatrix[r*classCount+c];
+                        rowCollection[c + 1] = PageVM.Model.ConfusionMatrix[r*classCount+c];
                     }
 
                     row.ItemArray = rowCollection;
@@ -340,7 +344,7 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Post(async () =>
             {
-                if (Model?.TaskState == DNNTaskStates.Running)
+                if (PageVM?.Model?.TaskState == DNNTaskStates.Running)
                 {
 
                     await MessageBox.Show("You must stop training first.", "Information", MessageBoxButtons.OK);
@@ -348,11 +352,11 @@ namespace Convnet.PageViewModels
                     return;
                 }
 
-                if (Model?.TaskState == DNNTaskStates.Stopped && App.MainWindow != null)
+                if (PageVM?.Model?.TaskState == DNNTaskStates.Stopped && App.MainWindow != null)
                 {
                     TestParameters dialog = new TestParameters
                     {
-                        Model = this.Model,
+                        Model = PageVM.Model,
                         Path = DefinitionsDirectory,
                         IsEnabled = true,
                         Rate = TestRate,
@@ -368,10 +372,10 @@ namespace Convnet.PageViewModels
                         TestRate = dialog.Rate;
                         Settings.Default.Save();
 
-                        Model.AddTrainingRate(new DNNTrainingRate(dialog.Rate.Optimizer, dialog.Rate.Momentum, dialog.Rate.Beta2, dialog.Rate.L2Penalty, dialog.Rate.Dropout, dialog.Rate.Eps, dialog.Rate.N, dialog.Rate.D, dialog.Rate.H, dialog.Rate.W, dialog.Rate.PadD, dialog.Rate.PadH, dialog.Rate.PadW, 1, 1, dialog.Rate.EpochMultiplier, dialog.Rate.MaximumRate, dialog.Rate.MinimumRate, dialog.Rate.FinalRate, dialog.Rate.Gamma, dialog.Rate.DecayAfterEpochs, dialog.Rate.DecayFactor, dialog.Rate.HorizontalFlip, dialog.Rate.VerticalFlip, dialog.Rate.InputDropout, dialog.Rate.Cutout, dialog.Rate.CutMix, dialog.Rate.AutoAugment, dialog.Rate.ColorCast, dialog.Rate.ColorAngle, dialog.Rate.Distortion, dialog.Rate.Interpolation, dialog.Rate.Scaling, dialog.Rate.Rotation), true, 1, Model.TrainingSamples);
+                        PageVM.Model.AddTrainingRate(new DNNTrainingRate(dialog.Rate.Optimizer, dialog.Rate.Momentum, dialog.Rate.Beta2, dialog.Rate.L2Penalty, dialog.Rate.Dropout, dialog.Rate.Eps, dialog.Rate.N, dialog.Rate.D, dialog.Rate.H, dialog.Rate.W, dialog.Rate.PadD, dialog.Rate.PadH, dialog.Rate.PadW, 1, 1, dialog.Rate.EpochMultiplier, dialog.Rate.MaximumRate, dialog.Rate.MinimumRate, dialog.Rate.FinalRate, dialog.Rate.Gamma, dialog.Rate.DecayAfterEpochs, dialog.Rate.DecayFactor, dialog.Rate.HorizontalFlip, dialog.Rate.VerticalFlip, dialog.Rate.InputDropout, dialog.Rate.Cutout, dialog.Rate.CutMix, dialog.Rate.AutoAugment, dialog.Rate.ColorCast, dialog.Rate.ColorAngle, dialog.Rate.Distortion, dialog.Rate.Interpolation, dialog.Rate.Scaling, dialog.Rate.Rotation), true, 1, PageVM.Model.TrainingSamples);
                         if (costLayersComboBox != null)
-                            Model.SetCostIndex((uint)costLayersComboBox.SelectedIndex);
-                        Model.Start(false);
+                            PageVM.Model.SetCostIndex((uint)costLayersComboBox.SelectedIndex);
+                        PageVM.Model.Start(false);
                         RefreshTimer = new Timer(1000.0);
                         RefreshTimer.Elapsed += RefreshTimer_Elapsed;
 
@@ -380,16 +384,14 @@ namespace Convnet.PageViewModels
                         CommandToolBar[2].IsVisible = true;
 
                         ShowProgress = true;
-                        ShowSample = true;
-
-                            
+                        ShowSample = true;  
                     }
                 }
                 else
                 {
-                    if (Model?.TaskState == DNNTaskStates.Paused)
+                    if (PageVM?.Model?.TaskState == DNNTaskStates.Paused)
                     {
-                        Model.Resume();
+                        PageVM.Model.Resume();
 
                         CommandToolBar[0].IsVisible = false;
                         CommandToolBar[1].IsVisible = true;
@@ -401,7 +403,7 @@ namespace Convnet.PageViewModels
 
         private async void StopButtonClick(object? sender, RoutedEventArgs e)
         {
-            if (Model?.TaskState != DNNTaskStates.Stopped)
+            if (PageVM?.Model?.TaskState != DNNTaskStates.Stopped)
             {
                 var stop = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to stop?", "Stop Testing", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
                 if (stop == MessageBoxResult.Yes)
@@ -413,7 +415,7 @@ namespace Convnet.PageViewModels
                         RefreshTimer.Dispose();
                     }
 
-                    Model?.Stop();
+                    PageVM?.Model?.Stop();
                     ConfusionDataTable = null;
 
                     ToolTip.SetTip(CommandToolBar[0], "Start Testing");
@@ -425,7 +427,7 @@ namespace Convnet.PageViewModels
                     ShowProgress = false;
                     ShowSample = false;
                     
-                    pageViewModel?.OnPageTaskStatusChange();
+                    PageVM?.OnPageTaskStatusChange();
                 }
             }
         }
@@ -434,9 +436,9 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (Model?.TaskState == DNNTaskStates.Running)
+                if (PageVM?.Model?.TaskState == DNNTaskStates.Running)
                 {
-                    Model.Pause();
+                    PageVM.Model.Pause();
 
                     ToolTip.SetTip(CommandToolBar[0], "Resume Testing");
                     CommandToolBar[0].IsVisible = true;

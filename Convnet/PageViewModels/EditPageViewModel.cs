@@ -57,16 +57,23 @@ namespace Convnet.PageViewModels
         private bool dirty = true;
         private static bool initAction = true;
         private readonly DispatcherTimer clickWaitTimer;
+
         private PageViewModel? pageViewModel;
+        public PageViewModel? PageVM
+        {
+            get => pageViewModel;
+            set => this.RaiseAndSetIfChanged(ref pageViewModel, value);
+        }
 
         public ReactiveCommand<Unit, Unit> CheckCommand { get; }
         public ReactiveCommand<Unit, Unit> SyncCommand { get; }
         public ReactiveCommand<Unit, Unit> ScriptsCommand { get; }
         public ReactiveCommand<Unit, Unit> VisualStudioCommand { get; }
 
-        public EditPageViewModel(PageViewModel pvm, DNNModel model) : base(model)
+        public EditPageViewModel(PageViewModel pvm) : base()
         {
-            pageViewModel = pvm;
+            PageVM = pvm;
+
             initAction = true;
             clickWaitTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Background, MouseWaitTimer_Tick);
 
@@ -340,7 +347,7 @@ namespace Convnet.PageViewModels
                 {
                     this.RaiseAndSetIfChanged(ref definitionStatus, value);
                     var sameDefinition = Definition.ToLower().Equals(Settings.Default.DefinitionActive.ToLower());
-                    CanSynchronize = definitionStatus && !sameDefinition && Model != null && Model.TaskState == DNNTaskStates.Stopped;
+                    CanSynchronize = definitionStatus && !sameDefinition && PageVM != null && PageVM.Model != null && PageVM.Model.TaskState == DNNTaskStates.Stopped;
                 }
             }
         }
@@ -414,12 +421,12 @@ namespace Convnet.PageViewModels
             try
             {
                 var modelname = Definition.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0].Trim().Replace("[", "").Replace("]", "").Trim();
-                var notSameModelName = modelname != Model?.Name || modelname != ModelName;
+                var notSameModelName = modelname != PageVM?.Model?.Name || modelname != ModelName;
                 var sameDefinition = Definition.ToLower(CultureInfo.CurrentCulture).Equals(Settings.Default.DefinitionActive.ToLower(CultureInfo.CurrentCulture));
                 var pathDefinition = Path.Combine(DefinitionsDirectory, modelname + ".txt");
                 var pathStateDefinition = Path.Combine(StateDirectory, modelname + ".txt");
                 var pathWeightsDirectory = Path.Combine(DefinitionsDirectory, modelname);
-                var pathWeights = Settings.Default.PersistOptimizer ? Path.Combine(pathWeightsDirectory, Dataset.ToString().ToLower(CultureInfo.CurrentCulture) + "-" + Settings.Default.Optimizer.ToString().ToLower(CultureInfo.CurrentCulture) + @".bin") : Path.Combine(pathWeightsDirectory, Dataset.ToString().ToLower(CultureInfo.CurrentCulture) + ".bin");
+                var pathWeights = Settings.Default.PersistOptimizer ? Path.Combine(pathWeightsDirectory, PageVM?.Dataset.ToString().ToLower(CultureInfo.CurrentCulture) + "-" + Settings.Default.Optimizer.ToString().ToLower(CultureInfo.CurrentCulture) + @".bin") : Path.Combine(pathWeightsDirectory, PageVM?.Dataset.ToString().ToLower(CultureInfo.CurrentCulture) + ".bin");
 
                 if (notSameModelName || !sameDefinition)
                 {
@@ -444,36 +451,36 @@ namespace Convnet.PageViewModels
                             var keepWeights = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Keep model weights?", "Same Model", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1), DispatcherPriority.Render);
                             if (keepWeights == MessageBoxResult.Yes)
                             {
-                                Model?.SaveWeights(pathWeights, Settings.Default.PersistOptimizer);
+                                PageVM?.Model?.SaveWeights(pathWeights, Settings.Default.PersistOptimizer);
                                 reloadWeights = true;
                             }
                         }
 
                         try
                         {
-                            Model?.Dispose();
-                            Model = new DNNModel(Definition)
+                            PageVM?.Model?.Dispose();
+                            PageVM?.Model = new DNNModel(Definition)
                             {
                                 BackgroundColor = Settings.Default.BackgroundColor,
                                 BlockSize = (UInt64)Settings.Default.PixelSize,
                                 TrainingStrategies = Settings.Default.TrainingStrategies != null ? Settings.Default.TrainingStrategies : new System.Collections.ObjectModel.ObservableCollection<DNNTrainingStrategy>()
                             };
-                            Model?.ClearTrainingStrategies();
+                            PageVM?.Model?.ClearTrainingStrategies();
                             if (Settings.Default.TrainingStrategies != null)
                                 foreach (DNNTrainingStrategy strategy in Settings.Default.TrainingStrategies)
-                                    Model?.AddTrainingStrategy(strategy);
-                            Model?.SetFormat(Settings.Default.PlainFormat);
-                            Model?.SetOptimizer((DNNOptimizers)Settings.Default.Optimizer);
-                            Model?.SetPersistOptimizer(Settings.Default.PersistOptimizer);
-                            Model?.SetUseTrainingStrategy(Settings.Default.UseTrainingStrategy);
-                            Model?.SetDisableLocking(Settings.Default.DisableLocking);
-                            Model?.SetShuffleCount((ulong)Math.Round(Settings.Default.Shuffle));
+                                    PageVM?.Model?.AddTrainingStrategy(strategy);
+                            PageVM?.Model?.SetFormat(Settings.Default.PlainFormat);
+                            PageVM?.Model?.SetOptimizer((DNNOptimizers)Settings.Default.Optimizer);
+                            PageVM?.Model?.SetPersistOptimizer(Settings.Default.PersistOptimizer);
+                            PageVM?.Model?.SetUseTrainingStrategy(Settings.Default.UseTrainingStrategy);
+                            PageVM?.Model?.SetDisableLocking(Settings.Default.DisableLocking);
+                            PageVM?.Model?.SetShuffleCount((ulong)Math.Round(Settings.Default.Shuffle));
 
                             if (reloadWeights)
-                                Model?.LoadWeights(pathWeights, Settings.Default.PersistOptimizer);
+                                PageVM?.Model?.LoadWeights(pathWeights, Settings.Default.PersistOptimizer);
 
                             ModelName = modelname;
-                            Settings.Default.ModelNameActive = Model?.Name;
+                            Settings.Default.ModelNameActive = PageVM?.Model?.Name;
                             Settings.Default.DefinitionEditing = Definition;
                             Settings.Default.DefinitionActive = Definition;
                             Settings.Default.Script = Script;
@@ -482,7 +489,7 @@ namespace Convnet.PageViewModels
                             Settings.Default.Save();
 
                             if (App.MainWindow != null)
-                                App.MainWindow.Title = Model?.Name + " - Convnet Explorer";
+                                App.MainWindow.Title = PageVM?.Model?.Name + " - Convnet Explorer";
 
                             CanSynchronize = false;
 
@@ -518,26 +525,26 @@ namespace Convnet.PageViewModels
 
                             var keepWeights = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Keep model weights?", "Same Model", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1));
                             if (keepWeights == MessageBoxResult.Yes)
-                                Model?.SaveWeights(pathWeights, Settings.Default.PersistOptimizer);
+                                PageVM?.Model?.SaveWeights(pathWeights, Settings.Default.PersistOptimizer);
 
                             try
                             {
-                                Model?.Dispose();
-                                Model = new DNNModel(Definition);
-                                Model?.SetFormat(Settings.Default.PlainFormat);
-                                Model?.SetOptimizer((DNNOptimizers)Settings.Default.Optimizer);
-                                Model?.SetPersistOptimizer(Settings.Default.PersistOptimizer);
-                                Model?.SetDisableLocking(Settings.Default.DisableLocking);
-                                Model?.SetShuffleCount((ulong)Math.Round(Settings.Default.Shuffle));
+                                PageVM?.Model?.Dispose();
+                                PageVM?.Model = new DNNModel(Definition);
+                                PageVM?.Model?.SetFormat(Settings.Default.PlainFormat);
+                                PageVM?.Model?.SetOptimizer((DNNOptimizers)Settings.Default.Optimizer);
+                                PageVM?.Model?.SetPersistOptimizer(Settings.Default.PersistOptimizer);
+                                PageVM?.Model?.SetDisableLocking(Settings.Default.DisableLocking);
+                                PageVM?.Model?.SetShuffleCount((ulong)Math.Round(Settings.Default.Shuffle));
                                 Settings.Default.Save();
-                                if (Model != null)
-                                    Model.BlockSize = (UInt64)Settings.Default.PixelSize;
+                                if (PageVM?.Model != null)
+                                    PageVM?.Model.BlockSize = (UInt64)Settings.Default.PixelSize;
 
                                 if (keepWeights == MessageBoxResult.Yes)
-                                    Model?.LoadWeights(pathWeights, Settings.Default.PersistOptimizer);
+                                    PageVM?.Model?.LoadWeights(pathWeights, Settings.Default.PersistOptimizer);
 
                                 ModelName = modelname;
-                                Settings.Default.ModelNameActive = Model?.Name;
+                                Settings.Default.ModelNameActive = PageVM?.Model?.Name;
                                 Settings.Default.DefinitionEditing = Definition;
                                 Settings.Default.DefinitionActive = Definition;
                                 Settings.Default.Script = Script;
@@ -546,7 +553,7 @@ namespace Convnet.PageViewModels
                                 Settings.Default.Save();
 
                                 if (App.MainWindow != null)
-                                    App.MainWindow.Title = Model?.Name + " - Convnet Explorer";
+                                    App.MainWindow.Title = PageVM?.Model?.Name + " - Convnet Explorer";
 
                                 CanSynchronize = false;
 
@@ -563,7 +570,7 @@ namespace Convnet.PageViewModels
                     }
                 }
 
-                Settings.Default.Dataset = Model?.Dataset.ToString().ToLower(CultureInfo.CurrentCulture);
+                Settings.Default.Dataset = PageVM?.Model?.Dataset.ToString().ToLower(CultureInfo.CurrentCulture);
                 Settings.Default.Save();
             }
             catch (Exception ex)
@@ -742,10 +749,10 @@ namespace Convnet.PageViewModels
 
         private bool CheckDefinition()
         {
-            if (Model != null)
+            if (PageVM != null && PageVM.Model != null)
             {
                 var definition = new StringBuilder(Definition);
-                var msg = Model.Check(ref definition);
+                var msg = PageVM.Model.Check(ref definition);
 
                 Definition = msg.Definition;
 

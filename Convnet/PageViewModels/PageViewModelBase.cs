@@ -30,13 +30,9 @@ namespace Convnet.PageViewModels
         public static IEnumerable<DNNOptimizers> GetOptimizers => Enum.GetValues<DNNOptimizers>().Cast<DNNOptimizers>();
         public static IEnumerable<DNNInterpolations> GetInterpolations => Enum.GetValues<DNNInterpolations>().Cast<DNNInterpolations>();
 
-        public event EventHandler? ModelChanged;
-
-      
         public abstract string DisplayName { get; }
 
         public abstract void Reset();
-
 
         private ObservableCollection<Control> commandToolBar;
         public ObservableCollection<Control> CommandToolBar
@@ -52,52 +48,11 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref commandToolBarVisibility, value);
         }
 
-        private ObservableCollection<DNNCostLayer>? costLayers;
-        public ObservableCollection<DNNCostLayer>? CostLayers
-        {
-            get => costLayers;
-            set => this.RaiseAndSetIfChanged(ref costLayers, value);
-        }
-
-        private int costIndex;
-        public int CostIndex
-        {
-            get => costIndex;
-            set => this.RaiseAndSetIfChanged(ref costIndex, value);
-        }
-
         private bool isValid = true;
         public bool IsValid
         {
             get => isValid;
             set => this.RaiseAndSetIfChanged(ref isValid, value);
-        }
-
-        private DNNDatasets dataset;
-        public DNNDatasets Dataset
-        {
-            get => dataset;
-            set => this.RaiseAndSetIfChanged(ref dataset, value);
-        }
-
-        private void OnModelChanged()
-        {
-            ModelChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private DNNModel? model;
-        public DNNModel? Model
-        {
-            get => model;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref model, value);
-                if (model != null)
-                {
-                    Dataset = model.Dataset;
-                    OnModelChanged();
-                }
-            }
         }
 
         private void CommandToolBarCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -108,15 +63,8 @@ namespace Convnet.PageViewModels
                 CommandToolBarVisibility = false;
         }
 
-        protected PageViewModelBase(DNNModel? model)
+        protected PageViewModelBase()
         {
-            if (model != null && model.CostLayers != null)
-            {
-                Model = model;
-                dataset = Model.Dataset;
-                costLayers = new ObservableCollection<DNNCostLayer>(model.CostLayers);
-                costIndex = (int)Model.CostIndex;
-            }
 
             commandToolBarVisibility = false;
             commandToolBar = new ObservableCollection<Control>();

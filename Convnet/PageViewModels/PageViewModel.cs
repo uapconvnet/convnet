@@ -27,9 +27,52 @@ namespace Convnet.PageViewModels
 
     public class PageViewModel : PageViewModelBase
     {
+        public event EventHandler? ModelChanged;
         public event EventHandler? PageChange;
-        
-       
+
+        private ObservableCollection<DNNCostLayer>? costLayers;
+        public ObservableCollection<DNNCostLayer>? CostLayers
+        {
+            get => costLayers;
+            set => this.RaiseAndSetIfChanged(ref costLayers, value);
+        }
+
+        private int costIndex;
+        public int CostIndex
+        {
+            get => costIndex;
+            set => this.RaiseAndSetIfChanged(ref costIndex, value);
+        }
+
+
+        private DNNDatasets dataset;
+        public DNNDatasets Dataset
+        {
+            get => dataset;
+            set => this.RaiseAndSetIfChanged(ref dataset, value);
+        }
+
+        private DNNModel? model;
+        public DNNModel? Model
+        {
+            get => model;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref model, value);
+                if (model != null)
+                {
+                    Dataset = model.Dataset;
+                    OnModelChanged();
+                }
+            }
+        }
+
+        private void OnModelChanged()
+        {
+            ModelChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+
         private bool openCommandVisible = false;
         public bool OpenCommandVisible
         {
@@ -84,27 +127,35 @@ namespace Convnet.PageViewModels
         }
 
        
-        public PageViewModel(DNNModel model) : base(model)
+        public PageViewModel(DNNModel model) : base()
         {
             Settings.Default.PropertyChanged += Default_PropertyChanged;
 
             progressBarMinimum = 0.0;
             progressBarMaximum = 100.0;
 
+            if (model != null && model.CostLayers != null)
+            {
+                Model = model;
+                dataset = Model.Dataset;
+                costLayers = new ObservableCollection<DNNCostLayer>(model.CostLayers);
+                costIndex = (int)Model.CostIndex;
+            }
+
             if (Model != null)
             {
                 Model.TrainProgress += TrainProgress;
                 Model.TestProgress += TestProgress;
 
-                var EditPageVM = new EditPageViewModel(this, Model);
+                var EditPageVM = new EditPageViewModel(this);
                 EditPageVM.Open += PageVM_Open;
                 EditPageVM.SaveAs += PageVM_SaveAs;
-                EditPageVM.ModelChanged += EditPageVM_ModelChanged;
+                ModelChanged += EditPageVM_ModelChanged;
                
-                var TestPageVM = new TestPageViewModel(this, Model);
+                var TestPageVM = new TestPageViewModel(this);
                 TestPageVM.Open += PageVM_Open;
                
-                var TrainPageVM = new TrainPageViewModel(this, Model);
+                var TrainPageVM = new TrainPageViewModel(this);
                 TrainPageVM.Open += PageVM_Open;
                 TrainPageVM.Save += PageVM_Save;
                 TrainPageVM.SaveAs += PageVM_SaveAs;
@@ -252,13 +303,13 @@ namespace Convnet.PageViewModels
                     {
                         if (CurrentPage is TrainPageViewModel tpvm)
                         {
-                            if (tpvm.Model != null)
+                            if (Model != null)
                             {
-                                if (tpvm.Model.LoadWeights(path, Settings.Default.PersistOptimizer, true) == 0)
+                                if (Model.LoadWeights(path, Settings.Default.PersistOptimizer, true) == 0)
                                 {
                                     Dispatcher.UIThread.Post(() =>
                                     {
-                                        tpvm.Optimizer = tpvm.Model.Optimizer;
+                                        tpvm.Optimizer = Model.Optimizer;
                                         tpvm.RefreshButtonClick(this, null);
                                         MessageBox.Show(path + " is loaded", "Information", MessageBoxButtons.OK);
                                     });
@@ -272,7 +323,7 @@ namespace Convnet.PageViewModels
                     {
                         if (CurrentPage is EditPageViewModel epvm)
                         {
-                            if (epvm.Model != null)
+                            if (Model != null)
                             {
                                 var reader = new StreamReader(path, true);
                                 var definition = reader.ReadToEnd().Trim();
@@ -287,7 +338,7 @@ namespace Convnet.PageViewModels
                     {
                         if (CurrentPage is EditPageViewModel epvm)
                         {
-                            if (epvm.Model != null)
+                            if (Model != null)
                             {
                                 var reader = new StreamReader(path, true);
                                 var script = reader.ReadToEnd().Trim();
@@ -509,17 +560,10 @@ namespace Convnet.PageViewModels
         {
             if (Pages != null && Pages.Count > (int)ViewModels.Train)
             {
-                Model = Pages[(int)ViewModels.Edit]?.Model;
                 if (Model != null)
                 {                    
                     Model.TestProgress += TestProgress;
                     Model.TrainProgress += TrainProgress;
-                   
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    Pages[(int)ViewModels.Test].Model = Model;
-                    Pages[(int)ViewModels.Train].Model = Model;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-
                 }
             }
         }
@@ -612,9 +656,9 @@ namespace Convnet.PageViewModels
             {
                 var testPVM = Pages[(int)ViewModels.Test] as TestPageViewModel;
 
-                if (testPVM?.Model != null)
+                if (testPVM != null)
                 {
-                    testPVM.CommandToolBar[0].IsVisible = testPVM.Model.TaskState == DNNTaskStates.Stopped;
+                    testPVM.CommandToolBar[0].IsVisible = Model?.TaskState == DNNTaskStates.Stopped;
                     testPVM.CommandToolBar[1].IsVisible = false;
                     testPVM.CommandToolBar[2].IsVisible = false;
                 }
@@ -640,13 +684,13 @@ namespace Convnet.PageViewModels
                     break;
 
                 case (int)ViewModels.Test:
-                    OpenCommandVisible = ((Pages?[(int)ViewModels.Train] as TrainPageViewModel)?.Model?.TaskState == DNNTaskStates.Stopped) && ((Pages?[(int)ViewModels.Test] as TestPageViewModel)?.Model?.TaskState == DNNTaskStates.Stopped);
+                    OpenCommandVisible = Model?.TaskState == DNNTaskStates.Stopped;
                     SaveCommandVisible = false;
                     SaveAsCommandVisible = false;
                     break;
 
                 case (int)ViewModels.Train:
-                    OpenCommandVisible = ((Pages?[(int)ViewModels.Train] as TrainPageViewModel)?.Model?.TaskState == DNNTaskStates.Stopped) && ((Pages?[(int)ViewModels.Test] as TestPageViewModel)?.Model?.TaskState == DNNTaskStates.Stopped);
+                    OpenCommandVisible = Model?.TaskState == DNNTaskStates.Stopped;
                     SaveCommandVisible = true;
                     SaveAsCommandVisible = true;
                     break;
