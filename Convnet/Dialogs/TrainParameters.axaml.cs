@@ -266,8 +266,8 @@ namespace Convnet.Dialogs
             if (cbs != null)
             {
                 var useStrategy = cbs.IsChecked.HasValue && cbs.IsChecked.Value;
-                if (tpvm?.Model != null)
-                    tpvm?.Model.SetUseTrainingStrategy(useStrategy);
+                if (tpvm?.PageVM?.Model != null)
+                    tpvm?.PageVM?.Model.SetUseTrainingStrategy(useStrategy);
                 Settings.Default.UseTrainingStrategy = useStrategy;
                 Settings.Default.Save();
 
@@ -281,8 +281,8 @@ namespace Convnet.Dialogs
             if (cbs != null)
             {
                 var useStrategy = cbs.IsChecked.HasValue && cbs.IsChecked.Value;
-                if (tpvm?.Model != null)
-                    tpvm.Model.SetUseTrainingStrategy(useStrategy);
+                if (tpvm?.PageVM?.Model != null)
+                    tpvm?.PageVM?.Model.SetUseTrainingStrategy(useStrategy);
                 Settings.Default.UseTrainingStrategy = useStrategy;
                 Settings.Default.Save();
 
