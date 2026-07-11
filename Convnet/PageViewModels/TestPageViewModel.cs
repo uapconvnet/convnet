@@ -43,11 +43,11 @@ namespace Convnet.PageViewModels
         public Timer? RefreshTimer;
         public event EventHandler? Open;
 
-        private PageViewModel? pageViewModel;
+        private PageViewModel? pageVM;
         public PageViewModel? PageVM
         {
-            get => pageViewModel;
-            set => this.RaiseAndSetIfChanged(ref pageViewModel, value);
+            get => pageVM;
+            set => this.RaiseAndSetIfChanged(ref pageVM, value);
         }
 
         public TestPageViewModel(PageViewModel pvm) : base()

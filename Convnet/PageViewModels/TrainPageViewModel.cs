@@ -119,11 +119,11 @@ namespace Convnet.PageViewModels
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private StringBuilder sb = new StringBuilder();
        
-        private PageViewModel? pageViewModel;
+        private PageViewModel? pageVM;
         public PageViewModel? PageVM
         {
-            get => pageViewModel;
-            set => this.RaiseAndSetIfChanged(ref pageViewModel, value);
+            get => pageVM;
+            set => this.RaiseAndSetIfChanged(ref pageVM, value);
         }
 
         public Timer? RefreshTimer;
@@ -579,41 +579,41 @@ namespace Convnet.PageViewModels
             currentPlotType = (PlotType)Settings.Default.PlotType;
             currentLegendPosition = currentPlotType == PlotType.Accuracy ? LegendPosition.BottomRight : LegendPosition.TopRight;
 
-            if (pageViewModel != null && pageViewModel.Model != null && pageViewModel.Model.CostLayers != null)
+            if (pageVM != null && pageVM.Model != null && pageVM.Model.CostLayers != null)
             {
-                pageViewModel.Model.NewEpoch += NewEpoch;
-                pageViewModel.Model.TrainProgress += TrainProgress;
+                pageVM.Model.NewEpoch += NewEpoch;
+                pageVM.Model.TrainProgress += TrainProgress;
             
 
                 costLayersComboBox?.Items.Clear();
-                for (uint layer = 0u; layer < pageViewModel.Model.CostLayerCount; layer++)
+                for (uint layer = 0u; layer < pageVM.Model.CostLayerCount; layer++)
                 {
                     var item = new ComboBoxItem
                     {
                         Name = "CostLayer" + layer.ToString(),
-                        Content = pageViewModel.Model.CostLayers[layer].Name,
+                        Content = pageVM.Model.CostLayers[layer].Name,
                         Tag = layer
                     };
                     costLayersComboBox?.Items.Add(item);
                 }
             }
-            if (pageViewModel != null && pageViewModel.Model != null && costLayersComboBox != null && layersComboBox != null)
+            if (pageVM != null && pageVM.Model != null && costLayersComboBox != null && layersComboBox != null)
             {
-                costLayersComboBox.SelectedIndex = (int)pageViewModel.Model.CostIndex;
+                costLayersComboBox.SelectedIndex = (int)pageVM.Model.CostIndex;
                 selectedCostIndex = costLayersComboBox.SelectedIndex;
-                costLayersComboBox.IsEnabled = pageViewModel.Model.CostLayerCount > 1;
-                costLayersComboBox.IsVisible = pageViewModel.Model.CostLayerCount > 1;
-                layersComboBox.ItemsSource = pageViewModel.Model.Layers;
+                costLayersComboBox.IsEnabled = pageVM.Model.CostLayerCount > 1;
+                costLayersComboBox.IsVisible = pageVM.Model.CostLayerCount > 1;
+                layersComboBox.ItemsSource = pageVM.Model.Layers;
                 layersComboBox.SelectedIndex = 0;
-                pageViewModel.Model.SelectedIndex = 0;
+                pageVM.Model.SelectedIndex = 0;
             }
 
             SelectedItems = new ObservableCollection<DNNTrainingResult>();
 
             Settings.Default.SelectedLayer = 0;
             Settings.Default.Save();
-            if (dataProviderComboBox != null && pageViewModel != null)
-                dataProviderComboBox.SelectedIndex = (int)pageViewModel.Dataset;
+            if (dataProviderComboBox != null && pageVM != null)
+                dataProviderComboBox.SelectedIndex = (int)pageVM.Dataset;
 
             LayersComboBox_SelectionChanged(sender, null);
 
@@ -631,20 +631,20 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Invoke(() =>
             {
-                if (pageViewModel != null && pageViewModel.Model != null && pageViewModel.Model.CostLayers != null)
+                if (pageVM != null && pageVM.Model != null && pageVM.Model.CostLayers != null)
                 {
-                    var span = pageViewModel.Model.Duration.Elapsed.Subtract(EpochDuration);
-                    EpochDuration = pageViewModel.Model.Duration.Elapsed;
-                    for (UInt c = 0; c < pageViewModel.Model.CostLayerCount; c++)
+                    var span = pageVM.Model.Duration.Elapsed.Subtract(EpochDuration);
+                    EpochDuration = pageVM.Model.Duration.Elapsed;
+                    for (UInt c = 0; c < pageVM.Model.CostLayerCount; c++)
                     {
-                        pageViewModel.Model.UpdateCostInfo(c);
-                        DNNCostLayer cost = pageViewModel.Model.CostLayers[c];
+                        pageVM.Model.UpdateCostInfo(c);
+                        DNNCostLayer cost = pageVM.Model.CostLayers[c];
                         TrainingLog?.Add(new DNNTrainingResult(Cycle, Epoch, cost.GroupIndex, c, cost.Name, N, D, H, W, PadD, PadH, PadW, (DNNOptimizers)Optimizer, Rate, Eps, Momentum, Beta2, Gamma, L2Penalty, Dropout, InputDropout, Cutout, CutMix, AutoAugment, HorizontalFlip, VerticalFlip, ColorCast, ColorAngle, Distortion, (DNNInterpolations)Interpolation, Scaling, Rotation, cost.AvgTrainLoss, cost.TrainErrors, cost.TrainErrorPercentage, cost.TrainAccuracy, cost.AvgTestLoss, cost.TestErrors, cost.TestErrorPercentage, cost.TestAccuracy, (Int64)span.TotalMilliseconds, span));
                     }
                     if (TrainingLog != null)
                         SelectedIndex = TrainingLog.Count - 1;
 
-                    var epoch = "(" + pageViewModel.Dataset.ToString().ToLower() + ")(" + ((DNNOptimizers)Optimizer).ToString().ToLower() + ")" + Epoch.ToString() + "-" + Cycle.ToString() + "-" + TrainErrors.ToString() + "-" + TestErrors.ToString();
+                    var epoch = "(" + pageVM.Dataset.ToString().ToLower() + ")(" + ((DNNOptimizers)Optimizer).ToString().ToLower() + ")" + Epoch.ToString() + "-" + Cycle.ToString() + "-" + TrainErrors.ToString() + "-" + TestErrors.ToString();
                     var path = Path.Combine(DefinitionsDirectory, Settings.Default.ModelNameActive, epoch);
                     if (Directory.Exists(path))
                     {
@@ -690,28 +690,28 @@ namespace Convnet.PageViewModels
                 {
                     case DNNStates.Training:
                         {
-                            if (Optimizer != Optim && pageViewModel != null && pageViewModel.Model != null)
+                            if (Optimizer != Optim && pageVM != null && pageVM.Model != null)
                             {
                                 Optimizer = Optim;
-                                pageViewModel.Model.Optimizer = Optim;
+                                pageVM.Model.Optimizer = Optim;
                             }
 
-                            switch (pageViewModel?.Model?.Optimizer)
+                            switch (pageVM?.Model?.Optimizer)
                             {
                                 case DNNOptimizers.AdaGrad:
-                                    ProgressText = string.Format(stringTraining + " Dropout:\t\t   {7}" + nwl + CutMixToString(CutMix) + "{8}" + nwl + " Auto Augment:\t  {9}" + nwl + " Horizontal Flip:   {10}" + nwl + " Vertical Flip:\t {11}" + nwl + " Color Cast:\t\t{12}" + nwl + " Distortion:\t\t{13}" + nwl + " Loss:\t\t\t  {14:N7}" + nwl + " Errors:\t\t\t{15:G}" + nwl + " Error:\t\t\t {16:N2} %" + nwl + " Accuracy:\t\t  {17:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageViewModel.Model.BatchSize, Rate, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format(stringTraining + " Dropout:\t\t   {7}" + nwl + CutMixToString(CutMix) + "{8}" + nwl + " Auto Augment:\t  {9}" + nwl + " Horizontal Flip:   {10}" + nwl + " Vertical Flip:\t {11}" + nwl + " Color Cast:\t\t{12}" + nwl + " Distortion:\t\t{13}" + nwl + " Loss:\t\t\t  {14:N7}" + nwl + " Errors:\t\t\t{15:G}" + nwl + " Error:\t\t\t {16:N2} %" + nwl + " Accuracy:\t\t  {17:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageVM.Model.BatchSize, Rate, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.AdaDelta:
                                 case DNNOptimizers.RMSProp:
-                                    ProgressText = string.Format(stringTraining + " Momentum: \t\t {7:0.#######}" + nwl + " Dropout:\t\t   {8}" + nwl + CutMixToString(CutMix) + "{9}" + nwl + " Auto Augment:\t  {10}" + nwl + " Horizontal Flip:   {11}" + nwl + " Vertical Flip:\t {12}" + nwl + " Color Cast:\t\t{13}" + nwl + " Distortion:\t\t{14}" + nwl + " Loss:\t\t\t  {15:N7}" + nwl + " Errors:\t\t\t{16:G}" + nwl + " Error:\t\t\t {17:N2} %" + nwl + " Accuracy:\t\t  {18:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageViewModel.Model.BatchSize, Rate, Momentum, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format(stringTraining + " Momentum: \t\t {7:0.#######}" + nwl + " Dropout:\t\t   {8}" + nwl + CutMixToString(CutMix) + "{9}" + nwl + " Auto Augment:\t  {10}" + nwl + " Horizontal Flip:   {11}" + nwl + " Vertical Flip:\t {12}" + nwl + " Color Cast:\t\t{13}" + nwl + " Distortion:\t\t{14}" + nwl + " Loss:\t\t\t  {15:N7}" + nwl + " Errors:\t\t\t{16:G}" + nwl + " Error:\t\t\t {17:N2} %" + nwl + " Accuracy:\t\t  {18:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageVM.Model.BatchSize, Rate, Momentum, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.AdaBoundW:
                                 case DNNOptimizers.AdamW:
                                 case DNNOptimizers.AmsBoundW:
                                 case DNNOptimizers.AdamS:
-                                    ProgressText = string.Format(stringTraining + " Momentum: \t\t {7:0.#######}" + nwl + " Beta2:\t\t\t {8:0.#######}" + nwl + " L2 Penalty:\t\t{9:0.#######}" + nwl + " Dropout:\t\t   {10}" + nwl + CutMixToString(CutMix) + "{11}" + nwl + " Auto Augment:\t  {12}" + nwl + " Horizontal Flip:   {13}" + nwl + " Vertical Flip:\t {14}" + nwl + " Color Cast:\t\t{15}" + nwl + " Distortion:\t\t{16}" + nwl + " Loss:\t\t\t  {17:N7}" + nwl + " Errors:\t\t\t{18:G}" + nwl + " Error:\t\t\t {19:N2} %" + nwl + " Accuracy:\t\t  {20:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageViewModel.Model.BatchSize, Rate, Momentum, Beta2, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format(stringTraining + " Momentum: \t\t {7:0.#######}" + nwl + " Beta2:\t\t\t {8:0.#######}" + nwl + " L2 Penalty:\t\t{9:0.#######}" + nwl + " Dropout:\t\t   {10}" + nwl + CutMixToString(CutMix) + "{11}" + nwl + " Auto Augment:\t  {12}" + nwl + " Horizontal Flip:   {13}" + nwl + " Vertical Flip:\t {14}" + nwl + " Color Cast:\t\t{15}" + nwl + " Distortion:\t\t{16}" + nwl + " Loss:\t\t\t  {17:N7}" + nwl + " Errors:\t\t\t{18:G}" + nwl + " Error:\t\t\t {19:N2} %" + nwl + " Accuracy:\t\t  {20:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageVM.Model.BatchSize, Rate, Momentum, Beta2, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.AdaBelief:
@@ -720,17 +720,17 @@ namespace Convnet.PageViewModels
                                 case DNNOptimizers.Adamax:
                                 case DNNOptimizers.AmsBound:
                                 case DNNOptimizers.DiffGrad:
-                                    ProgressText = string.Format(stringTraining + " Momentum: \t\t {7:0.#######}" + nwl + " Beta2:\t\t\t {8:0.#######}" + nwl + " Dropout:\t\t   {9}" + nwl + CutMixToString(CutMix) + "{10}" + nwl + " Auto Augment:\t  {11}" + nwl + " Horizontal Flip:   {12}" + nwl + " Vertical Flip:\t {13}" + nwl + " Color Cast:\t\t{14}" + nwl + " Distortion:\t\t{15}" + nwl + " Loss:\t\t\t  {16:N7}" + nwl + " Errors:\t\t\t{17:G}" + nwl + " Error:\t\t\t {18:N2} %" + nwl + " Accuracy:\t\t  {19:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageViewModel.Model.BatchSize, Rate, Momentum, Beta2, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format(stringTraining + " Momentum: \t\t {7:0.#######}" + nwl + " Beta2:\t\t\t {8:0.#######}" + nwl + " Dropout:\t\t   {9}" + nwl + CutMixToString(CutMix) + "{10}" + nwl + " Auto Augment:\t  {11}" + nwl + " Horizontal Flip:   {12}" + nwl + " Vertical Flip:\t {13}" + nwl + " Color Cast:\t\t{14}" + nwl + " Distortion:\t\t{15}" + nwl + " Loss:\t\t\t  {16:N7}" + nwl + " Errors:\t\t\t{17:G}" + nwl + " Error:\t\t\t {18:N2} %" + nwl + " Accuracy:\t\t  {19:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageVM.Model.BatchSize, Rate, Momentum, Beta2, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.SGD:
-                                    ProgressText = string.Format(stringTraining + " L2 Penalty:\t\t{7:0.#######}" + nwl + " Dropout:\t\t   {8}" + nwl + CutMixToString(CutMix) + "{9}" + nwl + " Auto Augment:\t  {10}" + nwl + " Horizontal Flip:   {11}" + nwl + " Vertical Flip:\t {12}" + nwl + " Color Cast:\t\t{13}" + nwl + " Distortion:\t\t{14}" + nwl + " Loss:\t\t\t  {15:N7}" + nwl + " Errors:\t\t\t{16:G}" + nwl + " Error:\t\t\t {17:N2} %" + nwl + " Accuracy:\t\t  {18:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageViewModel.Model.BatchSize, Rate, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format(stringTraining + " L2 Penalty:\t\t{7:0.#######}" + nwl + " Dropout:\t\t   {8}" + nwl + CutMixToString(CutMix) + "{9}" + nwl + " Auto Augment:\t  {10}" + nwl + " Horizontal Flip:   {11}" + nwl + " Vertical Flip:\t {12}" + nwl + " Color Cast:\t\t{13}" + nwl + " Distortion:\t\t{14}" + nwl + " Loss:\t\t\t  {15:N7}" + nwl + " Errors:\t\t\t{16:G}" + nwl + " Error:\t\t\t {17:N2} %" + nwl + " Accuracy:\t\t  {18:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageVM.Model.BatchSize, Rate, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
 
                                 case DNNOptimizers.NAG:
                                 case DNNOptimizers.SGDMomentum:
                                 case DNNOptimizers.SGDW:
-                                    ProgressText = string.Format(stringTraining + " Momentum:\t\t  {7:0.#######}" + nwl + " L2 Penalty:\t\t{8:0.#######}" + nwl + " Dropout:\t\t   {9}" + nwl + CutMixToString(CutMix) + "{10}" + nwl + " Auto Augment:\t  {11}" + nwl + " Horizontal Flip:   {12}" + nwl + " Vertical Flip:\t {13}" + nwl + " Color Cast:\t\t{14}" + nwl + " Distortion:\t\t{15}" + nwl + " Loss:\t\t\t  {16:N7}" + nwl + " Errors:\t\t\t{17:G}" + nwl + " Error:\t\t\t {18:N2} %" + nwl + " Accuracy:\t\t  {19:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageViewModel.Model.BatchSize, Rate, Momentum, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
+                                    ProgressText = string.Format(stringTraining + " Momentum:\t\t  {7:0.#######}" + nwl + " L2 Penalty:\t\t{8:0.#######}" + nwl + " Dropout:\t\t   {9}" + nwl + CutMixToString(CutMix) + "{10}" + nwl + " Auto Augment:\t  {11}" + nwl + " Horizontal Flip:   {12}" + nwl + " Vertical Flip:\t {13}" + nwl + " Color Cast:\t\t{14}" + nwl + " Distortion:\t\t{15}" + nwl + " Loss:\t\t\t  {16:N7}" + nwl + " Errors:\t\t\t{17:G}" + nwl + " Error:\t\t\t {18:N2} %" + nwl + " Accuracy:\t\t  {19:N2} %", SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageVM.Model.BatchSize, Rate, Momentum, L2Penalty, FloatToString(Dropout), FloatToString(Cutout), FloatToString(AutoAugment), BoolToString(HorizontalFlip), BoolToString(VerticalFlip), FloatToString(ColorCast), FloatToString(Distortion), AvgTrainLoss, TrainErrors, TrainErrorPercentage, 100 - TrainErrorPercentage);
                                     break;
                             }
                         }
@@ -738,8 +738,8 @@ namespace Convnet.PageViewModels
 
                     case DNNStates.Testing:
                         {
-                            if (pageViewModel != null && pageViewModel.Model != null)
-                                ProgressText = string.Format(stringTesting, SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageViewModel.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
+                            if (pageVM != null && pageVM.Model != null)
+                                ProgressText = string.Format(stringTesting, SampleIndex, Cycle, TotalCycles, Epoch, TotalEpochs, pageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
                         }
                         break;
 
@@ -756,9 +756,9 @@ namespace Convnet.PageViewModels
                                 RefreshTimer.Dispose();
                             }
 
-                            if (pageViewModel != null && pageViewModel.Model != null)
+                            if (pageVM != null && pageVM.Model != null)
                             {
-                                pageViewModel.Model.Stop();
+                                pageVM.Model.Stop();
 
                                 ProgressText = string.Empty;
 
@@ -773,7 +773,7 @@ namespace Convnet.PageViewModels
                                 CommandToolBar[8].IsVisible = true;
                                 CommandToolBar[9].IsVisible = true;
 
-                                if (layersComboBox != null && pageViewModel.Model.Layers != null && (pageViewModel.Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0 || pageViewModel.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer))
+                                if (layersComboBox != null && pageVM.Model.Layers != null && (pageVM.Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0 || pageVM.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer))
                                 {
                                     CommandToolBar[17].IsVisible = !Settings.Default.DisableLocking;
                                     CommandToolBar[18].IsVisible = !Settings.Default.DisableLocking;
@@ -808,7 +808,7 @@ namespace Convnet.PageViewModels
                 Settings.Default.DisableLocking = disableLockingCheckBox.IsChecked.Value;
                 Settings.Default.Save();
 
-                pageViewModel?.Model?.SetDisableLocking(Settings.Default.DisableLocking);
+                pageVM?.Model?.SetDisableLocking(Settings.Default.DisableLocking);
 
                 if (unlockAllButton != null)
                     unlockAllButton.IsVisible = !Settings.Default.DisableLocking;
@@ -840,12 +840,12 @@ namespace Convnet.PageViewModels
 
         private void UnlockAll_Click(object? sender, RoutedEventArgs e)
         {
-            pageViewModel?.Model?.SetLocked(false);
+            pageVM?.Model?.SetLocked(false);
         }
 
         private void LockAll_Click(object? sender, RoutedEventArgs e)
         {
-            pageViewModel?.Model?.SetLocked(true);
+            pageVM?.Model?.SetLocked(true);
         }
 
         //static DataTemplate GetLockTemplate()
@@ -929,32 +929,32 @@ namespace Convnet.PageViewModels
             Settings.Default.PixelSize = temp;
             Settings.Default.Save();
 
-            if (pageViewModel != null && pageViewModel.Model != null)
-                pageViewModel.Model.BlockSize = (ulong)temp;
+            if (pageVM != null && pageVM.Model != null)
+                pageVM.Model.BlockSize = (ulong)temp;
 
             Dispatcher.UIThread.Invoke(() =>
             {
-                if (pageViewModel != null && pageViewModel.Model != null && pageViewModel.Model.Layers != null && layersComboBox?.SelectedIndex >= 0)
+                if (pageVM != null && pageVM.Model != null && pageVM.Model.Layers != null && layersComboBox?.SelectedIndex >= 0)
                 {
                     var index = layersComboBox.SelectedIndex;
-                    if (index < (int)pageViewModel.Model.LayerCount)
+                    if (index < (int)pageVM.Model.LayerCount)
                     {
                         Settings.Default.SelectedLayer = index;
                         Settings.Default.Save();
-                        pageViewModel.Model.SelectedIndex = index;
+                        pageVM.Model.SelectedIndex = index;
 
-                        ShowSample = pageViewModel.Model.TaskState == DNNTaskStates.Running;
-                        ShowWeights = pageViewModel.Model.Layers[index].WeightCount > 0 || Settings.Default.Timings;
-                        ShowWeightsSnapshot = (pageViewModel.Model.Layers[index].IsNormLayer && pageViewModel.Model.Layers[index].Scaling) || pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.DepthwiseConvolution || pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.ConvolutionTranspose || pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.Convolution || pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.Dense || (pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.Activation && pageViewModel.Model.Layers[index].WeightCount > 0);
+                        ShowSample = pageVM.Model.TaskState == DNNTaskStates.Running;
+                        ShowWeights = pageVM.Model.Layers[index].WeightCount > 0 || Settings.Default.Timings;
+                        ShowWeightsSnapshot = (pageVM.Model.Layers[index].IsNormLayer && pageVM.Model.Layers[index].Scaling) || pageVM.Model.Layers[index].LayerType == DNNLayerTypes.DepthwiseConvolution || pageVM.Model.Layers[index].LayerType == DNNLayerTypes.ConvolutionTranspose || pageVM.Model.Layers[index].LayerType == DNNLayerTypes.Convolution || pageVM.Model.Layers[index].LayerType == DNNLayerTypes.Dense || (pageVM.Model.Layers[index].LayerType == DNNLayerTypes.Activation && pageVM.Model.Layers[index].WeightCount > 0);
 
                         if (index == 0)
-                            pageViewModel.Model.UpdateLayerInfo((ulong)index, ShowSample);
+                            pageVM.Model.UpdateLayerInfo((ulong)index, ShowSample);
                         else
-                            pageViewModel.Model.UpdateLayerInfo((ulong)index, ShowWeightsSnapshot);
+                            pageVM.Model.UpdateLayerInfo((ulong)index, ShowWeightsSnapshot);
 
-                        WeightsSnapshotX = pageViewModel.Model.Layers[index].WeightsSnapshotX;
-                        WeightsSnapshotY = pageViewModel.Model.Layers[index].WeightsSnapshotY;
-                        WeightsSnapshot = pageViewModel.Model.Layers[index].WeightsSnapshot;
+                        WeightsSnapshotX = pageVM.Model.Layers[index].WeightsSnapshotX;
+                        WeightsSnapshotY = pageVM.Model.Layers[index].WeightsSnapshotY;
+                        WeightsSnapshot = pageVM.Model.Layers[index].WeightsSnapshot;
                     }
                 }
             });
@@ -983,7 +983,7 @@ namespace Convnet.PageViewModels
             if (costLayersComboBox?.SelectedIndex >= 0)
             {
                 SelectedCostIndex = costLayersComboBox.SelectedIndex;
-                pageViewModel?.Model?.SetCostIndex((uint)SelectedCostIndex);
+                pageVM?.Model?.SetCostIndex((uint)SelectedCostIndex);
             }
         }
 
@@ -1408,7 +1408,7 @@ namespace Convnet.PageViewModels
             if (TrainingLog != null)
             {
                 TrainingLog.Clear();
-                pageViewModel?.Model?.ClearLog();
+                pageVM?.Model?.ClearLog();
             }
             SelectedIndex = -1;
             ProgressText = String.Empty;
@@ -1425,19 +1425,19 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Post(async () =>
             {
-                if (pageViewModel != null && pageViewModel.Model != null && pageViewModel.Model?.TaskState == DNNTaskStates.Running)
+                if (pageVM != null && pageVM.Model != null && pageVM.Model?.TaskState == DNNTaskStates.Running)
                 {
                     await MessageBox.Show("You must stop testing first.", "Information", MessageBoxButtons.OK);
                     return;
                 }
 
-                if (pageViewModel != null && pageViewModel.Model != null && pageViewModel.Model?.TaskState == DNNTaskStates.Stopped)
+                if (pageVM != null && pageVM.Model != null && pageVM.Model?.TaskState == DNNTaskStates.Stopped)
                 {
                     if (App.MainWindow != null)
                     {
                         var dialog = new TrainParameters
                         {
-                            Model = pageViewModel.Model,
+                            Model = pageVM.Model,
                             Path = DefinitionsDirectory,
                             IsEnabled = true,
                             Rate = TrainRate,
@@ -1453,12 +1453,12 @@ namespace Convnet.PageViewModels
                             TrainRate = dialog.Rate;
 
                             if (SGDR)
-                                pageViewModel.Model.AddTrainingRateSGDR(TrainRate, true, GotoEpoch, GotoCycle, pageViewModel.Model.TrainingSamples);
+                                pageVM.Model.AddTrainingRateSGDR(TrainRate, true, GotoEpoch, GotoCycle, pageVM.Model.TrainingSamples);
                             else
-                                pageViewModel.Model.AddTrainingRate(TrainRate, true, GotoEpoch, pageViewModel.Model.TrainingSamples);
+                                pageVM.Model.AddTrainingRate(TrainRate, true, GotoEpoch, pageVM.Model.TrainingSamples);
 
-                            pageViewModel.Model.SetOptimizer(TrainRate.Optimizer);
-                            pageViewModel.Model.Optimizer = TrainRate.Optimizer;
+                            pageVM.Model.SetOptimizer(TrainRate.Optimizer);
+                            pageVM.Model.Optimizer = TrainRate.Optimizer;
                             Optimizer = TrainRate.Optimizer;
 
                             EpochDuration = TimeSpan.Zero;
@@ -1466,8 +1466,8 @@ namespace Convnet.PageViewModels
                             RefreshTimer = new Timer(1000 * Settings.Default.RefreshInterval);
                             RefreshTimer.Elapsed += new ElapsedEventHandler(RefreshTimer_Elapsed);
 
-                            pageViewModel.Model.SetCostIndex((uint)SelectedCostIndex);
-                            pageViewModel.Model.Start(true);
+                            pageVM.Model.SetCostIndex((uint)SelectedCostIndex);
+                            pageVM.Model.Start(true);
                             RefreshTimer.Start();
                             CommandToolBar[0].IsVisible = false;
                             CommandToolBar[1].IsVisible = true;
@@ -1484,9 +1484,9 @@ namespace Convnet.PageViewModels
                             CommandToolBar[21].IsVisible = false;
                             CommandToolBar[22].IsVisible = false;
 
-                            if (layersComboBox != null && pageViewModel.Model.Layers != null && pageViewModel.Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
+                            if (layersComboBox != null && pageVM.Model.Layers != null && pageVM.Model.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
                             {
-                                if ((pageViewModel.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && pageViewModel.Model.Layers[layersComboBox.SelectedIndex].Scaling) || !pageViewModel.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
+                                if ((pageVM.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && pageVM.Model.Layers[layersComboBox.SelectedIndex].Scaling) || !pageVM.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
                                 {
                                     CommandToolBar[18].IsVisible = !Settings.Default.DisableLocking;
                                     CommandToolBar[19].IsVisible = !Settings.Default.DisableLocking;
@@ -1496,15 +1496,15 @@ namespace Convnet.PageViewModels
 
                             ShowProgress = true;
 
-                            pageViewModel?.OnPageTaskStatusChange();
+                            pageVM?.OnPageTaskStatusChange();
                         }
                     }
                 }
                 else
                 {
-                    if (pageViewModel?.Model?.TaskState == DNNTaskStates.Paused)
+                    if (pageVM?.Model?.TaskState == DNNTaskStates.Paused)
                     {
-                        pageViewModel.Model.Resume();
+                        pageVM.Model.Resume();
                         CommandToolBar[0].IsVisible = false;
                         CommandToolBar[1].IsVisible = true;
                         CommandToolBar[2].IsVisible = true;
@@ -1520,7 +1520,7 @@ namespace Convnet.PageViewModels
 
         private async void StopButtonClick(object? sender, RoutedEventArgs e)
         {
-            if (pageViewModel != null && pageViewModel.Model != null && pageViewModel.Model?.TaskState != DNNTaskStates.Stopped)
+            if (pageVM != null && pageVM.Model != null && pageVM.Model?.TaskState != DNNTaskStates.Stopped)
             {
                 var stop = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to stop?", "Stop Training", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
                 if (stop == MessageBoxResult.Yes)
@@ -1532,7 +1532,7 @@ namespace Convnet.PageViewModels
                         RefreshTimer.Dispose();
                     }
 
-                    pageViewModel.Model?.Stop();
+                    pageVM.Model?.Stop();
 
                     ToolTip.SetTip(CommandToolBar[0], "Start Training");
                     CommandToolBar[0].IsVisible = true;
@@ -1550,9 +1550,9 @@ namespace Convnet.PageViewModels
                     CommandToolBar[21].IsVisible = false;
                     CommandToolBar[22].IsVisible = false;
 
-                    if (layersComboBox != null && pageViewModel.Model?.Layers != null && pageViewModel.Model?.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
+                    if (layersComboBox != null && pageVM.Model?.Layers != null && pageVM.Model?.Layers[layersComboBox.SelectedIndex].WeightCount > 0)
                     {
-                        if ((pageViewModel.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && pageViewModel.Model.Layers[layersComboBox.SelectedIndex].Scaling) || !pageViewModel.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
+                        if ((pageVM.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer && pageVM.Model.Layers[layersComboBox.SelectedIndex].Scaling) || !pageVM.Model.Layers[layersComboBox.SelectedIndex].IsNormLayer)
                         {
                             CommandToolBar[18].IsVisible = !Settings.Default.DisableLocking;
                             CommandToolBar[19].IsVisible = !Settings.Default.DisableLocking;
@@ -1564,7 +1564,7 @@ namespace Convnet.PageViewModels
 
                     ShowProgress = false;
                     
-                    pageViewModel?.OnPageTaskStatusChange();
+                    pageVM?.OnPageTaskStatusChange();
                 }
             }
         }
@@ -1573,9 +1573,9 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (pageViewModel?.Model?.TaskState == DNNTaskStates.Running)
+                if (pageVM?.Model?.TaskState == DNNTaskStates.Running)
                 {
-                    pageViewModel.Model.Pause();
+                    pageVM.Model.Pause();
                     
                     ToolTip.SetTip(CommandToolBar[0], "Resume Training");
                     CommandToolBar[0].IsVisible = true;
@@ -1741,7 +1741,7 @@ namespace Convnet.PageViewModels
 
             if (result == MessageBoxResult.Yes)                
             {
-                pageViewModel?.Model?.ResetWeights();
+                pageVM?.Model?.ResetWeights();
                 LayersComboBox_SelectionChanged(sender, null);
             }
         }
@@ -1763,7 +1763,7 @@ namespace Convnet.PageViewModels
                 if (result == MessageBoxResult.Yes)
                 {
                     TrainingLog.Clear();
-                    pageViewModel?.Model?.ClearLog();
+                    pageVM?.Model?.ClearLog();
                     RefreshTrainingPlot();
                 }
             }
@@ -1773,9 +1773,9 @@ namespace Convnet.PageViewModels
         {
             var provider = App.MainWindow?.StorageProvider;
             
-            if (pageViewModel != null && pageViewModel.Model != null && provider != null && provider.CanOpen)
+            if (pageVM != null && pageVM.Model != null && provider != null && provider.CanOpen)
             {
-                var folder = Path.Combine(DefinitionsDirectory, pageViewModel.Model.Name);
+                var folder = Path.Combine(DefinitionsDirectory, pageVM.Model.Name);
 
                 IStorageFolder? startingLocation = null;
                 startingLocation = await provider.TryGetFolderFromPathAsync(folder).ConfigureAwait(false);
@@ -1810,7 +1810,7 @@ namespace Convnet.PageViewModels
                         {
                             if (path.EndsWith(".bin"))
                             {
-                                if (layersComboBox != null && pageViewModel.Model?.LoadLayerWeights(path, (uint)layersComboBox.SelectedIndex) == 0)
+                                if (layersComboBox != null && pageVM.Model?.LoadLayerWeights(path, (uint)layersComboBox.SelectedIndex) == 0)
                                 {
                                     Dispatcher.UIThread.Post(() => LayersComboBox_SelectionChanged(sender, null), DispatcherPriority.Render);
                                     await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are loaded", "Information", MessageBoxButtons.OK));
@@ -1831,7 +1831,7 @@ namespace Convnet.PageViewModels
 
         private async void SaveLayerWeightsButtonClick(object? sender, RoutedEventArgs e)
         {
-            if (pageViewModel != null && pageViewModel.Model != null && pageViewModel.Model.Layers != null && App.MainWindow != null && layersComboBox != null)
+            if (pageVM != null && pageVM.Model != null && pageVM.Model.Layers != null && App.MainWindow != null && layersComboBox != null)
             {
                 var layerIndex = layersComboBox.SelectedIndex;
                              
@@ -1839,7 +1839,7 @@ namespace Convnet.PageViewModels
 
                 if (provider != null && provider.CanSave)
                 {
-                    var folder = Path.Combine(DefinitionsDirectory, pageViewModel.Model.Name);
+                    var folder = Path.Combine(DefinitionsDirectory, pageVM.Model.Name);
                     
                     IStorageFolder? startingLocation = null;
                     startingLocation = await provider.TryGetFolderFromPathAsync(folder);
@@ -1854,7 +1854,7 @@ namespace Convnet.PageViewModels
 
                     var files = await provider.SaveFilePickerAsync(new FilePickerSaveOptions
                     {
-                        SuggestedFileName = pageViewModel.Model.Layers[layerIndex].Name,
+                        SuggestedFileName = pageVM.Model.Layers[layerIndex].Name,
                         DefaultExtension = "*.bin",
                         Title = "Save layer weights",
                         ShowOverwritePrompt = true,
@@ -1870,7 +1870,7 @@ namespace Convnet.PageViewModels
                         {
                             if (path.EndsWith(".bin"))
                             {
-                                if (pageViewModel.Model.SaveLayerWeights(path, (ulong)layerIndex) == 0)
+                                if (pageVM.Model.SaveLayerWeights(path, (ulong)layerIndex) == 0)
                                     await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights are saved", "Information", MessageBoxButtons.OK));
                                 else
                                     await Dispatcher.UIThread.Invoke(() => MessageBox.Show("Layer weights not saved!", "Information", MessageBoxButtons.OK));
@@ -1889,7 +1889,7 @@ namespace Convnet.PageViewModels
             if (result == MessageBoxResult.Yes && layersComboBox != null)
             {
                 uint index = (uint)layersComboBox.SelectedIndex;
-                pageViewModel?.Model?.ResetLayerWeights((uint)layersComboBox.SelectedIndex);
+                pageVM?.Model?.ResetLayerWeights((uint)layersComboBox.SelectedIndex);
                 LayersComboBox_SelectionChanged(sender, null);
             }
         }
@@ -1904,133 +1904,133 @@ namespace Convnet.PageViewModels
         {
             Dispatcher.UIThread.Invoke(() =>
             {
-                if (pageViewModel != null && pageViewModel.Model != null && pageViewModel.Model.Layers != null && layersComboBox != null && layersComboBox?.SelectedIndex >= 0)
+                if (pageVM != null && pageVM.Model != null && pageVM.Model.Layers != null && layersComboBox != null && layersComboBox?.SelectedIndex >= 0)
                 {
                     var index = layersComboBox.SelectedIndex;
-                    if (index < (int)pageViewModel.Model.LayerCount)
+                    if (index < (int)pageVM.Model.LayerCount)
                     {
                         Settings.Default.SelectedLayer = index;
                         Settings.Default.Save();
-                        pageViewModel.Model.SelectedIndex = index;
+                        pageVM.Model.SelectedIndex = index;
 
-                        ShowSample = pageViewModel.Model.TaskState == DNNTaskStates.Running;
-                        ShowWeights = pageViewModel.Model.Layers[index].WeightCount > 0 || Settings.Default.Timings;
-                        ShowWeightsSnapshot = (pageViewModel.Model.Layers[index].IsNormLayer && pageViewModel.Model.Layers[index].Scaling) || pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.DepthwiseConvolution || pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.ConvolutionTranspose || pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.Convolution || pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.Dense || (pageViewModel.Model.Layers[index].LayerType == DNNLayerTypes.Activation && pageViewModel.Model.Layers[index].WeightCount > 0);
+                        ShowSample = pageVM.Model.TaskState == DNNTaskStates.Running;
+                        ShowWeights = pageVM.Model.Layers[index].WeightCount > 0 || Settings.Default.Timings;
+                        ShowWeightsSnapshot = (pageVM.Model.Layers[index].IsNormLayer && pageVM.Model.Layers[index].Scaling) || pageVM.Model.Layers[index].LayerType == DNNLayerTypes.DepthwiseConvolution || pageVM.Model.Layers[index].LayerType == DNNLayerTypes.ConvolutionTranspose || pageVM.Model.Layers[index].LayerType == DNNLayerTypes.Convolution || pageVM.Model.Layers[index].LayerType == DNNLayerTypes.Dense || (pageVM.Model.Layers[index].LayerType == DNNLayerTypes.Activation && pageVM.Model.Layers[index].WeightCount > 0);
 
                         if (index == 0)
-                            pageViewModel.Model.UpdateLayerInfo((UInt)index, ShowSample);
+                            pageVM.Model.UpdateLayerInfo((UInt)index, ShowSample);
                         else
-                            pageViewModel.Model.UpdateLayerInfo((UInt)index, ShowWeightsSnapshot);
+                            pageVM.Model.UpdateLayerInfo((UInt)index, ShowWeightsSnapshot);
 
                         if (ShowSample)
                         {
                             if (index != 0)
-                                pageViewModel.Model.UpdateLayerInfo(0ul, ShowSample);
+                                pageVM.Model.UpdateLayerInfo(0ul, ShowSample);
 
-                            InputSnapshot = pageViewModel.Model.InputSnapshot;
-                            Label = pageViewModel.Model.Label;
+                            InputSnapshot = pageVM.Model.InputSnapshot;
+                            Label = pageVM.Model.Label;
                         }
 
                         CommandToolBar[18].IsVisible = !Settings.Default.DisableLocking;
                         CommandToolBar[19].IsVisible = !Settings.Default.DisableLocking;
-                        CommandToolBar[20].IsVisible = pageViewModel.Model.Layers[index].Lockable && pageViewModel.Model.TaskState == DNNTaskStates.Stopped;
-                        CommandToolBar[21].IsVisible = pageViewModel.Model.Layers[index].Lockable;
-                        CommandToolBar[22].IsVisible = pageViewModel.Model.Layers[index].Lockable && pageViewModel.Model.TaskState == DNNTaskStates.Stopped;
+                        CommandToolBar[20].IsVisible = pageVM.Model.Layers[index].Lockable && pageVM.Model.TaskState == DNNTaskStates.Stopped;
+                        CommandToolBar[21].IsVisible = pageVM.Model.Layers[index].Lockable;
+                        CommandToolBar[22].IsVisible = pageVM.Model.Layers[index].Lockable && pageVM.Model.TaskState == DNNTaskStates.Stopped;
 
                         sb.Length = 0;
-                        sb.Append(stringLayer + pageViewModel.Model.Layers[index].Description + nwl);
+                        sb.Append(stringLayer + pageVM.Model.Layers[index].Description + nwl);
                         if (Settings.Default.Timings)
                         {
-                            if (pageViewModel.Model.State == DNNStates.Training)
+                            if (pageVM.Model.State == DNNStates.Training)
                             {
                                 sb.Append(stringTimings);
-                                sb.AppendFormat(stringFprop + nwl, (int)pageViewModel.Model.Layers[index].FPropLayerTime, (int)pageViewModel.Model.fpropTime);
-                                sb.AppendFormat(stringBprop, (int)pageViewModel.Model.Layers[index].BPropLayerTime, (int)pageViewModel.Model.bpropTime);
+                                sb.AppendFormat(stringFprop + nwl, (int)pageVM.Model.Layers[index].FPropLayerTime, (int)pageVM.Model.fpropTime);
+                                sb.AppendFormat(stringBprop, (int)pageVM.Model.Layers[index].BPropLayerTime, (int)pageVM.Model.bpropTime);
                                
                                 if (ShowWeightsSnapshot)
-                                    sb.AppendFormat(stringUpdate, (int)pageViewModel.Model.Layers[index].UpdateLayerTime, (int)pageViewModel.Model.updateTime);
+                                    sb.AppendFormat(stringUpdate, (int)pageVM.Model.Layers[index].UpdateLayerTime, (int)pageVM.Model.updateTime);
                             }
-                            else if (pageViewModel.Model.State == DNNStates.Testing)
+                            else if (pageVM.Model.State == DNNStates.Testing)
                             {
                                 sb.Append(stringTimings);
-                                sb.AppendFormat(stringFprop, (int)pageViewModel.Model.Layers[index].FPropLayerTime, (int)pageViewModel.Model.fpropTime);
+                                sb.AppendFormat(stringFprop, (int)pageVM.Model.Layers[index].FPropLayerTime, (int)pageVM.Model.fpropTime);
                             }
                         }
                         LayerInfo = sb.ToString();
 
                         sb.Length = 0;
                         sb.Append(stringNeurons);
-                        if (pageViewModel.Model.Layers[index].NeuronsStats.StdDev >= 0.0f)
-                            sb.AppendFormat(stringStdDevPositive, pageViewModel.Model.Layers[index].NeuronsStats.StdDev);
+                        if (pageVM.Model.Layers[index].NeuronsStats.StdDev >= 0.0f)
+                            sb.AppendFormat(stringStdDevPositive, pageVM.Model.Layers[index].NeuronsStats.StdDev);
                         else
-                            sb.AppendFormat(stringStdDevNegative, pageViewModel.Model.Layers[index].NeuronsStats.StdDev);
+                            sb.AppendFormat(stringStdDevNegative, pageVM.Model.Layers[index].NeuronsStats.StdDev);
                        
-                        if (pageViewModel.Model.Layers[index].NeuronsStats.Mean >= 0.0f)
-                            sb.AppendFormat(stringMeanPositive, pageViewModel.Model.Layers[index].NeuronsStats.Mean);
+                        if (pageVM.Model.Layers[index].NeuronsStats.Mean >= 0.0f)
+                            sb.AppendFormat(stringMeanPositive, pageVM.Model.Layers[index].NeuronsStats.Mean);
                         else
-                            sb.AppendFormat(stringMeanNegative, pageViewModel.Model.Layers[index].NeuronsStats.Mean);
+                            sb.AppendFormat(stringMeanNegative, pageVM.Model.Layers[index].NeuronsStats.Mean);
                        
-                        if (pageViewModel.Model.Layers[index].NeuronsStats.Min >= 0.0f)
-                            sb.AppendFormat(stringMminPositive, pageViewModel.Model.Layers[index].NeuronsStats.Min);
+                        if (pageVM.Model.Layers[index].NeuronsStats.Min >= 0.0f)
+                            sb.AppendFormat(stringMminPositive, pageVM.Model.Layers[index].NeuronsStats.Min);
                         else
-                            sb.AppendFormat(stringMinNegative, pageViewModel.Model.Layers[index].NeuronsStats.Min);
+                            sb.AppendFormat(stringMinNegative, pageVM.Model.Layers[index].NeuronsStats.Min);
                       
-                        if (pageViewModel.Model.Layers[index].NeuronsStats.Max >= 0.0f)
-                            sb.AppendFormat(stringMaxPositive, pageViewModel.Model.Layers[index].NeuronsStats.Max);
+                        if (pageVM.Model.Layers[index].NeuronsStats.Max >= 0.0f)
+                            sb.AppendFormat(stringMaxPositive, pageVM.Model.Layers[index].NeuronsStats.Max);
                         else
-                            sb.AppendFormat(stringMaxNegative, pageViewModel.Model.Layers[index].NeuronsStats.Max);
+                            sb.AppendFormat(stringMaxNegative, pageVM.Model.Layers[index].NeuronsStats.Max);
                                                 
                         if (ShowWeightsSnapshot)
                         {
-                            WeightsSnapshotX = pageViewModel.Model.Layers[index].WeightsSnapshotX;
-                            WeightsSnapshotY = pageViewModel.Model.Layers[index].WeightsSnapshotY;
-                            WeightsSnapshot = pageViewModel.Model.Layers[index].WeightsSnapshot;
+                            WeightsSnapshotX = pageVM.Model.Layers[index].WeightsSnapshotX;
+                            WeightsSnapshotY = pageVM.Model.Layers[index].WeightsSnapshotY;
+                            WeightsSnapshot = pageVM.Model.Layers[index].WeightsSnapshot;
 
                             sb.Append(stringWeights);
                            
-                            if (pageViewModel.Model.Layers[index].WeightsStats.StdDev >= 0.0f)
-                                sb.AppendFormat(stringStdDevPositive, pageViewModel.Model.Layers[index].WeightsStats.StdDev);
+                            if (pageVM.Model.Layers[index].WeightsStats.StdDev >= 0.0f)
+                                sb.AppendFormat(stringStdDevPositive, pageVM.Model.Layers[index].WeightsStats.StdDev);
                             else
-                                sb.AppendFormat(stringStdDevNegative, pageViewModel.Model.Layers[index].WeightsStats.StdDev);
+                                sb.AppendFormat(stringStdDevNegative, pageVM.Model.Layers[index].WeightsStats.StdDev);
                            
-                            if (pageViewModel.Model.Layers[index].WeightsStats.Mean >= 0.0f)
-                                sb.AppendFormat(stringMeanPositive, pageViewModel.Model.Layers[index].WeightsStats.Mean);
+                            if (pageVM.Model.Layers[index].WeightsStats.Mean >= 0.0f)
+                                sb.AppendFormat(stringMeanPositive, pageVM.Model.Layers[index].WeightsStats.Mean);
                             else
-                                sb.AppendFormat(stringMeanNegative, pageViewModel.Model.Layers[index].WeightsStats.Mean);
+                                sb.AppendFormat(stringMeanNegative, pageVM.Model.Layers[index].WeightsStats.Mean);
                            
-                            if (pageViewModel.Model.Layers[index].WeightsStats.Min >= 0.0f)
-                                sb.AppendFormat(stringMminPositive, pageViewModel.Model.Layers[index].WeightsStats.Min);
+                            if (pageVM.Model.Layers[index].WeightsStats.Min >= 0.0f)
+                                sb.AppendFormat(stringMminPositive, pageVM.Model.Layers[index].WeightsStats.Min);
                             else
-                                sb.AppendFormat(stringMinNegative, pageViewModel.Model.Layers[index].WeightsStats.Min);
+                                sb.AppendFormat(stringMinNegative, pageVM.Model.Layers[index].WeightsStats.Min);
                           
-                            if (pageViewModel.Model.Layers[index].WeightsStats.Max >= 0.0f)
-                                sb.AppendFormat(stringMaxPositive, pageViewModel.Model.Layers[index].WeightsStats.Max);
+                            if (pageVM.Model.Layers[index].WeightsStats.Max >= 0.0f)
+                                sb.AppendFormat(stringMaxPositive, pageVM.Model.Layers[index].WeightsStats.Max);
                             else
-                                sb.AppendFormat(stringMaxNegative, pageViewModel.Model.Layers[index].WeightsStats.Max);
+                                sb.AppendFormat(stringMaxNegative, pageVM.Model.Layers[index].WeightsStats.Max);
                           
-                            if (pageViewModel.Model.Layers[index].HasBias)
+                            if (pageVM.Model.Layers[index].HasBias)
                             {
                                 sb.Append(stringBiases);
                             
-                                if (pageViewModel.Model.Layers[index].BiasesStats.StdDev >= 0.0f)
-                                    sb.AppendFormat(stringStdDevPositive, pageViewModel.Model.Layers[index].BiasesStats.StdDev);
+                                if (pageVM.Model.Layers[index].BiasesStats.StdDev >= 0.0f)
+                                    sb.AppendFormat(stringStdDevPositive, pageVM.Model.Layers[index].BiasesStats.StdDev);
                                 else
-                                    sb.AppendFormat(stringStdDevNegative, pageViewModel.Model.Layers[index].BiasesStats.StdDev);
+                                    sb.AppendFormat(stringStdDevNegative, pageVM.Model.Layers[index].BiasesStats.StdDev);
                                
-                                if (pageViewModel.Model.Layers[index].BiasesStats.Mean >= 0.0f)
-                                    sb.AppendFormat(stringMeanPositive, pageViewModel.Model.Layers[index].BiasesStats.Mean);
+                                if (pageVM.Model.Layers[index].BiasesStats.Mean >= 0.0f)
+                                    sb.AppendFormat(stringMeanPositive, pageVM.Model.Layers[index].BiasesStats.Mean);
                                 else
-                                    sb.AppendFormat(stringMeanNegative, pageViewModel.Model.Layers[index].BiasesStats.Mean);
+                                    sb.AppendFormat(stringMeanNegative, pageVM.Model.Layers[index].BiasesStats.Mean);
                                 
-                                if (pageViewModel.Model.Layers[index].BiasesStats.Min >= 0.0f)
-                                    sb.AppendFormat(stringMminPositive, pageViewModel.Model.Layers[index].BiasesStats.Min);
+                                if (pageVM.Model.Layers[index].BiasesStats.Min >= 0.0f)
+                                    sb.AppendFormat(stringMminPositive, pageVM.Model.Layers[index].BiasesStats.Min);
                                 else
-                                    sb.AppendFormat(stringMinNegative, pageViewModel.Model.Layers[index].BiasesStats.Min);
+                                    sb.AppendFormat(stringMinNegative, pageVM.Model.Layers[index].BiasesStats.Min);
                                 
-                                if (pageViewModel.Model.Layers[index].BiasesStats.Max >= 0.0f)
-                                    sb.AppendFormat(stringMaxPositive, pageViewModel.Model.Layers[index].BiasesStats.Max);
+                                if (pageVM.Model.Layers[index].BiasesStats.Max >= 0.0f)
+                                    sb.AppendFormat(stringMaxPositive, pageVM.Model.Layers[index].BiasesStats.Max);
                                 else
-                                    sb.AppendFormat(stringMaxNegative, pageViewModel.Model.Layers[index].BiasesStats.Max);
+                                    sb.AppendFormat(stringMaxNegative, pageVM.Model.Layers[index].BiasesStats.Max);
                             }
                         }
                         WeightsMinMax = sb.ToString();

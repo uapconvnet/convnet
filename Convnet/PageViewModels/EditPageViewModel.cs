@@ -58,11 +58,11 @@ namespace Convnet.PageViewModels
         private static bool initAction = true;
         private readonly DispatcherTimer clickWaitTimer;
 
-        private PageViewModel? pageViewModel;
+        private PageViewModel? pageVM;
         public PageViewModel? PageVM
         {
-            get => pageViewModel;
-            set => this.RaiseAndSetIfChanged(ref pageViewModel, value);
+            get => pageVM;
+            set => this.RaiseAndSetIfChanged(ref pageVM, value);
         }
 
         public ReactiveCommand<Unit, Unit> CheckCommand { get; }
