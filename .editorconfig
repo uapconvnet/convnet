@@ -175,7 +175,7 @@ dotnet_diagnostic.CA1822.severity = silent
 dotnet_diagnostic.CA1826.severity = none
 dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1852.severity = none
-dotnet_diagnostic.CA2007.severity = warning
+dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.IDE0042.severity = none
 dotnet_diagnostic.IDE0058.severity = none
 dotnet_diagnostic.IDE0130.severity = none
@@ -187,6 +187,12 @@ dotnet_diagnostic.VSTHRD100.severity = none
 dotnet_diagnostic.VSTHRD101.severity = none
 dotnet_diagnostic.VSTHRD110.severity = none
 dotnet_diagnostic.VSTHRD200.severity = none
+
+dotnet_diagnostic.AVP1002.severity = none
+dotnet_diagnostic.CS0169.severity = none
+dotnet_diagnostic.CS0618.severity = none
+dotnet_diagnostic.CS0108.severity = none
+
 
 # XAML
 [*.{xaml,axaml}]
