@@ -30,10 +30,8 @@ namespace Convnet.PageViewModels
 #else
         const string Mode = "Release";
 #endif
-        public event EventHandler? Open;
-        public event EventHandler? SaveAs;
        
-
+        private static readonly string[] separator = [Environment.NewLine];
         private string modelName = Settings.Default.ModelNameActive;
         private string definition = Settings.Default.DefinitionEditing;
         private bool definitionStatus = false;
@@ -57,8 +55,15 @@ namespace Convnet.PageViewModels
         private bool dirty = true;
         private static bool initAction = true;
         private readonly DispatcherTimer clickWaitTimer;
-
         private PageViewModel? pageVM;
+
+
+        public override string DisplayName => "Edit";
+    
+        public event EventHandler? Open;
+
+        public event EventHandler? SaveAs;
+       
         public PageViewModel? PageVM
         {
             get => pageVM;
@@ -66,8 +71,11 @@ namespace Convnet.PageViewModels
         }
 
         public ReactiveCommand<Unit, Unit> CheckCommand { get; }
+
         public ReactiveCommand<Unit, Unit> SyncCommand { get; }
+
         public ReactiveCommand<Unit, Unit> ScriptsCommand { get; }
+
         public ReactiveCommand<Unit, Unit> VisualStudioCommand { get; }
 
         public EditPageViewModel(PageViewModel pvm) : base()
@@ -84,8 +92,7 @@ namespace Convnet.PageViewModels
 
             AddCommandButtons();
         }
-      
-       
+             
         private void AddCommandButtons()
         {
             var openButton = new Button
@@ -164,8 +171,6 @@ namespace Convnet.PageViewModels
             CommandToolBar.Add(scriptsButton);
             CommandToolBar.Add(visualStudioButton);
         }
-
-        public override string DisplayName => "Edit";
 
         public override void Reset()
         {
@@ -411,8 +416,6 @@ namespace Convnet.PageViewModels
                 this.RaiseAndSetIfChanged(ref debuginfo, value);
             }
         }
-
-        private static readonly string[] separator = [Environment.NewLine];
 
       
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
