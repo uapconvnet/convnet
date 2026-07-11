@@ -384,7 +384,9 @@ namespace Convnet.PageViewModels
                         CommandToolBar[2].IsVisible = true;
 
                         ShowProgress = true;
-                        ShowSample = true;  
+                        ShowSample = true;
+
+                        pageVM?.OnPageTaskStatusChange();
                     }
                 }
                 else
