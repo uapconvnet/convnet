@@ -31,28 +31,41 @@ namespace Convnet.PageViewModels
         public event EventHandler? PageChange;
 
         private ObservableCollection<DNNCostLayer>? costLayers;
+        private int costIndex;
+        private DNNDatasets dataset;
+        private DNNModel? model;
+        private string? sampleRate;
+        private string? duration;
+        private double progressBarMinimum = 0;
+        private double progressBarMaximum = 100;
+        private double progressBarValue = 0;
+        private double progressValue = 0;
+        private PageViewModelBase? currentPage;
+        private bool openCommandVisible = false;
+        private bool saveCommandVisible = false;
+        private bool saveAsCommandVisible = false;
+
+
+        public override string DisplayName => "Main";
+                
         public ObservableCollection<DNNCostLayer>? CostLayers
         {
             get => costLayers;
             set => this.RaiseAndSetIfChanged(ref costLayers, value);
         }
 
-        private int costIndex;
         public int CostIndex
         {
             get => costIndex;
             set => this.RaiseAndSetIfChanged(ref costIndex, value);
         }
-
-
-        private DNNDatasets dataset;
+       
         public DNNDatasets Dataset
         {
             get => dataset;
             set => this.RaiseAndSetIfChanged(ref dataset, value);
         }
-
-        private DNNModel? model;
+       
         public DNNModel? Model
         {
             get => model;
@@ -72,8 +85,6 @@ namespace Convnet.PageViewModels
             ModelChanged?.Invoke(this, EventArgs.Empty);
         }
 
-
-        private bool openCommandVisible = false;
         public bool OpenCommandVisible
         {
             get => openCommandVisible;
@@ -82,7 +93,7 @@ namespace Convnet.PageViewModels
                 this.RaiseAndSetIfChanged(ref openCommandVisible, value); 
             }
         }
-        private bool saveCommandVisible = false;
+       
         public bool SaveCommandVisible
         {
             get => saveCommandVisible;
@@ -91,7 +102,7 @@ namespace Convnet.PageViewModels
                 this.RaiseAndSetIfChanged(ref saveCommandVisible, value);
             }
         }
-        private bool saveAsCommandVisible = false;
+       
         public bool SaveAsCommandVisible 
         {
             get => saveAsCommandVisible;
@@ -125,7 +136,6 @@ namespace Convnet.PageViewModels
         {
             PageVM_SaveAs(this, new EventArgs());
         }
-
        
         public PageViewModel(DNNModel model) : base()
         {
@@ -573,45 +583,43 @@ namespace Convnet.PageViewModels
             get => (Pages != null && CurrentPage != null) ? (ViewModels?)Pages.IndexOf(CurrentPage) : null;  
         }
 
-       
-        public override string DisplayName => "Main";
-                
-        private string? sampleRate;
+
         public string? SampleRate
         {
             get => sampleRate;
             set => this.RaiseAndSetIfChanged(ref sampleRate, value);
         }
 
-        private string? duration;
+        
         public string? Duration
         {
             get => duration;
             set => this.RaiseAndSetIfChanged(ref duration, value);
         }
+       
 
-        private double progressBarMinimum = 0;
         public double ProgressBarMinimum
         {
             get => progressBarMinimum;
             set => this.RaiseAndSetIfChanged(ref progressBarMinimum, value);
         }
 
-        private double progressBarMaximum = 100;
+       
         public double ProgressBarMaximum
         {
             get => progressBarMaximum;
             set => this.RaiseAndSetIfChanged(ref progressBarMaximum, value);
         }
+        
 
-        private double progressBarValue = 0;
+
         public double ProgressBarValue
         {
             get => progressBarValue;
             set => this.RaiseAndSetIfChanged(ref progressBarValue, value);
         }
 
-        private double progressValue = 0;
+        
         public double ProgressValue
         {
             get => progressValue;
@@ -620,8 +628,7 @@ namespace Convnet.PageViewModels
 
         public ReadOnlyCollection<PageViewModelBase?>? Pages { get; }
 
-        private PageViewModelBase? currentPage;
-        public PageViewModelBase? CurrentPage
+               public PageViewModelBase? CurrentPage
         {
             get => currentPage; 
             set
