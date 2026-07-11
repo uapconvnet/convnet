@@ -41,10 +41,12 @@ namespace Convnet.PageViewModels
         private ComboBox? costLayersComboBox;
         private PageViewModel? pageVM;
        
-        public Timer? RefreshTimer;
+       
         public event EventHandler? Open;
 
         public override string DisplayName => "Test";
+
+        public Timer? RefreshTimer;
 
         public string? ProgressText
         {
