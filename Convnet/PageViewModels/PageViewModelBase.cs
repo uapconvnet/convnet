@@ -63,10 +63,7 @@ namespace Convnet.PageViewModels
 
         private void CommandToolBarCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (CommandToolBar.Count > 0)
-                CommandToolBarVisibility = true;
-            else
-                CommandToolBarVisibility = false;
+            CommandToolBarVisibility = CommandToolBar.Count > 0;
         }
 
         public abstract void Reset();
