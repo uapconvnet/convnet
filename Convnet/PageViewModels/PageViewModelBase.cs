@@ -21,6 +21,11 @@ namespace Convnet.PageViewModels
         const string Mode = @"Release";
 #endif
 
+        private ObservableCollection<Control> commandToolBar;
+        private bool commandToolBarVisibility = false;
+        private bool isValid = true;
+
+
         public static string? ApplicationPath { get; } = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string StorageDirectory { get; } = Path.Combine(Environment.GetFolderPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Environment.SpecialFolder.MyDocuments : Environment.SpecialFolder.UserProfile), "convnet");
         public static string StateDirectory { get; } = Path.Combine(StorageDirectory, "state");
@@ -33,22 +38,19 @@ namespace Convnet.PageViewModels
         public abstract string DisplayName { get; }
 
         public abstract void Reset();
-
-        private ObservableCollection<Control> commandToolBar;
+        
         public ObservableCollection<Control> CommandToolBar
         {
             get => commandToolBar;
             set => this.RaiseAndSetIfChanged(ref commandToolBar, value);
         }
 
-        private bool commandToolBarVisibility;
         public bool CommandToolBarVisibility
         {
             get => commandToolBarVisibility;
             set => this.RaiseAndSetIfChanged(ref commandToolBarVisibility, value);
         }
-
-        private bool isValid = true;
+        
         public bool IsValid
         {
             get => isValid;
@@ -65,7 +67,6 @@ namespace Convnet.PageViewModels
 
         protected PageViewModelBase()
         {
-
             commandToolBarVisibility = false;
             commandToolBar = new ObservableCollection<Control>();
             commandToolBar.CollectionChanged += new NotifyCollectionChangedEventHandler(CommandToolBarCollectionChanged);

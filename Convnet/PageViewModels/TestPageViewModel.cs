@@ -39,15 +39,66 @@ namespace Convnet.PageViewModels
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private ComboBox? dataProviderComboBox;
         private ComboBox? costLayersComboBox;
+        private PageViewModel? pageVM;
        
         public Timer? RefreshTimer;
         public event EventHandler? Open;
 
-        private PageViewModel? pageVM;
+        public override string DisplayName => "Test";
+
+        public string? ProgressText
+        {
+            get => progressText;
+            set => this.RaiseAndSetIfChanged(ref progressText, value);
+        }
+
+        public bool ShowProgress
+        {
+            get => showProgress;
+            set => this.RaiseAndSetIfChanged(ref showProgress, value);
+        }
+
+        public string? Label
+        {
+            get => label;
+            set => this.RaiseAndSetIfChanged(ref label, value);
+        }
+
+        public bool ShowSample
+        {
+            get => showSample;
+            set => this.RaiseAndSetIfChanged(ref showSample, value);
+        }
+
+        public DataTable? ConfusionDataTable
+        {
+            get => confusionDataTable;
+            set => this.RaiseAndSetIfChanged(ref confusionDataTable, value);
+        }
+
+        public Avalonia.Media.Imaging.WriteableBitmap? InputSnapshot
+        {
+            get => inputSnapshot;
+            set => this.RaiseAndSetIfChanged(ref inputSnapshot, value);
+        }
+
         public PageViewModel? PageVM
         {
             get => pageVM;
             set => this.RaiseAndSetIfChanged(ref pageVM, value);
+        }
+        
+        public DNNTrainingRate TestRate
+        {
+            get => Settings.Default.TestRate ?? new DNNTrainingRate(DNNOptimizers.NAG, 0.9f, 0.0005f, 0, 0.999f, 0.000001f, 128, 1, 32, 32, 0, 4, 4, 1, 200, 1, 0.05f, 0.0001f, 0.1f, 0.003f, 1, 1, false, false, 0, 0, false, 0, 0, 0, 0, DNNInterpolations.Cubic, 10, 12);
+            private set
+            {
+                if (value == Settings.Default.TestRate)
+                    return;
+
+                Settings.Default.TestRate = value;
+                this.RaisePropertyChanged(nameof(TestRate));
+            }
         }
 
         public TestPageViewModel(PageViewModel pvm) : base()
@@ -238,25 +289,6 @@ namespace Convnet.PageViewModels
             }
         }
 
-        public DNNTrainingRate TestRate
-        {
-            get => Settings.Default.TestRate ?? new DNNTrainingRate(DNNOptimizers.NAG, 0.9f, 0.0005f, 0, 0.999f, 0.000001f, 128, 1, 32, 32, 0, 4, 4, 1, 200, 1, 0.05f, 0.0001f, 0.1f, 0.003f, 1, 1, false, false, 0, 0, false, 0, 0, 0, 0, DNNInterpolations.Cubic, 10, 12);
-            private set
-            {
-                if (value == Settings.Default.TestRate)
-                    return;
-
-                Settings.Default.TestRate = value;
-                this.RaisePropertyChanged(nameof(TestRate));
-            }
-        }
-
-        public DataTable? ConfusionDataTable
-        {
-            get => confusionDataTable;
-            set => this.RaiseAndSetIfChanged(ref confusionDataTable, value);
-        }
-
         private DataTable? GetConfusionDataTable()
         {
             DataTable? table = null;
@@ -296,38 +328,6 @@ namespace Convnet.PageViewModels
 
             return table;
         }
-
-        public bool ShowProgress
-        {
-            get => showProgress;
-            set => this.RaiseAndSetIfChanged(ref showProgress, value);
-        }
-
-        public bool ShowSample
-        {
-            get => showSample;
-            set => this.RaiseAndSetIfChanged(ref showSample, value);
-        }
-
-        public Avalonia.Media.Imaging.WriteableBitmap? InputSnapshot
-        {
-            get => inputSnapshot;
-            set => this.RaiseAndSetIfChanged(ref inputSnapshot, value);
-        }
-
-        public string? Label
-        {
-            get => label;
-            set => this.RaiseAndSetIfChanged(ref label, value);
-        }
-
-        public string? ProgressText
-        {
-            get => progressText;
-            set => this.RaiseAndSetIfChanged(ref progressText, value);
-        }
-
-        public override string DisplayName => "Test";
 
         public override void Reset()
         {
@@ -453,6 +453,7 @@ namespace Convnet.PageViewModels
             Open?.Invoke(this, EventArgs.Empty);
         }
 
+        
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
