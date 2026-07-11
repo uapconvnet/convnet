@@ -22,8 +22,11 @@ namespace Convnet.PageViewModels
 #endif
 
         private ObservableCollection<Control> commandToolBar = new ObservableCollection<Control>();
+
         private bool commandToolBarVisibility = false;
+
         private bool isValid = true;
+
 
         public static string? ApplicationPath { get; } = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
