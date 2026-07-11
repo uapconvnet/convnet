@@ -118,23 +118,33 @@ namespace Convnet.PageViewModels
         private Avalonia.Media.Imaging.WriteableBitmap? weightsSnapshot;
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
         private StringBuilder sb = new StringBuilder();
-       
         private PageViewModel? pageVM;
+
+
         public PageViewModel? PageVM
         {
             get => pageVM;
             set => this.RaiseAndSetIfChanged(ref pageVM, value);
         }
 
+        public override string DisplayName => "Train";
+        
         public Timer? RefreshTimer;
+
         public TimeSpan EpochDuration { get; set; }
+
         public event EventHandler? Open;
+
         public event EventHandler? Save;
+
         public event EventHandler? SaveAs;
+
         public event EventHandler<int> RefreshRateChanged;
 
         public bool IsUpdating = false;
+
         public ReactiveCommand<SelectionChangedEventArgs, Unit> SelectionChangedCommand { get; }
+
         public void SelectionChanged(SelectionChangedEventArgs e)
         {
             if (!IsUpdating && TrainingLog != null)
@@ -1124,8 +1134,7 @@ namespace Convnet.PageViewModels
                     return;
 
                 this.RaiseAndSetIfChanged(ref sgdr, value);
-                Settings.Default.SGDR = sgdr;
-                Settings.Default.Save();
+                Settings.Default.SGDR = sgdr;               
             }
         }
 
@@ -1139,7 +1148,6 @@ namespace Convnet.PageViewModels
 
                 this.RaiseAndSetIfChanged(ref gotoEpoch, value);
                 Settings.Default.GotoEpoch = gotoEpoch;
-                Settings.Default.Save();
             }
         }
 
@@ -1153,7 +1161,6 @@ namespace Convnet.PageViewModels
 
                 this.RaiseAndSetIfChanged(ref gotoCycle, value);
                 Settings.Default.GotoCycle = gotoCycle;
-                Settings.Default.Save();
             }
         }
 
@@ -1384,8 +1391,6 @@ namespace Convnet.PageViewModels
                 Settings.Default.Optimizer = (int)optimizer;
             }
         }
-
-        public override string DisplayName => "Train";
 
         public int RefreshRate
         {
