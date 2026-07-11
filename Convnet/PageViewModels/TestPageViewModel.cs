@@ -130,8 +130,8 @@ namespace Convnet.PageViewModels
                 }
                 ToolTip.SetTip(costLayersComboBox, "Cost Layer");
                
-                costLayersComboBox.SelectedIndex = (int)PageVM.Model.CostIndex;
-                costLayersComboBox.IsEnabled = PageVM.Model.CostLayerCount > 1;
+                costLayersComboBox.SelectedIndex = (int)((PageVM != null && PageVM.Model != null) ? PageVM.Model.CostIndex : 0);
+                costLayersComboBox.IsEnabled = PageVM?.Model?.CostLayerCount > 1;
                
                 costLayersComboBox.SelectionChanged += CostLayersComboBox_SelectionChanged;
 
