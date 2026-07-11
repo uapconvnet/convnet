@@ -75,14 +75,9 @@ namespace Convnet.PageViewModels
                 if (model != null)
                 {
                     Dataset = model.Dataset;
-                    OnModelChanged();
+                    ModelChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
-        }
-
-        private void OnModelChanged()
-        {
-            ModelChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public bool OpenCommandVisible
