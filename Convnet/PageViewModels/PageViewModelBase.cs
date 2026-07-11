@@ -25,20 +25,24 @@ namespace Convnet.PageViewModels
         private bool commandToolBarVisibility = false;
         private bool isValid = true;
 
-
         public static string? ApplicationPath { get; } = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
         public static string StorageDirectory { get; } = Path.Combine(Environment.GetFolderPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Environment.SpecialFolder.MyDocuments : Environment.SpecialFolder.UserProfile), "convnet");
+
         public static string StateDirectory { get; } = Path.Combine(StorageDirectory, "state");
+
         public static string DefinitionsDirectory { get; } = Path.Combine(StorageDirectory, "definitions");
+
         public static string ScriptsDirectory { get; } = Path.Combine(StorageDirectory, "scripts");
+
         public static string ScriptPath { get; } = Path.Combine(ScriptsDirectory, "bin", Mode, Framework);
+
         public static IEnumerable<DNNOptimizers> GetOptimizers => Enum.GetValues<DNNOptimizers>().Cast<DNNOptimizers>();
+
         public static IEnumerable<DNNInterpolations> GetInterpolations => Enum.GetValues<DNNInterpolations>().Cast<DNNInterpolations>();
 
         public abstract string DisplayName { get; }
-
-        public abstract void Reset();
-        
+       
         public ObservableCollection<Control> CommandToolBar
         {
             get => commandToolBar;
@@ -64,6 +68,8 @@ namespace Convnet.PageViewModels
             else
                 CommandToolBarVisibility = false;
         }
+
+        public abstract void Reset();
 
         protected PageViewModelBase()
         {
