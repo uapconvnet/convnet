@@ -21,7 +21,7 @@ namespace Convnet.PageViewModels
         const string Mode = @"Release";
 #endif
 
-        private ObservableCollection<Control> commandToolBar;
+        private ObservableCollection<Control> commandToolBar = new ObservableCollection<Control>();
         private bool commandToolBarVisibility = false;
         private bool isValid = true;
 
@@ -67,9 +67,7 @@ namespace Convnet.PageViewModels
 
         protected PageViewModelBase()
         {
-            commandToolBarVisibility = false;
-            commandToolBar = new ObservableCollection<Control>();
-            commandToolBar.CollectionChanged += new NotifyCollectionChangedEventHandler(CommandToolBarCollectionChanged);
+            CommandToolBar.CollectionChanged += new NotifyCollectionChangedEventHandler(CommandToolBarCollectionChanged);
         }
     }
 }
