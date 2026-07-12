@@ -141,6 +141,7 @@ namespace Convnet.PageViewModels
 
         public event EventHandler<int> RefreshRateChanged;
 
+
         public bool IsUpdating = false;
 
         public ReactiveCommand<SelectionChangedEventArgs, Unit> SelectionChangedCommand { get; }
@@ -169,6 +170,13 @@ namespace Convnet.PageViewModels
             }
         }
 
+        public ReactiveCommand<Unit, Unit> OpenCommand { get; }
+
+        public ReactiveCommand<Unit, Unit> SaveCommand { get; }
+        
+        public ReactiveCommand<Unit, Unit> SaveAsCommand { get; }
+
+
         public TrainPageViewModel(PageViewModel pvm) : base()
         {
             PageVM = pvm;
@@ -190,6 +198,10 @@ namespace Convnet.PageViewModels
             }
 
             SelectionChangedCommand = ReactiveCommand.Create<SelectionChangedEventArgs>(SelectionChanged);
+
+            OpenCommand = ReactiveCommand.Create(() => Open?.Invoke(this, EventArgs.Empty));
+            SaveCommand = ReactiveCommand.Create(() => Save?.Invoke(this, EventArgs.Empty)); 
+            SaveAsCommand = ReactiveCommand.Create(() => SaveAs?.Invoke(this, EventArgs.Empty));
 
             InitializeTrainingPlot();
 
@@ -220,6 +232,7 @@ namespace Convnet.PageViewModels
             {
                 Name = "ButtonStart",
                 Content = ApplicationHelper.LoadFromResource("Play.png"),
+                Focusable = false,
                 ClickMode = ClickMode.Release
             };
             ToolTip.SetTip(startButton, "Start Training");
@@ -230,6 +243,7 @@ namespace Convnet.PageViewModels
                 Name = "ButtonStop",
                 Content = ApplicationHelper.LoadFromResource("Stop.png"),
                 ClickMode = ClickMode.Release,
+                Focusable = false,
                 IsVisible = false
             };
             ToolTip.SetTip(stopButton, "Stop Training");
@@ -240,6 +254,7 @@ namespace Convnet.PageViewModels
                 Name = "ButtonPause",
                 Content = ApplicationHelper.LoadFromResource("Pause.png"),
                 ClickMode = ClickMode.Release,
+                Focusable = false,
                 IsVisible = false
             };
             ToolTip.SetTip(pauseButton, "Pause Training");
@@ -249,7 +264,8 @@ namespace Convnet.PageViewModels
             {
                 Name = "ButtonEditor",
                 Content = ApplicationHelper.LoadFromResource("Collection.png"),
-                ClickMode = ClickMode.Release
+                ClickMode = ClickMode.Release,
+                Focusable = false,
             };
             ToolTip.SetTip(editorButton, "Training Scheme Editor");
             editorButton.Click += EditorButtonClick;
@@ -258,7 +274,8 @@ namespace Convnet.PageViewModels
             {
                 Name = "ButtonStrategies",
                 Content = ApplicationHelper.LoadFromResource("Property.png"),
-                ClickMode = ClickMode.Release
+                ClickMode = ClickMode.Release,
+                Focusable = false,
             };
             ToolTip.SetTip(strategiesButton, "Training Strategies Editor");
             strategiesButton.Click += StrategyButtonClick;
@@ -268,7 +285,8 @@ namespace Convnet.PageViewModels
                 Name = "ButtonOpen",
                 Content = ApplicationHelper.LoadFromResource("Open.png"),
                 ClickMode = ClickMode.Release,
-                Command = ReactiveCommand.Create(() => Open?.Invoke(this, EventArgs.Empty))
+                Focusable = false,
+                Command = OpenCommand
             };
             ToolTip.SetTip(openButton, "Load Model Weights");
 
@@ -277,7 +295,8 @@ namespace Convnet.PageViewModels
                 Name = "ButtonSave",
                 Content = ApplicationHelper.LoadFromResource("Save.png"),
                 ClickMode = ClickMode.Release,
-                Command = ReactiveCommand.Create(() => Save?.Invoke(this, EventArgs.Empty))
+                Focusable = false,
+                Command = SaveCommand
             };
             ToolTip.SetTip(saveButton, "Save Model Weights");
            
@@ -286,7 +305,8 @@ namespace Convnet.PageViewModels
                 Name = "ButtonSaveAs",
                 Content = ApplicationHelper.LoadFromResource("SaveAs.png"),
                 ClickMode = ClickMode.Release,
-                Command = ReactiveCommand.Create(() => SaveAs?.Invoke(this, EventArgs.Empty))
+                Focusable = false,
+                Command = SaveAsCommand
             };
             ToolTip.SetTip(saveAsButton, "Save As");
             
@@ -294,6 +314,7 @@ namespace Convnet.PageViewModels
             {
                 Name = "ButtonResetWeights",
                 Content = ApplicationHelper.LoadFromResource("Bolt.png"),
+                Focusable = false,
                 ClickMode = ClickMode.Release
             };
             ToolTip.SetTip(resetButton, "Reset Model Weights");
@@ -303,6 +324,7 @@ namespace Convnet.PageViewModels
             {
                 Name = "ButtonClearLog",
                 Content = ApplicationHelper.LoadFromResource("ClearContents.png"),
+                Focusable = false,
                 ClickMode = ClickMode.Release
             };
             ToolTip.SetTip(clearButton, "Clear Log");

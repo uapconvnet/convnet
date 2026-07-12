@@ -69,6 +69,9 @@ namespace Convnet.PageViewModels
             get => pageVM;
             set => this.RaiseAndSetIfChanged(ref pageVM, value);
         }
+        public ReactiveCommand<Unit, Unit> OpenCommand { get; }
+
+        public ReactiveCommand<Unit, Unit> SaveAsCommand { get; }
 
         public ReactiveCommand<Unit, Unit> CheckCommand { get; }
 
@@ -85,6 +88,8 @@ namespace Convnet.PageViewModels
             initAction = true;
             clickWaitTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Background, MouseWaitTimer_Tick);
 
+            OpenCommand = ReactiveCommand.Create(() => Open?.Invoke(this, EventArgs.Empty)); 
+            SaveAsCommand = ReactiveCommand.Create(() => SaveAs?.Invoke(this, EventArgs.Empty)); 
             CheckCommand = ReactiveCommand.Create(() => { DefinitionStatus = CheckDefinition(); });
             SyncCommand = ReactiveCommand.Create(() => { Synchronize(this, new RoutedEventArgs()); });
             ScriptsCommand = ReactiveCommand.Create(() => { Scripts(this, new RoutedEventArgs()); });
@@ -101,7 +106,7 @@ namespace Convnet.PageViewModels
                 Content = ApplicationHelper.LoadFromResource("OpenFile.png"),
                 ClickMode = ClickMode.Release,
                 Focusable = false,
-                Command = ReactiveCommand.Create(() => Open?.Invoke(this, EventArgs.Empty))
+                Command = OpenCommand
             };
             ToolTip.SetTip(openButton, "Open");
             
@@ -111,7 +116,7 @@ namespace Convnet.PageViewModels
                 Content = ApplicationHelper.LoadFromResource("SaveAs.png"),
                 ClickMode = ClickMode.Release,
                 Focusable = false,
-                Command = ReactiveCommand.Create(() => SaveAs?.Invoke(this, EventArgs.Empty))
+                Command = SaveAsCommand
             };
             ToolTip.SetTip(saveAsButton, "Save As");
             
