@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
 	  <TargetFrameworks>net10.0</TargetFrameworks>
 	  <LangVersion>10.0</LangVersion>
@@ -31,5 +30,4 @@
       <PackagePath>\</PackagePath>
     </Resource>
   </ItemGroup>
-
 </Project>
