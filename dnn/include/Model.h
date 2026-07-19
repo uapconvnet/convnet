@@ -929,19 +929,21 @@ namespace dnn
 
 		void SetLocking(const bool locked)
 		{
-			for (auto &layer : Layers)
-				if (layer->Lockable() && !DisableLocking)
-					layer->LockUpdate.store(locked);
-			for (auto i = Layers.size() - 1; i >= 0; i--)
-				if (Layers[i]->Lockable() && !DisableLocking)
-				{
-					Layers[i]->LockUpdate.store(false);
-					break;
-				}
-				
-			if (!DisableLocking)
-			{
-				FirstUnlockedLayer.store(Layers.size() - 2);
+            if (!DisableLocking)
+            {
+                for (auto& layer : Layers)
+                    if (layer->Lockable())
+                        layer->LockUpdate.store(locked);
+
+                // unlock last layer with weights
+                for (auto i = Layers.size() - 1; i >= 0; i--)
+                    if (Layers[i]->Lockable())
+                    {
+                        Layers[i]->LockUpdate.store(false);
+                        break;
+                    }
+            
+                FirstUnlockedLayer.store(Layers.size() - 2);
 				for (auto i = 0ull; i < Layers.size(); i++)
 				{
 					Layers[i]->bpropTime = std::chrono::duration<Float>(0);
