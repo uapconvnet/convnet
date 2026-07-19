@@ -936,7 +936,7 @@ namespace dnn
                         layer->LockUpdate.store(locked);
 
                 // unlock last layer with weights
-                for (auto i = Layers.size() - 1; i >= 0; i--)
+                for (auto i = Layers.size() - 1; i > 0; i--)
                     if (Layers[i]->Lockable())
                     {
                         Layers[i]->LockUpdate.store(false);
