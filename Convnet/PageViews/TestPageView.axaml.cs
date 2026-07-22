@@ -1,4 +1,5 @@
-﻿using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 using Convnet.PageViewModels;
 using ReactiveUI.Avalonia;
 
@@ -14,8 +15,11 @@ namespace Convnet.PageViews
 
             InitializeComponent();
 
+            //var grid = this.FindControl<DataGrid>("Datagrid");
+            //if (grid != null)
+            //{
 
-            //var gr = this.FindControl<Grid>("grid");
+            //}
         }
 
         private void InitializeComponent()

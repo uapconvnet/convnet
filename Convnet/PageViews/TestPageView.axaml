@@ -31,6 +31,9 @@
           </StackPanel>
         </Border>
       </StackPanel>
-    </Grid>  
+    </Grid>
+    <Grid Grid.Row="2">
+        <DataGrid x:Name="Datagrid" Grid.ColumnSpan="2" Grid.RowSpan="1" AutoGenerateColumns="True" HeadersVisibility="All" ItemsSource="{Binding ConfusionDataTable}" IsReadOnly="True" CanUserSortColumns="False" GridLinesVisibility="All" BorderThickness="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource DisabledBorderBrush}"/>
+    </Grid>
   </Grid>
 </UserControl>

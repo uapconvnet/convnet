@@ -259,10 +259,6 @@ namespace Convnet.PageViewModels
             {
                 Dispatcher.UIThread.Invoke(() =>
                 {
-                    if (PageVM != null && PageVM.Model != null)
-                        ProgressText = string.Format(stringTesting, SampleIndex, PageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
-
-
                     if (RefreshTimer != null)
                     {
                         RefreshTimer.Stop();
@@ -270,14 +266,16 @@ namespace Convnet.PageViewModels
                         RefreshTimer.Dispose();
                     }
 
-
                     if (PageVM != null && PageVM.Model != null && costLayersComboBox != null)
                     {
+                        ProgressText = string.Format(stringTesting, SampleIndex, PageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
+
                         PageVM.Model.Stop();
                         PageVM.Model.SetCostIndex((UInt)costLayersComboBox.SelectedIndex);
                         PageVM.Model.GetConfusionMatrix();
+
+                        ConfusionDataTable = GetConfusionDataTable();
                     }
-                    ConfusionDataTable = GetConfusionDataTable();
 
                     ToolTip.SetTip(CommandToolBar[0], "Start Testing");
 
