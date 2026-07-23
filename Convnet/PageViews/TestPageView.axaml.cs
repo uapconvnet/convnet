@@ -37,26 +37,50 @@ namespace Convnet.PageViews
 
                 if (datagrid != null && tpvm != null && tpvm.ConfusionDataTable != null)
                 {
-                    Dispatcher.Invoke(()=>
+                    Dispatcher.UIThread.Invoke(()=>
                     {
-                        while (datagrid.Columns.Count > 0) 
-                        { 
+                        // datagrid?.BeginInit();
+                        
+                        while (datagrid?.Columns.Count > 0) 
                             datagrid.Columns.RemoveAt(datagrid.Columns.Count - 1); 
-                        }
-
-                        datagrid.ItemsSource = tpvm.ConfusionDataTable.DefaultView;
-
+                        
+                        // datagrid?.ItemsSource = tpvm.ConfusionDataView;
+                        
                         foreach (System.Data.DataColumn x in tpvm.ConfusionDataTable.Columns)
                             if (x.ColumnName == "RowHeader")
-                                datagrid.Columns.Add(new DataGridTextColumn { Header = "", Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") }); 
+                                datagrid?.Columns.Add(new DataGridTextColumn { Header = "", Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") }); 
                             else
-                                datagrid.Columns.Add(new DataGridTextColumn { Header = x.ColumnName, Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") });        
-                    }, DispatcherPriority.ContextIdle);
+                                datagrid?.Columns.Add(new DataGridTextColumn { Header = x.ColumnName, Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") });
+                        
+                        // datagrid?.EndInit();
+
+                        // datagrid?.Focus();
+                        // datagrid?.BringIntoView();
+                        // datagrid?.CollectionView.Refresh();
+                        //datagrid?.InvalidateArrange();
+                        //datagrid?.InvalidateVisual();
+                    });
                 }
             }
             else
                 Initialized += delegate { Datagrid_DataContextChanged(sender, e); };
         }
+
+        // private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        // {
+        //     var datagrid = this.FindControl<DataGrid>("Datagrid");
+        //     var tpvm = DataContext as TestPageViewModel;
+
+        //     if (datagrid != null && tpvm != null)
+        //     {
+        //         // datagrid?.ItemsSource = null;
+        //         // datagrid?.ItemsSource = tpvm.ConfusionDataView;
+        //         // datagrid?.Focus();
+        //         // datagrid?.BringIntoView();
+        //         // datagrid?.InvalidateVisual();
+        //         // datagrid?.InvalidateArrange();
+        //     }
+        // }
 
         private void InitializeComponent()
         {

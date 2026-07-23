@@ -16,8 +16,8 @@
     <Setter Property="Focusable" Value="False" />
     <Setter Property="SeparatorBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
     <Setter Property="Padding" Value="12,0,0,0" />
-    <Setter Property="FontSize" Value="12" />
-    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontWeight" Value="Normal" />
     <Setter Property="MinHeight" Value="30" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -101,6 +101,6 @@
         </Border>
       </StackPanel>
     </Grid>
-    <DataGrid x:Name="Datagrid" ItemsSource="{Binding ConfusionDataTable.DefaultView}" IsVisible="True" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="1" AutoGenerateColumns="True" HeadersVisibility="All" IsReadOnly="True" CanUserSortColumns="False" GridLinesVisibility="All" BorderThickness="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource DisabledBorderBrush}"/>
+    <DataGrid x:Name="Datagrid" ItemsSource="{Binding ConfusionDataView}" IsVisible="True" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="1" AutoGenerateColumns="True" HeadersVisibility="All" IsReadOnly="True" CanUserSortColumns="False" GridLinesVisibility="All" BorderThickness="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource DisabledBorderBrush}"/>
   </Grid>
 </UserControl>

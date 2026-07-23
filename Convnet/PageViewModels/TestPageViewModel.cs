@@ -38,6 +38,7 @@ namespace Convnet.PageViewModels
         private string? _label;
         private bool _showSample;
         private DataTable? _confusionDataTable;
+        private DataView? _confusionDataView;
         private Avalonia.Media.Imaging.WriteableBitmap? _inputSnapshot;
         private ComboBox? _dataProviderComboBox;
         private ComboBox? _costLayersComboBox;
@@ -80,6 +81,11 @@ namespace Convnet.PageViewModels
             set => this.RaiseAndSetIfChanged(ref _confusionDataTable, value);
         }
 
+        public DataView? ConfusionDataView
+        {
+            get => _confusionDataView;
+            set => this.RaiseAndSetIfChanged(ref _confusionDataView, value);
+        }
         public Avalonia.Media.Imaging.WriteableBitmap? InputSnapshot
         {
             get => _inputSnapshot;
@@ -112,6 +118,7 @@ namespace Convnet.PageViewModels
             AddCommandButtons();
 
             _confusionDataTable = null;
+            _confusionDataView = null;
             _showProgress = false;
             _showSample = false;
             
@@ -200,10 +207,10 @@ namespace Convnet.PageViewModels
             {
                 var costIndex = (uint)_costLayersComboBox.SelectedIndex;
                 PageVM.Model?.SetCostIndex(costIndex);
-                if (PageVM.Model?.TaskState != DNNTaskStates.Running && ConfusionDataTable != null)
+                if (PageVM.Model?.TaskState != DNNTaskStates.Running)
                 {
                     PageVM.Model?.GetConfusionMatrix();
-                    ConfusionDataTable = GetConfusionDataTable();
+                    ConfusionDataView = GetConfusionDataTable()?.AsDataView();
                     
                     PageVM.Model?.UpdateCostInfo(costIndex);
                     ProgressText = string.Format(_stringTesting, 0, PageVM.Model?.BatchSize, PageVM.Model?.CostLayers[costIndex].AvgTestLoss, PageVM.Model?.CostLayers[costIndex].TestErrors, PageVM.Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - PageVM.Model?.CostLayers[costIndex].TestErrorPercentage);
@@ -219,6 +226,7 @@ namespace Convnet.PageViewModels
                 ShowProgress = false;
                 ShowSample = false;
                 ConfusionDataTable = null;
+                ConfusionDataView = null;
 
                 if (_costLayersComboBox != null && _dataProviderComboBox != null)
                 { 
@@ -246,7 +254,7 @@ namespace Convnet.PageViewModels
         {
             if (State != DNNStates.Completed)
             {
-                Dispatcher.UIThread.Invoke(() =>
+                Dispatcher.UIThread.Invoke(async () =>
                 {
                     if (PageVM != null && PageVM.Model != null)
                     {
@@ -260,7 +268,7 @@ namespace Convnet.PageViewModels
             }
             else
             {
-                Dispatcher.UIThread.Invoke(() =>
+                Dispatcher.UIThread.Invoke(async () =>
                 {
                     // if (RefreshTimer != null)
                     // {
@@ -276,8 +284,8 @@ namespace Convnet.PageViewModels
                         PageVM.Model.Stop();
                         PageVM.Model.SetCostIndex((UInt)_costLayersComboBox.SelectedIndex);
                         PageVM.Model.GetConfusionMatrix();
-
                         ConfusionDataTable = GetConfusionDataTable();
+                        ConfusionDataView = GetConfusionDataTable()?.DefaultView;
                     }
 
                     ToolTip.SetTip(CommandToolBar[0], "Start Testing");
@@ -294,11 +302,9 @@ namespace Convnet.PageViewModels
 
         private DataTable? GetConfusionDataTable()
         {
-            DataTable? table = null;
-
             if (PageVM != null && PageVM.Model != null && PageVM.Model?.ConfusionMatrix != null && PageVM.Model.LabelsCollection != null)
             {
-                table = new DataTable("ConfusionTable");
+                var table = new DataTable("ConfusionTable");
                 uint classCount = (uint)PageVM.Model.ClassCount;
                 uint labelIndex = (uint)PageVM.Model.LabelIndex;
 
@@ -327,9 +333,11 @@ namespace Convnet.PageViewModels
                     table.Rows.Add(row);
                 }
                 table.EndLoadData();
+
+                return table;
             }
 
-            return table;
+            return null;
         }
 
         public override void Reset()
