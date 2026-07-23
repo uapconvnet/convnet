@@ -34,31 +34,19 @@ namespace Convnet.PageViews
             {
                 var datagrid = sender as DataGrid;
                 var tpvm = DataContext as TestPageViewModel;
-
-                if (datagrid != null && tpvm != null && tpvm.ConfusionDataTable != null)
+               
+                if (datagrid != null && tpvm != null && tpvm.ConfusionDataView != null)
                 {
                     Dispatcher.UIThread.Invoke(()=>
                     {
-                        // datagrid?.BeginInit();
-                        
                         while (datagrid?.Columns.Count > 0) 
                             datagrid.Columns.RemoveAt(datagrid.Columns.Count - 1); 
                         
-                        // datagrid?.ItemsSource = tpvm.ConfusionDataView;
-                        
-                        foreach (System.Data.DataColumn x in tpvm.ConfusionDataTable.Columns)
+                        foreach (System.Data.DataColumn x in tpvm.ConfusionDataView.ToTable().Columns)
                             if (x.ColumnName == "RowHeader")
                                 datagrid?.Columns.Add(new DataGridTextColumn { Header = "", Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") }); 
                             else
                                 datagrid?.Columns.Add(new DataGridTextColumn { Header = x.ColumnName, Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") });
-                        
-                        // datagrid?.EndInit();
-
-                        // datagrid?.Focus();
-                        // datagrid?.BringIntoView();
-                        // datagrid?.CollectionView.Refresh();
-                        //datagrid?.InvalidateArrange();
-                        //datagrid?.InvalidateVisual();
                     });
                 }
             }

@@ -37,7 +37,6 @@ namespace Convnet.PageViewModels
         private bool _showProgress;
         private string? _label;
         private bool _showSample;
-        private DataTable? _confusionDataTable;
         private DataView? _confusionDataView;
         private Avalonia.Media.Imaging.WriteableBitmap? _inputSnapshot;
         private ComboBox? _dataProviderComboBox;
@@ -49,8 +48,7 @@ namespace Convnet.PageViewModels
 
         public override string DisplayName => "Test";
 
-        //public Timer? RefreshTimer;
-
+       
         public string? ProgressText
         {
             get => _progressText;
@@ -73,12 +71,6 @@ namespace Convnet.PageViewModels
         {
             get => _showSample;
             set => this.RaiseAndSetIfChanged(ref _showSample, value);
-        }
-
-        public DataTable? ConfusionDataTable
-        {
-            get => _confusionDataTable;
-            set => this.RaiseAndSetIfChanged(ref _confusionDataTable, value);
         }
 
         public DataView? ConfusionDataView
@@ -117,7 +109,6 @@ namespace Convnet.PageViewModels
 
             AddCommandButtons();
 
-            _confusionDataTable = null;
             _confusionDataView = null;
             _showProgress = false;
             _showSample = false;
@@ -225,7 +216,6 @@ namespace Convnet.PageViewModels
                 PageVM.Model.TestProgress += TestProgress;
                 ShowProgress = false;
                 ShowSample = false;
-                ConfusionDataTable = null;
                 ConfusionDataView = null;
 
                 if (_costLayersComboBox != null && _dataProviderComboBox != null)
@@ -270,13 +260,6 @@ namespace Convnet.PageViewModels
             {
                 Dispatcher.UIThread.Invoke(async () =>
                 {
-                    // if (RefreshTimer != null)
-                    // {
-                    //     RefreshTimer.Stop();
-                    //     RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
-                    //     RefreshTimer.Dispose();
-                    // }
-
                     if (PageVM != null && PageVM.Model != null && _costLayersComboBox != null)
                     {
                         ProgressText = string.Format(_stringTesting, SampleIndex, PageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
@@ -284,7 +267,6 @@ namespace Convnet.PageViewModels
                         PageVM.Model.Stop();
                         PageVM.Model.SetCostIndex((UInt)_costLayersComboBox.SelectedIndex);
                         PageVM.Model.GetConfusionMatrix();
-                        ConfusionDataTable = GetConfusionDataTable();
                         ConfusionDataView = GetConfusionDataTable()?.DefaultView;
                     }
 
@@ -346,11 +328,6 @@ namespace Convnet.PageViewModels
             Label = string.Empty;
         }
 
-        //private void RefreshTimer_Elapsed(object? sender, ElapsedEventArgs e)
-        //{
-            
-        //}
-
         private void StartButtonClick(object? sender, RoutedEventArgs e)
         {
             Dispatcher.UIThread.Post(async () =>
@@ -387,9 +364,7 @@ namespace Convnet.PageViewModels
                         if (_costLayersComboBox != null)
                             PageVM.Model.SetCostIndex((uint)_costLayersComboBox.SelectedIndex);
                         PageVM.Model.Start(false);
-                        //RefreshTimer = new Timer(1000.0);
-                        //RefreshTimer.Elapsed += RefreshTimer_Elapsed;
-
+                        
                         CommandToolBar[0].IsVisible = false;
                         CommandToolBar[1].IsVisible = true;
                         CommandToolBar[2].IsVisible = true;
@@ -421,15 +396,8 @@ namespace Convnet.PageViewModels
                 var stop = await Dispatcher.UIThread.InvokeAsync(() => MessageBox.Show("Do you really want to stop?", "Stop Testing", MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button2));
                 if (stop == MessageBoxResult.Yes)
                 {
-                    // if (RefreshTimer != null)
-                    // { 
-                    //     RefreshTimer.Stop();
-                    //     RefreshTimer.Elapsed -= new ElapsedEventHandler(RefreshTimer_Elapsed);
-                    //     RefreshTimer.Dispose();
-                    // }
-
                     PageVM?.Model?.Stop();
-                    ConfusionDataTable = null;
+                    ConfusionDataView = null;
 
                     ToolTip.SetTip(CommandToolBar[0], "Start Testing");
                     CommandToolBar[0].IsVisible = true;
@@ -477,8 +445,7 @@ namespace Convnet.PageViewModels
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
-                    //RefreshTimer?.Dispose();
-                    _confusionDataTable?.Dispose();
+                    _confusionDataView?.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
