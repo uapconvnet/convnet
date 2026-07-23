@@ -101,8 +101,6 @@
         </Border>
       </StackPanel>
     </Grid>
-    <Grid Grid.Row="2">
-        <DataGrid x:Name="Datagrid" ItemsSource="{Binding ConfusionDataTable.DefaultView}" IsVisible="True" Grid.ColumnSpan="2" Grid.RowSpan="1" AutoGenerateColumns="True" HeadersVisibility="All" IsReadOnly="True" CanUserSortColumns="False" GridLinesVisibility="All" BorderThickness="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource DisabledBorderBrush}"/>
-    </Grid>
+    <DataGrid x:Name="Datagrid" ItemsSource="{Binding ConfusionDataTable.DefaultView}" IsVisible="True" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="1" AutoGenerateColumns="True" HeadersVisibility="All" IsReadOnly="True" CanUserSortColumns="False" GridLinesVisibility="All" BorderThickness="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource DisabledBorderBrush}"/>
   </Grid>
 </UserControl>

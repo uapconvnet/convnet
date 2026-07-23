@@ -9,8 +9,10 @@ using CustomMessageBox.Avalonia;
 using Interop;
 using ReactiveUI;
 using System;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Timers;
 
 using Float = System.Single;
@@ -23,7 +25,7 @@ namespace Convnet.PageViewModels
     {
         private static readonly string nwl = Environment.NewLine;
 
-        private readonly string stringTesting           = "Testing" + nwl + 
+        private readonly string _stringTesting          = "Testing" + nwl + 
                                                           " Sample:\t\t\t{0:G}" + nwl + 
                                                           " Batch Size:\t\t{1:G}" + nwl + 
                                                           " Loss:\t\t\t  {2:N7}" + nwl + 
@@ -31,15 +33,15 @@ namespace Convnet.PageViewModels
                                                           " Error:\t\t\t {4:N2} %" + nwl + 
                                                           " Accuracy:\t\t  {5:N2} %";
 
-        private string? progressText;
-        private bool showProgress;
-        private string? label;
-        private bool showSample;
-        private DataTable? confusionDataTable;
-        private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;
-        private ComboBox? dataProviderComboBox;
-        private ComboBox? costLayersComboBox;
-        private PageViewModel? pageVM;
+        private string? _progressText;
+        private bool _showProgress;
+        private string? _label;
+        private bool _showSample;
+        private DataTable? _confusionDataTable;
+        private Avalonia.Media.Imaging.WriteableBitmap? _inputSnapshot;
+        private ComboBox? _dataProviderComboBox;
+        private ComboBox? _costLayersComboBox;
+        private PageViewModel? _pageVM;
        
        
         public event EventHandler? Open;
@@ -50,44 +52,44 @@ namespace Convnet.PageViewModels
 
         public string? ProgressText
         {
-            get => progressText;
-            set => this.RaiseAndSetIfChanged(ref progressText, value);
+            get => _progressText;
+            set => this.RaiseAndSetIfChanged(ref _progressText, value);
         }
 
         public bool ShowProgress
         {
-            get => showProgress;
-            set => this.RaiseAndSetIfChanged(ref showProgress, value);
+            get => _showProgress;
+            set => this.RaiseAndSetIfChanged(ref _showProgress, value);
         }
 
         public string? Label
         {
-            get => label;
-            set => this.RaiseAndSetIfChanged(ref label, value);
+            get => _label;
+            set => this.RaiseAndSetIfChanged(ref _label, value);
         }
 
         public bool ShowSample
         {
-            get => showSample;
-            set => this.RaiseAndSetIfChanged(ref showSample, value);
+            get => _showSample;
+            set => this.RaiseAndSetIfChanged(ref _showSample, value);
         }
 
         public DataTable? ConfusionDataTable
         {
-            get => confusionDataTable;
-            set => this.RaiseAndSetIfChanged(ref confusionDataTable, value);
+            get => _confusionDataTable;
+            set => this.RaiseAndSetIfChanged(ref _confusionDataTable, value);
         }
 
         public Avalonia.Media.Imaging.WriteableBitmap? InputSnapshot
         {
-            get => inputSnapshot;
-            set => this.RaiseAndSetIfChanged(ref inputSnapshot, value);
+            get => _inputSnapshot;
+            set => this.RaiseAndSetIfChanged(ref _inputSnapshot, value);
         }
 
         public PageViewModel? PageVM
         {
-            get => pageVM;
-            set => this.RaiseAndSetIfChanged(ref pageVM, value);
+            get => _pageVM;
+            set => this.RaiseAndSetIfChanged(ref _pageVM, value);
         }
         
         public DNNTrainingRate TestRate
@@ -109,8 +111,9 @@ namespace Convnet.PageViewModels
 
             AddCommandButtons();
 
-            showProgress = false;
-            showSample = false;
+            _confusionDataTable = null;
+            _showProgress = false;
+            _showSample = false;
             
             PageVM?.Model?.TestProgress += TestProgress;
             PageVM?.ModelChanged += TestPageVM_ModelChanged;
@@ -149,28 +152,28 @@ namespace Convnet.PageViewModels
             ToolTip.SetTip(pauseButton, "Pause Testing");
             pauseButton.Click += PauseButtonClick;
           
-            dataProviderComboBox = new ComboBox
+            _dataProviderComboBox = new ComboBox
             {
                 Name = "ComboBoxDataSet",
                 ItemsSource = Enum.GetValues(typeof(DNNDatasets)).Cast<Enum>().ToList(),
                 SelectedIndex = (int)(PageVM != null ? PageVM.Dataset : 0),
                 IsEnabled = false
             };
-            ToolTip.SetTip(dataProviderComboBox, "Dataset");
+            ToolTip.SetTip(_dataProviderComboBox, "Dataset");
 
             CommandToolBar.Add(startButton);
             CommandToolBar.Add(stopButton);
             CommandToolBar.Add(pauseButton);
             CommandToolBar.Add(new Separator());
-            CommandToolBar.Add(dataProviderComboBox);
+            CommandToolBar.Add(_dataProviderComboBox);
 
             if (PageVM != null && PageVM.Model != null && PageVM.Model.CostLayers != null)
             {
-                costLayersComboBox = new ComboBox
+                _costLayersComboBox = new ComboBox
                 {
                     Name = "ComboBoxCostLayers"
                 };
-                costLayersComboBox.Items.Clear();
+                _costLayersComboBox.Items.Clear();
                 for (uint layer = 0u; layer < PageVM.Model?.CostLayerCount; layer++)
                 {
                     ComboBoxItem item = new ComboBoxItem
@@ -179,31 +182,31 @@ namespace Convnet.PageViewModels
                         Content = PageVM.Model.CostLayers[layer].Name,
                         Tag = layer
                     };
-                    costLayersComboBox.Items.Add(item);
+                    _costLayersComboBox.Items.Add(item);
                 }
-                ToolTip.SetTip(costLayersComboBox, "Cost Layer");
+                ToolTip.SetTip(_costLayersComboBox, "Cost Layer");
                
-                costLayersComboBox.SelectedIndex = (int)((PageVM != null && PageVM.Model != null) ? PageVM.Model.CostIndex : 0);
-                costLayersComboBox.IsEnabled = PageVM?.Model?.CostLayerCount > 1;
-               
-                costLayersComboBox.SelectionChanged += CostLayersComboBox_SelectionChanged;
+                _costLayersComboBox.SelectedIndex = (int)((PageVM != null && PageVM.Model != null) ? PageVM.Model.CostIndex : 0);
+                _costLayersComboBox.IsEnabled = PageVM?.Model?.CostLayerCount > 1;
+                _costLayersComboBox.SelectionChanged += CostLayersComboBox_SelectionChanged;
 
-                CommandToolBar.Add(costLayersComboBox);
+                CommandToolBar.Add(_costLayersComboBox);
             }
         }
 
         public void CostLayersComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
-            if (PageVM != null && PageVM.Model != null && PageVM.Model.CostLayers != null && costLayersComboBox?.SelectedIndex >= 0)
+            if (PageVM != null && PageVM.Model != null && PageVM.Model.CostLayers != null && _costLayersComboBox?.SelectedIndex >= 0)
             {
-                var costIndex = (uint)costLayersComboBox.SelectedIndex;
+                var costIndex = (uint)_costLayersComboBox.SelectedIndex;
                 PageVM.Model?.SetCostIndex(costIndex);
                 if (PageVM.Model?.TaskState != DNNTaskStates.Running && ConfusionDataTable != null)
                 {
                     PageVM.Model?.GetConfusionMatrix();
                     ConfusionDataTable = GetConfusionDataTable();
+                    
                     PageVM.Model?.UpdateCostInfo(costIndex);
-                    ProgressText = string.Format(stringTesting, 0, PageVM.Model?.BatchSize, PageVM.Model?.CostLayers[costIndex].AvgTestLoss, PageVM.Model?.CostLayers[costIndex].TestErrors, PageVM.Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - PageVM.Model?.CostLayers[costIndex].TestErrorPercentage);
+                    ProgressText = string.Format(_stringTesting, 0, PageVM.Model?.BatchSize, PageVM.Model?.CostLayers[costIndex].AvgTestLoss, PageVM.Model?.CostLayers[costIndex].TestErrors, PageVM.Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - PageVM.Model?.CostLayers[costIndex].TestErrorPercentage);
                 }
             }
         }
@@ -217,9 +220,9 @@ namespace Convnet.PageViewModels
                 ShowSample = false;
                 ConfusionDataTable = null;
 
-                if (costLayersComboBox != null && dataProviderComboBox != null)
+                if (_costLayersComboBox != null && _dataProviderComboBox != null)
                 { 
-                    costLayersComboBox.Items.Clear();
+                    _costLayersComboBox.Items.Clear();
                     for (uint layer = 0u; layer < PageVM.Model.CostLayerCount; layer++)
                     {
                         ComboBoxItem item = new ComboBoxItem
@@ -228,12 +231,12 @@ namespace Convnet.PageViewModels
                             Content = PageVM.Model.CostLayers[layer].Name,
                             Tag = layer
                         };
-                        costLayersComboBox.Items.Add(item);
+                        _costLayersComboBox.Items.Add(item);
                     }
-                    costLayersComboBox.SelectedIndex = (int)PageVM.Model.CostIndex;
-                    costLayersComboBox.IsEnabled = PageVM.Model.CostLayerCount > 1;
+                    _costLayersComboBox.SelectedIndex = (int)PageVM.Model.CostIndex;
+                    _costLayersComboBox.IsEnabled = PageVM.Model.CostLayerCount > 1;
 
-                    dataProviderComboBox.SelectedIndex = (int)PageVM.Dataset;
+                    _dataProviderComboBox.SelectedIndex = (int)PageVM.Dataset;
                 }
             }
             //Dispatcher.UIThread.Post(() => LayerIndexChanged(this, null), DispatcherPriority.Render);
@@ -247,7 +250,7 @@ namespace Convnet.PageViewModels
                 {
                     if (PageVM != null && PageVM.Model != null)
                     {
-                        ProgressText = string.Format(stringTesting, SampleIndex, PageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
+                        ProgressText = string.Format(_stringTesting, SampleIndex, PageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
 
                         PageVM.Model.UpdateLayerInfo(0ul, true);
                         InputSnapshot = PageVM.Model.InputSnapshot;
@@ -266,12 +269,12 @@ namespace Convnet.PageViewModels
                         RefreshTimer.Dispose();
                     }
 
-                    if (PageVM != null && PageVM.Model != null && costLayersComboBox != null)
+                    if (PageVM != null && PageVM.Model != null && _costLayersComboBox != null)
                     {
-                        ProgressText = string.Format(stringTesting, SampleIndex, PageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
+                        ProgressText = string.Format(_stringTesting, SampleIndex, PageVM.Model.BatchSize, AvgTestLoss, TestErrors, TestErrorPercentage, 100 - TestErrorPercentage);
 
                         PageVM.Model.Stop();
-                        PageVM.Model.SetCostIndex((UInt)costLayersComboBox.SelectedIndex);
+                        PageVM.Model.SetCostIndex((UInt)_costLayersComboBox.SelectedIndex);
                         PageVM.Model.GetConfusionMatrix();
 
                         ConfusionDataTable = GetConfusionDataTable();
@@ -285,7 +288,7 @@ namespace Convnet.PageViewModels
 
                     IsValid = true;
                     ShowSample = false;
-                });
+                }, DispatcherPriority.ContextIdle);
             }
         }
 
@@ -373,8 +376,8 @@ namespace Convnet.PageViewModels
                         Settings.Default.Save();
 
                         PageVM.Model.AddTrainingRate(new DNNTrainingRate(dialog.Rate.Optimizer, dialog.Rate.Momentum, dialog.Rate.Beta2, dialog.Rate.L2Penalty, dialog.Rate.Dropout, dialog.Rate.Eps, dialog.Rate.N, dialog.Rate.D, dialog.Rate.H, dialog.Rate.W, dialog.Rate.PadD, dialog.Rate.PadH, dialog.Rate.PadW, 1, 1, dialog.Rate.EpochMultiplier, dialog.Rate.MaximumRate, dialog.Rate.MinimumRate, dialog.Rate.FinalRate, dialog.Rate.Gamma, dialog.Rate.DecayAfterEpochs, dialog.Rate.DecayFactor, dialog.Rate.HorizontalFlip, dialog.Rate.VerticalFlip, dialog.Rate.InputDropout, dialog.Rate.Cutout, dialog.Rate.CutMix, dialog.Rate.AutoAugment, dialog.Rate.ColorCast, dialog.Rate.ColorAngle, dialog.Rate.Distortion, dialog.Rate.Interpolation, dialog.Rate.Scaling, dialog.Rate.Rotation), true, 1, PageVM.Model.TrainingSamples);
-                        if (costLayersComboBox != null)
-                            PageVM.Model.SetCostIndex((uint)costLayersComboBox.SelectedIndex);
+                        if (_costLayersComboBox != null)
+                            PageVM.Model.SetCostIndex((uint)_costLayersComboBox.SelectedIndex);
                         PageVM.Model.Start(false);
                         RefreshTimer = new Timer(1000.0);
                         RefreshTimer.Elapsed += RefreshTimer_Elapsed;
@@ -386,7 +389,7 @@ namespace Convnet.PageViewModels
                         ShowProgress = true;
                         ShowSample = true;
 
-                        pageVM?.OnPageTaskStatusChange();
+                        _pageVM?.OnPageTaskStatusChange();
                     }
                 }
                 else
@@ -467,7 +470,7 @@ namespace Convnet.PageViewModels
                 {
                     // TODO: dispose managed state (managed objects).
                     RefreshTimer?.Dispose();
-                    confusionDataTable?.Dispose();
+                    _confusionDataTable?.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
