@@ -39,15 +39,18 @@ namespace Convnet.PageViews
                 {
                     Dispatcher.Invoke(()=>
                     {
-                        while (datagrid.Columns.Count > 0) { datagrid.Columns.RemoveAt(datagrid.Columns.Count - 1); }
+                        while (datagrid.Columns.Count > 0) 
+                        { 
+                            datagrid.Columns.RemoveAt(datagrid.Columns.Count - 1); 
+                        }
 
                         datagrid.ItemsSource = tpvm.ConfusionDataTable.DefaultView;
 
                         foreach (System.Data.DataColumn x in tpvm.ConfusionDataTable.Columns)
-                        if (x.ColumnName == "RowHeader")
-                            datagrid.Columns.Add(new DataGridTextColumn { Header = "", Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") }); 
-                        else
-                            datagrid.Columns.Add(new DataGridTextColumn { Header = x.ColumnName, Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") });        
+                            if (x.ColumnName == "RowHeader")
+                                datagrid.Columns.Add(new DataGridTextColumn { Header = "", Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") }); 
+                            else
+                                datagrid.Columns.Add(new DataGridTextColumn { Header = x.ColumnName, Binding = new Avalonia.Data.Binding($"Row.ItemArray[{x.Ordinal}]") });        
                     }, DispatcherPriority.ContextIdle);
                 }
             }
