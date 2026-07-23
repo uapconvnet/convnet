@@ -8,6 +8,75 @@
              x:Class="Convnet.PageViews.TestPageView"
              x:DataType="vm:TestPageViewModel">
 
+  <UserControl.Styles>
+    <Style Selector="DataGridColumnHeader">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="SeparatorBrush" Value="{DynamicResource DataGridGridLinesBrush}" />
+    <Setter Property="Padding" Value="12,0,0,0" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid Name="PART_ColumnHeaderRoot"
+              ColumnDefinitions="*,Auto"
+              Background="{TemplateBinding Background}">
+
+          <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                Margin="{TemplateBinding Padding}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition MinWidth="32"
+                                Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ContentPresenter Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+
+            <Path Name="SortIcon"
+                  Grid.Column="1"
+                  Fill="{DynamicResource SampleSortOrange}"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Stretch="Uniform"
+                  Height="12" />
+          </Grid>
+
+          <Rectangle Name="VerticalSeparator"
+                     Grid.Column="1"
+                     Width="1"
+                     VerticalAlignment="Stretch"
+                     Fill="{TemplateBinding SeparatorBrush}"
+                     IsVisible="{TemplateBinding AreSeparatorsVisible}" />
+
+          <Grid x:Name="FocusVisual"
+                IsHitTestVisible="False">
+            <Rectangle x:Name="FocusVisualPrimary"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       Fill="Transparent"
+                       IsHitTestVisible="False"
+                       Stroke="{DynamicResource DataGridCellFocusVisualPrimaryBrush}"
+                       StrokeThickness="2" />
+            <Rectangle x:Name="FocusVisualSecondary"
+                       Margin="2"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       Fill="Transparent"
+                       IsHitTestVisible="False"
+                       Stroke="{DynamicResource DataGridCellFocusVisualSecondaryBrush}"
+                       StrokeThickness="1" />
+          </Grid>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+    </Style>
+  </UserControl.Styles>
+
   <Grid x:Name="gridMain" Background="{DynamicResource BackgroundBrushLight}">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
