@@ -20,6 +20,20 @@ namespace Convnet.PageViews
             {
                 datagrid.AutoGeneratingColumn += Datagrid_AutoGeneratingColumn;
                 datagrid.DataContextChanged += Datagrid_DataContextChanged;
+                datagrid.Loaded += Datagrid_Loaded;
+                var tpvm = DataContext as TestPageViewModel;
+                if (tpvm != null) 
+                { 
+                }
+            }
+        }
+
+        private void Datagrid_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+            var datagrid = sender as DataGrid;
+            if (datagrid != null)
+            {
+                
             }
         }
 

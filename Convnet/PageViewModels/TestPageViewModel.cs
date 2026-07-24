@@ -201,7 +201,7 @@ namespace Convnet.PageViewModels
                 if (PageVM.Model?.TaskState != DNNTaskStates.Running)
                 {
                     PageVM.Model?.GetConfusionMatrix();
-                    ConfusionDataView = GetConfusionDataTable()?.AsDataView();
+                    ConfusionDataView = GetConfusionDataView();
                     
                     PageVM.Model?.UpdateCostInfo(costIndex);
                     ProgressText = string.Format(_stringTesting, 0, PageVM.Model?.BatchSize, PageVM.Model?.CostLayers[costIndex].AvgTestLoss, PageVM.Model?.CostLayers[costIndex].TestErrors, PageVM.Model?.CostLayers[costIndex].TestErrorPercentage, (Float)100 - PageVM.Model?.CostLayers[costIndex].TestErrorPercentage);
@@ -216,6 +216,7 @@ namespace Convnet.PageViewModels
                 PageVM.Model.TestProgress += TestProgress;
                 ShowProgress = false;
                 ShowSample = false;
+                ConfusionDataView?.Dispose();
                 ConfusionDataView = null;
 
                 if (_costLayersComboBox != null && _dataProviderComboBox != null)
@@ -267,7 +268,9 @@ namespace Convnet.PageViewModels
                         PageVM.Model.Stop();
                         PageVM.Model.SetCostIndex((UInt)_costLayersComboBox.SelectedIndex);
                         PageVM.Model.GetConfusionMatrix();
-                        ConfusionDataView = GetConfusionDataTable()?.DefaultView;
+                        ConfusionDataView?.Dispose();
+                        ConfusionDataView = null;
+                        ConfusionDataView = GetConfusionDataView();
                     }
 
                     ToolTip.SetTip(CommandToolBar[0], "Start Testing");
@@ -282,7 +285,7 @@ namespace Convnet.PageViewModels
             }
         }
 
-        private DataTable? GetConfusionDataTable()
+        private DataView? GetConfusionDataView()
         {
             if (PageVM != null && PageVM.Model != null && PageVM.Model?.ConfusionMatrix != null && PageVM.Model.LabelsCollection != null)
             {
@@ -316,7 +319,7 @@ namespace Convnet.PageViewModels
                 }
                 table.EndLoadData();
 
-                return table;
+                return table.DefaultView;
             }
 
             return null;
