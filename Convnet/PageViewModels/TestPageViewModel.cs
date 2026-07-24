@@ -109,13 +109,13 @@ namespace Convnet.PageViewModels
 
             AddCommandButtons();
 
-            _confusionDataView = null;
+            _confusionDataView = GetConfusionDataView();;
             _showProgress = false;
             _showSample = false;
             
             PageVM?.Model?.TestProgress += TestProgress;
             PageVM?.ModelChanged += TestPageVM_ModelChanged;
-
+            
             //Dispatcher.UIThread.Post(() => LayerIndexChanged(this, null), DispatcherPriority.Render);
         }
 
@@ -201,6 +201,11 @@ namespace Convnet.PageViewModels
                 if (PageVM.Model?.TaskState != DNNTaskStates.Running)
                 {
                     PageVM.Model?.GetConfusionMatrix();
+                    if (ConfusionDataView != null)
+                    {
+                        ConfusionDataView.Dispose();
+                        ConfusionDataView = null;
+                    }
                     ConfusionDataView = GetConfusionDataView();
                     
                     PageVM.Model?.UpdateCostInfo(costIndex);
@@ -216,8 +221,13 @@ namespace Convnet.PageViewModels
                 PageVM.Model.TestProgress += TestProgress;
                 ShowProgress = false;
                 ShowSample = false;
-                ConfusionDataView?.Dispose();
-                ConfusionDataView = null;
+
+                if (ConfusionDataView != null)
+                {
+                    ConfusionDataView.Dispose();
+                    ConfusionDataView = null;
+                }
+                ConfusionDataView = GetConfusionDataView();
 
                 if (_costLayersComboBox != null && _dataProviderComboBox != null)
                 { 
@@ -268,8 +278,12 @@ namespace Convnet.PageViewModels
                         PageVM.Model.Stop();
                         PageVM.Model.SetCostIndex((UInt)_costLayersComboBox.SelectedIndex);
                         PageVM.Model.GetConfusionMatrix();
-                        ConfusionDataView?.Dispose();
-                        ConfusionDataView = null;
+                        
+                        if (ConfusionDataView != null)
+                        {
+                            ConfusionDataView.Dispose();
+                            ConfusionDataView = null;
+                        }
                         ConfusionDataView = GetConfusionDataView();
                     }
 
@@ -287,7 +301,7 @@ namespace Convnet.PageViewModels
 
         private DataView? GetConfusionDataView()
         {
-            if (PageVM != null && PageVM.Model != null && PageVM.Model?.ConfusionMatrix != null && PageVM.Model.LabelsCollection != null)
+            if (PageVM != null && PageVM.Model != null && PageVM.Model.LabelsCollection != null)
             {
                 var table = new DataTable("ConfusionTable");
                 uint classCount = (uint)PageVM.Model.ClassCount;
@@ -310,7 +324,7 @@ namespace Convnet.PageViewModels
                     rowCollection[0] = PageVM.Model.LabelsCollection[labelIndex][r].ToString().Replace("_", "__");
                     for (uint c = 0; c < classCount; c++)
                     {
-                        rowCollection[c + 1] = PageVM.Model.ConfusionMatrix[r*classCount+c];
+                        rowCollection[c + 1] = (PageVM.Model.ConfusionMatrix == null) ? 0 : PageVM.Model.ConfusionMatrix[r*classCount+c];
                     }
 
                     row.ItemArray = rowCollection;
@@ -321,7 +335,7 @@ namespace Convnet.PageViewModels
 
                 return table.DefaultView;
             }
-
+            
             return null;
         }
 
@@ -366,6 +380,7 @@ namespace Convnet.PageViewModels
                         PageVM.Model.AddTrainingRate(new DNNTrainingRate(dialog.Rate.Optimizer, dialog.Rate.Momentum, dialog.Rate.Beta2, dialog.Rate.L2Penalty, dialog.Rate.Dropout, dialog.Rate.Eps, dialog.Rate.N, dialog.Rate.D, dialog.Rate.H, dialog.Rate.W, dialog.Rate.PadD, dialog.Rate.PadH, dialog.Rate.PadW, 1, 1, dialog.Rate.EpochMultiplier, dialog.Rate.MaximumRate, dialog.Rate.MinimumRate, dialog.Rate.FinalRate, dialog.Rate.Gamma, dialog.Rate.DecayAfterEpochs, dialog.Rate.DecayFactor, dialog.Rate.HorizontalFlip, dialog.Rate.VerticalFlip, dialog.Rate.InputDropout, dialog.Rate.Cutout, dialog.Rate.CutMix, dialog.Rate.AutoAugment, dialog.Rate.ColorCast, dialog.Rate.ColorAngle, dialog.Rate.Distortion, dialog.Rate.Interpolation, dialog.Rate.Scaling, dialog.Rate.Rotation), true, 1, PageVM.Model.TrainingSamples);
                         if (_costLayersComboBox != null)
                             PageVM.Model.SetCostIndex((uint)_costLayersComboBox.SelectedIndex);
+                        
                         PageVM.Model.Start(false);
                         
                         CommandToolBar[0].IsVisible = false;
@@ -400,7 +415,6 @@ namespace Convnet.PageViewModels
                 if (stop == MessageBoxResult.Yes)
                 {
                     PageVM?.Model?.Stop();
-                    ConfusionDataView = null;
 
                     ToolTip.SetTip(CommandToolBar[0], "Start Testing");
                     CommandToolBar[0].IsVisible = true;
