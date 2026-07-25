@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,7 +10,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:PageViewModel"
              x:Class="Convnet.PageViews.PageView">
-  
+
   <UserControl.DataTemplates>
     <DataTemplate DataType="{x:Type vm:EditPageViewModel}">
       <view:EditPageView />
@@ -22,7 +22,7 @@
       <view:TrainPageView />
     </DataTemplate>
   </UserControl.DataTemplates>
-  
+
   <UserControl.Styles>
     <Style Selector="Separator">
       <Setter Property="Height" Value="NaN"/>
@@ -54,14 +54,16 @@
       <MenuItem Header="_Settings">
         <MenuItem Header="_Format"/>
         <MenuItem Header="_Locking"/>
-        <MenuItem Header="_Shuffle Dataset"/>
+        <MenuItem Header="_Shuffle Dataset">
+            <Slider Width="128" Minimum="1" Maximum="128" TickFrequency="8" IsSnapToTickEnabled="True" TickPlacement="Outside" Value="{Binding Shuffle}" />
+        </MenuItem>
         <MenuItem Header="_Priority"/>
       </MenuItem>
       <MenuItem Header="_Help">
         <MenuItem Header="_Documentation" Command="{Binding DocumentationCommand}"/>
       </MenuItem>
     </Menu>
-    
+
     <Grid RowDefinitions="Auto,*,24" DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1">
       <controls:ToolBarTray Name="toolBarTray" Grid.Row="0" HorizontalAlignment="Stretch" Orientation="Horizontal">
         <controls:ToolBar Background="{DynamicResource ToolBarBackgroundBrush}" Foreground="{DynamicResource TextBrush}" >

@@ -40,6 +40,7 @@ namespace Convnet.PageViewModels
         private double progressBarMaximum = 100;
         private double progressBarValue = 0;
         private double progressValue = 0;
+        private double shuffle = Settings.Default.Shuffle;
         private PageViewModelBase? currentPage;
         private bool openCommandVisible = false;
         private bool saveCommandVisible = false;
@@ -624,6 +625,21 @@ namespace Convnet.PageViewModels
         {
             get => progressValue;
             set => this.RaiseAndSetIfChanged(ref progressValue, value);
+        }
+
+        public double Shuffle
+        {
+            get => shuffle;
+            set
+            {
+                if (value != shuffle)
+                {
+                    Settings.Default.Shuffle = value;
+                    this.RaiseAndSetIfChanged(ref shuffle, value);
+                    Model?.SetShuffleCount((ulong)Math.Round(Settings.Default.Shuffle));
+                }
+            }
+        
         }
 
         public ReadOnlyCollection<PageViewModelBase?>? Pages { get; }
