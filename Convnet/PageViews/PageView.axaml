@@ -55,7 +55,7 @@
         <MenuItem Header="_Format"/>
         <MenuItem Header="_Locking"/>
         <MenuItem Header="_Shuffle Dataset">
-            <Slider Width="128" Minimum="1" Maximum="128" TickFrequency="8" IsSnapToTickEnabled="True" TickPlacement="Outside" Value="{Binding Shuffle}" />
+            <Slider Width="128" Minimum="1" Maximum="128" TickFrequency="8" IsSnapToTickEnabled="True" TickPlacement="Outside" Value="{Binding Shuffle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </MenuItem>
         <MenuItem Header="_Priority"/>
       </MenuItem>

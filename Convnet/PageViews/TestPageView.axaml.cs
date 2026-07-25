@@ -26,12 +26,6 @@ namespace Convnet.PageViews
             {
                 datagrid.AutoGeneratingColumn += Datagrid_AutoGeneratingColumn;
                 datagrid.DataContextChanged += Datagrid_DataContextChanged;
-                // datagrid.Loaded += Datagrid_Loaded;
-
-                // var tpvm = DataContext as TestPageViewModel;
-                // if (tpvm != null) 
-                // { 
-                // }
             }
         }
 
@@ -66,46 +60,5 @@ namespace Convnet.PageViews
             else
                 Initialized += delegate { Datagrid_DataContextChanged(sender, e); };
         }
-
-        // private void Datagrid_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
-        // {
-        //     var datagrid = sender as DataGrid;
-        //     if (datagrid != null)
-        //     {
-                
-        //     }
-        // }
-
-
-        // private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        // {
-        //     var datagrid = this.FindControl<DataGrid>("Datagrid");
-        //     var tpvm = DataContext as TestPageViewModel;
-
-        //     if (datagrid != null && tpvm != null && tpvm.ConfusionDataView != null)
-        //     {
-        //         // datagrid?.ItemsSource = null;
-        //         // datagrid?.ItemsSource = tpvm.ConfusionDataView;
-        //         // datagrid?.Focus();
-        //         // datagrid?.BringIntoView();
-        //         // datagrid?.InvalidateVisual();
-        //         // datagrid?.InvalidateArrange();
-
-        //         var cols = tpvm?.ConfusionDataView?.ToTable().Columns;
-        //         if (cols != null)
-        //         {
-        //             while (datagrid?.Columns.Count > 0) 
-        //                 datagrid.Columns.RemoveAt(datagrid.Columns.Count - 1); 
-
-        //             for (var i = 0; i < cols.Count; i++)
-        //             {
-        //                 if (cols[i].ColumnName == "RowHeader")
-        //                     datagrid?.Columns.Add(new DataGridTextColumn { Header = "", Binding = new Binding($"Row.ItemArray[{i}]") });
-        //                 else
-        //                     datagrid?.Columns.Add(new DataGridTextColumn { Header = cols[i].ColumnName, Binding = new Binding($"Row.ItemArray[{i}]") });
-        //             }
-        //         }
-        //     }
-        // }
     }
 }
