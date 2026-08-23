@@ -2273,7 +2273,11 @@ namespace dnn
 				auto costs = magic_enum::enum_names<Costs>();
 				for (const auto& cost : costs)
 					if (params == std::string(cost))
+                    {
 						ok = true;
+                        break;
+                    }
+                    
 				if (!ok)
 				{
 					msg = CheckMsg(line, col, std::string("Cost is not recognized."));
@@ -2309,7 +2313,11 @@ namespace dnn
 				auto activations = magic_enum::enum_names<Activations>();
 				for (const auto& activation : activations)
 					if (params == std::string(activation))
+                    {
 						ok = true;
+                        break;
+                    }
+
 				if (!ok)
 				{
 					msg = CheckMsg(line, col, std::string("Activation is not recognized."));
@@ -2569,7 +2577,11 @@ namespace dnn
 				auto ops = magic_enum::enum_names<ReduceOperations>();
 				for (const auto& op : ops)
 					if (params == std::string(op))
+                    {
 						ok = true;
+                        break;
+                    }
+
 				if (!ok)
 				{
 					msg = CheckMsg(line, col, std::string("Operation is not recognized."));
