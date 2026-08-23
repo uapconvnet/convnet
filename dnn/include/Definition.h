@@ -662,7 +662,6 @@ namespace dnn
 					labelTrue = Float(0.9);
 					labelFalse = Float(0.1);
 					ratio = model->Ratio;
-					
 				}
 			}
 			else if (strLine.find("Dataset=") == 0)
@@ -1069,7 +1068,7 @@ namespace dnn
 				auto list = std::istringstream(params);
 				std::string item;
 				while (std::getline(list, item, ','))
-					inputsStr.push_back(item);
+				    inputsStr.push_back(item);
 
 				for (const auto& input : inputsStr)
 				{
