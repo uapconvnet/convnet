@@ -270,16 +270,12 @@ namespace dnn
 
 						isModel = false;
 
-						auto exists = false;
 						for (auto& layer : layerNames)
 							if (layer.first == layerName)
-								exists = true;
-
-						if (exists)
-						{
-							msg = CheckMsg(line, col, std::string("Name already in use, must be unique."));
-							goto FAIL;
-						}
+							{
+							    msg = CheckMsg(line, col, std::string("Name already in use, must be unique."));
+							    goto FAIL;
+						    }
 
 						layerNames.push_back(std::make_pair(layerName, line));
 					}
@@ -292,16 +288,12 @@ namespace dnn
 						goto FAIL;
 					}
 
-					auto exists = false;
 					for (auto& layer : layerNames)
 						if (layer.first == layerName)
-							exists = true;
-
-					if (exists)
-					{
-						msg = CheckMsg(line, col, std::string("Layer name already in use, must be unique."));
-						goto FAIL;
-					}
+						{
+						    msg = CheckMsg(line, col, std::string("Layer name already in use, must be unique."));
+						    goto FAIL;
+                        }
 
 					layerNames.push_back(std::make_pair(layerName, line));
 
@@ -370,7 +362,11 @@ namespace dnn
 						}
 					}
 
-					if (layerType == LayerTypes::Convolution || layerType == LayerTypes::DepthwiseConvolution || layerType == LayerTypes::ConvolutionTranspose || layerType == LayerTypes::MaxPooling || layerType == LayerTypes::AvgPooling)
+					if (layerType == LayerTypes::Convolution 
+                        || layerType == LayerTypes::DepthwiseConvolution 
+                        || layerType == LayerTypes::ConvolutionTranspose 
+                        || layerType == LayerTypes::MaxPooling 
+                        || layerType == LayerTypes::AvgPooling)
 					{
 						auto kerH = 1 + ((int)kernelH - 1) * (int)dilationH;
 						auto kerW = 1 + ((int)kernelW - 1) * (int)dilationW;
@@ -683,7 +679,11 @@ namespace dnn
 				auto datasets = magic_enum::enum_names<Datasets>();
 				for (auto& set : datasets)
 					if (params == std::string(set))
+                    {
 						ok = true;
+                        break;
+                    }
+
 				if (!ok)
 				{
 					msg = CheckMsg(line, col, std::string("Dataset is not recognized."));
@@ -955,7 +955,9 @@ namespace dnn
 			}
 			else if (strLine.rfind("Ratio=") == 0)
 			{
-				if (layerType != LayerTypes::Input && layerType != LayerTypes::ChannelSplitRatioLeft && layerType != LayerTypes::ChannelSplitRatioRight)
+				if (layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::ChannelSplitRatioLeft 
+                    && layerType != LayerTypes::ChannelSplitRatioRight)
 				{
 					msg = CheckMsg(line, col, std::string("Ratio cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1007,7 +1009,10 @@ namespace dnn
 				auto types = magic_enum::enum_names<LayerTypes>();
 				for (const auto& type : types)
 					if (params == std::string(type))
+                    {
 						ok = true;
+                        break;
+                    }
 						
 				if (params == "Input")
 				{
@@ -1075,7 +1080,11 @@ namespace dnn
 					auto ok = false;
 					for (const auto& name : layerNames)
 						if (name.first.compare(input) == 0)
+                        {
 							ok = true;
+                            break;
+                        }
+
 					if (!ok)
 					{
 						msg = CheckMsg(line, col, std::string("Inputs ") + input + std::string(" doesn't exists."));
@@ -1093,7 +1102,8 @@ namespace dnn
 			}
 			else if (strLine.rfind("Momentum=") == 0)
 			{
-				if (layerType != LayerTypes::Input && !isNormalizationLayer)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input)
 				{
 					msg = CheckMsg(line, col, std::string("Eps cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1128,7 +1138,8 @@ namespace dnn
 			}
 			else if (strLine.rfind("Scaling=") == 0)
 			{
-				if (layerType != LayerTypes::Input && !isNormalizationLayer)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input)
 				{
 					msg = CheckMsg(line, col, std::string("Eps cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1149,7 +1160,9 @@ namespace dnn
 			}
 			else if (strLine.rfind("Eps=") == 0)
 			{
-				if (layerType != LayerTypes::Input && !isNormalizationLayer && layerType != LayerTypes::Cost)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::Cost)
 				{
 					msg = CheckMsg(line, col, std::string("Eps cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1186,7 +1199,13 @@ namespace dnn
 			}
 			else if (strLine.rfind("WeightsFiller=") == 0)
 			{
-				if (!isNormalizationLayer && layerType != LayerTypes::Input && layerType != LayerTypes::PRelu && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::Dense)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::PRelu 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::Dense)
 				{
 					msg = CheckMsg(line, col, std::string("WeightsFiller cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1384,7 +1403,13 @@ namespace dnn
 			}
 			else if (strLine.rfind("WeightsLRM=") == 0)
 			{
-				if (!isNormalizationLayer && layerType != LayerTypes::Input && layerType != LayerTypes::PRelu && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::Dense)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::PRelu 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::Dense)
 				{
 					msg = CheckMsg(line, col, std::string("WeightsLRM cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1415,7 +1440,13 @@ namespace dnn
 			}
 			else if (strLine.rfind("WeightsWDM=") == 0)
 			{
-				if (!isNormalizationLayer && layerType != LayerTypes::Input && layerType != LayerTypes::PRelu && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::Dense)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::PRelu 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::Dense)
 				{
 					msg = CheckMsg(line, col, std::string("WeightsWDM cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1446,7 +1477,13 @@ namespace dnn
 			}
 			else if (strLine.rfind("BiasesFiller=") == 0)
 			{
-				if (!isNormalizationLayer && layerType != LayerTypes::Input && layerType != LayerTypes::PRelu && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::Dense)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::PRelu 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::Dense)
 				{
 					msg = CheckMsg(line, col, std::string("BiasesFiller cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1646,7 +1683,13 @@ namespace dnn
 			}
 			else if (strLine.rfind("BiasesLRM=") == 0)
 			{
-				if (!isNormalizationLayer && layerType != LayerTypes::Input && layerType != LayerTypes::PRelu && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::Dense)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::PRelu 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::Dense)
 				{
 					msg = CheckMsg(line, col, std::string("BiasesLRM cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1677,7 +1720,13 @@ namespace dnn
 			}
 			else if (strLine.rfind("BiasesWDM=") == 0)
 			{
-				if (!isNormalizationLayer && layerType != LayerTypes::Input && layerType != LayerTypes::PRelu && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::Dense)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::PRelu 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::Dense)
 				{
 					msg = CheckMsg(line, col, std::string("BiasesWDM cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1708,7 +1757,13 @@ namespace dnn
 			}
 			else if (strLine.rfind("Biases=") == 0)
 			{
-				if (!isNormalizationLayer && layerType != LayerTypes::Input && layerType != LayerTypes::PRelu && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::Dense)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::PRelu 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::Dense)
 				{
 					msg = CheckMsg(line, col, std::string("Biases cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1730,7 +1785,7 @@ namespace dnn
 			else if (strLine.rfind("Dropout=") == 0)
 			{
 				if (layerType != LayerTypes::Input
-					&& layerType != LayerTypes::BatchNormActivationDropout
+                    && layerType != LayerTypes::BatchNormActivationDropout
 					&& layerType != LayerTypes::Dropout)
 				{
 					msg = CheckMsg(line, col, std::string("Dropout cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
@@ -1766,7 +1821,11 @@ namespace dnn
 			}
 			else if (strLine.rfind("Alpha=") == 0)
 			{
-				if (!isNormalizationLayer && layerType != LayerTypes::Input && layerType != LayerTypes::PRelu && layerType != LayerTypes::Activation && layerType != LayerTypes::LocalResponseNorm)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::PRelu 
+                    && layerType != LayerTypes::Activation 
+                    && layerType != LayerTypes::LocalResponseNorm)
 				{
 					msg = CheckMsg(line, col, std::string("Alpha cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1795,7 +1854,10 @@ namespace dnn
 			}
 			else if (strLine.rfind("Beta=") == 0)
 			{
-				if (!isNormalizationLayer && layerType != LayerTypes::Input && layerType != LayerTypes::Activation && layerType != LayerTypes::LocalResponseNorm)
+				if (!isNormalizationLayer 
+                    && layerType != LayerTypes::Input 
+                    && layerType != LayerTypes::Activation 
+                    && layerType != LayerTypes::LocalResponseNorm)
 				{
 					msg = CheckMsg(line, col, std::string("Beta cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -1982,7 +2044,10 @@ namespace dnn
 					goto FAIL;
 				}
 
-				if (layerType != LayerTypes::Shuffle && layerType != LayerTypes::ChannelSplit && layerType != LayerTypes::Convolution && layerType != LayerTypes::GroupNorm)
+				if (layerType != LayerTypes::Shuffle 
+                    && layerType != LayerTypes::ChannelSplit 
+                    && layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::GroupNorm)
 				{
 					msg = CheckMsg(line, col, std::string("Groups cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -2301,7 +2366,9 @@ namespace dnn
 					goto FAIL;
 				}
 
-				if (layerType != LayerTypes::BatchNormActivation && layerType != LayerTypes::BatchNormActivationDropout && layerType != LayerTypes::Activation)
+				if (layerType != LayerTypes::BatchNormActivation 
+                    && layerType != LayerTypes::BatchNormActivationDropout 
+                    && layerType != LayerTypes::Activation)
 				{
 					msg = CheckMsg(line, col, std::string("Activation cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -2354,7 +2421,11 @@ namespace dnn
 					goto FAIL;
 				}
 
-				if (layerType != LayerTypes::ChannelZeroPad && layerType != LayerTypes::Dense && layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::Cost)
+				if (layerType != LayerTypes::ChannelZeroPad 
+                    && layerType != LayerTypes::Dense 
+                    && layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::Cost)
 				{
 					msg = CheckMsg(line, col, std::string("Channels cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -2386,7 +2457,11 @@ namespace dnn
 					goto FAIL;
 				}
 
-				if (layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::AvgPooling && layerType != LayerTypes::MaxPooling)
+				if (layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::AvgPooling 
+                    && layerType != LayerTypes::MaxPooling)
 				{
 					msg = CheckMsg(line, col, std::string("Kernel cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -2432,7 +2507,11 @@ namespace dnn
 					goto FAIL;
 				}
 
-				if (layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::AvgPooling && layerType != LayerTypes::MaxPooling)
+				if (layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::AvgPooling 
+                    && layerType != LayerTypes::MaxPooling)
 				{
 					msg = CheckMsg(line, col, std::string("Dilation cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -2478,7 +2557,11 @@ namespace dnn
 					goto FAIL;
 				}
 
-				if (layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::AvgPooling && layerType != LayerTypes::MaxPooling)
+				if (layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::AvgPooling 
+                    && layerType != LayerTypes::MaxPooling)
 				{
 					msg = CheckMsg(line, col, std::string("Stride cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
@@ -2524,7 +2607,11 @@ namespace dnn
 					goto FAIL;
 				}
 
-				if (layerType != LayerTypes::Convolution && layerType != LayerTypes::ConvolutionTranspose && layerType != LayerTypes::DepthwiseConvolution && layerType != LayerTypes::AvgPooling && layerType != LayerTypes::MaxPooling)
+				if (layerType != LayerTypes::Convolution 
+                    && layerType != LayerTypes::ConvolutionTranspose 
+                    && layerType != LayerTypes::DepthwiseConvolution 
+                    && layerType != LayerTypes::AvgPooling 
+                    && layerType != LayerTypes::MaxPooling)
 				{
 					msg = CheckMsg(line, col, std::string("Pad cannot be specified in a ") + std::string(magic_enum::enum_name<LayerTypes>(layerType)) + std::string(" layer."));
 					goto FAIL;
