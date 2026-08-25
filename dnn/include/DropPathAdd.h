@@ -18,8 +18,8 @@ namespace dnn
         std::unique_ptr<dnnl::binary> bwdB;
 #endif
 		std::vector<Float> scales;
-		FloatVector scale0;
-		FloatVector scale1;
+		dnnl::memory scaleFirst;
+		dnnl::memory scaleSecond;
 		
 	public:
 		const Byte first, second;
@@ -31,8 +31,8 @@ namespace dnn
 			second(GetSecond(inputs)),
 			SurvivalProbability(FloatVector(2, Float(1))),
 			scales(std::vector<Float>(2, Float(1))),
-			scale0(FloatVector(1, Float(1))),
-			scale1(FloatVector(1, Float(1)))
+			scaleFirst(memory::desc::host_scalar(memory::data_type::f32), Float(1)),
+			scaleSecond(memory::desc::host_scalar(memory::data_type::f32), Float(1))
 		{
 			assert(Inputs.size() == 2);
 			assert(Inputs[0]->C == Inputs[1]->C);
@@ -121,11 +121,11 @@ namespace dnn
 			
             scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
 			scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
-
-            scale0[0] = scales[first];
-			scale1[0] = scales[second];
-
-            const auto fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } };
+            
+            scaleFirst.set_host_scalar_value(&scales[first]);
+            scaleSecond.set_host_scalar_value(&scales[second]);
+            
+            const auto fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd->execute(Device.stream, fwdArgs);
@@ -151,10 +151,10 @@ namespace dnn
             scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
 			scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
 
-            scale0[0] = Float(1);
-			scale1[0] = scales[first];
+            scaleFirst.set_host_scalar_value(Float(1));
+			scaleSecond.set_host_scalar_value(&scales[first]);
 
-            const auto bwdArgsA = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } };
+            const auto bwdArgsA = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
         	
             #ifdef DNN_CACHE_PRIMITIVES
 				bwdA->execute(Device.stream, bwdArgsA);
@@ -163,10 +163,10 @@ namespace dnn
             #endif
 			Device.stream.wait();
 
-            scale0[0] = Float(1);
-			scale1[0] = scales[second];
+            scaleFirst.set_host_scalar_value(Float(1));
+			scaleSecond.set_host_scalar_value(&scales[second]);
 
-            const auto bwdArgsB = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } };
+            const auto bwdArgsB = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
 		
             #ifdef DNN_CACHE_PRIMITIVES
 				bwdB->execute(Device.stream, bwdArgsB);
