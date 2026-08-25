@@ -31,8 +31,8 @@ namespace dnn
 			second(GetSecond(inputs)),
 			SurvivalProbability(FloatVector(2, Float(1))),
 			scales(std::vector<Float>(2, Float(1))),
-			scaleFirst(memory::desc::host_scalar(memory::data_type::f32), Float(1)),
-			scaleSecond(memory::desc::host_scalar(memory::data_type::f32), Float(1))
+			scaleFirst(dnnl::memory::desc::host_scalar(dnnl::memory::data_type::f32), Float(1)),
+			scaleSecond(dnnl::memory::desc::host_scalar(dnnl::memory::data_type::f32), Float(1))
 		{
 			assert(Inputs.size() == 2);
 			assert(Inputs[0]->C == Inputs[1]->C);
