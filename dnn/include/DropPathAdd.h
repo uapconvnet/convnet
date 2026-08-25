@@ -6,14 +6,20 @@ namespace dnn
 	class DropPathAdd final : public Layer
 	{
 	private:
-		std::unordered_map<int, dnnl::memory> fwdArgs;
+		// std::unordered_map<int, dnnl::memory> fwdArgs;
+		// std::unordered_map<int, dnnl::memory> bwdArgsA;
+        // std::unordered_map<int, dnnl::memory> bwdArgsB;
 		std::unique_ptr<dnnl::binary::primitive_desc> fwdDesc;
+        std::unique_ptr<dnnl::binary::primitive_desc> bwdDescA;
+		std::unique_ptr<dnnl::binary::primitive_desc> bwdDescB;
 #ifdef DNN_CACHE_PRIMITIVES
 		std::unique_ptr<dnnl::binary> fwd;
+        std::unique_ptr<dnnl::binary> bwdA;
+        std::unique_ptr<dnnl::binary> bwdB;
 #endif
 		std::vector<Float> scales;
-		//FloatVector scale0;
-		//FloatVector scale1;
+		FloatVector scale0;
+		FloatVector scale1;
 		
 	public:
 		const Byte first, second;
@@ -24,9 +30,9 @@ namespace dnn
 			first(GetFirst(inputs)),
 			second(GetSecond(inputs)),
 			SurvivalProbability(FloatVector(2, Float(1))),
-			scales(std::vector<Float>(2, Float(1)))
-			//scale0(FloatVector(1, Float(1))),
-			//scale1(FloatVector(1, Float(1)))
+			scales(std::vector<Float>(2, Float(1))),
+			scale0(FloatVector(1, Float(1))),
+			scale1(FloatVector(1, Float(1)))
 		{
 			assert(Inputs.size() == 2);
 			assert(Inputs[0]->C == Inputs[1]->C);
@@ -82,37 +88,45 @@ namespace dnn
 				DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::data_type::f32, ChosenFormat));
 			}
 
-			/*
+			
 			dnnl::primitive_attr attr;
 			attr.set_scales_mask(DNNL_ARG_SRC_0, 0);
 			attr.set_scales_mask(DNNL_ARG_SRC_1, 0);
 			
 			fwdDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[first]->DstMemDesc, *Inputs[second]->DstMemDesc, *DstMemDesc, attr));
-			*/
-			fwdDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[first]->DstMemDesc, *Inputs[second]->DstMemDesc, *DstMemDesc));
+			
+			//fwdDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[first]->DstMemDesc, *Inputs[second]->DstMemDesc, *DstMemDesc));
 			
 			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			
-			// fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } };
-			fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) } };
+            bwdDescA = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputsBwd[first]->DiffDstMemDesc, *DiffDstMemDesc, *InputsBwd[first]->DiffDstMemDesc, attr));
+            bwdDescB = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputsBwd[second]->DiffDstMemDesc, *DiffDstMemDesc, *InputsBwd[second]->DiffDstMemDesc, attr));		
+       
+
+			// const auto fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } };
+			// fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) } };
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::binary>(dnnl::binary(*fwdDesc));
+            bwdA = std::make_unique<dnnl::binary>(dnnl::binary(*bwdDescA));
+            bwdB = std::make_unique<dnnl::binary>(dnnl::binary(*bwdDescB));
 #endif
 		}
 
-/*
+
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
 			scale0[0] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
 			scale1[0] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
             
+            const auto fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } };
+
 #ifdef DNN_CACHE_PRIMITIVES
-				fwd->execute(Device.stream, fwdArgs);
+			fwd->execute(Device.stream, fwdArgs);
 #else
-				dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
+			dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
 #endif
 			Device.stream.wait();
 			
@@ -121,8 +135,45 @@ namespace dnn
 				fast_memzero(NeuronsD1.data(), PaddedCDHW() * batchSize * sizeof(Float));
 #endif // DNN_LEAN
 		}
-*/
 
+        void BackwardProp(const UInt batchSize) final override
+        {
+#ifdef DNN_LEAN
+			ZeroGradientMulti(batchSize);
+#endif
+
+			const auto fullDepth = (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
+			//scales[first] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
+			//scales[second] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
+            scale0[0] = (!fullDepth && Inputs[first]->Skip) ? Float(0) : Float(1);
+			scale1[0] = (!fullDepth && Inputs[second]->Skip) ? Float(0) : Float(1);
+
+            const auto bwdArgsA = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data()) } };
+        	
+            #ifdef DNN_CACHE_PRIMITIVES
+				bwdA->execute(Device.stream, bwdArgsA);
+            #else
+                dnnl::binary(*bwdDescA).execute(Device.stream, bwdArgsA);
+            #endif
+			Device.stream.wait();
+
+            
+            const auto bwdArgsB = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data()) } };
+		
+            #ifdef DNN_CACHE_PRIMITIVES
+				bwdB->execute(Device.stream, bwdArgsB);
+            #else
+                dnnl::binary(*bwdDescB).execute(Device.stream, bwdArgsB);
+            #endif
+			Device.stream.wait();
+
+#ifdef DNN_LEAN
+			ReleaseGradient();
+#endif // DNN_LEAN
+        }
+
+
+/*
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
@@ -257,41 +308,41 @@ namespace dnn
 										}	
 									}
 								});
-								/*
-									for_i(batchSize, [=](UInt n)
-									{
-										for (auto c = 0ull; c < PaddedC; c += VectorSize)
-										{
-											const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
-											for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
-											{
-												(VecFloat().load_a(&Inputs[first]->Neurons[hw]) + VecFloat().load_a(&Inputs[second]->Neurons[hw])).store_a(&Neurons[hw]);
-#ifndef DNN_LEAN
-												VecZero.store_nt(&NeuronsD1[hw]);
-#endif
-											}
-										}
-									});
-								*/
+								
+// 									for_i(batchSize, [=](UInt n)
+// 									{
+// 										for (auto c = 0ull; c < PaddedC; c += VectorSize)
+// 										{
+// 											const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+// 											for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+// 											{
+// 												(VecFloat().load_a(&Inputs[first]->Neurons[hw]) + VecFloat().load_a(&Inputs[second]->Neurons[hw])).store_a(&Neurons[hw]);
+// #ifndef DNN_LEAN
+// 												VecZero.store_nt(&NeuronsD1[hw]);
+// #endif
+// 											}
+// 										}
+// 									});
+								
 							else
-							/*
-								for_i(batchSize, [=](UInt n)
-								{
-									const auto scaleFirst = scales[first];
-									const auto scaleSecond = scales[second];
-									for (auto c = 0ull; c < PaddedC; c += VectorSize)
-									{
-										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
-										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
-										{
-											((VecFloat().load_a(&Inputs[first]->Neurons[hw]) * scaleFirst) + (VecFloat().load_a(&Inputs[second]->Neurons[hw]) * scaleSecond)).store_a(&Neurons[hw]);
-#ifndef DNN_LEAN
-											VecZero.store_nt(&NeuronsD1[hw]);
-#endif
-										}
-									}
-								});
-							*/	
+// 							
+// 								for_i(batchSize, [=](UInt n)
+// 								{
+// 									const auto scaleFirst = scales[first];
+// 									const auto scaleSecond = scales[second];
+// 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
+// 									{
+// 										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+// 										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+// 										{
+// 											((VecFloat().load_a(&Inputs[first]->Neurons[hw]) * scaleFirst) + (VecFloat().load_a(&Inputs[second]->Neurons[hw]) * scaleSecond)).store_a(&Neurons[hw]);
+// #ifndef DNN_LEAN
+// 											VecZero.store_nt(&NeuronsD1[hw]);
+// #endif
+// 										}
+// 									}
+// 								});
+// 								
 
 								for_i(PaddedC / VectorSize, threads, [=](UInt c)
 								{
@@ -340,23 +391,23 @@ namespace dnn
 										}	
 									}
 								});
-								/*
-								parallel_nd(batchSize, [=](UInt n)
-								{
-									for (auto c = 0ull; c < PaddedC; c += VectorSize)
-									{
-										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
-										const auto channelOffset = Inputs[second]->OffsetPaddedMem(n, c, 0, 0);
-										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
-										{
-											(VecFloat().load_a(&Inputs[first]->Neurons[hw]) + VecFloat().load_a(&Inputs[second]->Neurons[channelOffset])).store_a(&Neurons[hw]);
-#ifndef DNN_LEAN
-											VecZero.store_nt(&NeuronsD1[hw]);
-#endif
-										}
-									}
-								});
-								*/
+								
+// 								parallel_nd(batchSize, [=](UInt n)
+// 								{
+// 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
+// 									{
+// 										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+// 										const auto channelOffset = Inputs[second]->OffsetPaddedMem(n, c, 0, 0);
+// 										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+// 										{
+// 											(VecFloat().load_a(&Inputs[first]->Neurons[hw]) + VecFloat().load_a(&Inputs[second]->Neurons[channelOffset])).store_a(&Neurons[hw]);
+// #ifndef DNN_LEAN
+// 											VecZero.store_nt(&NeuronsD1[hw]);
+// #endif
+// 										}
+// 									}
+// 								});
+								
 							else
 								for_i(PaddedC / VectorSize, threads, [=](UInt c)
 								{
@@ -381,25 +432,25 @@ namespace dnn
 										}	
 									}
 								});
-								/*
-								for_i(batchSize, threads, [=](UInt n)
-								{
-									const auto scaleFirst = scales[first];
-									const auto scaleSecond = scales[second];
-									for (auto c = 0ull; c < PaddedC; c += VectorSize)
-									{
-										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
-										const auto channelOffset = Inputs[second]->OffsetPaddedMem(n, c, 0, 0);
-										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
-										{
-											((VecFloat().load_a(&Inputs[first]->Neurons[hw]) * scaleFirst) + (VecFloat().load_a(&Inputs[second]->Neurons[channelOffset]) * scaleSecond)).store_a(&Neurons[hw]);
-#ifndef DNN_LEAN
-											VecZero.store_nt(&NeuronsD1[hw]);
-#endif
-										}
-									}
-								});
-								*/
+								
+// 								for_i(batchSize, threads, [=](UInt n)
+// 								{
+// 									const auto scaleFirst = scales[first];
+// 									const auto scaleSecond = scales[second];
+// 									for (auto c = 0ull; c < PaddedC; c += VectorSize)
+// 									{
+// 										const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+// 										const auto channelOffset = Inputs[second]->OffsetPaddedMem(n, c, 0, 0);
+// 										for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+// 										{
+// 											((VecFloat().load_a(&Inputs[first]->Neurons[hw]) * scaleFirst) + (VecFloat().load_a(&Inputs[second]->Neurons[channelOffset]) * scaleSecond)).store_a(&Neurons[hw]);
+// #ifndef DNN_LEAN
+// 											VecZero.store_nt(&NeuronsD1[hw]);
+// #endif
+// 										}
+// 									}
+// 								});
+								
 						}
 					}
 				}	
@@ -414,6 +465,7 @@ namespace dnn
 				Device.stream.wait();
 			}
 		}
+
 
 
 		void BackwardProp(const UInt batchSize) final override
@@ -486,22 +538,22 @@ namespace dnn
 								}	
 							}
 						});
-						/*
-						for_i(batchSize, threads, [=](UInt n)
-						{
-							VecFloat neuronsD1;
-							for (auto c = 0ull; c < PaddedC; c += VectorSize)
-							{
-								const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
-								for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
-								{
-									neuronsD1.load_a(&NeuronsD1[hw]);
-									(neuronsD1 + VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
-									(neuronsD1 + VecFloat().load_a(&InputsBwd[second]->NeuronsD1[hw])).store_a(&InputsBwd[second]->NeuronsD1[hw]);
-								}
-							}
-						});
-						*/
+						
+						// for_i(batchSize, threads, [=](UInt n)
+						// {
+						// 	VecFloat neuronsD1;
+						// 	for (auto c = 0ull; c < PaddedC; c += VectorSize)
+						// 	{
+						// 		const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+						// 		for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+						// 		{
+						// 			neuronsD1.load_a(&NeuronsD1[hw]);
+						// 			(neuronsD1 + VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+						// 			(neuronsD1 + VecFloat().load_a(&InputsBwd[second]->NeuronsD1[hw])).store_a(&InputsBwd[second]->NeuronsD1[hw]);
+						// 		}
+						// 	}
+						// });
+						
 					else
 						for_i(PaddedC / VectorSize, threads, [=](UInt c)
 						{
@@ -524,24 +576,24 @@ namespace dnn
 								}	
 							}
 						});
-						/*
-						for_i(batchSize, threads, [=](UInt n)
-						{
-							const auto scaleFirstVec = VecFloat(scales[first]);
-							const auto scaleSecondVec = VecFloat(scales[second]);
-							VecFloat neuronsD1;
-							for (auto c = 0ull; c < PaddedC; c += VectorSize)
-							{
-								const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
-								for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
-								{
-									neuronsD1.load_a(&NeuronsD1[hw]);
-									mul_add(neuronsD1, scaleFirstVec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
-									mul_add(neuronsD1, scaleSecondVec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[hw])).store_a(&InputsBwd[second]->NeuronsD1[hw]);
-								}
-							}
-						});
-						*/
+						
+						// for_i(batchSize, threads, [=](UInt n)
+						// {
+						// 	const auto scaleFirstVec = VecFloat(scales[first]);
+						// 	const auto scaleSecondVec = VecFloat(scales[second]);
+						// 	VecFloat neuronsD1;
+						// 	for (auto c = 0ull; c < PaddedC; c += VectorSize)
+						// 	{
+						// 		const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+						// 		for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+						// 		{
+						// 			neuronsD1.load_a(&NeuronsD1[hw]);
+						// 			mul_add(neuronsD1, scaleFirstVec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+						// 			mul_add(neuronsD1, scaleSecondVec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[hw])).store_a(&InputsBwd[second]->NeuronsD1[hw]);
+						// 		}
+						// 	}
+						// });
+						
 				}			
 			}
 			else
@@ -604,23 +656,23 @@ namespace dnn
 								}	
 							}
 						});
-						/*
-						for_i(batchSize, threads, [=](UInt n)
-						{
-							VecFloat neuronsD1;
-							for (auto c = 0ull; c < PaddedC; c += VectorSize)
-							{
-								const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
-								const auto channelOffset = InputsBwd[second]->OffsetPaddedMem(n, c, 0, 0);
-								for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
-								{
-									neuronsD1.load_a(&NeuronsD1[hw]);
-									(neuronsD1 + VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
-									(neuronsD1 + VecFloat().load_a(&InputsBwd[second]->NeuronsD1[channelOffset])).store_a(&InputsBwd[second]->NeuronsD1[channelOffset]);
-								}
-							}
-						});
-						*/
+						
+						// for_i(batchSize, threads, [=](UInt n)
+						// {
+						// 	VecFloat neuronsD1;
+						// 	for (auto c = 0ull; c < PaddedC; c += VectorSize)
+						// 	{
+						// 		const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+						// 		const auto channelOffset = InputsBwd[second]->OffsetPaddedMem(n, c, 0, 0);
+						// 		for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+						// 		{
+						// 			neuronsD1.load_a(&NeuronsD1[hw]);
+						// 			(neuronsD1 + VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+						// 			(neuronsD1 + VecFloat().load_a(&InputsBwd[second]->NeuronsD1[channelOffset])).store_a(&InputsBwd[second]->NeuronsD1[channelOffset]);
+						// 		}
+						// 	}
+						// });
+						
 					else
 						for_i(PaddedC / VectorSize, threads, [=](UInt c)
 						{
@@ -644,25 +696,25 @@ namespace dnn
 								}	
 							}
 						});
-						/*
-						for_i(batchSize, threads, [=](UInt n)
-						{
-							const auto scaleFirstVec = VecFloat(scales[first]);
-							const auto scaleSecondVec = VecFloat(scales[second]);
-							VecFloat neuronsD1;
-							for (auto c = 0ull; c < PaddedC; c += VectorSize)
-							{
-								const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
-								const auto channelOffset = InputsBwd[second]->OffsetPaddedMem(n, c, 0, 0);
-								for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
-								{
-									neuronsD1.load_a(&NeuronsD1[hw]);
-									mul_add(neuronsD1, scaleFirstVec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
-									mul_add(neuronsD1, scaleSecondVec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[channelOffset])).store_a(&InputsBwd[second]->NeuronsD1[channelOffset]);
-								}
-							}
-						});
-						*/
+						
+						// for_i(batchSize, threads, [=](UInt n)
+						// {
+						// 	const auto scaleFirstVec = VecFloat(scales[first]);
+						// 	const auto scaleSecondVec = VecFloat(scales[second]);
+						// 	VecFloat neuronsD1;
+						// 	for (auto c = 0ull; c < PaddedC; c += VectorSize)
+						// 	{
+						// 		const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+						// 		const auto channelOffset = InputsBwd[second]->OffsetPaddedMem(n, c, 0, 0);
+						// 		for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+						// 		{
+						// 			neuronsD1.load_a(&NeuronsD1[hw]);
+						// 			mul_add(neuronsD1, scaleFirstVec, VecFloat().load_a(&InputsBwd[first]->NeuronsD1[hw])).store_a(&InputsBwd[first]->NeuronsD1[hw]);
+						// 			mul_add(neuronsD1, scaleSecondVec, VecFloat().load_a(&InputsBwd[second]->NeuronsD1[channelOffset])).store_a(&InputsBwd[second]->NeuronsD1[channelOffset]);
+						// 		}
+						// 	}
+						// });
+						
 				}
 			}
 
@@ -670,5 +722,6 @@ namespace dnn
 			ReleaseGradient();
 #endif // DNN_LEAN
 		}
+        */
 	};
 }
