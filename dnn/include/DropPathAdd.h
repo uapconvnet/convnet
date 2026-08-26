@@ -6,16 +6,16 @@ namespace dnn
 	class DropPathAdd final : public Layer
 	{
 	private:
-		// std::unordered_map<int, dnnl::memory> fwdArgs;
-		// std::unordered_map<int, dnnl::memory> bwdArgsA;
-        // std::unordered_map<int, dnnl::memory> bwdArgsB;
+		std::unordered_map<int, dnnl::memory> fwdArgs;
+		std::unordered_map<int, dnnl::memory> bwdArgsFirst;
+        std::unordered_map<int, dnnl::memory> bwdArgsSecond;
 		std::unique_ptr<dnnl::binary::primitive_desc> fwdDesc;
-        std::unique_ptr<dnnl::binary::primitive_desc> bwdDescA;
-		std::unique_ptr<dnnl::binary::primitive_desc> bwdDescB;
+        std::unique_ptr<dnnl::binary::primitive_desc> bwdDescFirst;
+		std::unique_ptr<dnnl::binary::primitive_desc> bwdDescSecond;
 #ifdef DNN_CACHE_PRIMITIVES
 		std::unique_ptr<dnnl::binary> fwd;
-        std::unique_ptr<dnnl::binary> bwdA;
-        std::unique_ptr<dnnl::binary> bwdB;
+        std::unique_ptr<dnnl::binary> bwdFirst;
+        std::unique_ptr<dnnl::binary> bwdSecond;
 #endif
 		std::vector<Float> scales;
 		dnnl::memory scaleFirst;
@@ -100,8 +100,8 @@ namespace dnn
 			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			
-            bwdDescA = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputsBwd[first]->DiffDstMemDesc, *DiffDstMemDesc, *InputsBwd[first]->DiffDstMemDesc, attr));
-            bwdDescB = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputsBwd[second]->DiffDstMemDesc, *DiffDstMemDesc, *InputsBwd[second]->DiffDstMemDesc, attr));		
+            bwdDescFirst = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputsBwd[first]->DiffDstMemDesc, *DiffDstMemDesc, *InputsBwd[first]->DiffDstMemDesc, attr));
+            bwdDescSecond = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputsBwd[second]->DiffDstMemDesc, *DiffDstMemDesc, *InputsBwd[second]->DiffDstMemDesc, attr));		
        
 
 			// const auto fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale0.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale1.data()) } };
@@ -109,8 +109,8 @@ namespace dnn
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::binary>(dnnl::binary(*fwdDesc));
-            bwdA = std::make_unique<dnnl::binary>(dnnl::binary(*bwdDescA));
-            bwdB = std::make_unique<dnnl::binary>(dnnl::binary(*bwdDescB));
+            bwdFirst = std::make_unique<dnnl::binary>(dnnl::binary(*bwdDescFirst));
+            bwdSecond = std::make_unique<dnnl::binary>(dnnl::binary(*bwdDescSecond));
 #endif
 		}
 
@@ -154,24 +154,30 @@ namespace dnn
             scaleFirst.set_host_scalar_value(Float(1));
 			scaleSecond.set_host_scalar_value(scales[first]);
 
-            const auto bwdArgsA = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
+            const auto diffDestMem = dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data());
+            
+            auto firstDiffSrcMem = dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data());
+
+            const auto bwdArgsFirst = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, firstDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, firstDiffSrcMem }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
         	
             #ifdef DNN_CACHE_PRIMITIVES
-				bwdA->execute(Device.stream, bwdArgsA);
+				bwdFirst->execute(Device.stream, bwdArgsFirst);
             #else
-                dnnl::binary(*bwdDescA).execute(Device.stream, bwdArgsA);
+                dnnl::binary(*bwdDescFirst).execute(Device.stream, bwdArgsFirst);
             #endif
 			Device.stream.wait();
 
             scaleFirst.set_host_scalar_value(Float(1));
 			scaleSecond.set_host_scalar_value(scales[second]);
 
-            const auto bwdArgsB = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*DiffDstMemDesc, Device.engine, NeuronsD1.data()) }, { DNNL_ARG_DST, dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
+            auto secondDiffSrcMem = dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data());
+
+            const auto bwdArgsSecond = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, secondDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, secondDiffSrcMem }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
 		
             #ifdef DNN_CACHE_PRIMITIVES
-				bwdB->execute(Device.stream, bwdArgsB);
+				bwdSecond->execute(Device.stream, bwdArgsSecond);
             #else
-                dnnl::binary(*bwdDescB).execute(Device.stream, bwdArgsB);
+                dnnl::binary(*bwdDescSecond).execute(Device.stream, bwdArgsSecond);
             #endif
 			Device.stream.wait();
 
