@@ -6,9 +6,9 @@ namespace dnn
 	class Add final : public Layer
 	{
 	private:
-		// std::unordered_map<int, dnnl::memory> fwdArgs;
-		// std::unordered_map<int, dnnl::memory> bwdArgsFirst;
-        // std::unordered_map<int, dnnl::memory> bwdArgsSecond;
+		std::unordered_map<int, dnnl::memory> fwdArgs;
+		std::unordered_map<int, dnnl::memory> bwdArgsFirst;
+        std::unordered_map<int, dnnl::memory> bwdArgsSecond;
 		std::unique_ptr<dnnl::binary::primitive_desc> fwdDesc;
 		std::unique_ptr<dnnl::binary::primitive_desc> bwdDescFirst;
 		std::unique_ptr<dnnl::binary::primitive_desc> bwdDescSecond;
@@ -99,7 +99,7 @@ namespace dnn
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
-			const auto fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) } };
+			fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) } };
 
 			#ifdef DNN_CACHE_PRIMITIVES
 				fwd->execute(Device.stream, fwdArgs);
@@ -125,7 +125,7 @@ namespace dnn
             
             auto firstDiffSrcMem = dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data());
 
-            const auto bwdArgsFirst = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, firstDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, firstDiffSrcMem } };
+            bwdArgsFirst = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, firstDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, firstDiffSrcMem } };
         	
             #ifdef DNN_CACHE_PRIMITIVES
 				bwdFirst->execute(Device.stream, bwdArgsFirst);
@@ -137,7 +137,7 @@ namespace dnn
             
             auto secondDiffSrcMem = dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data());
 
-            const auto bwdArgsSecond = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, secondDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, secondDiffSrcMem } };
+            bwdArgsSecond = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, secondDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, secondDiffSrcMem } };
 		
             #ifdef DNN_CACHE_PRIMITIVES
 				bwdSecond->execute(Device.stream, bwdArgsSecond);

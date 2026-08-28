@@ -125,7 +125,7 @@ namespace dnn
             scaleFirst.set_host_scalar_value(scales[first]);
             scaleSecond.set_host_scalar_value(scales[second]);
             
-            const auto fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
+            fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd->execute(Device.stream, fwdArgs);
@@ -158,7 +158,7 @@ namespace dnn
             
             auto firstDiffSrcMem = dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data());
 
-            const auto bwdArgsFirst = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, firstDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, firstDiffSrcMem }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
+            bwdArgsFirst = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, firstDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, firstDiffSrcMem }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
         	
             #ifdef DNN_CACHE_PRIMITIVES
 				bwdFirst->execute(Device.stream, bwdArgsFirst);
@@ -172,7 +172,7 @@ namespace dnn
 
             auto secondDiffSrcMem = dnnl::memory(*InputsBwd[second]->DiffDstMemDesc, Device.engine, InputsBwd[second]->NeuronsD1.data());
 
-            const auto bwdArgsSecond = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, secondDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, secondDiffSrcMem }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
+            bwdArgsSecond = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, secondDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, secondDiffSrcMem }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
 		
             #ifdef DNN_CACHE_PRIMITIVES
 				bwdSecond->execute(Device.stream, bwdArgsSecond);
