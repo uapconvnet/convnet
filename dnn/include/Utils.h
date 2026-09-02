@@ -13,21 +13,6 @@
 #endif
 
 #ifndef MAX_VECTOR_SIZE
-#ifdef DNN_SSE41
-#define INSTRSET 5
-#define MAX_VECTOR_SIZE 128
-#endif // DNN_SSE41
-
-#ifdef DNN_SSE42
-#define INSTRSET 6
-#define MAX_VECTOR_SIZE 128
-#endif // DNN_SSE42
-
-#ifdef DNN_AVX
-#define INSTRSET 7
-#define MAX_VECTOR_SIZE 256
-#endif //DNN_AVX
-
 #ifdef DNN_AVX2
 #define INSTRSET 8
 #define MAX_VECTOR_SIZE 256
@@ -182,16 +167,11 @@ namespace dnn
 	typedef Vec16fb VecFloatBool;
 	constexpr auto VectorSize = 16ull;
 	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw16c;
-#elif defined(DNN_AVX2) || defined(DNN_AVX)
+#elif defined(DNN_AVX2)
 	typedef Vec8f VecFloat;
 	typedef Vec8fb VecFloatBool;
 	constexpr auto VectorSize = 8ull;
 	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw8c;
-#elif defined(DNN_SSE42) || defined(DNN_SSE41)
-	typedef Vec4f VecFloat;
-	typedef Vec4fb VecFloatBool;
-	constexpr auto VectorSize = 4ull;
-	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw4c;
 #endif
 	const auto VecZero = VecFloat(Float(0));
 
@@ -549,10 +529,8 @@ namespace dnn
 
 #if defined(DNN_AVX512BW) || defined(DNN_AVX512)
 		return select(generator.random16f() < p, VecFloat(1), VecFloat(0));
-#elif defined(DNN_AVX2) || defined(DNN_AVX)
+#elif defined(DNN_AVX2)
 		return select(generator.random8f() < p, VecFloat(1), VecFloat(0));
-#elif defined(DNN_SSE42) || defined(DNN_SSE41)
-		return select(generator.random4f() < p, VecFloat(1), VecFloat(0));
 #endif
 	}
 
@@ -567,10 +545,8 @@ namespace dnn
 
 #if defined(DNN_AVX512BW) || defined(DNN_AVX512)
 		return (generator.random16f() * scale) + min;
-#elif defined(DNN_AVX2) || defined(DNN_AVX)
+#elif defined(DNN_AVX2)
 		return (generator.random8f() * scale) + min;
-#elif defined(DNN_SSE42) || defined(DNN_SSE41)
-		return (generator.random4f() * scale) + min;
 #endif
 	}
 

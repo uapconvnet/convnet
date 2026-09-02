@@ -530,8 +530,8 @@ namespace dnn
 
 	void fast_memzero(void *dest, size_t numbytes)
 	{
-  		const auto PAGE_4K = 2 * 1024ll * 1024ll;
-		const auto res = std::lldiv(static_cast<long long>(numbytes), static_cast<long long>(PAGE_4K));
+  		const auto PAGE_4MB = 1 << 22; // 4MB page size
+		const auto res = std::lldiv(static_cast<long long>(numbytes), static_cast<long long>(PAGE_4MB));
 		
   		if (!res.quot)
 	  		fast_memset(dest, 0, res.rem);
@@ -539,8 +539,8 @@ namespace dnn
 			for_i(res.quot, [=](long long i)
 			{
       			const auto tail = (i + 1ll == res.quot) ? res.rem : 0ll;
-      			const auto ptr = reinterpret_cast<unsigned char *>(dest) + i * PAGE_4K;
-				fast_memset(ptr, 0, PAGE_4K + tail);
+      			const auto ptr = reinterpret_cast<unsigned char *>(dest) + i * PAGE_4MB;
+				fast_memset(ptr, 0, PAGE_4MB + tail);
     		});
 	}
 }
