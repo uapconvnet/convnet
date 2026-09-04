@@ -1,3 +1,11 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Reactive;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using AvaloniaEdit;
@@ -6,16 +14,9 @@ using Convnet.PageViewModels;
 using Convnet.Properties;
 using CustomMessageBox.Avalonia;
 using Interop;
-using System.Linq;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
-using System;
-using System.IO;
-using System.Reactive;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
+using ReactiveUI.Primitives;
 
 namespace Convnet.PageViews
 {
@@ -35,7 +36,7 @@ namespace Convnet.PageViews
         
         public PageViewModel? PageVM;
 
-        public ReactiveCommand<Unit, Unit> CutCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> CutCommand { get; }
         public void Cut()
         {
             //var elem = TopLevel.GetTopLevel(this).GetFocusedElement();

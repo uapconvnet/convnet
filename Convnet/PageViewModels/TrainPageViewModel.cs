@@ -27,6 +27,8 @@ using System.Collections.Generic;
 
 using Float = System.Single;
 using UInt = System.UInt64;
+using ReactiveUI.Primitives.Advanced;
+using ReactiveUI.Primitives;
 
 namespace Convnet.PageViewModels
 {
@@ -144,7 +146,7 @@ namespace Convnet.PageViewModels
 
         public bool IsUpdating = false;
 
-        public ReactiveCommand<SelectionChangedEventArgs, Unit> SelectionChangedCommand { get; }
+        public ReactiveCommand<SelectionChangedEventArgs, RxVoid> SelectionChangedCommand { get; }
 
         public void SelectionChanged(SelectionChangedEventArgs e)
         {
@@ -170,11 +172,11 @@ namespace Convnet.PageViewModels
             }
         }
 
-        public ReactiveCommand<Unit, Unit> OpenCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> OpenCommand { get; }
 
-        public ReactiveCommand<Unit, Unit> SaveCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> SaveCommand { get; }
         
-        public ReactiveCommand<Unit, Unit> SaveAsCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> SaveAsCommand { get; }
 
 
         public TrainPageViewModel(PageViewModel pvm) : base()

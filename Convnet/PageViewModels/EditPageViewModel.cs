@@ -19,6 +19,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using ReactiveUI.Primitives;
 
 namespace Convnet.PageViewModels
 {
@@ -69,17 +70,17 @@ namespace Convnet.PageViewModels
             get => pageVM;
             set => this.RaiseAndSetIfChanged(ref pageVM, value);
         }
-        public ReactiveCommand<Unit, Unit> OpenCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> OpenCommand { get; }
 
-        public ReactiveCommand<Unit, Unit> SaveAsCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> SaveAsCommand { get; }
 
-        public ReactiveCommand<Unit, Unit> CheckCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> CheckCommand { get; }
 
-        public ReactiveCommand<Unit, Unit> SyncCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> SyncCommand { get; }
 
-        public ReactiveCommand<Unit, Unit> ScriptsCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> ScriptsCommand { get; }
 
-        public ReactiveCommand<Unit, Unit> VisualStudioCommand { get; }
+        public ReactiveCommand<RxVoid, RxVoid> VisualStudioCommand { get; }
 
         public EditPageViewModel(PageViewModel pvm) : base()
         {
