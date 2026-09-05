@@ -115,7 +115,7 @@ namespace dnn
 		}
 
 
-		void ForwardProp(const UInt batchSize, const bool training) final override
+		void ForwardProp([[maybe_unused]] const UInt batchSize, const bool training) final override
 		{
 			const auto fullDepth = !training || (SurvivalProbability[first] == Float(1) && SurvivalProbability[second] == Float(1));
 			

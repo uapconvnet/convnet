@@ -115,7 +115,7 @@ namespace Convnet.PageViewModels
         private string? pointsTrainLabel = string.Empty;
         private string? pointsTestLabel = string.Empty;
         private PlotType currentPlotType;
-        private LegendPosition currentLegendPosition;
+        private LegendPosition currentLegendPosition = LegendPosition.RightBottom;
         private PlotModel? plotModel;
         private Avalonia.Media.Imaging.WriteableBitmap? weightsSnapshot;
         private Avalonia.Media.Imaging.WriteableBitmap? inputSnapshot;

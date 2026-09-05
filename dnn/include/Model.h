@@ -1325,7 +1325,7 @@ namespace dnn
 				for (auto b = 0ull; b < batchSize; b++)
 				{
 					if (overflow && b >= skipCount)
-						return;
+						continue;
 
 					const auto batchOffset = b * cost->C;
 					auto loss = Float(0);
@@ -1351,7 +1351,7 @@ namespace dnn
 				for (auto b = 0ull; b < batchSize; b++)
 				{
 					if (overflow && b >= skipCount)
-						return;
+						continue;
 
 					const auto sampleOffset = b * inputLayer->C;
 
