@@ -1752,7 +1752,6 @@ namespace dnn
 						else
 						{
 #endif
-							auto overflow = false;
 							for (SampleIndex = 0; SampleIndex < AdjustedTrainSamplesCount; SampleIndex += N)
 							{
 								// Forward
@@ -1784,9 +1783,8 @@ namespace dnn
 										Layers[i]->fpropTime = std::chrono::duration<Float>(Float(0));
 								}
 								
-								overflow = SampleIndex >= TrainOverflowCount;
-								CostFunctionBatch(State.load(), N, overflow, TrainSkipCount);
-								RecognizedBatch(State.load(), N, overflow, TrainSkipCount, SampleLabels);
+								CostFunctionBatch(State.load(), N, SampleIndex >= TrainOverflowCount, TrainSkipCount);
+								RecognizedBatch(State.load(), N, SampleIndex >= TrainOverflowCount, TrainSkipCount, SampleLabels);
 								fpropTime = timer.now() - timePointLocal;
 
 								// Backward
@@ -1870,7 +1868,6 @@ namespace dnn
 						else
 						{
 #endif
-							auto overflow = false;
 							for (SampleIndex = 0; SampleIndex < AdjustedTestSamplesCount; SampleIndex += N)
 							{
 								const auto timePointLocal = timer.now();
@@ -1896,9 +1893,8 @@ namespace dnn
 
 								fpropTime = timer.now() - timePointLocal;
 
-								overflow = SampleIndex >= TestOverflowCount;
-								CostFunctionBatch(State.load(), N, overflow, TestSkipCount);
-								RecognizedBatch(State.load(), N, overflow, TestSkipCount, SampleLabels);
+								CostFunctionBatch(State.load(), N, SampleIndex >= TestOverflowCount, TestSkipCount);
+								RecognizedBatch(State.load(), N, SampleIndex >= TestOverflowCount, TestSkipCount, SampleLabels);
 
 								elapsedTime = timer.now() - timePointLocal;
 								SampleSpeed = N / (Float(std::chrono::duration_cast<std::chrono::microseconds>(elapsedTime).count()) / 1000000ll);
