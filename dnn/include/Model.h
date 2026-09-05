@@ -73,7 +73,11 @@ namespace dnn
 		{
 			auto i = 0ull;
 			for (auto token : message)
+            {
 				Message[i++] = token;
+                if (i >= sizeof(Message) - 1)
+                    break;
+            }
 			Message[i] = '\0';
 		}
 	};

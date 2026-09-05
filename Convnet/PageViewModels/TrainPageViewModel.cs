@@ -1136,7 +1136,7 @@ namespace Convnet.PageViewModels
                 legend.LegendPosition = CurrentLegendPosition;
                 legend.LegendTitleFontSize = 16;
                 legend.LegendFontSize = 16;
-                legend.LegendPosition = LegendPosition.RightBottom;
+                //legend.LegendPosition = LegendPosition.RightBottom;
                 plotModel.Legends.Add(legend);
                 plotModel.TextColor = OxyColor.FromRgb(255, 255, 255);
                 //this.RaisePropertyChanged(nameof(PlotModel));
