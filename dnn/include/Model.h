@@ -2100,7 +2100,6 @@ namespace dnn
 					for (auto cost : CostLayers)
 						cost->Reset();
 
-					auto overflow = false;
 					SampleIndex = 0;
 
 					timePointGlobal = timer.now();
@@ -2136,9 +2135,9 @@ namespace dnn
 							Layers[i]->fpropTime = timer.now() - timePoint;
 						}
 						fpropTime = timer.now() - timePointGlobal;
-						overflow = SampleIndex >= TrainOverflowCount;
-						CostFunctionBatch(State.load(), N, overflow, TrainSkipCount);
-						RecognizedBatch(State.load(), N, overflow, TrainSkipCount, SampleLabels);
+                        						
+						CostFunctionBatch(State.load(), N, SampleIndex >= TrainOverflowCount, TrainSkipCount);
+						RecognizedBatch(State.load(), N, SampleIndex >= TrainOverflowCount, TrainSkipCount, SampleLabels);
 
 						for (auto i = Layers.size() - 1; i >= FirstUnlockedLayer.load(); --i)
 						{
