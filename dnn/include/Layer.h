@@ -627,7 +627,7 @@ namespace dnn
 		
 		virtual void UpdateResolution()	{ }
 
-		void SetParameters(const bool useDefaults, const Fillers weightsFiller, const FillerModes weightsFillerMode, const Float weightsGain, const Float weightsScale, const Float weightsLRM, const Float weightsWDM, const Fillers biasesFiller, const FillerModes biasesFillerMode, const Float biasesGain, const Float biasesScale, const Float biasesLRM, const Float biasesWDM)
+        void SetParameters(const bool useDefaults, const Fillers weightsFiller, const FillerModes weightsFillerMode, const Float weightsGain, const Float weightsScale, const Float weightsLRM, const Float weightsWDM, const Fillers biasesFiller, const FillerModes biasesFillerMode, const Float biasesGain, const Float biasesScale, const Float biasesLRM, const Float biasesWDM)
 		{
 			UseDefaultParameters = useDefaults;
 			WeightsFiller = weightsFiller;
@@ -2755,7 +2755,7 @@ namespace dnn
 							auto memWeightsPar3 = dnnl::memory(*PersistWeightsMemDesc, Device.engine);
 							is.read(reinterpret_cast<char*>(memWeightsPar3.get_data_handle()), std::streamsize(WeightCount * sizeof(Float)));
 							auto weightsPar3Mem = dnnl::memory(*WeightsMemDesc, Device.engine, WeightsPar3.data());
-							dnnl::reorder(memWeightsPar3, weightsPar2Mem).execute(Device.stream, { {DNNL_ARG_FROM, memWeightsPar3}, {DNNL_ARG_TO, weightsPar3Mem} });
+							dnnl::reorder(memWeightsPar3, weightsPar3Mem).execute(Device.stream, { {DNNL_ARG_FROM, memWeightsPar3}, {DNNL_ARG_TO, weightsPar3Mem} });
 							Device.stream.wait();
 							if (HasBias)
 								is.read(reinterpret_cast<char*>(BiasesPar3.data()), std::streamsize(BiasCount * sizeof(Float)));
