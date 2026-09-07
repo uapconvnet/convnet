@@ -528,9 +528,9 @@ namespace dnn
 		static thread_local auto generator = Ranvec1(3, Seed<int>(), static_cast<int>(std::hash<std::thread::id>()(std::this_thread::get_id())));
 
 #if defined(DNN_AVX512BW) || defined(DNN_AVX512)
-		return select(generator.random16f() < p, VecFloat(1), VecFloat(0));
+		return select(generator.random16f() < p, VecFloat(Float(1)), VecFloat(Float(0)));
 #elif defined(DNN_AVX2)
-		return select(generator.random8f() < p, VecFloat(1), VecFloat(0));
+		return select(generator.random8f() < p, VecFloat(Float(1)), VecFloat(Float(0)));
 #endif
 	}
 
