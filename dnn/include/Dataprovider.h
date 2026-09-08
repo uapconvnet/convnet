@@ -594,8 +594,8 @@ namespace dnn
 
 					if (ok && !infile.bad() && infile.is_open())
 					{
-						auto TrainPatterns = new Byte[30730000];
-						infile.read(reinterpret_cast<char*>(TrainPatterns), 30730000);
+						auto TrainPatterns = std::vector<Byte>(30730000);
+						infile.read(reinterpret_cast<char*>(TrainPatterns.data()), 30730000);
 						infile.close();
 						const auto offset = batch * 10000;
 						for (UInt index = 0; index < 10000; index++)
@@ -604,7 +604,7 @@ namespace dnn
 							TrainLabels[index + offset][0] = TrainPatterns[3073 * index];
 							
 						}
-						delete[] TrainPatterns;
+						TrainPatterns.clear();
 					}
 					else
 						ok = false;
@@ -616,15 +616,15 @@ namespace dnn
 				auto infile = std::ifstream(pathTestPatterns, std::ios::binary | std::ios::in);
 				if (!infile.bad() && infile.is_open())
 				{
-					auto TestPatterns = new Byte[30730000];
-					infile.read(reinterpret_cast<char*>(TestPatterns), 30730000);
+					auto TestPatterns = std::vector<Byte>(30730000);
+					infile.read(reinterpret_cast<char*>(TestPatterns.data()), 30730000);
 					infile.close();
 					for (UInt index = 0; index < TestSamplesCount; index++)
 					{
 						TestSamples[index] = Image<Byte>(3, 1, 32, 32, &TestPatterns[3073 * index + 1]);
 						TestLabels[index][0] = TestPatterns[3073 * index];
 					}
-					delete[] TestPatterns;
+					TestPatterns.clear();
 				}
 				else
 					return false;
@@ -639,8 +639,8 @@ namespace dnn
 				auto infile = std::ifstream(pathTrainPatterns, std::ios::binary | std::ios::in);
 				if (!infile.bad() && infile.is_open())
 				{
-					auto TrainPatterns = new Byte[153700000];
-					infile.read(reinterpret_cast<char*>(TrainPatterns), 153700000);
+					auto TrainPatterns = std::vector<Byte>(153700000);
+					infile.read(reinterpret_cast<char*>(TrainPatterns.data()), 153700000);
 					infile.close();
 					for (UInt index = 0; index < 50000; index++)
 					{
@@ -648,7 +648,7 @@ namespace dnn
 						TrainLabels[index][0] = TrainPatterns[3074 * index];
 						TrainLabels[index][1] = TrainPatterns[3074 * index + 1];
 					}
-					delete[] TrainPatterns;
+					TrainPatterns.clear();
 				}
 				else
 					return false;
@@ -656,8 +656,8 @@ namespace dnn
 				infile.open(pathTestPatterns, std::ios::binary | std::ios::in);
 				if (!infile.bad() && infile.is_open())
 				{
-					auto TestPatterns = new Byte[30740000];
-					infile.read(reinterpret_cast<char*>(TestPatterns), 30740000);
+					auto TestPatterns = std::vector<Byte>(30740000);
+					infile.read(reinterpret_cast<char*>(TestPatterns.data()), 30740000);
 					infile.close();
 					for (UInt index = 0; index < TestSamplesCount; index++)
 					{
@@ -665,7 +665,7 @@ namespace dnn
 						TestLabels[index][0] = TestPatterns[3074 * index];
 						TestLabels[index][1] = TestPatterns[3074 * index + 1];
 					}
-					delete[] TestPatterns;
+					TestPatterns.clear();
 				}
 				else
 					return false;
@@ -683,17 +683,17 @@ namespace dnn
 				auto infile = std::ifstream(pathTrainLabels, std::ios::binary | std::ios::in);
 				if (!infile.bad() && infile.is_open())
 				{
-					auto fileBufLabels = new Byte[60000];
+					auto fileBufLabels = std::vector<Byte>(60000);
 					infile.seekg(8ll, std::ios::beg);
-					infile.read(reinterpret_cast<char*>(fileBufLabels), 60000);
+					infile.read(reinterpret_cast<char*>(fileBufLabels.data()), 60000);
 					infile.close();
 
 					infile.open(pathTrainPatterns, std::ios::binary | std::ios::in);
 					if (!infile.bad() && infile.is_open())
 					{
-						auto fileBuf = new Byte[47040000];
+						auto fileBuf = std::vector<Byte>(47040000);
 						infile.seekg(16ll, std::ios::beg);
-						infile.read(reinterpret_cast<char*>(fileBuf), 47040000);
+						infile.read(reinterpret_cast<char*>(fileBuf.data()), 47040000);
 						infile.close();
 
 						for (UInt i = 0; i < TrainSamplesCount; i++)
@@ -702,15 +702,15 @@ namespace dnn
 							TrainLabels[i][0] = static_cast<UInt>(fileBufLabels[i]);
 						}
 
-						delete[] fileBuf;
+						fileBuf.clear();
 					}
 					else
 					{
-						delete[] fileBufLabels;
+						fileBufLabels.clear();
 						return false;
 					}
 
-					delete[] fileBufLabels;
+					fileBufLabels.clear();
 				}
 				else
 					return false;
@@ -718,17 +718,17 @@ namespace dnn
 				infile.open(pathTestLabels, std::ios::binary | std::ios::in);
 				if (!infile.bad() && infile.is_open())
 				{
-					auto fileBufLabels = new Byte[10000];
+					auto fileBufLabels = std::vector<Byte>(10000);
 					infile.seekg(8ll, std::ios::beg);
-					infile.read(reinterpret_cast<char*>(fileBufLabels), 10000);
+					infile.read(reinterpret_cast<char*>(fileBufLabels.data()), 10000);
 					infile.close();
 
 					infile.open(pathTestPatterns, std::ios::binary | std::ios::in);
 					if (!infile.bad() && infile.is_open())
 					{
-						auto fileBuf = new Byte[7840000];
+						auto fileBuf = std::vector<Byte>(7840000);
 						infile.seekg(16ll, std::ios::beg);
-						infile.read(reinterpret_cast<char*>(fileBuf), 7840000);
+						infile.read(reinterpret_cast<char*>(fileBuf.data()), 7840000);
 						infile.close();
 
 						for (UInt i = 0; i < TestSamplesCount; i++)
@@ -737,15 +737,15 @@ namespace dnn
 							TestLabels[i][0] = static_cast<UInt>(fileBufLabels[i]);
 						}
 
-						delete[] fileBuf;
+						fileBuf.clear();
 					}
 					else
 					{
-						delete[] fileBufLabels;
+						fileBufLabels.clear();
 						return false;
 					}
 
-					delete[] fileBufLabels;
+					fileBufLabels.clear();
 				}
 				else
 					return false;
@@ -1046,7 +1046,7 @@ namespace dnn
 		}
 		
 #ifdef cimg_use_jpeg
-		static cimg_library::CImg<Byte> LoadJPEG(const std::string& fileName, const bool forceColorFormat = false) NOEXCEPT
+		static cimg_library::CImg<Byte> LoadJPEG(const std::string& fileName, const bool forceColorFormat = false)
 		{
 			auto img = cimg_library::CImg<Byte>().get_load_jpeg(fileName.c_str());
 
@@ -1066,7 +1066,7 @@ namespace dnn
 #endif
 
 #ifdef cimg_use_png
-		static cimg_library::CImg<Byte> LoadPNG(const std::string& fileName, const bool forceColorFormat = false) NOEXCEPT
+		static cimg_library::CImg<Byte> LoadPNG(const std::string& fileName, const bool forceColorFormat = false)
 		{
 			auto bitsPerPixel = 0u;
 
