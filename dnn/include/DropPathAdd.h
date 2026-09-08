@@ -140,7 +140,7 @@ namespace dnn
 #endif // DNN_LEAN
 		}
 
-        void BackwardProp(const UInt batchSize) final override
+        void BackwardProp([[maybe_unused]] const UInt batchSize) final override
         {
 #ifdef DNN_LEAN
 			ZeroGradientMulti(batchSize);
