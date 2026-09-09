@@ -31,7 +31,7 @@ namespace dnn
     class AlignedAllocator
     {
         // Static assertion to ensure alignment is a power of two at compile time
-        static_assert((Alignment & (Alignment - 1)) == 0, "Alignment must be a power of two.");
+        static_assert((Alignment & (Alignment - 1)) == 0, "Alignment must be a power of two.");  
 
     public:
         using value_type      = T;
@@ -41,10 +41,12 @@ namespace dnn
         using difference_type = std::ptrdiff_t;
         using reference       = T&;
         using const_reference = const T&;
+        using is_always_equal = std::true_type;
 
         // Rebind is still useful for older compilers/specific STL implementations
         template <typename U>
-        struct rebind {
+        struct rebind 
+        {
             using other = AlignedAllocator<U, Alignment>;
         };
 
@@ -87,14 +89,10 @@ namespace dnn
         }
 
         // --- Utilities ---
-
-        [[nodiscard]] DNN_INLINE size_type max_size() const noexcept 
+        [[nodiscard]] static constexpr size_type max_size() noexcept
         { 
             return std::numeric_limits<std::size_t>::max() / sizeof(T); 
         }
-
-        DNN_INLINE pointer address(reference value) const noexcept { return std::addressof(value); }
-        DNN_INLINE const_pointer address(const_reference value) const noexcept { return std::addressof(value); }
 
     protected:
         // Helper to ensure the requested size is a multiple of the alignment (required by POSIX)
