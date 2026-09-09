@@ -152,6 +152,7 @@ set(libdnn_headers
   include/BatchNormActivation.h
   include/BatchNormActivationDropout.h
   include/BatchNormRelu.h
+  include/BetaDistribution.h
   include/ChannelSplit.h
   include/ChannelSplitRatioLeft.h
   include/ChannelSplitRatioRight.h

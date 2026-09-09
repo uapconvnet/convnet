@@ -27,6 +27,11 @@
 #define INSTRSET 10
 #define MAX_VECTOR_SIZE 512
 #endif //DNN_AVX512BW
+
+#ifdef DNN_AVX512FP16
+#define INSTRSET 12
+#define MAX_VECTOR_SIZE 512
+#endif //DNN_AVX512FP16
 #endif // MAX_VECTOR_SIZE
 
 #include "instrset.h"
@@ -87,6 +92,7 @@
 
 #include "AlignedAllocator.h"
 #include "ParallelFor.h"
+#include "BetaDistribution.h"
 
 #define MAGIC_ENUM_RANGE_MIN 0
 #define MAGIC_ENUM_RANGE_MAX 255
@@ -880,102 +886,13 @@ namespace dnn
 	typedef std::vector<Float, AlignedAllocator<Float, 64ull>> FloatVector;
 	
 	
-	/* https://stackoverflow.com/questions/15165202/random-number-generator-with-beta-distribution */
-	template <typename RealType = double>
-	class beta_distribution
-	{
-	public:
-		typedef RealType result_type;
-
-		class param_type
-		{
-		public:
-			typedef beta_distribution distribution_type;
-
-			explicit param_type(RealType a = 2.0, RealType b = 2.0) : a_param(a), b_param(b) { }
-
-			RealType a() const noexcept { return a_param; }
-			RealType b() const noexcept { return b_param; }
-
-			bool operator==(const param_type& other) const noexcept
-			{
-				return (a_param == other.a_param && b_param == other.b_param);
-			}
-
-			bool operator!=(const param_type& other) const noexcept
-			{
-				return !(*this == other);
-			}
-
-		private:
-			RealType a_param, b_param;
-		};
-
-		explicit beta_distribution(RealType a = 2.0, RealType b = 2.0) noexcept  : a_gamma(a), b_gamma(b) { }
-		explicit beta_distribution(const param_type& param) noexcept : a_gamma(param.a()), b_gamma(param.b()) { }
-
-		void reset() { }
-
-		param_type param() const noexcept
-		{
-			return param_type(a(), b());
-		}
-
-		void param(const param_type& param) noexcept
-		{
-			a_gamma = gamma_dist_type(param.a());
-			b_gamma = gamma_dist_type(param.b());
-		}
-
-		template <typename URNG>
-		inline result_type operator()(URNG& engine) noexcept
-		{
-			return generate(engine, a_gamma, b_gamma);
-		}
-
-		template <typename URNG>
-		inline result_type operator()(URNG& engine, const param_type& param) noexcept
-		{
-			gamma_dist_type a_param_gamma(param.a()), b_param_gamma(param.b());
-			return generate(engine, a_param_gamma, b_param_gamma);
-		}
-
-		result_type min() const noexcept { return 0.0; }
-		result_type max() const noexcept { return 1.0; }
-
-		result_type a() const noexcept { return a_gamma.alpha(); }
-		result_type b() const noexcept { return b_gamma.alpha(); }
-
-		bool operator==(const beta_distribution<result_type>& other) const noexcept
-		{
-			return (param() == other.param() &&	a_gamma == other.a_gamma &&	b_gamma == other.b_gamma);
-		}
-
-		bool operator!=(const beta_distribution<result_type>& other) const noexcept
-		{
-			return !(*this == other);
-		}
-
-	private:
-		typedef std::gamma_distribution<result_type> gamma_dist_type;
-
-		gamma_dist_type a_gamma, b_gamma;
-
-		template <typename URNG>
-		inline result_type generate(URNG& engine, gamma_dist_type& x_gamma, gamma_dist_type& y_gamma) noexcept
-		{
-			result_type x = x_gamma(engine);
-			return x / (x + y_gamma(engine));
-		}
-	};
-
 	template<typename T>
-	auto BetaDistribution(const T a, const T b) NOEXCEPT
+	auto GetBetaDistribution(const T a, const T b) NOEXCEPT
 	{
 		static_assert(std::is_floating_point<T>::value, "Only Floating point type supported in BetaDistribution function");
 		static thread_local auto generator = std::mt19937(Seed<unsigned>());
 
-		return dnn::beta_distribution<T>(a, b)(generator);
+		return dnn::BetaDistribution<T>(a, b)(generator);
 	}
 
 	struct no_separator : std::numpunct<char>
