@@ -901,7 +901,7 @@ namespace dnn
 
 			if (forceColorFormat && dstImage.Channels == 1)
 			{
-				Image dstColorImage = Image(3, dstImage.Depth, dstImage.Width, dstImage.Height);
+				Image dstColorImage = Image(3, dstImage.Depth, dstImage.Height, dstImage.Width);
 
 				for (auto c = 0ull; c < 3ull; c++)
 					for (auto d = 0ull; d < dstImage.Depth; d++)
@@ -924,7 +924,7 @@ namespace dnn
 
 			if (forceColorFormat && dstImage.Channels == 1)
 			{
-				Image dstColorImage = Image(3, dstImage.Depth, dstImage.Width, dstImage.Height);
+				Image dstColorImage = Image(3, dstImage.Depth, dstImage.Height, dstImage.Width);
 
 				for (auto c = 0ull; c < 3ull; c++)
 					for (auto d = 0ull; d < dstImage.Depth; d++)
@@ -1052,7 +1052,8 @@ namespace dnn
 			auto palette = std::vector<Byte>(256);
 			const auto q = 256ull / levels;
 			for (auto c = 0ull; c < 255ull; c++)
-				palette[c] = Saturate<UInt>((((c / q) * q) * levels) / (levels - 1));
+                palette[c] = static_cast<Byte>((c / q) * q); 
+				//palette[c] = Saturate<UInt>((((c / q) * q) * levels) / (levels - 1));
 
 			for (auto c = 0ull; c < dstImage.Channels; c++)
 				for (auto d = 0ull; d < dstImage.Depth; d++)
@@ -1211,7 +1212,7 @@ namespace dnn
 			return dstImage;
 		}
 
-		static Image Solarize(const Image& image, const T treshold = 128)
+		static Image Solarize(const Image& image, const T threshold = 128)
 		{
 			Image dstImage(image.Channels, image.Depth, image.Height, image.Width);
 
@@ -1221,7 +1222,7 @@ namespace dnn
 				for (auto d = 0ull; d < dstImage.Depth; d++)
 					for (auto h = 0ull; h < dstImage.Height; h++)
 						for (auto w = 0ull; w < dstImage.Width; w++)
-							dstImage(c, d, h, w) = (image(c, d, h, w) < treshold) ? image(c, d, h, w) : (maximum - image(c, d, h, w));
+							dstImage(c, d, h, w) = (image(c, d, h, w) < threshold) ? image(c, d, h, w) : (maximum - image(c, d, h, w));
 
 			return dstImage;
 		}
@@ -1261,7 +1262,7 @@ namespace dnn
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(srcImage._width + deltaW, y, z, c), 0, -deltaW * sizeof(T));
 						else
-							fast_memset(srcImage.data(srcImage._width + deltaW, y, z, c), (uint8_t)mean[c], -deltaW * sizeof(T));
+							fast_memset(srcImage.data(srcImage._width + deltaW, y, z, c), (uint8_t)std::clamp(mean[c], Float(0), Float(255)), -deltaW * sizeof(T));
 					}
 				else
 					cimg_forYZC(srcImage, y, z, c)
@@ -1270,7 +1271,7 @@ namespace dnn
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(0, y, z, c), 0, deltaW * sizeof(T));
 						else
-							fast_memset(srcImage.data(0, y, z, c), (uint8_t)mean[c], deltaW * sizeof(T));
+							fast_memset(srcImage.data(0, y, z, c), (uint8_t)std::clamp(mean[c], Float(0), Float(255)), deltaW * sizeof(T));
 					}
 			}
 
@@ -1283,7 +1284,7 @@ namespace dnn
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(0, srcImage._height + deltaH, z, c), 0, -deltaH * UInt(srcImage._width) * sizeof(T));
 						else
-							fast_memset(srcImage.data(0, srcImage._height + deltaH, z, c), (uint8_t)mean[c], -deltaH * UInt(srcImage._width) * sizeof(T));
+							fast_memset(srcImage.data(0, srcImage._height + deltaH, z, c), (uint8_t)std::clamp(mean[c], Float(0), Float(255)), -deltaH * UInt(srcImage._width) * sizeof(T));
 					}
 				else
 					cimg_forZC(srcImage, z, c)
@@ -1292,7 +1293,7 @@ namespace dnn
 						if constexpr (std::is_floating_point_v<T>)
 							fast_memset(srcImage.data(0, 0, z, c), 0, deltaH * UInt(srcImage._width) * sizeof(T));
 						else
-							fast_memset(srcImage.data(0, 0, z, c), (uint8_t)mean[c], deltaH * UInt(srcImage._width) * sizeof(T));
+							fast_memset(srcImage.data(0, 0, z, c), (uint8_t)std::clamp(mean[c], Float(0), Float(255)), deltaH * UInt(srcImage._width) * sizeof(T));
 					}
 			}
 
