@@ -66,7 +66,9 @@ namespace dnn
 #ifdef DEBUG
             assert(n > 0 && "Cannot allocate zero size");
 #endif
-            if (n == 0) return nullptr;
+            if (n == 0) {
+                return nullptr;
+            }
 
             if (n > std::numeric_limits<std::size_t>::max() / sizeof(T)) {
                 throw std::bad_array_new_length();
