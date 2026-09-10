@@ -14,7 +14,11 @@
 #if defined(_MSC_VER)
     #define DNN_INLINE __forceinline
 #elif defined(__clang__) || defined(__GNUC__)
-    #define DNN_INLINE inline __attribute__((always_inline))
+    #if __has_attribute(always_inline)
+        #define DNN_INLINE inline __attribute__((always_inline))
+    #else
+        #define DNN_INLINE inline
+    #endif
 #else
     #define DNN_INLINE inline
 #endif
@@ -29,7 +33,10 @@ namespace dnn
     template <typename T, std::size_t Alignment>
     class AlignedAllocator
     {
-        static_assert((Alignment & (Alignment - 1)) == 0, "Alignment must be a power of two.");  
+        static_assert(__cplusplus >= 201703L, "AlignedAllocator requires C++17 or later");
+        static_assert(sizeof(T) > 0, "Type T must have non-zero size");
+        static_assert((Alignment & (Alignment - 1)) == 0, "Alignment must be a power of two");
+        static_assert(Alignment >= sizeof(void*), "Alignment cannot be less than pointer size");
 
     public:
         using value_type      = T;
@@ -43,8 +50,7 @@ namespace dnn
 
         // Rebind is still useful for older compilers/specific STL implementations
         template <typename U>
-        struct rebind 
-        {
+        struct rebind { 
             using other = AlignedAllocator<U, Alignment>;
         };
 
@@ -57,6 +63,9 @@ namespace dnn
 
         [[nodiscard]] DNN_INLINE pointer allocate(std::size_t n)
         {
+#ifdef DEBUG
+            assert(n > 0 && "Cannot allocate zero size");
+#endif
             if (n == 0) return nullptr;
 
             if (n > std::numeric_limits<std::size_t>::max() / sizeof(T)) {
@@ -95,6 +104,9 @@ namespace dnn
         DNN_INLINE void* AlignedAlloc(std::size_t align, std::size_t size) const
         {
             const std::size_t adjusted_size = RoundUp(size, align);
+#ifdef DEBUG
+            assert((adjusted_size % align == 0) && "Size must be multiple of alignment");
+#endif
 
 #if defined(_WIN32) || defined(__CYGWIN__)
             return ::_aligned_malloc(adjusted_size, align);
@@ -103,8 +115,12 @@ namespace dnn
 #elif defined(__MINGW32__)
             return ::_mm_malloc(adjusted_size, align);
 #else // POSIX
-            // C++17 aligned_alloc requires size to be a multiple of alignment
-            return ::aligned_alloc(align, adjusted_size);
+            void* p = nullptr;
+            p = ::aligned_alloc(align, adjusted_size);
+            if (!p) {
+                ::posix_memalign(&p, align, adjusted_size);
+            }
+            return p;
 #endif
         }
 
