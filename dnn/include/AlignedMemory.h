@@ -24,6 +24,7 @@ namespace dnn
 
 	public:
 		static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value || std::is_same<T, unsigned int>::value || std::is_same<T, int>::value || std::is_same<T, unsigned long>::value || std::is_same<T, long>::value, "T has unsupported type");
+
 		void release() NOEXCEPT
 		{
 			if (arrPtr)
@@ -33,7 +34,9 @@ namespace dnn
 			arrPtr = nullptr;
 			dataPtr = nullptr;			
 		}
+
 		AlignedMemory() NOEXCEPT { }
+
 		AlignedMemory(const dnnl::memory::desc& md, const dnnl::engine& engine, const T value = T(0)) NOEXCEPT
 		{
 			if (md)
@@ -66,11 +69,16 @@ namespace dnn
 				}
 			}
 		}
+
 		inline auto memory() noexcept { return arrPtr.get(); }
+
 		inline auto data() noexcept { return dataPtr; }
-		inline auto data() const noexcept { return dataPtr; }
+        inline auto data() const noexcept { return dataPtr; }
+
 		inline auto size() const noexcept { return nelems; }
+
 		auto desc() { return description; }
+
 		void resizeMem(const dnnl::memory::desc& md, const dnnl::engine& engine, const T value = T(0)) NOEXCEPT
 		{
 			if (md)
@@ -111,24 +119,30 @@ namespace dnn
 				}
 			}
 		}
+
 		void resize(const size_type n, const size_type c, const dnnl::memory::data_type dtype, const dnnl::memory::format_tag format, const dnnl::engine& engine, const T value = T()) NOEXCEPT
 		{
 			AlignedMemory::resizeMem(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(n), dnnl::memory::dim(c) }), dtype, format), engine, value);
 		}
+
 		void resize(const size_type n, const size_type c, const size_type w, const dnnl::memory::data_type dtype, const dnnl::memory::format_tag format, const dnnl::engine& engine, const T value = T()) NOEXCEPT
 		{
 			AlignedMemory::resizeMem(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(n), dnnl::memory::dim(c), dnnl::memory::dim(w) }), dtype, format), engine, value);
 		}
+
 		void resize(const size_type n, const size_type c, const size_type h, const size_type w, const dnnl::memory::data_type dtype, const dnnl::memory::format_tag format, const dnnl::engine& engine, const T value = T()) NOEXCEPT
 		{
 			AlignedMemory::resizeMem(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(n), dnnl::memory::dim(c), dnnl::memory::dim(h), dnnl::memory::dim(w) }), dtype, format), engine, value);
 		}
+
 		void resize(const size_type n, const size_type c, const size_type d, const size_type h, const size_type w, const dnnl::memory::data_type dtype, const dnnl::memory::format_tag format, const dnnl::engine& engine, const T value = T()) NOEXCEPT
 		{
 			AlignedMemory::resizeMem(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(n), dnnl::memory::dim(c), dnnl::memory::dim(d), dnnl::memory::dim(h), dnnl::memory::dim(w) }), dtype, format), engine, value);
 		}
+
 		inline T& operator[] (size_type i) NOEXCEPT { return dataPtr[i]; }
 		inline const T& operator[] (size_type i) const NOEXCEPT { return dataPtr[i]; }
+        
 		inline auto empty() const noexcept { return nelems == 0; }
 	};
 }
