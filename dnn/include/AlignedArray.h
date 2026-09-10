@@ -8,7 +8,6 @@
 
 namespace dnn
 {
-
 	struct aligned_free
 	{
 		aligned_free() = default;
@@ -58,6 +57,7 @@ namespace dnn
 
 	public:
 	    static_assert(std::is_same<T, double>::value || std::is_same<T, float>::value || std::is_same<T, unsigned char>::value || std::is_same<T, char>::value || std::is_same<T, unsigned int>::value || std::is_same<T, int>::value || std::is_same<T, unsigned long>::value || std::is_same<T, long>::value, "T has unsupported type");
+
 		void release() NOEXCEPT
 		{
 			if (arrPtr)
@@ -67,7 +67,9 @@ namespace dnn
 			arrPtr = nullptr;
 			dataPtr = nullptr;
 		}
+
 		AlignedArray() NOEXCEPT	{ }
+
 		AlignedArray(const size_type elements, const T value = T(0)) NOEXCEPT
 		{
 			AlignedArray::release();
@@ -97,9 +99,13 @@ namespace dnn
 				}
 			}
 		}
+
 		inline auto data() noexcept { return dataPtr; }
+
 		inline auto data() const noexcept { return dataPtr; }
+
 		inline auto size() const noexcept { return nelems; }
+
 		void resize(size_type elements, const T value = T(0)) NOEXCEPT
 		{ 
 			if (elements == nelems)
@@ -135,8 +141,10 @@ namespace dnn
 				}
 			}		
 		}
+
 		inline T& operator[] (size_type i) NOEXCEPT { return dataPtr[i]; }
-		inline const T& operator[] (size_type i) const NOEXCEPT { return dataPtr[i]; }
+    	inline const T& operator[] (size_type i) const NOEXCEPT { return dataPtr[i]; }
+
 		inline auto empty() const noexcept { return nelems == 0; }
 	};
 }
