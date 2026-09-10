@@ -147,6 +147,7 @@ set(libdnn_headers
   include/Add.h
   include/AlignedAllocator.h
   include/AlignedArray.h
+  include/AlignedMemory.h
   include/Average.h
   include/AvgPooling.h
   include/BatchNorm.h

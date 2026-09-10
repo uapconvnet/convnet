@@ -1,4 +1,4 @@
-
+#pragma once
 #include <cstdlib>
 #include <cstddef>
 #include <memory>
