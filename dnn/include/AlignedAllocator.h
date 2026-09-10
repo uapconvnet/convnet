@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdlib>
-#include <new>       // Required for placement new
-#include <limits>    // For std::numeric_limits
+#include <new>
+#include <limits>
 #include <stdexcept>
 #include <type_traits>
 #include <cstddef>
@@ -11,7 +11,6 @@
 #include <mm_malloc.h>
 #endif
 
-// Improved Macro: Use constexpr/inline where possible instead of heavy macros
 #if defined(_MSC_VER)
     #define DNN_INLINE __forceinline
 #elif defined(__clang__) || defined(__GNUC__)
@@ -50,7 +49,6 @@ namespace dnn
             using other = AlignedAllocator<U, Alignment>;
         };
 
-        // Constructors
         AlignedAllocator() noexcept = default;
         
         template <typename U>
@@ -58,20 +56,16 @@ namespace dnn
 
         ~AlignedAllocator() = default;
 
-        // --- Core Allocation Logic ---
-
         [[nodiscard]] DNN_INLINE pointer allocate(std::size_t n)
         {
             if (n == 0) return nullptr;
 
-            // 1. Overflow Check: Ensure size * sizeof(T) doesn't wrap around
             if (n > std::numeric_limits<std::size_t>::max() / sizeof(T)) {
                 throw std::bad_array_new_length();
             }
 
             const std::size_t total_size = n * sizeof(T);
             
-            // 2. Perform aligned allocation
             void* p = AlignedAlloc(Alignment, total_size);
 
             if (!p) {
@@ -88,14 +82,12 @@ namespace dnn
             }
         }
 
-        // --- Utilities ---
         [[nodiscard]] static constexpr size_type max_size() noexcept
         { 
             return std::numeric_limits<std::size_t>::max() / sizeof(T); 
         }
 
     protected:
-        // Helper to ensure the requested size is a multiple of the alignment (required by POSIX)
         static constexpr std::size_t RoundUp(std::size_t size, std::size_t align) noexcept
         {
             return (size + align - 1) & ~(align - 1);
@@ -129,7 +121,6 @@ namespace dnn
         }
     };
 
-    // Equality operators are simplified (stateless allocator)
     template <typename T, typename U, std::size_t A>
     bool operator==(const AlignedAllocator<T, A>&, const AlignedAllocator<U, A>&) noexcept { return true; }
 
