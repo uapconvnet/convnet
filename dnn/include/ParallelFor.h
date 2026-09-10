@@ -530,15 +530,15 @@ namespace dnn
 
 	void fast_memzero(void *dest, size_t numbytes)
 	{
-  		const auto PAGE_4MB = 1 << 22; // 4MB page size
+  		const auto PAGE_4MB = 1ull << 22ull; // 4MB page size
 		const auto res = std::lldiv(static_cast<long long>(numbytes), static_cast<long long>(PAGE_4MB));
 		
   		if (!res.quot)
-	  		fast_memset(dest, 0, res.rem);
+	  		fast_memset(dest, 0, static_cast<unsigned long long>(res.rem));
   		else
-			for_i(res.quot, [=](long long i)
+			for_i(static_cast<unsigned long long>(res.quot), [=](unsigned long long i)
 			{
-      			const auto tail = (i + 1ll == res.quot) ? res.rem : 0ll;
+      			const auto tail = ((i + 1ull) == static_cast<unsigned long long>(res.quot)) ? static_cast<unsigned long long>(res.rem) : 0ull;
       			const auto ptr = reinterpret_cast<unsigned char *>(dest) + i * PAGE_4MB;
 				fast_memset(ptr, 0, PAGE_4MB + tail);
     		});
