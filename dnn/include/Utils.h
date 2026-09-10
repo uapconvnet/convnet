@@ -606,30 +606,6 @@ namespace dnn
 		return x + m;
 	}
 
-	/* template<typename T>
-	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const uint8_t initValue = 0) NOEXCEPT
-	{
-		//::memset(destination, initValue, elements * batchSize * sizeof(T));		
-		fast_memset(destination, initValue, elements * batchSize * sizeof(T));
-	} 
-
-	template<typename T>
-	static DNN_INLINE void InitArray(T* destination, const std::size_t elements, const std::size_t batchSize = 1, const uint8_t initValue = 0) NOEXCEPT
-	{
-		const auto PAGE_4K = 1024 * 4096;
-		const auto res = std::div(static_cast<int>(elements * batchSize * sizeof(T)), PAGE_4K);
-        if (!res.quot)
-			fast_memset(destination, 0, res.rem);
-        else
-			for_i(res.quot, [=](std::size_t i)
-			{
-        	    const auto tail = (i + 1 == res.quot) ? res.rem : 0;
-                const auto ptr = reinterpret_cast<unsigned char *>(destination) + i * PAGE_4K;
-				fast_memset(ptr, 0, PAGE_4K + tail);
-            });
-	}
-	*/
-
 	
 	typedef AlignedMemory<Float> FloatArray;
 	typedef AlignedArray<Byte, 64ull> ByteArray;
