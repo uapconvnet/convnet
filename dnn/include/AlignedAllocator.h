@@ -29,7 +29,6 @@ namespace dnn
     template <typename T, std::size_t Alignment>
     class AlignedAllocator
     {
-        // Static assertion to ensure alignment is a power of two at compile time
         static_assert((Alignment & (Alignment - 1)) == 0, "Alignment must be a power of two.");  
 
     public:

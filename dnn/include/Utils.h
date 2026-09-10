@@ -136,6 +136,10 @@ namespace dnn
 	typedef std::size_t UInt;
 	typedef unsigned char Byte;
 	
+    typedef AlignedMemory<Float> FloatArray;
+	typedef AlignedArray<Byte, 64ull> ByteArray;
+	typedef std::vector<Float, AlignedAllocator<Float, 64ull>> FloatVector;
+
 	//constexpr bool IsLittleEndian = std::endian::native == std::endian::little;
 	constexpr auto WeightsLimit = Float(500);	// limit for all the weights and biases [-WeightsLimit,WeightsLimit]
 	constexpr auto PlainFmt = dnnl::memory::format_tag::abcd;
@@ -155,7 +159,6 @@ namespace dnn
 		const auto medium     = maxThreads >=  8ull ?  8ull : maxThreads >=  6ull ?  6ull : maxThreads >=  4ull ?  4ull : 2ull;
 		const auto heavy      = maxThreads >= 32ull ? 16ull : maxThreads >= 24ull ?  16ll : maxThreads >= 16ull ? 16ull : maxThreads >= 12ull ? 12ull : maxThreads >= 8ull ? 8ull : maxThreads >= 6ull ? 6ull : maxThreads >= 4ull ? 4ull : 2ull;
 		const auto ultraHeavy = maxThreads >= 32ull ? 32ull : maxThreads >= 24ull ? 24ull : maxThreads >= 16ull ? 16ull : maxThreads >= 12ull ? 12ull : maxThreads >= 8ull ? 8ull : maxThreads >= 6ull ? 6ull : maxThreads >= 4ull ? 4ull : 2ull;
-
 
 		const auto load = static_cast<UInt>(Float(elements) * weight);
 
@@ -180,7 +183,6 @@ namespace dnn
 	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw8c;
 #endif
 	const auto VecZero = VecFloat(Float(0));
-
 	
 	/*
 	static inline int div_up(int value, int divisor) {	return (value + divisor - 1) / divisor;	}
@@ -606,12 +608,6 @@ namespace dnn
 		return x + m;
 	}
 
-	
-	typedef AlignedMemory<Float> FloatArray;
-	typedef AlignedArray<Byte, 64ull> ByteArray;
-	typedef std::vector<Float, AlignedAllocator<Float, 64ull>> FloatVector;
-	
-	
 	template<typename T>
 	auto GetBetaDistribution(const T a, const T b) NOEXCEPT
 	{
