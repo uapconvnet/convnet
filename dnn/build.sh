@@ -2,8 +2,8 @@
 # sudo apt update && sudo apt upgrade
 # sudo apt install build-essential curl unzip gzip libomp-dev libomp5 clang nasm graphviz doxygen python3-sphinx cmake ninja-build
 
-export CC=clang and export CXX=clang++
-# export CC=clang-22 and export CXX=clang++-22
+# export CC=clang and export CXX=clang++
+export CC=clang-22 and export CXX=clang++-22
 
 # export CC=gcc and export CXX=g++
 
