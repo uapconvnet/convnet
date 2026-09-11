@@ -419,7 +419,7 @@ namespace dnn
 					for (auto d = 0u; d < D; d++)
 						for (auto h = 0u; h < H; h++)
 							for (auto w = 0u; w < W; w++)
-								KahanSum<double>(double(TrainingSamples[n](static_cast<unsigned int>(c), d, h, w)), meanC, correction);
+								KahanSum<double>(double(TrainSamples[n](static_cast<unsigned int>(c), d, h, w)), meanC, correction);
 #else
 				for (auto n = 0ull; n < N; n++)
 					for (auto h = 0u; h < H; h++)
@@ -456,7 +456,7 @@ namespace dnn
 					for (auto d = 0u; d < D; d++)
 						for (auto h = 0u; h < H; h++)
 							for (auto w = 0u; w < W; w++)
-								KahanSum<double>(Square<double>(double(TrainingSamples[n](static_cast<unsigned int>(c), d, h, w)) - channelMean), channelStdDev, correction);
+								KahanSum<double>(Square<double>(double(TrainSamples[n](static_cast<unsigned int>(c), d, h, w)) - channelMean), channelStdDev, correction);
 #else
 				for (auto n = 0ull; n < N; n++)
 					for (auto h = 0u; h < H; h++)
