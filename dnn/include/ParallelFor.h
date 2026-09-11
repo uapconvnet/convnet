@@ -346,36 +346,58 @@ namespace dnn
 #endif
 	}
 
-	template <typename T, typename U>
-	inline void balance211(T n, U team, U tid, T& n_start, T& n_end) {
-		T n_min = 1;
-		T& n_my = n_end;
-		if (team <= 1 || n == 0) {
-			n_start = 0;
-			n_my = n;
-		}
-		else if (n_min == 1) {
-			// team = T1 + T2
-			// n = T1*n1 + T2*n2  (n1 - n2 = 1)
-			T n1 = div_up(n, (T)team);
-			T n2 = n1 - 1;
-			T T1 = n - n2 * (T)team;
-			n_my = (T)tid < T1 ? n1 : n2;
-			n_start = (T)tid <= T1 ? (T)tid * n1 : T1 * n1 + ((T)tid - T1) * n2;
-		}
+    template <typename T, typename U>
+    inline void balance211(T n, U team, U tid, T &n_start, T &n_end) {
+        T n_min = 1;
+        T &n_my = n_end;
+        if (team <= 1 || n == 0) {
+            n_start = 0;
+            n_my = n;
+        } else if (n_min == 1) {
+            // team = T1 + T2
+            // n = T1*n1 + T2*n2  (n1 - n2 = 1)
+            T n1 = div_up(n, (T)team);
+            T n2 = n1 - 1;
+            T T1 = n - n2 * (T)team;
+            n_my = (T)tid < T1 ? n1 : n2;
+            n_start = (T)tid <= T1 ? (T)tid * n1 : T1 * n1 + ((T)tid - T1) * n2;
+        }
 
-		n_end += n_start;
-	}
+        n_end += n_start;
+    }
 
-	static inline void for_nd(const int ithr, const int nthr, std::size_t D0, const std::function<void(std::size_t)>& f)
-	{
+    template <typename T, typename U>
+    void balance2D(U nthr, U ithr, T ny, T &ny_start, T &ny_end, T nx, T &nx_start, T &nx_end, T nx_divider) {
+        const T grp_count = std::min(nx_divider, static_cast<T>(nthr));
+        const int grp_size_big = nthr / static_cast<int>(grp_count) + 1;
+        const int grp_size_small = nthr / static_cast<int>(grp_count);
+        const int n_grp_big = nthr % static_cast<int>(grp_count);
+        const int threads_in_big_groups = n_grp_big * grp_size_big;
+
+        const int ithr_bound_distance = ithr - threads_in_big_groups;
+        T grp, grp_ithr, grp_nthr;
+        if (ithr_bound_distance < 0) { // ithr in first groups
+            grp = ithr / grp_size_big;
+            grp_ithr = ithr % grp_size_big;
+            grp_nthr = grp_size_big;
+        } else { // ithr in last groups
+            grp = n_grp_big + ithr_bound_distance / grp_size_small;
+            grp_ithr = ithr_bound_distance % grp_size_small;
+            grp_nthr = grp_size_small;
+        }
+
+        balance211(nx, grp_count, grp, nx_start, nx_end);
+        balance211(ny, grp_nthr, grp_ithr, ny_start, ny_end);
+    }
+
+	static inline void for_nd(const int ithr, const int nthr, std::size_t D0, const std::function<void(std::size_t)>& f) {
 		std::size_t start{ 0 }, end{ 0 };
 		balance211(D0, nthr, ithr, start, end);
 		for (auto d0 = start; d0 < end; ++d0)
 			f(d0);
 	}
 
-	static inline void parallel(int nthr, const std::function<void(int, int)>& f) 
+    static inline void parallel(int nthr, const std::function<void(int, int)>& f) 
 	{
 		nthr = adjust_num_threads(nthr, INT64_MAX);
 #if DNNL_CPU_THREADING_RUNTIME == DNNL_RUNTIME_SEQ
@@ -469,7 +491,7 @@ namespace dnn
 #endif
 #endif
 	}
-
+  
 	static inline void parallel_nd(std::size_t D0, const std::function<void(std::size_t)>& f)
 	{
 		int nthr = adjust_num_threads(omp_get_max_threads(), D0);
@@ -534,11 +556,11 @@ namespace dnn
 		const auto res = std::lldiv(static_cast<long long>(numbytes), static_cast<long long>(PAGE_4MB));
 		
   		if (!res.quot)
-	  		fast_memset(dest, 0, static_cast<unsigned long long>(res.rem));
+	  		fast_memset(dest, 0, static_cast<size_t>(res.rem));
   		else
-			for_i(static_cast<unsigned long long>(res.quot), [=](unsigned long long i)
+			for_i(static_cast<size_t>(res.quot), [=](size_t i)
 			{
-      			const auto tail = ((i + 1ull) == static_cast<unsigned long long>(res.quot)) ? static_cast<unsigned long long>(res.rem) : 0ull;
+      			const auto tail = ((i + 1ull) == static_cast<size_t>(res.quot)) ? static_cast<size_t>(res.rem) : 0ull;
       			const auto ptr = reinterpret_cast<unsigned char *>(dest) + i * PAGE_4MB;
 				fast_memset(ptr, 0, PAGE_4MB + tail);
     		});
