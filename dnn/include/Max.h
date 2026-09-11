@@ -88,6 +88,19 @@ namespace dnn
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
+#ifdef DNN_CACHE_PRIMITIVES
+    		fwd->execute(Device.stream, fwdArgs);
+#else
+			dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
+#endif
+			Device.stream.wait();
+#ifndef DNN_LEAN
+            if (training)
+			    fast_memzero(NeuronsD1.data(), PaddedCDHW() * batchSize * sizeof(Float));
+#endif // DNN_LEAN
+
+/*
+
 			if (training)
 			{
 				if constexpr (Reference)
@@ -199,6 +212,8 @@ namespace dnn
 #endif
 				Device.stream.wait();
 			}
+
+*/
 		}
 
 		void BackwardProp(const UInt batchSize) final override
