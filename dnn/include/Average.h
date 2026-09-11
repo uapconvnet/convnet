@@ -11,7 +11,8 @@ namespace dnn
 #ifdef DNN_CACHE_PRIMITIVES
 		std::unique_ptr<dnnl::binary> fwd;
 #endif
-		FloatVector scale;
+		dnnl::memory scaleFirst;
+		dnnl::memory scaleSecond;
 
 	public:
 		const Byte first, second;
@@ -20,7 +21,8 @@ namespace dnn
 			Layer(device, format, name, LayerTypes::Average, 0, 0, inputs[GetFirst(inputs)]->C, inputs[GetFirst(inputs)]->D, inputs[GetFirst(inputs)]->H, inputs[GetFirst(inputs)]->W, 0, 0, 0, inputs),
 			first(GetFirst(inputs)),
 			second(GetSecond(inputs)),
-			scale(FloatVector(1, Float(0.5)))
+			scaleFirst(dnnl::memory::desc::host_scalar(dnnl::memory::data_type::f32), Float(0.5)),
+			scaleSecond(dnnl::memory::desc::host_scalar(dnnl::memory::data_type::f32), Float(0.5))
 		{
 			assert(Inputs.size() == 2);
 			assert(Inputs[0]->C == Inputs[1]->C);
@@ -85,9 +87,7 @@ namespace dnn
 			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 
-		    auto ScaleMem = dnnl::memory(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(1) }), dnnl::memory::data_type::f32, dnnl::memory::format_tag::x), Device.engine, scale.data());
-
-			fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, ScaleMem }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, ScaleMem } };
+		    fwdArgs = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, dnnl::memory(*Inputs[first]->DstMemDesc, Device.engine, Inputs[first]->Neurons.data()) }, { DNNL_ARG_SRC_1, dnnl::memory(*Inputs[second]->DstMemDesc, Device.engine, Inputs[second]->Neurons.data()) }, { DNNL_ARG_DST, dnnl::memory(*DstMemDesc, Device.engine, Neurons.data()) }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_0, scaleFirst }, { DNNL_ARG_ATTR_SCALES | DNNL_ARG_SRC_1, scaleSecond } };
 
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::binary>(dnnl::binary(*fwdDesc));
@@ -96,6 +96,18 @@ namespace dnn
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
+#ifdef DNN_CACHE_PRIMITIVES
+			fwd->execute(Device.stream, fwdArgs);
+#else
+			dnnl::binary(*fwdDesc).execute(Device.stream, fwdArgs);
+#endif
+			Device.stream.wait();
+#ifndef DNN_LEAN
+            if (training)
+				fast_memzero(NeuronsD1.data(), PaddedCDHW() * batchSize * sizeof(Float));
+#endif // DNN_LEAN
+
+/*
 			if (training)
 			{
 				if constexpr (Reference)
@@ -209,6 +221,7 @@ namespace dnn
 #endif
 				Device.stream.wait();
 			}
+*/
 		}
 
 		void BackwardProp(const UInt batchSize) final override
