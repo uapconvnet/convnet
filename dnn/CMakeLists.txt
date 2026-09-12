@@ -71,8 +71,8 @@ if(WIN32 OR MSVC)
   add_compile_options(
     "$<$<COMPILE_LANGUAGE:CXX>:${flags}>"
     "$<$<COMPILE_LANGUAGE:C>:${flags}>")
-  set(debug_flags /bigobj /openmp:llvm /W4 /Od)
-  set(release_flags /bigobj /openmp:llvm /W3 /O2 /Ob2 /Oi /Ot /GL /GF /Gy /fp:fast)
+  set(debug_flags /Zc:__cplusplus /bigobj /openmp:llvm /W4 /Od)
+  set(release_flags /Zc:__cplusplus /bigobj /openmp:llvm /W3 /O2 /Ob2 /Oi /Ot /GL /GF /Gy /fp:fast)
 else()
   if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(flags -mrdseed -mrdrnd -mfma -mavx512f -mavx512dq -mavx512vl -mavx512bw -mavx512ifma -mavx512vbmi -mavx512vbmi2 -mavx512bitalg -mavx512vpopcntdq -mavx512vnni -mavx512bf16 -mavx512vp2intersect -mavxvnni -mmovdiri -mmovdir64b -mprefetchi -march=native -mtune=native -fopenmp)
