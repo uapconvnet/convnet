@@ -1270,7 +1270,7 @@ namespace dnn
 		}
 
 #ifdef DNN_STOCHASTIC
-		void CostFunction(const States state)
+		bool CostFunction(const States state)
 		{
 			for (auto cost : CostLayers)
 			{
@@ -1283,7 +1283,14 @@ namespace dnn
 					cost->TrainLoss += loss;
 				else
 					cost->TestLoss += loss;
+
+                if (state == States::Training)
+					return std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
+				else
+					return std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss);
 			}
+
+            return false;
 		}
 
 		void Recognized(const States state, const std::vector<LabelInfo>& sampleLabel)
@@ -1318,7 +1325,7 @@ namespace dnn
 		}
 #endif
 
-		void CostFunctionBatch(const States state, const UInt batchSize, const bool overflow, const UInt skipCount)
+		bool CostFunctionBatch(const States state, const UInt batchSize, const bool overflow, const UInt skipCount)
 		{
 			for (auto cost : CostLayers)
 			{
@@ -1338,7 +1345,14 @@ namespace dnn
 					else
 						cost->TestLoss += loss;
 				}
+
+                if (state == States::Training)
+					return std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
+				else
+					return std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss);
 			}
+            
+			return false;
 		}
 
 		void RecognizedBatch(const States state, const UInt batchSize, const bool overflow, const UInt skipCount, const std::vector<std::vector<LabelInfo>>& sampleLabels)
@@ -1709,7 +1723,11 @@ namespace dnn
 									Layers[i]->fpropTime = timer.now() - timePoint;
 								}
 
-								CostFunction(State.load());
+								if (CostFunction(State.load()))
+                                {
+                                    State.store(States::Completed);
+									return;
+                                }
 								Recognized(State.load(), SampleLabel);
 								fpropTime = timer.now() - timePointLocal;
 
@@ -1783,7 +1801,11 @@ namespace dnn
 										Layers[i]->fpropTime = std::chrono::duration<Float>(Float(0));
 								}
 								
-								CostFunctionBatch(State.load(), N, SampleIndex >= TrainOverflowCount, TrainSkipCount);
+								if (CostFunctionBatch(State.load(), N, SampleIndex >= TrainOverflowCount, TrainSkipCount))
+                                {
+                                    State.store(States::Completed);
+									return;
+                                }
 								RecognizedBatch(State.load(), N, SampleIndex >= TrainOverflowCount, TrainSkipCount, SampleLabels);
 								fpropTime = timer.now() - timePointLocal;
 
@@ -1858,7 +1880,11 @@ namespace dnn
 								for (auto i = 1u; i < Layers.size(); i++)
 									Layers[i]->ForwardProp(1, false);
 
-								CostFunction(State.load());
+								if (CostFunction(State.load()))
+                                {
+                                    State.store(States::Completed);
+									return;
+                                }
 								Recognized(State.load(), SampleLabel);
 
 								if (TaskState.load() != TaskStates::Running && !CheckTaskState())
@@ -1893,7 +1919,11 @@ namespace dnn
 
 								fpropTime = timer.now() - timePointLocal;
 
-								CostFunctionBatch(State.load(), N, SampleIndex >= TestOverflowCount, TestSkipCount);
+								if (!CostFunctionBatch(State.load(), N, SampleIndex >= TestOverflowCount, TestSkipCount))
+								{
+									State.store(States::Completed);
+									return;
+								}
 								RecognizedBatch(State.load(), N, SampleIndex >= TestOverflowCount, TestSkipCount, SampleLabels);
 
 								elapsedTime = timer.now() - timePointLocal;
