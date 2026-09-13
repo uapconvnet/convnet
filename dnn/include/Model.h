@@ -1356,7 +1356,7 @@ namespace dnn
 				else
 					exploded = std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss);
 
-                if (exploded)
+                if (exploded && !overflow)
                     return true;
 			}
             
