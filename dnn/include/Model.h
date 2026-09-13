@@ -1272,9 +1272,7 @@ namespace dnn
 #ifdef DNN_STOCHASTIC
 		bool CostFunction(const States state)
 		{
-            auto exploded = false;
-
-			for (auto cost : CostLayers)
+            for (auto cost : CostLayers)
 			{
 				auto loss = Float(0);
 
@@ -1286,6 +1284,7 @@ namespace dnn
 				else
 					cost->TestLoss += loss;
 
+                auto exploded = false;
                 if (state == States::Training)
 					exploded = std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
 				else
@@ -1295,7 +1294,7 @@ namespace dnn
                     return true;
 			}
 
-            return exploded;
+            return false;
 		}
 
 		void Recognized(const States state, const std::vector<LabelInfo>& sampleLabel)
@@ -1332,8 +1331,6 @@ namespace dnn
 
 		bool CostFunctionBatch(const States state, const UInt batchSize, const bool overflow, const UInt skipCount)
 		{
-            auto exploded = false;
-
 			for (auto cost : CostLayers)
 			{
 				for (auto b = 0ull; b < batchSize; b++)
@@ -1353,6 +1350,7 @@ namespace dnn
 						cost->TestLoss += loss;
 				}
 
+                auto exploded = false;
                 if (state == States::Training)
 					exploded = std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
 				else
@@ -1362,7 +1360,7 @@ namespace dnn
                     return true;
 			}
             
-			return exploded;
+			return false;
 		}
 
 		void RecognizedBatch(const States state, const UInt batchSize, const bool overflow, const UInt skipCount, const std::vector<std::vector<LabelInfo>>& sampleLabels)
