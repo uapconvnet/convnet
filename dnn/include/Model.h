@@ -1272,6 +1272,8 @@ namespace dnn
 #ifdef DNN_STOCHASTIC
 		bool CostFunction(const States state)
 		{
+            auto exploded = false;
+
 			for (auto cost : CostLayers)
 			{
 				auto loss = Float(0);
@@ -1285,12 +1287,15 @@ namespace dnn
 					cost->TestLoss += loss;
 
                 if (state == States::Training)
-					return std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
+					exploded = std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
 				else
-					return std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss);
+					exploded = std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss);
+
+                if (exploded)
+                    return true;
 			}
 
-            return false;
+            return exploded;
 		}
 
 		void Recognized(const States state, const std::vector<LabelInfo>& sampleLabel)
@@ -1327,6 +1332,8 @@ namespace dnn
 
 		bool CostFunctionBatch(const States state, const UInt batchSize, const bool overflow, const UInt skipCount)
 		{
+            auto exploded = false;
+
 			for (auto cost : CostLayers)
 			{
 				for (auto b = 0ull; b < batchSize; b++)
@@ -1347,12 +1354,15 @@ namespace dnn
 				}
 
                 if (state == States::Training)
-					return std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
+					exploded = std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
 				else
-					return std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss);
+					exploded = std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss);
+
+                if (exploded)
+                    return true;
 			}
             
-			return false;
+			return exploded;
 		}
 
 		void RecognizedBatch(const States state, const UInt batchSize, const bool overflow, const UInt skipCount, const std::vector<std::vector<LabelInfo>>& sampleLabels)
