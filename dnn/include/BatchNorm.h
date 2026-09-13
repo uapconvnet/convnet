@@ -6,17 +6,17 @@ namespace dnn
 	class BatchNorm final : public Layer
 	{
 	private:
-		std::unique_ptr<dnnl::batch_normalization_forward::primitive_desc> fwdDesc;
+        std::unique_ptr<dnnl::batch_normalization_forward::primitive_desc> fwdInferenceDesc;
+		std::unique_ptr<dnnl::batch_normalization_forward::primitive_desc> fwdTrainingDesc;
 		std::unique_ptr<dnnl::batch_normalization_backward::primitive_desc> bwdDesc;
 		std::unique_ptr<dnnl::binary::primitive_desc> bwdAddDesc;
 #ifdef DNN_CACHE_PRIMITIVES
-		std::unique_ptr<dnnl::batch_normalization_forward> fwd;
+        std::unique_ptr<dnnl::batch_normalization_forward> fwdInference;
+		std::unique_ptr<dnnl::batch_normalization_forward> fwdTraining;
 		std::unique_ptr<dnnl::batch_normalization_backward> bwd;
 		std::unique_ptr<dnnl::binary> bwdAdd;
 #endif
-		dnnl::normalization_flags flags;
-		bool inference;
-		bool reorderFwdSrc;
+        bool reorderFwdSrc;
 		bool reorderBwdSrc;
 		bool reorderBwdDiffSrc;
 		bool reorderBwdDiffDst;
@@ -41,9 +41,7 @@ namespace dnn
 			Variance(FloatVector(PaddedC, Float(1))),
 			RunningVariance(FloatVector(PaddedC, Float(1))),
 			InvStdDev(FloatVector(PaddedC)),
-			flags(static_cast<dnnl::normalization_flags>(0U)),
-			inference(false),
-			reorderFwdSrc(false),
+            reorderFwdSrc(false),
 			reorderBwdSrc(false),
 			reorderBwdDiffSrc(false),
 			reorderBwdDiffDst(false)
@@ -117,38 +115,45 @@ namespace dnn
 				DstMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::data_type::f32, ChosenFormat));
 				DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(dnnl::memory::desc(dnnl::memory::dims({ dnnl::memory::dim(batchSize), dnnl::memory::dim(C), dnnl::memory::dim(H), dnnl::memory::dim(W) }), dnnl::memory::data_type::f32, ChosenFormat));
 			}
+			
+			const auto flagsInference = Scaling ? 
+				dnnl::normalization_flags::use_global_stats | dnnl::normalization_flags::use_scale | dnnl::normalization_flags::use_shift 
+				: dnnl::normalization_flags::use_global_stats;
 
-			if (inference)
-				flags = Scaling ? 
-					dnnl::normalization_flags::use_global_stats | dnnl::normalization_flags::use_scale | dnnl::normalization_flags::use_shift 
-					: dnnl::normalization_flags::use_global_stats;
-			else
-				flags = Scaling ? 
-					dnnl::normalization_flags::use_scale | dnnl::normalization_flags::use_shift 
-					: static_cast<dnnl::normalization_flags>(0U);
+            fwdInferenceDesc = std::make_unique<dnnl::batch_normalization_forward::primitive_desc>(dnnl::batch_normalization_forward::primitive_desc(Device.engine, dnnl::prop_kind::forward_inference, *DstMemDesc, *DstMemDesc, Eps, flagsInference));
 			
-			fwdDesc = std::make_unique<dnnl::batch_normalization_forward::primitive_desc>(dnnl::batch_normalization_forward::primitive_desc(Device.engine, inference ? dnnl::prop_kind::forward_inference : dnnl::prop_kind::forward_training, *DstMemDesc, *DstMemDesc, Eps, flags));
+            
+			const auto flagsTraining = Scaling ? 
+				dnnl::normalization_flags::use_scale | dnnl::normalization_flags::use_shift 
+				: static_cast<dnnl::normalization_flags>(0U);
 			
-			reorderFwdSrc = fwdDesc->src_desc() != *InputLayer->DstMemDesc;
+			fwdTrainingDesc = std::make_unique<dnnl::batch_normalization_forward::primitive_desc>(dnnl::batch_normalization_forward::primitive_desc(Device.engine, dnnl::prop_kind::forward_training, *DstMemDesc, *DstMemDesc, Eps, flagsTraining));
+			
 
 #ifdef DNN_CACHE_PRIMITIVES
-			fwd = std::make_unique<dnnl::batch_normalization_forward>(dnnl::batch_normalization_forward(*fwdDesc));
+            fwdInference = std::make_unique<dnnl::batch_normalization_forward>(dnnl::batch_normalization_forward(*fwdInferenceDesc));
+			fwdTraining = std::make_unique<dnnl::batch_normalization_forward>(dnnl::batch_normalization_forward(*fwdTrainingDesc));
 #endif
-			if (!inference)
-			{
-				bwdDesc = std::make_unique<dnnl::batch_normalization_backward::primitive_desc>(dnnl::batch_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DiffDstMemDesc, *InputLayerBwd->DiffDstMemDesc, *DstMemDesc, Eps, flags, *fwdDesc));
 
-				reorderBwdSrc = bwdDesc->src_desc() != *InputLayer->DstMemDesc;
-				reorderBwdDiffSrc = bwdDesc->diff_src_desc() != *InputLayerBwd->DiffDstMemDesc;
-				reorderBwdDiffDst = bwdDesc->diff_dst_desc() != (!InplaceBwd ? *DiffDstMemDesc : *InputLayerBwd->DiffDstMemDesc);
 
-				bwdAddDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputLayerBwd->DiffDstMemDesc, *InputLayerBwd->DiffDstMemDesc, *InputLayerBwd->DiffDstMemDesc));
+            reorderFwdSrc = fwdTrainingDesc->src_desc() != *InputLayer->DstMemDesc;
+
+			const auto flagsBackward = Scaling ? 
+				dnnl::normalization_flags::use_scale | dnnl::normalization_flags::use_shift 
+				: static_cast<dnnl::normalization_flags>(0U);
+
+			bwdDesc = std::make_unique<dnnl::batch_normalization_backward::primitive_desc>(dnnl::batch_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DiffDstMemDesc, *InputLayerBwd->DiffDstMemDesc, *DstMemDesc, Eps, flagsBackward, *fwdTrainingDesc));
+
+			reorderBwdSrc = bwdDesc->src_desc() != *InputLayer->DstMemDesc;
+			reorderBwdDiffSrc = bwdDesc->diff_src_desc() != *InputLayerBwd->DiffDstMemDesc;
+			reorderBwdDiffDst = bwdDesc->diff_dst_desc() != (!InplaceBwd ? *DiffDstMemDesc : *InputLayerBwd->DiffDstMemDesc);
+
+			bwdAddDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputLayerBwd->DiffDstMemDesc, *InputLayerBwd->DiffDstMemDesc, *InputLayerBwd->DiffDstMemDesc));
 
 #ifdef DNN_CACHE_PRIMITIVES
-				bwd = std::make_unique<dnnl::batch_normalization_backward>(dnnl::batch_normalization_backward(*bwdDesc));
-				bwdAdd = std::make_unique<dnnl::binary>(dnnl::binary(*bwdAddDesc));
+			bwd = std::make_unique<dnnl::batch_normalization_backward>(dnnl::batch_normalization_backward(*bwdDesc));
+			bwdAdd = std::make_unique<dnnl::binary>(dnnl::binary(*bwdAddDesc));
 #endif
-			}
 		}
 
 		bool Lockable() const final override
@@ -160,22 +165,16 @@ namespace dnn
 		{
 			if (!training)
 			{
-				if (!inference)
-				{
-					inference = true;
-					InitializeDescriptors(batchSize);
-				}
-
 				const auto& memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());
-				auto srcMem = reorderFwdSrc ? dnnl::memory(fwdDesc->src_desc(), Device.engine) : memSrc;
+				auto srcMem = reorderFwdSrc ? dnnl::memory(fwdInferenceDesc->src_desc(), Device.engine) : memSrc;
 				if (reorderFwdSrc)
 				{
 					dnnl::reorder(memSrc, srcMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memSrc}, { DNNL_ARG_TO, srcMem } });
 					Device.stream.wait();
 				}
 
-				auto memMean = dnnl::memory(fwdDesc->mean_desc(), Device.engine, RunningMean.data());
-				auto memVariance = dnnl::memory(fwdDesc->variance_desc(), Device.engine, RunningVariance.data());
+				auto memMean = dnnl::memory(fwdInferenceDesc->mean_desc(), Device.engine, RunningMean.data());
+				auto memVariance = dnnl::memory(fwdInferenceDesc->variance_desc(), Device.engine, RunningVariance.data());
 				auto dstMem = dnnl::memory(*DstMemDesc, Device.engine, Neurons.data());
 
 				if (Scaling)
@@ -184,37 +183,31 @@ namespace dnn
 					auto memShift = dnnl::memory(*WeightsMemDesc, Device.engine, Biases.data());
 
 #ifdef DNN_CACHE_PRIMITIVES
-					fwd->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_SCALE, memScale }, { DNNL_ARG_SHIFT, memShift }, { DNNL_ARG_DST, dstMem } });
+					fwdInference->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_SCALE, memScale }, { DNNL_ARG_SHIFT, memShift }, { DNNL_ARG_DST, dstMem } });
 #endif
-					dnnl::batch_normalization_forward(*fwdDesc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_SCALE, memScale }, { DNNL_ARG_SHIFT, memShift }, { DNNL_ARG_DST, dstMem } });
+					dnnl::batch_normalization_forward(*fwdInferenceDesc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_SCALE, memScale }, { DNNL_ARG_SHIFT, memShift }, { DNNL_ARG_DST, dstMem } });
 				}
 				else
 #ifdef DNN_CACHE_PRIMITIVES
-					fwd->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_DST, dstMem } });
+					fwdInference->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_DST, dstMem } });
 #else
-					dnnl::batch_normalization_forward(*fwdDesc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_DST, dstMem } });
+					dnnl::batch_normalization_forward(*fwdInferenceDesc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_DST, dstMem } });
 #endif
 
 				Device.stream.wait();
 			}
 			else
 			{
-				if (inference)
-				{
-					inference = false;
-					InitializeDescriptors(batchSize);
-				}
-
 				const auto& memSrc = dnnl::memory(*InputLayer->DstMemDesc, Device.engine, InputLayer->Neurons.data());
-				auto srcMem = reorderFwdSrc ? dnnl::memory(fwdDesc->src_desc(), Device.engine) : memSrc;
+				auto srcMem = reorderFwdSrc ? dnnl::memory(fwdTrainingDesc->src_desc(), Device.engine) : memSrc;
 				if (reorderFwdSrc)
 				{
 					dnnl::reorder(memSrc, srcMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memSrc}, { DNNL_ARG_TO, srcMem } });
 					Device.stream.wait();
 				}
 
-				auto memMean = dnnl::memory(fwdDesc->mean_desc(), Device.engine, Mean.data());
-				auto memVariance = dnnl::memory(fwdDesc->variance_desc(), Device.engine, Variance.data());
+				auto memMean = dnnl::memory(fwdTrainingDesc->mean_desc(), Device.engine, Mean.data());
+				auto memVariance = dnnl::memory(fwdTrainingDesc->variance_desc(), Device.engine, Variance.data());
 				auto dstMem = dnnl::memory(*DstMemDesc, Device.engine, Neurons.data());
 
 				if (Scaling)
@@ -223,16 +216,16 @@ namespace dnn
 					auto memShift = dnnl::memory(*WeightsMemDesc, Device.engine, Biases.data());
 
 #ifdef DNN_CACHE_PRIMITIVES
-					fwd->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_SCALE, memScale }, { DNNL_ARG_SHIFT, memShift }, { DNNL_ARG_DST, dstMem } });
+					fwdTraining->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_SCALE, memScale }, { DNNL_ARG_SHIFT, memShift }, { DNNL_ARG_DST, dstMem } });
 #else
-					dnnl::batch_normalization_forward(*fwdDesc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_SCALE, memScale }, { DNNL_ARG_SHIFT, memShift }, { DNNL_ARG_DST, dstMem } });
+					dnnl::batch_normalization_forward(*fwdTrainingDesc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_SCALE, memScale }, { DNNL_ARG_SHIFT, memShift }, { DNNL_ARG_DST, dstMem } });
 #endif
 				}
 				else
 #ifdef DNN_CACHE_PRIMITIVES
-					fwd->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_DST, dstMem } });
+					fwdTraining->execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_DST, dstMem } });
 #else
-					dnnl::batch_normalization_forward(*fwdDesc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_DST, dstMem } });
+					dnnl::batch_normalization_forward(*fwdTrainingDesc).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_SRC, srcMem}, { DNNL_ARG_MEAN, memMean }, { DNNL_ARG_VARIANCE, memVariance }, { DNNL_ARG_DST, dstMem } });
 #endif
 				Device.stream.wait();
 
