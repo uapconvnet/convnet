@@ -142,7 +142,7 @@ namespace dnn
 			
 			reorderFwdSrc = fwdInferenceDesc->src_desc() != *InputLayer->DstMemDesc;
 
-        	bwdDesc = std::make_unique<dnnl::layer_normalization_backward::primitive_desc>(dnnl::layer_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DataDesc, *DataDesc, *StatsDesc, Eps, flags, *fwdDesc));
+        	bwdDesc = std::make_unique<dnnl::layer_normalization_backward::primitive_desc>(dnnl::layer_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DataDesc, *DataDesc, *StatsDesc, Eps, flagsTraining, *fwdTrainingDesc));
 
 			reorderBwdSrc = bwdDesc->src_desc() != *InputLayer->DstMemDesc;
 			reorderBwdDiffSrc = bwdDesc->diff_src_desc() != *InputLayerBwd->DiffDstMemDesc;

@@ -142,7 +142,7 @@ namespace dnn
 
 			workspaceMemory = std::make_unique<dnnl::memory>(dnnl::memory(fwdTrainingDesc->workspace_desc(), Device.engine));
 
-			bwdDesc = std::make_unique<dnnl::batch_normalization_backward::primitive_desc>(dnnl::batch_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DiffDstMemDesc, *InputLayerBwd->DiffDstMemDesc, *DstMemDesc, Eps, flags, *fwdDesc));
+			bwdDesc = std::make_unique<dnnl::batch_normalization_backward::primitive_desc>(dnnl::batch_normalization_backward::primitive_desc(Device.engine, Scaling ? dnnl::prop_kind::backward : dnnl::prop_kind::backward_data, *DiffDstMemDesc, *InputLayerBwd->DiffDstMemDesc, *DstMemDesc, Eps, flagsTraining, *fwdTrainingDesc));
 
 			reorderBwdSrc = bwdDesc->src_desc() != *InputLayer->DstMemDesc;
 			reorderBwdDiffSrc = bwdDesc->diff_src_desc() != *InputLayerBwd->DiffDstMemDesc;
