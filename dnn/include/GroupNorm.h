@@ -17,7 +17,6 @@ namespace dnn
 		std::unique_ptr<dnnl::group_normalization_backward> bwd;
 		std::unique_ptr<dnnl::binary> bwdAdd;
 #endif
-		bool inference;
 		bool reorderFwdSrc;
 		bool reorderBwdSrc;
 		bool reorderBwdDiffSrc;
