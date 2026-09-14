@@ -1721,6 +1721,8 @@ namespace dnn
 
 								if (CostFunction(State.load()))
                                 {
+                                    for (auto& layer : Layers)
+										layer->ResetOptimizer(Optimizer);
                                     State.store(States::Completed);
 									return;
                                 }
@@ -1799,6 +1801,8 @@ namespace dnn
 								
 								if (CostFunctionBatch(State.load(), N, SampleIndex >= TrainOverflowCount, TrainSkipCount))
                                 {
+                                    for (auto& layer : Layers)
+										layer->ResetOptimizer(Optimizer);
                                     State.store(States::Completed);
 									return;
                                 }
@@ -1878,6 +1882,8 @@ namespace dnn
 
 								if (CostFunction(State.load()))
                                 {
+                                    for (auto& layer : Layers)
+										layer->ResetOptimizer(Optimizer);
                                     State.store(States::Completed);
 									return;
                                 }
@@ -1917,6 +1923,8 @@ namespace dnn
 
 								if (CostFunctionBatch(State.load(), N, SampleIndex >= TestOverflowCount, TestSkipCount))
 								{
+                                    for (auto& layer : Layers)
+										layer->ResetOptimizer(Optimizer);
 									State.store(States::Completed);
 									return;
 								}
