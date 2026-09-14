@@ -821,6 +821,8 @@ namespace Convnet.PageViewModels
                                     CommandToolBar[19].IsVisible = false;
                                     CommandToolBar[20].IsVisible = false;
                                 }
+
+                                pageVM.OnPageTaskStatusChange();
                             }
                             ShowProgress = false;
                         }
