@@ -1284,12 +1284,7 @@ namespace dnn
 				else
 					cost->TestLoss += loss;
 
-                auto exploded = false;
-                if (state == States::Training)
-					exploded = std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
-				else
-					exploded = std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss);
-
+                const auto exploded = (state == States::Training) ? (std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss)) : (std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss));
                 if (exploded)
                     return true;
 			}
@@ -1350,13 +1345,8 @@ namespace dnn
 						cost->TestLoss += loss;
 				}
 
-                auto exploded = false;
-                if (state == States::Training)
-					exploded = std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss);
-				else
-					exploded = std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss);
-
-                if (exploded && !overflow)
+                const auto exploded = (state == States::Training) ? (std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss)) : (std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss));
+                if (exploded)
                     return true;
 			}
             
@@ -1927,7 +1917,7 @@ namespace dnn
 
 								fpropTime = timer.now() - timePointLocal;
 
-								if (!CostFunctionBatch(State.load(), N, SampleIndex >= TestOverflowCount, TestSkipCount))
+								if (CostFunctionBatch(State.load(), N, SampleIndex >= TestOverflowCount, TestSkipCount))
 								{
 									State.store(States::Completed);
 									return;
