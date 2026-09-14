@@ -1284,8 +1284,7 @@ namespace dnn
 				else
 					cost->TestLoss += loss;
 
-                const auto exploded = (state == States::Training) ? (std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss)) : (std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss));
-                if (exploded)
+                if ((state == States::Training) ? (std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss)) : (std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss)))
                     return true;
 			}
 
@@ -1345,8 +1344,7 @@ namespace dnn
 						cost->TestLoss += loss;
 				}
 
-                const auto exploded = (state == States::Training) ? (std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss)) : (std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss));
-                if (exploded)
+                if ((state == States::Training) ? (std::isnan(cost->TrainLoss) || std::isinf(cost->TrainLoss)) : (std::isnan(cost->TestLoss) || std::isinf(cost->TestLoss)))
                     return true;
 			}
             
