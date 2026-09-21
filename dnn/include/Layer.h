@@ -1186,6 +1186,8 @@ namespace dnn
 
 		void ResetOptimizer(const Optimizers optimizer)
 		{
+            fast_memzero(NeuronsD1.data(), NeuronsD1.size() * sizeof(Float));
+
 			if (HasWeights)
 			{
 				B1 = Float(0);
@@ -1197,7 +1199,8 @@ namespace dnn
 
 				WeightsD1.resize(weightsSize, Float(0));
 				BiasesD1.resize(biasesSize, Float(0));
-			
+			    ResetGradients();
+                
 				switch (GetOptimizerParameters(optimizer))
 				{
 				case 3ull:
