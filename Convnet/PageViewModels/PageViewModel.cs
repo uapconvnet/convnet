@@ -287,13 +287,19 @@ namespace Convnet.PageViewModels
 
                                         if (result == MessageBoxResult.Yes)
                                         {
-                                            Settings.Default.TrainingLog.Clear();
-                                            Model?.ClearLog();
+                                            Dispatcher.UIThread.Invoke(() => 
+                                            {
+                                                Settings.Default.TrainingLog.Clear();
+                                                Model?.ClearLog();
+                                            });
                                         }
                                     }
 
-                                    foreach (var record in records)
-                                        Settings.Default.TrainingLog?.Add(record);
+                                    Dispatcher.UIThread.Invoke(() => 
+                                    {
+                                        foreach (var record in records)
+                                            Settings.Default.TrainingLog?.Add(record);
+                                    });
                                 }
 
                                 Model?.LoadLog(path);
