@@ -8,9 +8,9 @@
 
 namespace dnn
 {
-	struct aligned_free
+	struct AlignedFree
 	{
-		aligned_free() = default;
+		AlignedFree() = default;
 
 		void operator()(void* ptr)
 		{
@@ -28,7 +28,7 @@ namespace dnn
 	};
 	
 	template<typename T>
-	T* aligned_malloc(std::size_t size, std::size_t alignment) 
+	T* AlignedMalloc(std::size_t size, std::size_t alignment) 
 	{ 
 #if defined(_WIN32) || defined(__CYGWIN__)
 		return static_cast<T*>(::_aligned_malloc(size * sizeof(T), alignment));
@@ -41,10 +41,10 @@ namespace dnn
 #endif
 	}
 
-	template<class T> using unique_ptr_aligned = std::unique_ptr<T, aligned_free>;
+	template<class T> using unique_ptr_aligned = std::unique_ptr<T, AlignedFree>;
 
 	template<class T, std::size_t alignment> 
-	unique_ptr_aligned<T> aligned_unique_ptr(std::size_t size, std::size_t align) { return unique_ptr_aligned<T>(static_cast<T*>(aligned_malloc<T>(size, align))); }
+	unique_ptr_aligned<T> aligned_unique_ptr(std::size_t size, std::size_t align) { return unique_ptr_aligned<T>(static_cast<T*>(AlignedMalloc<T>(size, align))); }
 
 	template <typename T, std::size_t alignment> class AlignedArray
 	{
