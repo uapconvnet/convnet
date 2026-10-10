@@ -602,9 +602,7 @@ namespace dnn
 						{
 							TrainSamples[index + offset] = Image<Byte>(3, 1, 32, 32, &TrainPatterns[3073 * index + 1]);
 							TrainLabels[index + offset][0] = TrainPatterns[3073 * index];
-							
 						}
-						TrainPatterns.clear();
 					}
 					else
 						ok = false;
@@ -624,7 +622,6 @@ namespace dnn
 						TestSamples[index] = Image<Byte>(3, 1, 32, 32, &TestPatterns[3073 * index + 1]);
 						TestLabels[index][0] = TestPatterns[3073 * index];
 					}
-					TestPatterns.clear();
 				}
 				else
 					return false;
@@ -648,7 +645,6 @@ namespace dnn
 						TrainLabels[index][0] = TrainPatterns[3074 * index];
 						TrainLabels[index][1] = TrainPatterns[3074 * index + 1];
 					}
-					TrainPatterns.clear();
 				}
 				else
 					return false;
@@ -665,7 +661,6 @@ namespace dnn
 						TestLabels[index][0] = TestPatterns[3074 * index];
 						TestLabels[index][1] = TestPatterns[3074 * index + 1];
 					}
-					TestPatterns.clear();
 				}
 				else
 					return false;
@@ -701,16 +696,11 @@ namespace dnn
 							TrainSamples.push_back(Image<Byte>(1, 1, 28, 28, &fileBuf[i * 784]));
 							TrainLabels[i][0] = static_cast<UInt>(fileBufLabels[i]);
 						}
-
-						fileBuf.clear();
 					}
 					else
 					{
-						fileBufLabels.clear();
 						return false;
 					}
-
-					fileBufLabels.clear();
 				}
 				else
 					return false;
@@ -736,16 +726,11 @@ namespace dnn
 							TestSamples.push_back(Image<Byte>(1, 1, 28, 28, &fileBuf[i * 784]));
 							TestLabels[i][0] = static_cast<UInt>(fileBufLabels[i]);
 						}
-
-						fileBuf.clear();
 					}
 					else
 					{
-						fileBufLabels.clear();
 						return false;
 					}
-
-					fileBufLabels.clear();
 				}
 				else
 					return false;
