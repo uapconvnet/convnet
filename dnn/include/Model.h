@@ -709,11 +709,11 @@ namespace dnn
 			dnnl_set_verbose(0);
 #endif
 
-#if defined(DNN_AVX512BW) || defined(DNN_AVX512)
-			dnnl::set_max_cpu_isa(dnnl::cpu_isa::avx512_core_bf16);
-			dnnl::set_cpu_isa_hints(dnnl::cpu_isa_hints::prefer_ymm);
-#elif defined(DNN_AVX2)
+#if defined(DNN_AVX2)
 			dnnl::set_max_cpu_isa(dnnl::cpu_isa::avx2);
+			dnnl::set_cpu_isa_hints(dnnl::cpu_isa_hints::prefer_ymm);
+#else
+            dnnl::set_max_cpu_isa(dnnl::cpu_isa::avx512_core_bf16);
 			dnnl::set_cpu_isa_hints(dnnl::cpu_isa_hints::prefer_ymm);
 #endif
 			//dnnl::set_primitive_cache_capacity(1000);

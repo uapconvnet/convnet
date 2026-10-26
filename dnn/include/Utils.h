@@ -13,25 +13,22 @@
 #endif
 
 #ifndef MAX_VECTOR_SIZE
-#ifdef DNN_AVX2
+#if defined(DNN_AVX2)
 #define INSTRSET 8
 #define MAX_VECTOR_SIZE 256
-#endif //DNN_AVX2
-
-#ifdef DNN_AVX512
+#elif defined(DNN_AVX512)
 #define INSTRSET 10
 #define MAX_VECTOR_SIZE 512
-#endif //DNN_AVX512
-
-#ifdef DNN_AVX512BW
+#elif defined(DNN_AVX512BW)
 #define INSTRSET 10
 #define MAX_VECTOR_SIZE 512
-#endif //DNN_AVX512BW
-
-#ifdef DNN_AVX512FP16
+#elif defined(DNN_AVX512FP16)
 #define INSTRSET 12
 #define MAX_VECTOR_SIZE 512
-#endif //DNN_AVX512FP16
+#else
+#define INSTRSET 10
+#define MAX_VECTOR_SIZE 512
+#endif
 #endif // MAX_VECTOR_SIZE
 
 #include "instrset.h"
@@ -536,7 +533,7 @@ namespace dnn
 		static thread_local auto generator = Ranvec1(3, Seed<int>(), static_cast<int>(std::hash<std::thread::id>()(std::this_thread::get_id())));
 #if defined(DNN_AVX2)
 		return select(generator.random8f() < p, VecFloat(Float(1)), VecFloat(Float(0)));
-#else()
+#else
         return select(generator.random16f() < p, VecFloat(Float(1)), VecFloat(Float(0)));
 #endif
 	}
@@ -551,9 +548,9 @@ namespace dnn
 		const auto scale = std::abs(max - min);
 #if defined(DNN_AVX2)
         return (generator.random8f() * scale) + min;
-#else()
+#else
         return (generator.random16f() * scale) + min;
-#endif()
+#endif
 	}
 
 	template<typename T>
