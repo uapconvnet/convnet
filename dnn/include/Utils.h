@@ -173,12 +173,12 @@ namespace dnn
 	typedef Vec8fb VecFloatBool;
 	constexpr auto VectorSize = 8ull;
 	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw8c;
-#else()
+#else
 	typedef Vec16f VecFloat;
 	typedef Vec16fb VecFloatBool;
 	constexpr auto VectorSize = 16ull;
 	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw16c;
-#endif()
+#endif
 	const auto VecZero = VecFloat(Float(0));
 	
 	/*
