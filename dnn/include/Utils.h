@@ -171,17 +171,17 @@ namespace dnn
 	}
 	
 	
-#if defined(DNN_AVX512BW) || defined(DNN_AVX512) || defined(DNN_AVX512FP16)
-	typedef Vec16f VecFloat;
-	typedef Vec16fb VecFloatBool;
-	constexpr auto VectorSize = 16ull;
-	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw16c;
-#elif defined(DNN_AVX2)
+#if defined(DNN_AVX2)
 	typedef Vec8f VecFloat;
 	typedef Vec8fb VecFloatBool;
 	constexpr auto VectorSize = 8ull;
 	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw8c;
-#endif
+#else()
+	typedef Vec16f VecFloat;
+	typedef Vec16fb VecFloatBool;
+	constexpr auto VectorSize = 16ull;
+	constexpr auto BlockedFmt = dnnl::memory::format_tag::nChw16c;
+#endif()
 	const auto VecZero = VecFloat(Float(0));
 	
 	/*
@@ -534,11 +534,10 @@ namespace dnn
 			throw std::invalid_argument("Parameter out of range in BernoulliVecFloat function");
 #endif
 		static thread_local auto generator = Ranvec1(3, Seed<int>(), static_cast<int>(std::hash<std::thread::id>()(std::this_thread::get_id())));
-
-#if defined(DNN_AVX512BW) || defined(DNN_AVX512) || defined(DNN_AVX512FP16)
-		return select(generator.random16f() < p, VecFloat(Float(1)), VecFloat(Float(0)));
-#elif defined(DNN_AVX2)
+#if defined(DNN_AVX2)
 		return select(generator.random8f() < p, VecFloat(Float(1)), VecFloat(Float(0)));
+#else()
+        return select(generator.random16f() < p, VecFloat(Float(1)), VecFloat(Float(0)));
 #endif
 	}
 
@@ -550,12 +549,11 @@ namespace dnn
 #endif
 		static thread_local auto generator = Ranvec1(3, Seed<int>(), static_cast<int>(std::hash<std::thread::id>()(std::this_thread::get_id())));
 		const auto scale = std::abs(max - min);
-
-#if defined(DNN_AVX512BW) || defined(DNN_AVX512) || defined(DNN_AVX512FP16)
-		return (generator.random16f() * scale) + min;
-#elif defined(DNN_AVX2)
-		return (generator.random8f() * scale) + min;
-#endif
+#if defined(DNN_AVX2)
+        return (generator.random8f() * scale) + min;
+#else()
+        return (generator.random16f() * scale) + min;
+#endif()
 	}
 
 	template<typename T>
