@@ -4051,7 +4051,7 @@ namespace Interop
                                             }
                                         }
 
-                                        int length = Marshal.SizeOf(newImg[0]) * newImg.Length;
+                                        var length = Marshal.SizeOf(newImg[0]) * newImg.Length;
                                         IntPtr pnt = Marshal.AllocHGlobal(length);
                                         Marshal.Copy(newImg, 0, pnt, newImg.Length);
                                         var bitmap = new WriteableBitmap(format, AlphaFormat.Premul, pnt, new PixelSize((int)width, (int)height), new Vector(96, 96), stride);
@@ -4109,7 +4109,7 @@ namespace Interop
                                         }
                                     }
                                     
-                                    int length = Marshal.SizeOf(newImg[0]) * newImg.Length;
+                                    var length = Marshal.SizeOf(newImg[0]) * newImg.Length;
                                     IntPtr pnt = Marshal.AllocHGlobal(length);
                                     Marshal.Copy(newImg, 0, pnt, newImg.Length);
                                     var bitmap = new WriteableBitmap(format, AlphaFormat.Premul, pnt, new PixelSize((int)width, (int)height), new Vector(96, 96), stride);
@@ -4145,7 +4145,7 @@ namespace Interop
                                         newImg[(i * 4) + 3] = 255;     // A
                                     }
                                                                        
-                                    int length = Marshal.SizeOf(newImg[0]) * newImg.Length;
+                                    var length = Marshal.SizeOf(newImg[0]) * newImg.Length;
                                     IntPtr pnt = Marshal.AllocHGlobal(length);
                                     Marshal.Copy(newImg, 0, pnt, newImg.Length);
                                     var bitmap = new WriteableBitmap(format, AlphaFormat.Premul, pnt, new PixelSize((int)width, (int)height), new Vector(96, 96), stride);
@@ -4188,7 +4188,7 @@ namespace Interop
                                             newImg[(i * 4) + 3] = 255;     // A
                                         }
                                         
-                                        int length = Marshal.SizeOf(newImg[0]) * newImg.Length;
+                                        var length = Marshal.SizeOf(newImg[0]) * newImg.Length;
                                         IntPtr pnt = Marshal.AllocHGlobal(length);
                                         Marshal.Copy(newImg, 0, pnt, newImg.Length);
                                         var bitmap = new WriteableBitmap(format, AlphaFormat.Premul, pnt, new PixelSize((int)width, (int)height), new Vector(96, 96), stride);
@@ -4225,7 +4225,7 @@ namespace Interop
                                         newImg[(i * 4) + 3] = 255;     // A
                                     }
 
-                                    int length = Marshal.SizeOf(newImg[0]) * newImg.Length;
+                                    var length = Marshal.SizeOf(newImg[0]) * newImg.Length;
                                     IntPtr pnt = Marshal.AllocHGlobal(length);
                                     Marshal.Copy(newImg, 0, pnt, newImg.Length);
                                     var bitmap = new WriteableBitmap(format, AlphaFormat.Premul, pnt, new PixelSize((int)width, (int)height), new Vector(96, 96), stride);
