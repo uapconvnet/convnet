@@ -268,16 +268,7 @@ namespace Convnet.PageViewModels
 
                             try
                             {
-                                var config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.CurrentCulture)
-                                {
-                                    HasHeaderRecord = true,
-                                    DetectDelimiter = true,
-                                    DetectDelimiterValues = [";"],
-                                    Delimiter = ";"
-                                };
-
-                                using (var reader = new StreamReader(path, true))
-                                using (var csv = new CsvReader(reader, config))
+                                using (var csv = CsvReader.FromFile(path, new CsvReaderOptions { HasHeader = true, Separator = ';', FormatProvider = CultureInfo.CurrentUICulture }))
                                 {
                                     var records = csv.GetRecords<DNNTrainingResult>();
 

@@ -1,15 +1,15 @@
-﻿using Avalonia;
-using Avalonia.Data;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-
+using Avalonia;
+using Avalonia.Data;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+using CsvHelper;
 using Float = System.Single;
 using UInt = System.UInt64;
 
@@ -1894,7 +1894,8 @@ namespace Interop
     };
 
     [Serializable()]
-    public class DNNTrainingResult : INotifyPropertyChanged
+    [CsvRecord]
+    public partial class DNNTrainingResult : INotifyPropertyChanged
     {
         [field: NonSerializedAttribute()]
         public virtual event PropertyChangedEventHandler? PropertyChanged;
