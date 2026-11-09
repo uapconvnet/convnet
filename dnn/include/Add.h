@@ -109,7 +109,7 @@ namespace dnn
 			Device.stream.wait();
 			
 #ifndef DNN_LEAN
-			 if (training)
+			if (training)
 				fast_memzero(NeuronsD1.data(), PaddedCDHW() * batchSize * sizeof(Float));
 #endif // DNN_LEAN		
 		}
