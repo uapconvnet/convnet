@@ -270,19 +270,6 @@ IF(NOT DEFINED VECTORCLASS_SOURCE_DIR)
   SET(VECTORCLASS_SOURCE_DIR "${DNN_DEPENDENCIES_SOURCE_DIR}/version2" CACHE STRING "vectorclass source directory")
  ENDIF()
 
-IF(NOT DEFINED JPEG_SOURCE_DIR)
-  MESSAGE(STATUS "Downloading jpeg to ${DNN_DEPENDENCIES_SOURCE_DIR}/libjpeg-turbo (define JPEG_SOURCE_DIR to avoid it)")
-  CONFIGURE_FILE(cmake/DownloadJPEG.cmake "${DNN_DEPENDENCIES_BINARY_DIR}/libjpeg-turbo-download/CMakeLists.txt")
-  EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-    WORKING_DIRECTORY "${DNN_DEPENDENCIES_BINARY_DIR}/libjpeg-turbo-download")
-  EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" --build .
-    WORKING_DIRECTORY "${DNN_DEPENDENCIES_BINARY_DIR}/libjpeg-turbo-download")
-  SET(JPEG_SOURCE_DIR "${DNN_DEPENDENCIES_SOURCE_DIR}/libjpeg-turbo" CACHE STRING "JPEG source directory")
-  # --- EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -E copy "${DNN_DEPENDENCIES_SOURCE_DIR}/libjpeg-turbo/jconfig.h.in" "${DNN_DEPENDENCIES_SOURCE_DIR}/libjpeg-turbo/jconfig.h")
-  # --- EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -E copy "${DNN_DEPENDENCIES_SOURCE_DIR}/libjpeg-turbo/jconfig.h.in" "${DNN_DEPENDENCIES_BINARY_DIR}/libjpeg-turbo/jconfig.h")
-  # --- EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -E copy "${JPEG_SOURCE_DIR}/jpeglib.h" "${DNN_DEPENDENCIES_BINARY_DIR}/libjpeg-turbo/jpeglib.h")
- ENDIF()
-
  IF(NOT DEFINED MAGIC_ENUM_SOURCE_DIR)
   MESSAGE(STATUS "Downloading MagicEnum to ${DNN_DEPENDENCIES_SOURCE_DIR}/magic_enum (define MAGIC_ENUM_SOURCE_DIR to avoid it)")
   CONFIGURE_FILE(cmake/DownloadMagicEnum.cmake "${DNN_DEPENDENCIES_BINARY_DIR}/magic_enum-download/CMakeLists.txt")
@@ -347,8 +334,6 @@ include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/zlib)
 include_directories(${DNN_DEPENDENCIES_BINARY_DIR}/zlib)
 include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/libpng)
 include_directories(${DNN_DEPENDENCIES_BINARY_DIR}/libpng)
-include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/libjpeg-turbo)
-include_directories(${DNN_DEPENDENCIES_BINARY_DIR}/libjpeg-turbo)
 include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/oneDNN/include)
 include_directories(${DNN_DEPENDENCIES_BINARY_DIR}/oneDNN/include)
 include_directories(${DNN_DEPENDENCIES_SOURCE_DIR}/oneDNN/src)
@@ -387,11 +372,36 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC png_static)
 
 # ---[ Configure JPEG
 IF(NOT TARGET jpeg)
-  ADD_SUBDIRECTORY(
-    "${JPEG_SOURCE_DIR}"
-    "${DNN_DEPENDENCIES_BINARY_DIR}/libjpeg-turbo")
+  if(WIN32)
+	    set(JPEG_LIBNAME jpeg-static.lib)
+	else()
+	    set(JPEG_LIBNAME libjpeg.a)
+  endif()
+  INCLUDE(ExternalProject)
+  ExternalProject_Add(libjpeg-turbo
+                        CMAKE_ARGS
+                          -DENABLE_SHARED=OFF
+                          -DENABLE_STATIC=ON
+                          -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/libjpeg-turbo
+                          -DCMAKE_INSTALL_LIBDIR=${CMAKE_CURRENT_BINARY_DIR}/bin
+                          -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+                          -DWITH_TURBOJPEG=0
+                        GIT_REPOSITORY https://github.com/libjpeg-turbo/libjpeg-turbo.git
+                        GIT_TAG        main
+                        # ninja has no rule to make the library unless it is listed as a byproduct
+                        BUILD_BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/bin/${JPEG_LIBNAME})
+    # Create imported target for the static library
+    add_library(jpeg-imported STATIC IMPORTED GLOBAL)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/libjpeg-turbo/include)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
+    set_target_properties(jpeg-imported PROPERTIES
+      IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${JPEG_LIBNAME}
+      INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_BINARY_DIR}/libjpeg-turbo/include)
+    add_dependencies(jpeg-imported libjpeg-turbo)
+    include_directories(${CMAKE_CURRENT_BINARY_DIR}/libjpeg-turbo/include)
+    include_directories(${CMAKE_CURRENT_BINARY_DIR}/bin)
 ENDIF()
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC jpeg-static)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC jpeg-imported)
 
 # ---[ Configure oneDNN
 IF(NOT TARGET dnnl)
