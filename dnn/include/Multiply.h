@@ -25,9 +25,7 @@ namespace dnn
 			assert(Inputs.size() == 2);
 			assert(Inputs[0]->C >= Inputs[1]->C);
 			assert(Inputs[0]->D >= Inputs[1]->D);
-			assert(Inputs[0]->H >= Inputs[1]->H);
-			assert(Inputs[0]->W >= Inputs[1]->W);
-
+			
 			FwdInferenceWeight = Float(5);
 			FwdTrainingWeight = Float(10);
 			BwdTrainingWeight = Float(10);

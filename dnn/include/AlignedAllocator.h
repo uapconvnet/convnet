@@ -98,14 +98,9 @@ namespace dnn
         }
 
     protected:
-        static constexpr std::size_t RoundUp(std::size_t size, std::size_t align) noexcept
-        {
-            return (size + align - 1) & ~(align - 1);
-        }
-
         DNN_INLINE void* AlignedAlloc(std::size_t align, std::size_t size) const
         {
-            const std::size_t adjusted_size = RoundUp(size, align);
+            const auto adjusted_size = (size + align - 1ul) & ~(align - 1ul);
 #ifdef DEBUG
             assert((adjusted_size % align == 0) && "Size must be multiple of alignment");
 #endif
