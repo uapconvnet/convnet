@@ -74,7 +74,7 @@ namespace dnn
                 throw std::bad_array_new_length();
             }
 
-            const std::size_t total_size = n * sizeof(T);
+            const auto total_size = n * sizeof(T);
             
             void* p = AlignedAlloc(Alignment, total_size);
 
