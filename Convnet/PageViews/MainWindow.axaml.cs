@@ -22,7 +22,7 @@ namespace Convnet.PageViews
 {
     public partial class MainWindow : ReactiveWindow<PageViewModel>
     {
-        const string Framework = "net10.0";
+        const string Framework = "net11.0";
 #if DEBUG
         const string Mode = "Debug";
 #else
