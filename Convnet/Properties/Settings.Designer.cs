@@ -1505,7 +1505,7 @@ namespace Convnet.Properties {
             "          LogSoftmax(\"GAP\") +\r\n                            Cost(\"LSM\", p.Dataset" +
             ", p.Classes, \"CategoricalCrossEntropy\", 0.125f);\r\n                    }\r\n       " +
             "             break;\r\n            }\r\n\r\n            return net;\r\n        }\r\n\r\n\r\n  " +
-            "      const string Framework = \"net10.0\";\r\n#if DEBUG\r\n        const string Mode " +
+            "      const string Framework = \"net11.0\";\r\n#if DEBUG\r\n        const string Mode " +
             "= \"Debug\";\r\n#else\r\n        const string Mode = \"Release\";\r\n#endif\r\n\r\n        pub" +
             "lic static string StorageDirectory { get; } = Path.Combine(Environment.GetFolder" +
             "Path(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Environment.SpecialFo" +
