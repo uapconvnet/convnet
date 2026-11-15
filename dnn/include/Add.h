@@ -83,12 +83,12 @@ namespace dnn
 			
 			fwdDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *Inputs[first]->DstMemDesc, *Inputs[second]->DstMemDesc, *DstMemDesc));
 
-          	DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
+			DstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 			DiffDstMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->dst_desc());
 
             bwdDescFirst = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputsBwd[first]->DiffDstMemDesc, *DiffDstMemDesc, *InputsBwd[first]->DiffDstMemDesc));
             bwdDescSecond = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputsBwd[second]->DiffDstMemDesc, *DiffDstMemDesc, *InputsBwd[second]->DiffDstMemDesc));		
-           
+    
 #ifdef DNN_CACHE_PRIMITIVES
 			fwd = std::make_unique<dnnl::binary>(dnnl::binary(*fwdDesc));
             bwdFirst = std::make_unique<dnnl::binary>(dnnl::binary(*bwdDescFirst));
@@ -126,7 +126,7 @@ namespace dnn
             auto firstDiffSrcMem = dnnl::memory(*InputsBwd[first]->DiffDstMemDesc, Device.engine, InputsBwd[first]->NeuronsD1.data());
 
             bwdArgsFirst = std::unordered_map<int, dnnl::memory>{ { DNNL_ARG_SRC_0, firstDiffSrcMem }, { DNNL_ARG_SRC_1, diffDestMem }, { DNNL_ARG_DST, firstDiffSrcMem } };
-        	
+
             #ifdef DNN_CACHE_PRIMITIVES
 				bwdFirst->execute(Device.stream, bwdArgsFirst);
             #else
@@ -150,8 +150,8 @@ namespace dnn
 			ReleaseGradient();
 #endif // DNN_LEAN
         }
-
 /*
+
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
@@ -475,9 +475,6 @@ namespace dnn
 			ReleaseGradient();
 #endif // DNN_LEAN
 		}
+*/
 	};
-
-    */
-   
-    };
 }

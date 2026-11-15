@@ -138,8 +138,8 @@ namespace dnn
 				fast_memzero(NeuronsD1.data(), PaddedCDHW() * batchSize * sizeof(Float));
 #endif // DNN_LEAN
 		}
-	
 /*
+
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 			if (training)
