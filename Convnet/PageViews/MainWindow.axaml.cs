@@ -36,7 +36,7 @@ namespace Convnet.PageViews
         
         public PageViewModel? PageVM;
 
-        public ReactiveCommand<RxVoid, RxVoid> CutCommand { get; }
+        //public ReactiveCommand<RxVoid, RxVoid> CutCommand { get; }
         public void Cut()
         {
             //var elem = TopLevel.GetTopLevel(this).GetFocusedElement();
@@ -169,7 +169,7 @@ namespace Convnet.PageViews
             InitializeComponent();
 
             
-            CutCommand = ReactiveCommand.Create(Cut, this.WhenAnyValue(x => x.CanCut));
+            //CutCommand = ReactiveCommand.Create(Cut, this.WhenAnyValue(x => x.CanCut));
             //var cmdKey = GetPlatformCommandKey();
 
             //var file = new MenuItem();
