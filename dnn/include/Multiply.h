@@ -122,7 +122,7 @@ namespace dnn
 			if constexpr (TestMultiply)
 				InputNeurons.resize(batchSize, C, H, W, dnnl::memory::data_type::f32, BlockedFmt, Device.engine);
 		}
-
+/*
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
 
@@ -138,7 +138,7 @@ namespace dnn
 				fast_memzero(NeuronsD1.data(), PaddedCDHW() * batchSize * sizeof(Float));
 #endif // DNN_LEAN
 		}
-/*
+*/
 
 		void ForwardProp(const UInt batchSize, const bool training) final override
 		{
@@ -281,8 +281,8 @@ namespace dnn
 									{
 										for (auto c = 0ull; c < PaddedC; c += VectorSize)
 										{
-											const auto outputOffset = n * PaddedCDHW() + c * HW();
-
+											//const auto outputOffset = n * PaddedCDHW() + c * HW();
+											const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
 											for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
 											{
 												(VecFloat().load_a(&Inputs[0]->Neurons[hw]) * VecFloat().load_a(&Inputs[1]->Neurons[hw])).store_a(&Neurons[hw]);
@@ -299,8 +299,10 @@ namespace dnn
 									{
 										for (auto c = 0ull; c < PaddedC; c += VectorSize)
 										{
-											const auto outputOffset = n * PaddedCDHW() + c * HW();
-											const auto channelOffset = n * PaddedC + c;
+											const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+											const auto channelOffset = Inputs[second]->OffsetPaddedMem(n, c, 0, 0);
+											//const auto outputOffset = n * PaddedCDHW() + c * HW();
+											//const auto channelOffset = n * PaddedC + c;
 											for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
 											{
 												(VecFloat().load_a(&Inputs[first]->Neurons[hw]) * VecFloat().load_a(&Inputs[second]->Neurons[channelOffset])).store_a(&Neurons[hw]);
@@ -321,7 +323,8 @@ namespace dnn
 										const auto channelOffset = n * Inputs[second]->PaddedCDHW();
 										for (auto c = 0ull; c < PaddedC; c += VectorSize)
 										{
-											const auto outputOffset = n * PaddedCDHW() + c * HW();
+											//const auto outputOffset = n * PaddedCDHW() + c * HW();
+											const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
 											for (auto hw = 0ull; hw < strideHW; hw += VectorSize)
 											{
 												(VecFloat().load_a(&Inputs[first]->Neurons[hw + outputOffset]) * Inputs[second]->Neurons[hw + channelOffset]).store_a(&Neurons[hw + outputOffset]);
@@ -461,7 +464,7 @@ namespace dnn
 				Device.stream.wait();
 			}
 		}
-*/
+
 
 		void BackwardProp(const UInt batchSize)  final override
 		{
@@ -574,8 +577,10 @@ namespace dnn
 								VecFloat neuronsD1;
 								for (auto c = 0ull; c < PaddedC; c += VectorSize)
 								{
-									const auto outputOffset = n * PaddedCDHW() + c * HW();
-									const auto channelOffset = n * PaddedC + c;
+									//const auto outputOffset = n * PaddedCDHW() + c * HW();
+									const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+									//const auto channelOffset = n * PaddedC + c;
+									const auto channelOffset = InputsBwd[second]->OffsetPaddedMem(n, c, 0, 0);
 									for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
 									{
 										neuronsD1.load_a(&NeuronsD1[hw]);
@@ -615,7 +620,8 @@ namespace dnn
 							VecFloat neuronsD1;
 							for (auto c = 0ull; c < PaddedC; c += VectorSize)
 							{
-								const auto outputOffset = n * PaddedCDHW() + c * HW();
+								//const auto outputOffset = n * PaddedCDHW() + c * HW();
+								const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
 								for (auto hw = 0ull; hw < strideHW; hw += VectorSize)
 								{
 									neuronsD1.load_a(&NeuronsD1[hw + outputOffset]);
