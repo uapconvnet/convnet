@@ -14,11 +14,11 @@ namespace Convnet.PageViewModels
 {
     public abstract class PageViewModelBase : ReactiveObject
     {
-        const string Framework = @"net11.0";
+        public const string Framework = @"net11.0";
 #if DEBUG
-        const string Mode = "Debug";
+        public const string Mode = "Debug";
 #else
-        const string Mode = @"Release";
+        public const string Mode = @"Release";
 #endif
 
         private ObservableCollection<Control> commandToolBar = new ObservableCollection<Control>();
