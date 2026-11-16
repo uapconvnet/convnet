@@ -22,6 +22,12 @@ namespace Convnet.PageViews
 {
     public partial class MainWindow : ReactiveWindow<PageViewModel>
     {
+        const string Framework = @"net11.0";
+#if DEBUG
+        const string Mode = "Debug";
+#else
+        const string Mode = @"Release";
+#endif
         public static string? ApplicationPath { get; } = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string StorageDirectory { get; } = Path.Combine(Environment.GetFolderPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Environment.SpecialFolder.MyDocuments :Environment.SpecialFolder.UserProfile), "convnet");
         public static string StateDirectory { get; } = Path.Combine(StorageDirectory, "state");
