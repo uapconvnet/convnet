@@ -26,12 +26,6 @@ namespace Convnet.PageViewModels
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
     public class EditPageViewModel : PageViewModelBase
     {
-#if DEBUG
-        const string Mode = "Debug";
-#else
-        const string Mode = "Release";
-#endif
-
         private static readonly string[] separator = [Environment.NewLine];
         private string modelName = Settings.Default.ModelNameActive;
         private string definition = Settings.Default.DefinitionEditing;
