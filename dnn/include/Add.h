@@ -446,8 +446,6 @@ namespace dnn
 						});
 				}
 			}
-		}
-
 #ifdef DNN_LEAN
 			ReleaseGradient();
 #endif // DNN_LEAN
