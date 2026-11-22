@@ -35,7 +35,6 @@ namespace dnn
 			scaleSecond(dnnl::memory::desc::host_scalar(dnnl::memory::data_type::f32), Float(1))
 		{
 			assert(Inputs.size() == 2);
-			assert(Inputs[0]->C == Inputs[1]->C);
 			assert(Inputs[0]->D == Inputs[1]->D);
 			
 			FwdInferenceWeight = Float(5);
@@ -334,6 +333,10 @@ namespace dnn
 										}
 									});
 							}
+							else
+							{
+								throw std::invalid_argument("Inputs have different dimensions in " + std::string(magic_enum::enum_name<LayerTypes>(LayerType)) + " layer " + Name);
+							}
 						}
 					}
 					else
@@ -445,6 +448,10 @@ namespace dnn
 											}
 										}
 									});
+							}
+							else
+							{
+								throw std::invalid_argument("Inputs have different dimensions in " + std::string(magic_enum::enum_name<LayerTypes>(LayerType)) + " layer " + Name);
 							}
 						}
 					}
@@ -694,6 +701,10 @@ namespace dnn
 								}
 							});
 					}
+				}
+				else
+				{
+					throw std::invalid_argument("Inputs have different dimensions in " + std::string(magic_enum::enum_name<LayerTypes>(LayerType)) + " layer " + Name);
 				}
 			}
 #ifdef DNN_LEAN
