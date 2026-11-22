@@ -336,7 +336,7 @@ namespace dnn
 							for (auto c = 0ull; c < PaddedC; c += VectorSize)
 							{
 								const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
-								const auto channelOffset = n * PaddedC + c;
+								const auto channelOffset = InputsBwd[second]->OffsetPaddedMem(n, c, 0, 0);
 								for (auto hw = 0ull; hw < strideHW; hw += VectorSize)
 								{
 									neuronsD1.load_a(&NeuronsD1[hw + outputOffset]);
@@ -351,7 +351,7 @@ namespace dnn
 							for (auto c = 0ull; c < C; c++)
 							{
 								const auto outputOffset = OffsetPlainMem(n, c, 0, 0);
-								const auto channelOffset = n * C + c;
+								const auto channelOffset = InputsBwd[second]->OffsetPlainMem(n, c, 0, 0);
 								for (auto hw = 0ull; hw < HW(); hw++)
 								{
 									InputsBwd[first]->NeuronsD1[hw + outputOffset] += NeuronsD1[hw + outputOffset] / Inputs[second]->Neurons[channelOffset];
