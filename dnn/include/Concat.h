@@ -418,22 +418,5 @@ namespace dnn
 			ReleaseGradient();
 #endif // DNN_LEAN
 		}
-
-
-	
-		/*
-		void BackwardProp(const UInt batchSize)
-		{
-#ifdef DNN_LEAN
-			ZeroGradientMulti(batchSize);
-#endif
-
-
-
-#ifdef DNN_LEAN
-			ReleaseGradient();
-#endif // DNN_LEAN
-		}
-*/
 	};
 }
