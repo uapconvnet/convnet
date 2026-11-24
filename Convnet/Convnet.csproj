@@ -117,10 +117,10 @@
 	<PackageReference Include="System.Configuration.ConfigurationManager" Version="11.0.0" />
 	<PackageReference Include="System.Reactive" Version="7.0.0" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-	<PackageReference Include="Xaml.Behaviors" Version="12.1.5" />
-	<PackageReference Include="Xaml.Behaviors.Avalonia" Version="12.1.5" />
-	<PackageReference Include="Xaml.Behaviors.Interactions" Version="12.1.5" />
-	<PackageReference Include="Xaml.Behaviors.Interactivity" Version="12.1.5" />
+	<PackageReference Include="Xaml.Behaviors" Version="12.2.0" />
+	<PackageReference Include="Xaml.Behaviors.Avalonia" Version="12.2.0" />
+	<PackageReference Include="Xaml.Behaviors.Interactions" Version="12.2.0" />
+	<PackageReference Include="Xaml.Behaviors.Interactivity" Version="12.2.0" />
 	<PackageReference Include="System.Resources.Extensions" Version="11.0.0" />
   </ItemGroup>
 
