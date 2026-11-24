@@ -609,7 +609,7 @@ namespace dnn
 		static_assert(std::is_floating_point<T>::value, "Only Floating point type supported in BetaDistribution function");
 		static thread_local auto generator = std::mt19937(Seed<unsigned>());
 
-		return dnn::BetaDistribution<T>(a, b)(generator);
+		return dnn::beta_distribution<T>(a, b)(generator);
 	}
 
 	struct no_separator : std::numpunct<char>

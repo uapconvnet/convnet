@@ -3170,7 +3170,7 @@ namespace dnn
 			}
 			
             const auto same = (GetFileSize(fileName) == GetWeightsSize(persistOptimizer, optimizer));
-           
+        
 			if (same || skipCheck)
 			{
 				SetOptimizer(optimizer);

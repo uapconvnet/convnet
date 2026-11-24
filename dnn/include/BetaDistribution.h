@@ -1,5 +1,6 @@
 #pragma once
 #include <random>
+#include <limits>
 
 namespace dnn
 {
@@ -8,24 +9,24 @@ namespace dnn
 	class BetaDistribution
 	{
 	public:
-		typedef RealType ResultType;
+		typedef RealType result_type;
 
-		class ParamType
+		class param_type
 		{
 		public:
 			typedef BetaDistribution distribution_type;
 
-			explicit ParamType(RealType a = 2.0, RealType b = 2.0) : a_param(a), b_param(b) { }
+			explicit param_type(RealType a = 2.0, RealType b = 2.0) : a_param(a), b_param(b) { }
 
 			RealType a() const noexcept { return a_param; }
 			RealType b() const noexcept { return b_param; }
 
-			bool operator==(const ParamType& other) const noexcept
+			bool operator==(const param_type& other) const noexcept
 			{
 				return (a_param == other.a_param && b_param == other.b_param);
 			}
 
-			bool operator!=(const ParamType& other) const noexcept
+			bool operator!=(const param_type& other) const noexcept
 			{
 				return !(*this == other);
 			}
@@ -34,61 +35,69 @@ namespace dnn
 			RealType a_param, b_param;
 		};
 
-		explicit BetaDistribution(RealType a = 2.0, RealType b = 2.0) noexcept  : a_gamma(a), b_gamma(b) { }
-		explicit BetaDistribution(const ParamType& param) noexcept : a_gamma(param.a()), b_gamma(param.b()) { }
+		explicit BetaDistribution(RealType a = 2.0, RealType b = 2.0) noexcept : a_param(a), b_param(b) { }
+		explicit BetaDistribution(const param_type& param) noexcept : a_param(param.a()), b_param(param.b()) { }
 
-		void reset() { }
+		void reset() noexcept { }
 
-		ParamType param() const noexcept
+		param_type param() const noexcept
 		{
-			return ParamType(a(), b());
+			return param_type(a_param, b_param);
 		}
 
-		void param(const ParamType& param) noexcept
+		void param(const param_type& param) noexcept
 		{
-			a_gamma = GammaDistType(param.a());
-			b_gamma = GammaDistType(param.b());
-		}
-
-		template <typename URNG>
-		inline ResultType operator()(URNG& engine) noexcept
-		{
-			return generate(engine, a_gamma, b_gamma);
+			a_param = param.a();
+			b_param = param.b();
 		}
 
 		template <typename URNG>
-		inline ResultType operator()(URNG& engine, const ParamType& param) noexcept
+		inline result_type operator()(URNG& engine) noexcept
 		{
-			GammaDistType a_param_gamma(param.a()), b_param_gamma(param.b());
-			return generate(engine, a_param_gamma, b_param_gamma);
+			return generate(engine);
 		}
 
-		ResultType min() const noexcept { return 0.0; }
-		ResultType max() const noexcept { return 1.0; }
-
-		ResultType a() const noexcept { return a_gamma.alpha(); }
-		ResultType b() const noexcept { return b_gamma.alpha(); }
-
-		bool operator==(const BetaDistribution<ResultType>& other) const noexcept
+		template <typename URNG>
+		inline result_type operator()(URNG& engine, const param_type& param) noexcept
 		{
-			return (param() == other.param() &&	a_gamma == other.a_gamma &&	b_gamma == other.b_gamma);
+			BetaDistribution dist(param);
+			return dist.generate(engine);
 		}
 
-		bool operator!=(const BetaDistribution<ResultType>& other) const noexcept
+		result_type min() const noexcept { return 0.0; }
+		result_type max() const noexcept { return 1.0; }
+
+		result_type a() const noexcept { return a_param; }
+		result_type b() const noexcept { return b_param; }
+
+		bool operator==(const BetaDistribution& other) const noexcept
+		{
+			return a_param == other.a_param && b_param == other.b_param;
+		}
+
+		bool operator!=(const BetaDistribution& other) const noexcept
 		{
 			return !(*this == other);
 		}
 
 	private:
-		typedef std::gamma_distribution<ResultType> GammaDistType;
+		typedef std::gamma_distribution<RealType> GammaDistType;
 
-		GammaDistType a_gamma, b_gamma;
+		RealType a_param, b_param;
 
 		template <typename URNG>
-		inline ResultType generate(URNG& engine, GammaDistType& x_gamma, GammaDistType& y_gamma) noexcept
+		inline result_type generate(URNG& engine) noexcept
 		{
-			ResultType x = x_gamma(engine);
-			return x / (x + y_gamma(engine));
+			GammaDistType x_gamma(a_param);
+			GammaDistType y_gamma(b_param);
+			result_type x = x_gamma(engine);
+			result_type y = y_gamma(engine);
+			const result_type sum = x + y;
+			return (sum > std::numeric_limits<result_type>::epsilon()) ? x / sum : 0.0;
 		}
 	};
+
+	// Standard library naming convention alias for compatibility
+	template <typename RealType = double>
+	using beta_distribution = BetaDistribution<RealType>;
 }
