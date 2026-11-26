@@ -49,6 +49,7 @@ namespace dnn
 		{
 			a_param = param.a();
 			b_param = param.b();
+			cache_valid = false;
 		}
 
 		template <typename URNG>
