@@ -82,18 +82,37 @@ namespace dnn
 
 	private:
 		typedef std::gamma_distribution<RealType> GammaDistType;
-
 		RealType a_param, b_param;
-
+		mutable GammaDistType x_gamma_cached;
+        mutable GammaDistType y_gamma_cached;
+        mutable bool cache_valid = false;
+	
 		template <typename URNG>
 		inline result_type generate(URNG& engine) noexcept
 		{
-			GammaDistType x_gamma(a_param);
-			GammaDistType y_gamma(b_param);
-			result_type x = x_gamma(engine);
-			result_type y = y_gamma(engine);
-			const result_type sum = x + y;
-			return (sum > std::numeric_limits<result_type>::epsilon()) ? x / sum : 0.0;
+    		// Validate parameters first
+    		if (a_param <= 0.0 || b_param <= 0.0)
+        		return 0.5;
+
+    		// Update cached distributions only when parameters change
+    		if (!cache_valid)
+			{
+        		x_gamma_cached = GammaDistType(a_param);
+        		y_gamma_cached = GammaDistType(b_param);
+        		cache_valid = true;
+			}
+    
+    		result_type x = x_gamma_cached(engine);
+    		result_type y = y_gamma_cached(engine);
+    
+    		const result_type sum = x + y;
+    
+    		if (sum <= std::numeric_limits<result_type>::min())
+        		return 0.0;
+    
+    		result_type ratio = x / sum;
+    		// Clamp to valid range
+    		return (ratio < 0.0) ? 0.0 : ((ratio > 1.0) ? 1.0 : ratio);
 		}
 	};
 
