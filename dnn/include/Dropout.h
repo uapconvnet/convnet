@@ -96,48 +96,79 @@ namespace dnn
 			const auto plain = IsPlainFormat();
 			const auto size = GetElementsCount();
 			const auto part = GetVectorPart(size);
+			const auto strideHW = HW() * VectorSize;
 
 			if (Enabled && training)
 			{				
 				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), FwdTrainingWeight);
-
-				for_i(batchSize, threads, [=](UInt b)
-				{
-					const auto start = b * size;
-					const auto end = start + part;
-					VecFloat mask;
-					for (auto i = start; i < end; i += VectorSize)
+				if (plain)
+					for_i(batchSize, threads, [=](UInt b)
 					{
-						mask = BernoulliVecFloat(Keep);
-						mask.store_a(&NeuronsActive[i]);
-						(mask * Scale * VecFloat().load_a(&InputLayer->Neurons[i])).store_a(&Neurons[i]);
+						const auto start = b * size;
+						const auto end = start + part;
+						VecFloat mask;
+						for (auto i = start; i < end; i += VectorSize)
+						{
+							mask = BernoulliVecFloat(Keep);
+							mask.store_a(&NeuronsActive[i]);
+							(mask * Scale * VecFloat().load_a(&InputLayer->Neurons[i])).store_a(&Neurons[i]);
 #ifndef DNN_LEAN
-						VecZero.store_nt(&NeuronsD1[i]);
+							VecZero.store_nt(&NeuronsD1[i]);
 #endif
-					}
-					for (auto i = end; i < start + size; i++)
+						}
+						for (auto i = end; i < start + size; i++)
+						{
+							NeuronsActive[i] = Bernoulli<Float>(Keep);
+							Neurons[i] = NeuronsActive[i] * Scale * InputLayer->Neurons[i];
+#ifndef DNN_LEAN
+							NeuronsD1[i] = Float(0);
+#endif
+						}
+					});
+				else
+					for_i(batchSize, threads, [=](UInt n)
 					{
-						NeuronsActive[i] = Bernoulli<Float>(Keep);
-						Neurons[i] = NeuronsActive[i] * Scale * InputLayer->Neurons[i];
+						VecFloat mask;
+						for (auto c = 0ull; c < PaddedC; c += VectorSize)
+						{
+							const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+							for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+							{
+								mask = BernoulliVecFloat(Keep);
+								mask.store_a(&NeuronsActive[hw]);
+								(mask * Scale * VecFloat().load_a(&InputLayer->Neurons[hw])).store_a(&Neurons[hw]);
 #ifndef DNN_LEAN
-						NeuronsD1[i] = Float(0);
+								VecZero.store_nt(&NeuronsD1[hw]);
 #endif
-					}
-				});
+							}
+						}
+					});
 			}
 			else
 			{
 				const auto threads = batchSize == 1ull ? 1ull : GetThreads(batchSize * GetElementsCount(), FwdInferenceWeight);
 
-				for_i(batchSize, threads, [=](UInt b)
-				{
-					const auto start = b * size;
-					const auto end = start + part;
-					for (auto i = start; i < end; i += VectorSize)
-						(VecFloat().load_a(&InputLayer->Neurons[i])).store_a(&Neurons[i]);
-					for (auto i = end; i < start + size; i++)
-						Neurons[i] = InputLayer->Neurons[i];
-				});
+				if (plain)
+					for_i(batchSize, threads, [=](UInt b)
+					{
+						const auto start = b * size;
+						const auto end = start + part;
+						for (auto i = start; i < end; i += VectorSize)
+							(VecFloat().load_a(&InputLayer->Neurons[i])).store_a(&Neurons[i]);
+						for (auto i = end; i < start + size; i++)
+							Neurons[i] = InputLayer->Neurons[i];
+					});
+				else
+					for_i(batchSize, threads, [=](UInt n)
+					{
+						for (auto c = 0ull; c < PaddedC; c += VectorSize)
+						{
+							const auto outputOffset = OffsetPaddedMem(n, c, 0, 0);
+							for (auto hw = outputOffset; hw < outputOffset + strideHW; hw += VectorSize)
+								(VecFloat().load_a(&InputLayer->Neurons[hw])).store_a(&Neurons[hw]);
+							
+						}
+					});
 			}
 		}
 
