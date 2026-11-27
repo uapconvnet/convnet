@@ -65,11 +65,11 @@
 #endif // long simdlen if
 
 #ifndef DNN_UNREF_PAR
-  #ifdef _MSC_VER
-	#define DNN_UNREF_PAR(P) (P)
-  #else
-	#define DNN_UNREF_PAR(P) (void)P
-  #endif
+	#ifdef _MSC_VER
+		#define DNN_UNREF_PAR(P) (P)
+	#else
+		#define DNN_UNREF_PAR(P) (void)P
+	#endif
 #endif
 
 namespace dnn
@@ -491,7 +491,7 @@ namespace dnn
 #endif
 #endif
 	}
-  
+
 	static inline void parallel_nd(std::size_t D0, const std::function<void(std::size_t)>& f)
 	{
 		int nthr = adjust_num_threads(omp_get_max_threads(), D0);
@@ -514,7 +514,7 @@ namespace dnn
 		
 		parallel_nd(range, [=](size_t i)
 		{
-	  		f(i);
+			f(i);
 		});
 #else
 		for_(0ull, range, [&](const blocked_range& r)
@@ -535,7 +535,7 @@ namespace dnn
 			
 			parallel_nd(range, threads, [=](size_t i)
 			{
-	  			f(i);
+				f(i);
 			});
 #else
 			for_(0ull, range, [&](const blocked_range& r)
@@ -555,14 +555,14 @@ namespace dnn
   		const auto PAGE_4MB = 1ull << 22ull; // 4MB page size
 		const auto res = std::lldiv(static_cast<long long>(numbytes), static_cast<long long>(PAGE_4MB));
 		
-  		if (!res.quot)
-	  		fast_memset(dest, 0, static_cast<size_t>(res.rem));
-  		else
+		if (!res.quot)
+			fast_memset(dest, 0, static_cast<size_t>(res.rem));
+		else
 			for_i(static_cast<size_t>(res.quot), [=](size_t i)
 			{
-      			const auto tail = ((i + 1ull) == static_cast<size_t>(res.quot)) ? static_cast<size_t>(res.rem) : 0ull;
+				const auto tail = ((i + 1ull) == static_cast<size_t>(res.quot)) ? static_cast<size_t>(res.rem) : 0ull;
       			const auto ptr = reinterpret_cast<unsigned char *>(dest) + i * PAGE_4MB;
 				fast_memset(ptr, 0, PAGE_4MB + tail);
-    		});
+			});
 	}
 }

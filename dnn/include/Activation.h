@@ -214,7 +214,7 @@ namespace dnn
 		inline static VecFloat dfVec(const VecFloat& x, [[maybe_unused]] const Float& alpha = Float(0), [[maybe_unused]] const Float& beta = Float(0)) NOEXCEPT { return (Float(1) - square(tanh(x))); }
 		inline static Activations Enum() NOEXCEPT { return Activations::Tanh; }
 	};
-	 
+
 	struct TanhExp
 	{
 		inline static Float f(const Float& x, [[maybe_unused]] const Float& alpha = Float(0), [[maybe_unused]] const Float& beta = Float(0)) NOEXCEPT { return x * std::tanh(std::exp(x)); }
@@ -896,7 +896,7 @@ namespace dnn
 				case Activations::SoftPlus:
 				case Activations::SoftSign:
 				case Activations::TanhExp:
-				    break;
+					break;
 
 				case Activations::Abs:
 					algorithm = dnnl::algorithm::eltwise_abs;
