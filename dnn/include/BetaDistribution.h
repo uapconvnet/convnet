@@ -82,8 +82,9 @@ namespace dnn
 		}
 
 	private:
-		typedef std::gamma_distribution<RealType> GammaDistType;
 		RealType a_param, b_param;
+		
+		typedef std::gamma_distribution<RealType> GammaDistType;
 		mutable GammaDistType x_gamma_cached;
         mutable GammaDistType y_gamma_cached;
         mutable bool cache_valid = false;
