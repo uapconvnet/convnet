@@ -91,8 +91,51 @@ namespace Convnet.PageViewModels
             VisualStudioCommand = ReactiveCommand.Create(() => { VisualStudio(this, new RoutedEventArgs()); });
 
             AddCommandButtons();
+
+
+            using var watcher = new FileSystemWatcher(ScriptsDirectory, "Program.cs");
+            
+            watcher.NotifyFilter = NotifyFilters.Attributes
+                                | NotifyFilters.CreationTime
+                                | NotifyFilters.DirectoryName
+                                | NotifyFilters.FileName
+                                | NotifyFilters.LastAccess
+                                | NotifyFilters.LastWrite
+                                | NotifyFilters.Security
+                                | NotifyFilters.Size;
+
+            watcher.Changed += OnChanged;
+            watcher.Error += OnError;
+            watcher.IncludeSubdirectories = false;
+            watcher.EnableRaisingEvents = true;
         }
-        
+
+        private void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            if (e.ChangeType != WatcherChangeTypes.Changed)
+            {
+                return;
+            }
+            Console.WriteLine($"Changed: {e.FullPath}");
+            System.Threading.Thread.Sleep(250);
+            Script = File.ReadAllText(e.FullPath);
+        }
+
+        private static void OnError(object sender, ErrorEventArgs e) =>
+            PrintException(e.GetException());
+
+        private static void PrintException(Exception? ex)
+        {
+            if (ex != null)
+            {
+                Console.WriteLine($"Message: {ex.Message}");
+                Console.WriteLine("Stacktrace:");
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine();
+                PrintException(ex.InnerException);
+            }
+        }
+
         private void AddCommandButtons()
         {
             var openButton = new Button
@@ -372,10 +415,10 @@ namespace Convnet.PageViewModels
                     return;
 
                 if (value.Trim().All(c => char.IsLetterOrDigit(c) || c == '-' || c == '(' || c == ')'))
-                   this.RaiseAndSetIfChanged(ref modelName, value.Trim());
+                    this.RaiseAndSetIfChanged(ref modelName, value.Trim());
             }
         }
-     
+
         public string Script
         {
             get => script;
@@ -645,7 +688,6 @@ namespace Convnet.PageViewModels
             
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-               
                 try
                 {
                     var ProcStartInfo = new ProcessStartInfo("code", ScriptsDirectory + Path.DirectorySeparatorChar + "Program.cs")
