@@ -93,28 +93,28 @@ namespace dnn
 		inline result_type generate(URNG& engine) noexcept
 		{
     		// Validate parameters first
-    		if (a_param <= 0.0 || b_param <= 0.0)
-        		return 0.5;
+			if (a_param <= 0.0 || b_param <= 0.0)
+				return 0.5;
 
     		// Update cached distributions only when parameters change
-    		if (!cache_valid)
+			if (!cache_valid)
 			{
-        		x_gamma_cached = GammaDistType(a_param);
-        		y_gamma_cached = GammaDistType(b_param);
-        		cache_valid = true;
+				x_gamma_cached = GammaDistType(a_param);
+				y_gamma_cached = GammaDistType(b_param);
+				cache_valid = true;
 			}
     
-    		result_type x = x_gamma_cached(engine);
-    		result_type y = y_gamma_cached(engine);
+			result_type x = x_gamma_cached(engine);
+			result_type y = y_gamma_cached(engine);
     
-    		const result_type sum = x + y;
+			const result_type sum = x + y;
     
-    		if (sum <= std::numeric_limits<result_type>::min())
-        		return 0.0;
+			if (sum <= std::numeric_limits<result_type>::min())
+				return 0.0;
     
-    		result_type ratio = x / sum;
+			result_type ratio = x / sum;
     		// Clamp to valid range
-    		return (ratio < 0.0) ? 0.0 : ((ratio > 1.0) ? 1.0 : ratio);
+			return (ratio < 0.0) ? 0.0 : ((ratio > 1.0) ? 1.0 : ratio);
 		}
 	};
 

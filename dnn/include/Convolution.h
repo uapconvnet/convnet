@@ -101,7 +101,7 @@ namespace dnn
 				description.append(nwl + std::string(" Stride:     ") + tab + std::to_string(StrideH) + std::string("x") + std::to_string(StrideW));
 			if (HasPadding)
 				description.append(nwl + std::string(" Padding:    ") + tab + std::to_string(PadH) + std::string("x") + std::to_string(PadW));
-			    
+
 			description.append(GetWeightsDescription());
 
 			description.append(nwl + std::string(" Connections:") + tab + std::to_string(Groups * (InputLayer->C / Groups) * (C / Groups) * (H / StrideW) * (W / StrideH) * (HasBias ? KernelH * KernelW + 1 : KernelH * KernelW)));
@@ -149,7 +149,7 @@ namespace dnn
 				dnnl::convolution_backward_weights::primitive_desc(Device.engine, dnnl::algorithm::convolution_auto, memDesc[0], memDesc[2], memDesc[1], Strides, Dilates, Padding, Padding, *fwdDesc));
 
 			bwdDataDesc = std::make_unique<dnnl::convolution_backward_data::primitive_desc>(dnnl::convolution_backward_data::primitive_desc(Device.engine, dnnl::algorithm::convolution_auto, memDesc[0], memDesc[2], memDesc[1], Strides, Dilates, Padding, Padding, *fwdDesc));
-			
+
 			bwdAddDesc = std::make_unique<dnnl::binary::primitive_desc>(dnnl::binary::primitive_desc(Device.engine, dnnl::algorithm::binary_add, *InputLayer->DiffDstMemDesc, *InputLayer->DiffDstMemDesc, *InputLayer->DiffDstMemDesc));
 
 			if (*WeightsMemDesc != fwdDesc->weights_desc())
@@ -161,7 +161,7 @@ namespace dnn
 
 				dnnl::reorder(memWeights, weightsMem).execute(Device.stream, std::unordered_map<int, dnnl::memory>{ {DNNL_ARG_FROM, memWeights}, { DNNL_ARG_TO, weightsMem } });
 				Device.stream.wait();
-				
+
 				Weights = weights;
 				WeightsMemDesc = std::make_unique<dnnl::memory::desc>(fwdDesc->weights_desc());
 			}
