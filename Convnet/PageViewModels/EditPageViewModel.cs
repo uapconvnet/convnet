@@ -118,7 +118,14 @@ namespace Convnet.PageViewModels
             }
             Console.WriteLine($"Changed: {e.FullPath}");
             System.Threading.Thread.Sleep(250);
-            Script = File.ReadAllText(e.FullPath);
+            try
+            {
+                Script = File.ReadAllText(Path.Combine(ScriptsDirectory, "Program.cs"));
+            }
+            catch (Exception ex)
+            {
+                PrintException(ex);
+            }
         }
 
         private static void OnError(object sender, ErrorEventArgs e) =>
